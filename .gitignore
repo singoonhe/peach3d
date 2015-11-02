@@ -1,0 +1,4 @@
+# need ignore xcode cache data
+Peach3D/Support/projects/IOS_MAC/Peach3DImage.xcodeproj/xcuserdata/
+pro.mac_ios/Peach3DLib.xcodeproj/xcuserdata/
+tests/test.mac_ios/test.xcodeproj/xcuserdata/
