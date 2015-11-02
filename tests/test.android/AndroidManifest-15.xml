@@ -11,7 +11,8 @@
     <application android:label="@string/app_name" android:hasCode="true" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         <activity android:name="com.peach3d.lib.Peach3DActivity"
                   android:label="@string/app_name"
-                  android:icon="@drawable/icon">
+                  android:icon="@drawable/icon"
+                  android:screenOrientation="landscape">
             <!-- Tell NativeActivity the name of or .so -->
             <meta-data android:name="android.app.lib_name"
                     android:value="test" />

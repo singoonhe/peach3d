@@ -66,6 +66,14 @@ bool BaseScene::init()
     });
     rootWidget->addChild(nextButton);
     
+    // register keyboard back event
+    EventDispatcher::getSingletonPtr()->addKeyboardListener(this, [](KeyboardEvent event, KeyCode code){
+        if ((code == KeyCode::eESC || code == KeyCode::eBack) && event == KeyboardEvent::eKeyDown) {
+            // return to test scene
+            IPlatform::getSingleton().replaceWithNewScene(new TestScene());
+        }
+    });
+    
     // display first sample
     if (mSampleList.size() > 0) {
         this->changeToSample(mSampleIndex);

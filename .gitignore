@@ -2,3 +2,12 @@
 Peach3D/Support/projects/IOS_MAC/Peach3DImage.xcodeproj/xcuserdata/
 pro.mac_ios/Peach3DLib.xcodeproj/xcuserdata/
 tests/test.mac_ios/test.xcodeproj/xcuserdata/
+
+# ignore android temp files
+Peach3D/Android.mk
+tests/test.android/AndroidManifest.xml
+tests/test.android/assets/
+tests/test.android/bin/
+tests/test.android/gen/
+tests/test.android/libs/
+tests/test.android/obj/

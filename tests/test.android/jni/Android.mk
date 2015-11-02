@@ -18,10 +18,11 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := test
 LOCAL_SRC_FILES := main.cpp \
-../../source/EventScene.cpp \
+../../source/PlatformDelegate.cpp \
 ../../source/TestScene.cpp \
-../../source/WidgetScene.cpp \
-../../source/PlatformDelegate.cpp
+../../source/BaseScene.cpp \
+../../source/UIScene.cpp \
+../../source/ActionScene.cpp
 
 LOCAL_LDLIBS    := -llog -landroid
 LOCAL_WHOLE_STATIC_LIBRARIES := android_native_app_glue Peach3DLib
@@ -32,4 +33,4 @@ include $(BUILD_SHARED_LIBRARY)
 
 $(call import-add-path, $(LOCAL_PATH)/../../..)
 $(call import-module, Peach3D)
-$(call import-module,android/native_app_glue)
+$(call import-module, android/native_app_glue)
