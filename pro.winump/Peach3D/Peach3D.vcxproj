@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{46aa5ea5-b9ec-4e0d-a4fb-1082a912abdc}</ProjectGuid>
+    <Keyword>DynamicLibrary</Keyword>
+    <ProjectName>Peach3D</ProjectName>
+    <RootNamespace>Peach3D</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IncludePath>$(ProjectDir)..\Peach3D\Core;$(ProjectDir)..\Peach3D\GUI;$(ProjectDir)..\Peach3D\Platform;$(ProjectDir)..\Peach3D\Support;$(ProjectDir)..\Peach3D\RenderDX;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IncludePath>$(ProjectDir)..\Peach3D\Core;$(ProjectDir)..\Peach3D\GUI;$(ProjectDir)..\Peach3D\Platform;$(ProjectDir)..\Peach3D\Support;$(ProjectDir)..\Peach3D\RenderDX;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IncludePath>$(ProjectDir)..\Peach3D\Core;$(ProjectDir)..\Peach3D\GUI;$(ProjectDir)..\Peach3D\Platform;$(ProjectDir)..\Peach3D\Support;$(ProjectDir)..\Peach3D\RenderDX;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IncludePath>$(ProjectDir)..\Peach3D\Core;$(ProjectDir)..\Peach3D\GUI;$(ProjectDir)..\Peach3D\Platform;$(ProjectDir)..\Peach3D\Support;$(ProjectDir)..\Peach3D\RenderDX;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IncludePath>$(ProjectDir)..\Peach3D\Core;$(ProjectDir)..\Peach3D\GUI;$(ProjectDir)..\Peach3D\Platform;$(ProjectDir)..\Peach3D\Support;$(ProjectDir)..\Peach3D\RenderDX;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <IncludePath>$(ProjectDir)..\Peach3D\Core;$(ProjectDir)..\Peach3D\GUI;$(ProjectDir)..\Peach3D\Platform;$(ProjectDir)..\Peach3D\Support;$(ProjectDir)..\Peach3D\RenderDX;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DAABB.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DAction.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DActionImplement.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DCamera.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DColor4.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DCompile.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DEventDispatcher.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIAppDelegate.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIObject.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIPlatform.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIProgram.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIRender.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIScene.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DITexture.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DKeyCode.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DLayoutManager.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DLogPrinter.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DMaterial.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DMatrix4.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DMesh.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DNode.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DObjLoader.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DQuaternion.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DRect.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DResourceManager.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DSceneManager.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DSceneNode.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DScheduler.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DShaderCode.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DSingleton.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DTypes.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DUtils.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DVector2.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DVector3.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DVector4.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DWidget.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DWorldManager.h" />
+    <ClInclude Include="..\..\Peach3D\GUI\Peach3DButton.h" />
+    <ClInclude Include="..\..\Peach3D\GUI\Peach3DLabel.h" />
+    <ClInclude Include="..\..\Peach3D\GUI\Peach3DSprite.h" />
+    <ClInclude Include="..\..\Peach3D\Peach3D.h" />
+    <ClInclude Include="..\..\Peach3D\Platform\WinUwp\Peach3DPlatformWinUwp.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DCommonDX.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DObjectDX.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DProgramDX.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.h" />
+    <ClInclude Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.h" />
+    <ClInclude Include="..\..\Peach3D\Support\xxhash\xxhash.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DAABB.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DAction.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DActionImplement.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DCamera.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DEventDispatcher.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIObject.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIPlatform.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIRender.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIScene.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DITexture.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DLayoutManager.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DLogPrinter.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DMatrix4.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DMesh.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DNode.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DObjLoader.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DQuaternion.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DResourceManager.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneManager.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneNode.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DUtils.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DVector.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DWidget.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DWorldManager.cpp" />
+    <ClCompile Include="..\..\Peach3D\GUI\Peach3DButton.cpp" />
+    <ClCompile Include="..\..\Peach3D\GUI\Peach3DLabel.cpp" />
+    <ClCompile Include="..\..\Peach3D\GUI\Peach3DSprite.cpp" />
+    <ClCompile Include="..\..\Peach3D\Platform\WinUwp\Peach3DPlatformWinUwp.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DCommonDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DObjectDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DProgramDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="..\..\Peach3D\Support\xxhash\xxhash.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

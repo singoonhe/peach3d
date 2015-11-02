@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DResourceManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneNode.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DUtils.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DVector.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DWidget.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DWorldManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DAABB.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DAction.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DActionImplement.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DCamera.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DEventDispatcher.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIObject.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIPlatform.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIRender.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DIScene.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DITexture.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DLayoutManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DLogPrinter.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DMatrix4.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DMesh.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DNode.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DObjLoader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DQuaternion.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\GUI\Peach3DLabel.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\GUI\Peach3DSprite.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\GUI\Peach3DButton.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Platform\WinUwp\Peach3DPlatformWinUwp.cpp">
+      <Filter>Platform\WinUwp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DCommonDX.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DObjectDX.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DProgramDX.cpp">
+      <Filter>RenderDX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.cpp">
+      <Filter>Support\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Support\xxhash\xxhash.cpp">
+      <Filter>Support\xxhash</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DResourceManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DSceneManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DSceneNode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DScheduler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DShaderCode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DSingleton.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DTypes.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DUtils.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DVector2.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DVector3.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DVector4.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DWidget.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DWorldManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DAABB.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DAction.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DActionImplement.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DCamera.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DColor4.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DCompile.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DEventDispatcher.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIAppDelegate.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIPlatform.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIProgram.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIRender.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DIScene.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DITexture.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DKeyCode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DLayoutManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DLogPrinter.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DMaterial.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DMatrix4.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DMesh.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DNode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DObjLoader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DQuaternion.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DRect.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\GUI\Peach3DButton.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\GUI\Peach3DLabel.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\GUI\Peach3DSprite.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Platform\WinUwp\Peach3DPlatformWinUwp.h">
+      <Filter>Platform\WinUwp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DCommonDX.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DObjectDX.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DProgramDX.h">
+      <Filter>RenderDX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.h">
+      <Filter>Support\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Support\xxhash\xxhash.h">
+      <Filter>Support\xxhash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Peach3D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{72e6bb35-0f6d-4b10-bb6e-3f450c03419b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{93259418-4d2d-4752-b179-0afa9ccaf8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{5a0758b7-7e03-4464-876a-860f9753ed6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderDX">
+      <UniqueIdentifier>{37b533f6-af7a-405f-be61-b2abc0de9f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support">
+      <UniqueIdentifier>{e515d502-4ed0-4758-8d8d-c29ba170dfbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\WinUwp">
+      <UniqueIdentifier>{28a38def-ce32-42a9-a5ee-c3cf734948d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support\tinyxml2">
+      <UniqueIdentifier>{af3655bd-3d06-40b7-beb9-4a2e36b95a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Support\xxhash">
+      <UniqueIdentifier>{235fb224-f377-4b35-a318-1938c2c26f66}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

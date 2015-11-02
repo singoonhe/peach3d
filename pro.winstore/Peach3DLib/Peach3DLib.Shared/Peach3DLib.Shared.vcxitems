@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{e3ac15f6-5f9b-4bae-afff-59aadc581ca3}</ItemsProjectGuid>
+    <ItemsRootNamespace>Peach3DLib</ItemsRootNamespace>
+    <ItemsProjectName>Peach3DLib.Shared</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DAABB.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DAction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DActionImplement.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DCamera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DColor4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DCompile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DEventDispatcher.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIAppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIPlatform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIProgram.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIRender.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DITexture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIWidgetManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DKeyCode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DLayoutManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DLogPrinter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DMaterial.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DMatrix4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DMesh.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DNode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DObjLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DQuaternion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DRect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DSceneManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DSceneNode.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DSingleton.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DUtils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DVector2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DVector3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DVector4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DWidget.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\GUI\Peach3DButton.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\GUI\Peach3DLabel.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\GUI\Peach3DSprite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Peach3D.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Platform\WinStore\Peach3DPlatformWinStore.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DCommonDX.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DObjectDX.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DProgramDX.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DRenderDX.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DTextureDX.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DTextureLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Support\tinyxml2\tinyxml2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Support\xxhash\xxhash.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DAABB.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DAction.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DActionImplement.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DCamera.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DEventDispatcher.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIObject.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIPlatform.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIRender.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DITexture.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DIWidgetManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DLayoutManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DLogPrinter.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DMatrix4.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DMesh.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DNode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DObjLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DQuaternion.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DSceneManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DSceneNode.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DUtils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DVector.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Core\Peach3DWidget.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\GUI\Peach3DButton.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\GUI\Peach3DLabel.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\GUI\Peach3DSprite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Platform\WinStore\Peach3DPlatformWinStore.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DCommonDX.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DObjectDX.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DProgramDX.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DRenderDX.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DTextureDX.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DTextureLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Support\tinyxml2\tinyxml2.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Peach3D\Support\xxhash\xxhash.cpp" />
+  </ItemGroup>
+</Project>

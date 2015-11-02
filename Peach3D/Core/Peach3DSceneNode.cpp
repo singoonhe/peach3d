@@ -1,0 +1,221 @@
+//
+//  Peach3DSceneNode.cpp
+//  TestPeach3D
+//
+//  Created by singoon.he on 12-10-14.
+//  Copyright (c) 2012年 singoon.he. All rights reserved.
+//
+
+#include "Peach3DSceneNode.h"
+#include "Peach3DLogPrinter.h"
+#include "Peach3DMesh.h"
+#include "Peach3DIPlatform.h"
+#include "Peach3DSceneManager.h"
+
+namespace Peach3D
+{
+    SceneNode::SceneNode(const Vector3& pos, const Vector3& rotation, const Vector3& scale) : Node()
+    {
+        init();
+        mPosition = pos;
+        mRotation = rotation;
+        mScale = scale;
+    }
+    
+    void SceneNode::init()
+    {
+        mScale = Vector3(1.0f, 1.0f, 1.0f);
+        mAttachedMesh = nullptr;
+        mIsAABBShow = false;
+        mPickEnabled = false;
+        mPickAlways = false;
+        mDepthBias = 0.0f;
+        mRotateUseVec = false;
+    }
+    
+    void SceneNode::attachMesh(Mesh* mesh)
+    {
+        Peach3DAssert(mesh, "Can't attach a null Object to Node");
+        mAttachedMesh = mesh;
+        // copy template material to node
+        mNodeMtlMap.clear();
+        mesh->tranverseObjects([&](const char* name, IObject* object) {
+            mNodeMtlMap[name] = object->getObjectMaterial();
+        });
+    }
+    
+    void SceneNode::replaceTextureByIndex(const char* name, int index, ITexture* texture)
+    {
+        Material* objNodeMtl = getMaterial(name);
+        if (objNodeMtl && index < int(objNodeMtl->mTextureList.size()) && index >=0) {
+            objNodeMtl->mTextureList[index] = texture;
+        }
+        else {
+            Peach3DLog(LogLevel::eWarn, "Can't replace invalid texture index %d or material can't find", index);
+        }
+    }
+    
+    SceneNode* SceneNode::createChild(const Vector3& pos, const Vector3& rotation, const Vector3& scale)
+    {
+        SceneNode* newNode = new SceneNode(pos, rotation, scale);
+        // add to current scene node
+        addChild(newNode);
+        return newNode;
+    }
+    
+    SceneNode* SceneNode::createChild(const std::string& name)
+    {
+        SceneNode* newNode = new SceneNode(name);
+        // add to current scene node
+        addChild(newNode);
+        return newNode;
+    }
+    
+    void SceneNode::setPosition(const Vector3& pos)
+    {
+        if (mPosition != pos) {
+            mPosition = pos;
+            // also update children matrix
+            setNeedUpdateRenderingAttributes();
+        }
+    }
+    
+    const Vector3& SceneNode::getPosition(TranslateRelative type)
+    {
+        if (type == TranslateRelative::eWorld) {
+            updateRenderingAttributes(0.0f);
+            return mWorldPosition;
+        }
+        else {
+            return mPosition;
+        }
+    }
+    
+    void SceneNode::setRotation(const Vector3& rotation, TranslateRelative type)
+    {
+        if (type == TranslateRelative::eLocal) {
+            if (mRotation != rotation) {
+                mRotateUseVec = true;
+                mRotation = rotation;
+                // also update children matrix
+                setNeedUpdateRenderingAttributes();
+            }
+        }
+        else {
+            // TODO: calc new position
+        }
+    }
+    
+    Vector3 SceneNode::getRotation()
+    {
+        if (!mRotateUseVec) {
+            // convert Quaternion to Vector3
+            return mRotateQuat.getEulerAngle();
+        }
+        else {
+            return mRotation;
+        }
+    }
+
+    void SceneNode::setRotateQuaternion(const Quaternion& quat, TranslateRelative type)
+    {
+        if (type == TranslateRelative::eLocal) {
+            if (mRotateQuat != quat) {
+                mRotateUseVec = false;
+                mRotateQuat = quat;
+                // also update children matrix
+                setNeedUpdateRenderingAttributes();
+            }
+        }
+        else {
+            Quaternion curQuat = quat;
+            setRotation(curQuat.getEulerAngle(), type);
+        }
+    }
+
+    Quaternion SceneNode::getRotateQuaternion()
+    {
+        if (!mRotateUseVec) {
+            return mRotateQuat;
+        }
+        else {
+            // convert Vector3 to Quaternion
+            return Quaternion::createByEulerAngle(mRotation);
+        }
+    }
+
+    void SceneNode::setScale(const Vector3& scale)
+    {
+        if (mScale != scale) {
+            if (FLOAT_EQUAL_0(scale.x) || FLOAT_EQUAL_0(scale.y) || FLOAT_EQUAL_0(scale.z)) {
+                Peach3DLog(LogLevel::eWarn, "Node set scale 0 will draw nothing");
+            }
+            mScale = scale;
+            // also update children matrix
+            setNeedUpdateRenderingAttributes();
+        }
+    }
+    
+    const Vector3& SceneNode::getScale(TranslateRelative type)
+    {
+        if (type == TranslateRelative::eWorld) {
+            updateRenderingAttributes(0.0f);
+            return mWorldScale;
+        }
+        else {
+            return mScale;
+        }
+    }
+    
+    std::string SceneNode::getRenderStateString()
+    {
+        return "";
+    }
+    
+    void SceneNode::updateRenderingAttributes(float lastFrameTime)
+    {
+        if (mIsRenderDirty) {
+            // reset is need rendering
+            mNeedRender = mNeedRender && mAttachedMesh;
+            
+            // update world position and world scale
+            mWorldPosition = mPosition;
+            mWorldScale = mScale;
+            mWorldRotation = mRotation;
+            SceneNode* parent = static_cast<SceneNode*>(mParentNode);
+            SceneNode* rootNode = SceneManager::getSingletonPtr()->getRootSceneNode();
+            if (parent && parent != rootNode) {
+                mWorldPosition = mWorldPosition + parent->getPosition(TranslateRelative::eWorld);
+                mWorldScale = mWorldScale * parent->getScale(TranslateRelative::eWorld);
+            }
+            
+            // update matrix. Sequence: scale, rotation, translation
+            Matrix4 scaleMat4 = Matrix4::createScaling(mWorldScale.x, mWorldScale.y, mWorldScale.z);
+            Matrix4 translateMat4 = Matrix4::createTranslation(mWorldPosition.x, mWorldPosition.y, mWorldPosition.z);
+            if (mRotateUseVec) {
+                mModelMatrix = translateMat4 * Matrix4::createRotationPitchYawRoll(mRotation.x, mRotation.y, mRotation.z) * scaleMat4;
+            }
+            else {
+                mModelMatrix = translateMat4 * Matrix4::createRotationQuaternion(mRotateQuat) * scaleMat4;
+            }
+            
+            mIsRenderDirty = false;
+        }
+    }
+    
+    bool SceneNode::isRayIntersect(const Ray& ray, IObject** outObject)
+    {
+        if (mAttachedMesh) {
+            updateRenderingAttributes(0.0f);
+            // check mesh objects
+            IObject* interObject = mAttachedMesh->getRayIntersectObjectWithTranslation(mModelMatrix, ray);
+            if (interObject) {
+                if (outObject) {
+                    *outObject = interObject;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+}

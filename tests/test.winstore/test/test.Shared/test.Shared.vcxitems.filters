@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)App.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\TestScene.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\WidgetScene.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\EventScene.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\PlatformDelegate.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)App.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\TestScene.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\WidgetScene.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\EventScene.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\PlatformDelegate.h">
+      <Filter>source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="$(MSBuildThisFileDirectory)Assets\DarkGray.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LightGray.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)Assets\MediumGray.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peach.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peach1.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peachRGBA.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peach_leaf.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\common_down.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\common_highlight.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\common_normal.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peachicon.jpg">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peachicon-small.jpg">
+      <Filter>resource</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{51bb7525-6867-4145-9b44-c4efe45e7321}</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{67334035-485c-44bf-85de-9b81ae7c6dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{4c059d6b-b82b-4fcc-9bbe-09d117ee39c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{2e02e39c-1b63-488a-a7c6-ebd3d91e0947}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoPixelShader.hlsl">
+      <Filter>resource</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoVertexShader.hlsl">
+      <Filter>resource</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubePixelShader.hlsl">
+      <Filter>resource</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubeVertexShader.hlsl">
+      <Filter>resource</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetPixelShader.hlsl">
+      <Filter>resource</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetVertexShader.hlsl">
+      <Filter>resource</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\Cube.mtl">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcube.mtl">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\Cube.obj" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcube.obj" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoShader.fsh">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoShader.vsh">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubeShader.fsh">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubeShader.vsh">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetShader.fsh">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetShader.vsh">
+      <Filter>resource</Filter>
+    </None>
+  </ItemGroup>
+</Project>

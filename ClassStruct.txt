@@ -1,0 +1,6 @@
+1. IPlatform-->PlatformMAC、PlatformIOS...
+2. IPlatform = Render、SceneManager、ResourceManager
+3. Render = Texture、Widget、Object、Program、(ProgramGenerator)
+4. SceneManager-->SceneManagerDefault、SceneManagerOTree
+4. SceneManager = SceneNode、Widget、Camera
+5. ResourceManager = Texture、Mesh、Program、Audio

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7cfc9e1d-27b0-4895-9a30-553ea57bffee</SharedGUID>
+    <ItemsProjectGuid>{3a04bb42-7438-4153-8f2b-aebee6253728}</ItemsProjectGuid>
+    <ItemsRootNamespace>test</ItemsRootNamespace>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\common_down.png" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\common_highlight.png" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\common_normal.png" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peach.jpg" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peach1.png" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peachicon-small.jpg" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peachicon.jpg" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peachRGBA.png" />
+    <Image Include="$(MSBuildThisFileDirectory)..\..\..\resource\peach_leaf.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\DarkGray.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\LightGray.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\MediumGray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\EventScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\PlatformDelegate.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\TestScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\source\WidgetScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)App.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\EventScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\PlatformDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\TestScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\source\WidgetScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)App.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoPixelShader.hlsl">
+      <ShaderType>Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoVertexShader.hlsl">
+      <ShaderType>Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubePixelShader.hlsl">
+      <ShaderType>Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubeVertexShader.hlsl">
+      <ShaderType>Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetPixelShader.hlsl">
+      <ShaderType>Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetVertexShader.hlsl">
+      <ShaderType>Vertex</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\Cube.mtl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoShader.fsh" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\demoShader.vsh" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcube.mtl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubeShader.fsh" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcubeShader.vsh" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetShader.fsh" />
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\widgetShader.vsh" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\Cube.obj">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)..\..\..\resource\texcube.obj">
+      <FileType>Document</FileType>
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+</Project>
