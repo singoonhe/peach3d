@@ -11,3 +11,13 @@ tests/test.android/bin/
 tests/test.android/gen/
 tests/test.android/libs/
 tests/test.android/obj/
+
+# ignore xcode temp files
+pro.winump/.vs/
+pro.winump/Peach3D.sdf
+pro.winump/Peach3D/ARM/
+tests/test.winump/.vs/
+tests/test.winump/ARM/
+tests/test.winump/test.opensdf
+tests/test.winump/test.sdf
+tests/test.winump/test/ARM

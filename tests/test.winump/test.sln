@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{56B57814-0759-4407-BD6A-E896E96AFB4D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Peach3D", "..\..\..\pro.winump\Peach3D\Peach3D.vcxproj", "{46AA5EA5-B9EC-4E0D-A4FB-1082A912ABDC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Peach3D", "..\..\pro.winump\Peach3D\Peach3D.vcxproj", "{46AA5EA5-B9EC-4E0D-A4FB-1082A912ABDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

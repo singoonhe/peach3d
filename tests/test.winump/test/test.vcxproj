@@ -234,7 +234,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\pro.winump\Peach3D\Peach3D.vcxproj">
+    <ProjectReference Include="..\..\..\pro.winump\Peach3D\Peach3D.vcxproj">
       <Project>{46aa5ea5-b9ec-4e0d-a4fb-1082a912abdc}</Project>
     </ProjectReference>
   </ItemGroup>
