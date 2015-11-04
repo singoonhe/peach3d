@@ -6,10 +6,15 @@
 using namespace Microsoft::WRL;
 namespace Peach3D
 {
+	// Use triple buffering.
+	static const UINT gDXFrameCount = 3;
+
     class RenderDX : public IRender
     {
     public:
-        RenderDX() : mD2DFactory(nullptr), mDWriteFactory(nullptr), mWICImageFactory(nullptr) {}
+        RenderDX() : mCurrentFrame(0), mD2DFactory(nullptr), mDWriteFactory(nullptr), mWICImageFactory(nullptr) {
+			ZeroMemory(mFenceValues, sizeof(mFenceValues));
+		}
         virtual ~RenderDX();
         //! init not window dependent d3d handlers
         bool createGlobelRender();
@@ -66,12 +71,17 @@ namespace Peach3D
 
     private:
         // dx device handlers, ComPtr can't set nullptr, it not a pointer
-        ComPtr<ID3D11Device2>           mD3DDevice;
-        ComPtr<ID3D11DeviceContext2>    mDeviceContext;
-        D3D11_DEPTH_STENCIL_DESC        mDepthStencilDesc;
-        D3D11_RASTERIZER_DESC           mRasterizerDesc;
+		ComPtr<IDXGIFactory4>				mDXFactory;
+		ComPtr<ID3D12Device>				mD3DDevice;
+		ComPtr<ID3D12CommandQueue>			mCommandQueue;
+		ComPtr<ID3D12Fence>					mFence;
+		HANDLE								mFenceEvent;
+		UINT								mCurrentFrame;
+		UINT64								mFenceValues[gDXFrameCount];
 
-        ComPtr<IDXGISwapChain1>         mSwapChain;
+        ComPtr<ID3D12GraphicsCommandList>	mCommandList;
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC	mPipelineDesc;
+        ComPtr<IDXGISwapChain3>         mSwapChain;
         ComPtr<ID3D11RenderTargetView>  mTargetView;
         ComPtr<ID3D11DepthStencilView>  mDepthStencilView;
 

@@ -104,7 +104,7 @@ namespace Peach3D
         RenderDX* nativeRender = static_cast<RenderDX*>(mRender);
         bool globalSuccess = nativeRender->createGlobelRender();
         // save render feature level
-        mFeatureLevel = RenderFeatureLevel::eDX11;
+        mFeatureLevel = RenderFeatureLevel::eDX;
 
         // get default resource directory
         Platform::String^ accessPath = Package::Current->InstalledLocation->Path;

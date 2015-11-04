@@ -19,7 +19,7 @@ namespace Peach3D
     enum class PEACH3D_DLL RenderFeatureLevel
     {
         eUnkonw,// unknow feature level
-        eDX11,  // feature level for dx11
+        eDX,	// feature level for dx12
         eGL3,   // feature level for OpenGL 3.2 or OpenGL ES 3.0
         eGL2    // feature level for OpenGL ES 2.0 or OpenGL 2.x
     };

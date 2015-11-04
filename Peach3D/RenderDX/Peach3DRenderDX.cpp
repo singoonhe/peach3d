@@ -10,16 +10,6 @@
 
 namespace Peach3D
 {
-#define SHADER_CLAMP_UNIFORM_0_1(arg) \
-    codeList.push_back("    if ("#arg" < 0.0)\n"); \
-    codeList.push_back("    {\n"); \
-    codeList.push_back("        "#arg" = "#arg" + 1.0;\n"); \
-    codeList.push_back("    }\n"); \
-    codeList.push_back("    else if ("#arg" > 1.0)\n"); \
-    codeList.push_back("    {\n"); \
-    codeList.push_back("        "#arg" = "#arg" - 1.0;\n"); \
-    codeList.push_back("    }\n");
-
     RenderDX::~RenderDX()
     {
         // delete global AABB buffers
@@ -46,92 +36,49 @@ namespace Peach3D
 
     bool RenderDX::createGlobelRender()
     {
-        IDXGIAdapter1* highAdapter = nullptr;
-        std::string adapterDesc;
-#if PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_WINDESK
-        // Create a DXGIFactory object and choose Adapter.
-        IDXGIFactory1* pFactory;
-        if (SUCCEEDED(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory)))
-        {
-            UINT i = 0;
-            IDXGIAdapter1 *pAdapter;
-            while (pFactory->EnumAdapters1(i, &pAdapter) != DXGI_ERROR_NOT_FOUND)
-            {
-                DXGI_ADAPTER_DESC1 pDesc;
-                pAdapter->GetDesc1(&pDesc);
-                char* utf8Desc = convertUnicodeToUTF8(pDesc.Description);
-                if (i == 0 || strncmp(utf8Desc, "NVIDIA", strlen("NVIDIA")) == 0 || strncmp(utf8Desc, "ATI", strlen("ATI")) == 0)
-                {
-                    highAdapter = pAdapter;
-                    adapterDesc = utf8Desc;
-                }
-                free(utf8Desc);
-                ++i;
-            }
-            pFactory->Release();
-        }
+#if defined(_DEBUG)
+		// If the project is in a debug build, enable debugging via SDK Layers.
+		ComPtr<ID3D12Debug> debugController;
+		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+			debugController->EnableDebugLayer();
+		}
 #endif
-        // 此标志为与 API 默认设置具有不同颜色渠道顺序的图面添加支持。要与 Direct2D 兼容，必须满足此要求。
-        UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#if PEACH3D_DEBUG == 1
-        // Check debug is enabled
-        D3D_DRIVER_TYPE checkType = highAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_NULL;
-        HRESULT dhr = D3D11CreateDevice(highAdapter, checkType, 0, D3D11_CREATE_DEVICE_DEBUG,
-            nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr);
-        if (SUCCEEDED(dhr))
-        {
-            creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
-        }
-#endif
-        // dx11 must!
-        D3D_FEATURE_LEVEL featureLevels[] =
-        {
-            D3D_FEATURE_LEVEL_11_1,
-            D3D_FEATURE_LEVEL_11_0,
-            D3D_FEATURE_LEVEL_10_1,
-            D3D_FEATURE_LEVEL_10_0,
-            D3D_FEATURE_LEVEL_9_3   // Windows Phone support this level...
-        };
-        ComPtr<ID3D11Device> device;
-        ComPtr<ID3D11DeviceContext> context;
-        D3D_FEATURE_LEVEL featureLevel;
+		CreateDXGIFactory1(IID_PPV_ARGS(&mDXFactory));
 
-        // create d3d with hardware
-        D3D_DRIVER_TYPE createdType = highAdapter ? D3D_DRIVER_TYPE_UNKNOWN : D3D_DRIVER_TYPE_HARDWARE;
-        HRESULT hr = D3D11CreateDevice(highAdapter, createdType, 0, creationFlags, featureLevels,
-            ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &device, &featureLevel, &context);
-        // if failed, recreate d3d with warp
-        if (FAILED(hr))
-        {
-            hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, 0, creationFlags, featureLevels,
-                ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &device, &featureLevel, &context);
-            if (FAILED(hr))
-            {
-                Peach3DLog(LogLevel::eError, "Create D3D failed, may be you device not support dx11!");
-                return false;
-            }
-            adapterDesc = "Microsoft Basic Render Driver";
-        }
-        if (!adapterDesc.size())
-        {
-            ComPtr<IDXGIDevice3> dxgiDevice;
-            device.As(&dxgiDevice);
-            ComPtr<IDXGIAdapter> dxgiAdapter;
-            dxgiDevice->GetAdapter(&dxgiAdapter);
-            // get adapter description
-            DXGI_ADAPTER_DESC pDesc;
-            dxgiAdapter->GetDesc(&pDesc);
-            char* utf8Desc = convertUnicodeToUTF8(pDesc.Description);
-            adapterDesc = utf8Desc;
-            delete utf8Desc;
-        }
-        Peach3DLog(LogLevel::eInfo, "Adapter : %s", adapterDesc.c_str());
-        Peach3DLog(LogLevel::eInfo, "Create D3D Success, feature level is : %d", featureLevel);
+		// Create the Direct3D 12 API device object
+		HRESULT hr = D3D12CreateDevice(
+			nullptr,						// Specify nullptr to use the default adapter.
+			D3D_FEATURE_LEVEL_11_0,			// Minimum feature level this app can support.
+			IID_PPV_ARGS(&mD3DDevice)		// Returns the Direct3D device created.
+			);
+		if (FAILED(hr)) {
+			// If the initialization fails, fall back to the WARP device.
+			// For more information on WARP, see: 
+			// http://go.microsoft.com/fwlink/?LinkId=286690
 
-        // get device handler and content handler
-        device.As(&mD3DDevice);
-        context.As(&mDeviceContext);
+			ComPtr<IDXGIAdapter> warpAdapter;
+			mDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter));
+			D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mD3DDevice));
+		}
+		ComPtr<IDXGIAdapter> dxgiAdapter;
+		LUID adapterID = mD3DDevice->GetAdapterLuid();
+		Peach3DLog(LogLevel::eInfo, "Adapter : %d %u", adapterID.HighPart, adapterID.LowPart);
 
+		// Create the command queue.
+		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		mD3DDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue)));
+
+		ComPtr<ID3D12CommandAllocator>	commandAllocators[gDXFrameCount];
+		for (UINT n = 0; n < gDXFrameCount; n++) {
+			mD3DDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocators[n]));
+		}
+		// Create synchronization objects.
+		mD3DDevice->CreateFence(mFenceValues[mCurrentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
+		mFenceValues[mCurrentFrame]++;
+
+		mFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
         return true;
     }
 
