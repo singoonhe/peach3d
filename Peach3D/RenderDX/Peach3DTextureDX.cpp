@@ -22,7 +22,7 @@ namespace Peach3D
         if (!ITexture::setTextureData(data, size, status)) {
             return false;
         }
-
+		/*
         // is mipmap enabled
         bool isMipMapEnabled = ResourceManager::getSingleton().isTextureMipMapEnabled();
         // load texture
@@ -53,7 +53,7 @@ namespace Peach3D
 
         // Create the sample state
         if (!recreatedSamplerState())
-            return false;
+            return false;*/
         return true;
     }
 
@@ -84,7 +84,7 @@ namespace Peach3D
     }
 
     bool TextureDX::recreatedSamplerState()
-    {
+    {/*
         D3D11_FILTER filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
         if (mTexFilter == TextureFilter::eLinear) {
             filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -120,7 +120,7 @@ namespace Peach3D
             mTexState->Release();
             mTexState = nullptr;
         }
-        mTexState = tempState;
+        mTexState = tempState;*/
         return true;
     }
 
@@ -151,7 +151,7 @@ namespace Peach3D
 
     Vector2 TextureDX::calcTextRenderInfoList(const std::vector<LabelStageTextInfo>& textList, IDWriteTextFormat* textFormat,
         const LabelTextDefined& defined, std::vector<std::vector<tTextDrawInfo>>* drawInfoList)
-    {
+    {/*
 #define CHANGE_TEXT_NEW_LINE(height) \
         curHeight += height; \
         if (curWidth > textMaxWidth) { \
@@ -290,7 +290,8 @@ namespace Peach3D
             rSize.x = textMaxWidth;
         }
         rSize.y = curHeight;
-        return rSize;
+        return rSize;*/
+		return Vector2();
     }
 
     bool TextureDX::createTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
@@ -334,6 +335,7 @@ namespace Peach3D
                 });
             });
         }
+		/*
         float startPosY = 0.0f;
         // apply vertical alignment
         if (defined.dim.x > 0 && defined.dim.y > 0) {
@@ -463,7 +465,7 @@ namespace Peach3D
                     info.image->Release();
                 }
             }
-        }
+        }*/
 
         return mTextureRV!=nullptr;
     }

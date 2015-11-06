@@ -138,7 +138,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;d3d12.lib;dxgi.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,7 +151,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;d3d12.lib;dxgi.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -164,7 +164,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;d3d12.lib;dxgi.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -177,7 +177,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;d3d12.lib;dxgi.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -190,7 +190,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;d3d12.lib;dxgi.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -203,7 +203,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>d2d1.lib;d3d11.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d2d1.lib;d3d12.lib;dxgi.lib;dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -255,7 +255,6 @@
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.h" />
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.h" />
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.h" />
-    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.h" />
     <ClInclude Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.h" />
     <ClInclude Include="..\..\Peach3D\Support\xxhash\xxhash.h" />
   </ItemGroup>
@@ -292,9 +291,9 @@
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DObjectDX.cpp" />
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DProgramDX.cpp" />
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.cpp" />
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DShaderCodeDX.cpp" />
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.cpp" />
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.cpp" />
-    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.cpp" />
     <ClCompile Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="..\..\Peach3D\Support\xxhash\xxhash.cpp" />
   </ItemGroup>

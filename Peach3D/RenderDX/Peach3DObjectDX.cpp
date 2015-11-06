@@ -14,7 +14,7 @@ namespace Peach3D
     {
         // base object setVertexBuffer
         bool result = IObject::setVertexBuffer(data, size, type);
-
+		/*
         // delete old vertex buffer
         cleanObjectVertexBuffer();
 
@@ -40,7 +40,7 @@ namespace Peach3D
             {
                 mDrawMode = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
             }
-        }
+        }*/
         return result && mVertexBuffer;
     }
 
@@ -48,7 +48,7 @@ namespace Peach3D
     {
         // base object setIndexBuffer
         IObject::setIndexBuffer(data, size, type);
-
+		/*
         // delete old index buffer
         cleanObjectIndexBuffer();
 
@@ -68,11 +68,11 @@ namespace Peach3D
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
             mD3DDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &mIndexBuffer);
-        }
+        }*/
     }
 
     void ObjectDX::render(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
-    {
+    {/*
         // check is need choose preset program
         IObject::render(attrs, mtl, lastFrameTime);
 
@@ -125,8 +125,16 @@ namespace Peach3D
             if (attrs->showAABB) {
                 renderAABB(attrs);
             }
-        }
+        }*/
     }
+
+	void ObjectDX::render(const std::vector<Widget*>& renderList)
+	{
+	}
+
+	void ObjectDX::render(std::vector<SceneNode*> renderList)
+	{
+	}
 
     void ObjectDX::bindBaseAttrBuffer(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
     {
@@ -149,8 +157,8 @@ namespace Peach3D
         mRenderProgram->updateObjectUnifroms(attrs, mtl, lastFrameTime);
     }
 
-    void ObjectDX::generateAABBBuffers(ComPtr<ID3D11Device2> device, ComPtr<ID3D11DeviceContext2> context)
-    {
+    void ObjectDX::generateAABBBuffers(ComPtr<ID3D12Device> device, ComPtr<ID3D11DeviceContext2> context)
+    {/*
         // generate vertex buffer for AABB rendering
         if (!mAABBVertexBuffer && !mAABBIndexBuffer) {
             float globalVertex[] = { -0.5, -0.5, -0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
@@ -193,11 +201,11 @@ namespace Peach3D
             // generate program
             Material AABBMtl;
             mAABBProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexTypePosition3 | VertexTypeColor4, AABBMtl);
-        }
+        }*/
     }
 
     void ObjectDX::renderAABB(RenderObjectAttr* attrs)
-    {
+    {/*
         // generate AABB buffers if needed
         generateAABBBuffers(mD3DDevice, mDeviceContext);
         const UINT offset = 0, vertexStride = 7 * sizeof(float);
@@ -232,7 +240,7 @@ namespace Peach3D
             mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
             mDeviceContext->DrawIndexed(6, 10, 0);
             PD_ADD_DRAWCALL(1);
-        }
+        }*/
     }
 
     void ObjectDX::deleteAABBBuffers()

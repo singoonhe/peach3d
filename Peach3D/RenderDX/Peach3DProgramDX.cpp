@@ -12,14 +12,14 @@ namespace Peach3D
     uint ProgramDX::mGlobalUboSize = 0;
     std::map<std::string, int>   ProgramDX::mGUniformOffsetMap;
 
-    ProgramDX::ProgramDX(ComPtr<ID3D11Device2> device, ComPtr<ID3D11DeviceContext2> context, uint pId)
-        : IProgram(pId), mD3DDevice(device), mDeviceContext(context), mOUniformBuffer(nullptr),
+    ProgramDX::ProgramDX(ComPtr<ID3D12Device> device, uint pId)
+        : IProgram(pId), mD3DDevice(device), mOUniformBuffer(nullptr),
         mPixelShader(nullptr), mVertexShader(nullptr), mInputLayout(nullptr), mVertexShaderData(nullptr)
     {
         // set global uniform offset, only init once
         if (mGUniformOffsetMap.size() == 0)
         {
-            mGlobalUpdateContext = context;
+            //mGlobalUpdateContext = context;
             mGUniformOffsetMap[pdShaderProjMatrixUniformName] = 0;
             mGUniformOffsetMap[pdShaderViewMatrixUniformName] = 16;
             mGUniformOffsetMap[pdShaderAmbientUniformName] = 32;
@@ -28,7 +28,7 @@ namespace Peach3D
     }
 
     bool ProgramDX::setVertexShader(const char* data, int size, bool isCompiled)
-    {
+    {/*
         if (mVertexShader)
         {
             // delete vertex shader when it's exist
@@ -72,12 +72,12 @@ namespace Peach3D
         {
             // pixel shader and mVertexType all are valid, create layout
             createInputLayout();
-        }
+        }*/
         return true;
     }
 
     bool ProgramDX::setPixelShader(const char* data, int size, bool isCompiled)
-    {
+    {/*
         if (mPixelShader)
         {
             // delete pixel shader when it's exist
@@ -113,22 +113,22 @@ namespace Peach3D
         {
             // vertex shader and mVertexType all are valid, create layout
             createInputLayout();
-        }
+        }*/
         return true;
     }
 
     void ProgramDX::setVertexType(uint type, uint instancedType)
     {
-        IProgram::setVertexType(type, instancedType);
-        if (mVertexShader && mPixelShader)
-        {
-            // vertex shader and pixel shader are valid, create layout
-            createInputLayout();
-        }
+        //IProgram::setVertexType(type, instancedType);
+        //if (mVertexShader && mPixelShader)
+        //{
+        //    // vertex shader and pixel shader are valid, create layout
+        //    createInputLayout();
+        //}
     }
 
     void ProgramDX::setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList)
-    {
+    {/*
         IProgram::setProgramUniformsDesc(uniformList);
         mOUniformOffsetMap.clear();
 
@@ -172,7 +172,7 @@ namespace Peach3D
         if (mProgramValid && uniformList.size() > 0)
         {
             bindProgramUniformsForObject();
-        }
+        }*/
     }
 
     void ProgramDX::updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
@@ -186,7 +186,7 @@ namespace Peach3D
             {
                 if (iter->name.compare(pdShaderModelMatrixUniformName) == 0)
                 {
-                    memcpy(dataBuffer + mOUniformOffsetMap[iter->name], attrs->modelMatrix->getTranspose().mat, 16 * sizeof(float));
+                    //memcpy(dataBuffer + mOUniformOffsetMap[iter->name], attrs->modelMatrix->getTranspose().mat, 16 * sizeof(float));
                 }
                 else if (iter->name.compare(pdShaderScrollUVUniformName) == 0 && mtl)
                 {
@@ -215,7 +215,7 @@ namespace Peach3D
     }
 
     void ProgramDX::updateWidgetUnifroms(Widget* widget)
-    {
+    {/*
         if (mOUniformBuffer)
         {
             D3D11_MAPPED_SUBRESOURCE subData;
@@ -245,18 +245,18 @@ namespace Peach3D
                 mDeviceContext->PSSetShaderResources(UINT(i), 1, &dxTexRV);
                 mDeviceContext->PSSetSamplers(UINT(i), 1, &dxTexState);
             }
-        }
+        }*/
     }
 
     void ProgramDX::bindGlobalUniformsForObject()
-    {
+    {/*
         // create global uniform buffer
         if (mGUniformBuffer == nullptr)
         {
             CD3D11_BUFFER_DESC constantBufferDesc(mGlobalUboSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
             mD3DDevice->CreateBuffer(&constantBufferDesc, nullptr, &mGUniformBuffer);
             Peach3DLog(LogLevel::eInfo, "Create global UBO success for DX11");
-        }
+        }*/
     }
 
     void ProgramDX::bindProgramUniformsForObject()
@@ -268,12 +268,12 @@ namespace Peach3D
             mOUniformBuffer = nullptr;
         }
         // create object uniform buffer
-        CD3D11_BUFFER_DESC constantBufferDesc(mObjectUboSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-        mD3DDevice->CreateBuffer(&constantBufferDesc, nullptr, &mOUniformBuffer);
+        //CD3D11_BUFFER_DESC constantBufferDesc(mObjectUboSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+        //mD3DDevice->CreateBuffer(&constantBufferDesc, nullptr, &mOUniformBuffer);
     }
 
     void ProgramDX::updateGlobalUnifroms(RenderObjectAttr* attrs)
-    {
+    {/*
         // update global uniforms, called before render objects
         if (mGUniformBuffer)
         {
@@ -284,8 +284,16 @@ namespace Peach3D
             memcpy(dataBuffer + mGUniformOffsetMap[pdShaderViewMatrixUniformName], attrs->viewMatrix->getTranspose().mat, 16 * sizeof(float));
             memcpy(dataBuffer + mGUniformOffsetMap[pdShaderAmbientUniformName], attrs->ambient, 4 * sizeof(float));
             mGlobalUpdateContext->Unmap(mGUniformBuffer, 0);
-        }
+        }*/
     }
+
+	void ProgramDX::updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList)
+	{
+	}
+
+	void ProgramDX::updateInstancedWidgetUnifroms(std::vector<Widget*> renderList)
+	{
+	}
 
     void ProgramDX::deleteGlobalUBO()
     {
@@ -322,7 +330,7 @@ namespace Peach3D
     }
 
     void ProgramDX::createInputLayout()
-    {
+    {/*
         // check compiled vertex data
         if (!mVertexShaderData)
         {
@@ -390,13 +398,13 @@ namespace Peach3D
         // free compiled shader data
         free(mVertexShaderData);
         mVertexShaderData = nullptr;
-        mVertexShaderDataSize = 0;
+        mVertexShaderDataSize = 0;*/
     }
 
     ID3DBlob* ProgramDX::compileShader(const char* data, int size, const char* entryName, const char* targetName)
     {
         Peach3DAssert(strlen(data) > 0 && size > 0, "Can't compile invalid shader source");
-        ID3DBlob* shaderBlob = nullptr;
+        ID3DBlob* shaderBlob = nullptr;/*
         do
         {
             if (strlen(data) == 0 || size == 0)
@@ -422,7 +430,7 @@ namespace Peach3D
                 }
                 errorBlob->Release();
             }
-        } while (0);
+        } while (0);*/
         return shaderBlob;
     }
 

@@ -53,8 +53,8 @@ namespace Peach3D
             std::map<std::string, std::vector<Rect>>& clicksRect);
 
     protected:
-        TextureDX(ComPtr<ID3D11Device2> device, ComPtr<ID3D11DeviceContext2> context, const char* name) : ITexture(name),
-            mD3DDevice(device), mDeviceContext(context), mTextureRV(nullptr), mTexState(nullptr) {}
+        TextureDX(ComPtr<ID3D12Device> device, const char* name) : ITexture(name),
+            mD3DDevice(device), mTextureRV(nullptr), mTexState(nullptr) {}
         virtual ~TextureDX();
 
         // recreated sampler state
@@ -66,7 +66,7 @@ namespace Peach3D
             const LabelTextDefined& defined, std::vector<std::vector<tTextDrawInfo>>* drawInfoList);
 
     private:
-        ComPtr<ID3D11Device2>          mD3DDevice;            // D3D11 device 
+        ComPtr<ID3D12Device>          mD3DDevice;            // D3D11 device 
         ComPtr<ID3D11DeviceContext2>   mDeviceContext;        // D3D11 device context
         ID3D11ShaderResourceView*      mTextureRV;            // texture handler
         ID3D11SamplerState*            mTexState;             // texture render state

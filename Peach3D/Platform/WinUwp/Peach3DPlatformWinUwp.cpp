@@ -78,13 +78,13 @@ namespace Peach3D
 #endif
 
         // get writeable path
-        Platform::String^ writePath = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
-        char* utf8String = convertUnicodeToUTF8((wchar_t*)writePath->Data());
-        mWriteablePath = utf8String;
-        if (mWriteablePath[mWriteablePath.size() - 1] != '\\') {
-            mWriteablePath = mWriteablePath + "\\";
-        }
-        free(utf8String);
+		//Platform::String^ writePath = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
+  //      char* utf8String = convertUnicodeToUTF8((wchar_t*)writePath->Data());
+  //      mWriteablePath = utf8String;
+  //      if (mWriteablePath[mWriteablePath.size() - 1] != '\\') {
+  //          mWriteablePath = mWriteablePath + "\\";
+  //      }
+  //      free(utf8String);
     }
 
     PlatformWinUwp::~PlatformWinUwp()
@@ -107,10 +107,10 @@ namespace Peach3D
         mFeatureLevel = RenderFeatureLevel::eDX;
 
         // get default resource directory
-        Platform::String^ accessPath = Package::Current->InstalledLocation->Path;
-        char* utf8String = convertUnicodeToUTF8((wchar_t*)accessPath->Data());
-        ResourceManager::getSingleton().addSearchDirectory(utf8String);
-        free(utf8String);
+        //Platform::String^ accessPath = Package::Current->InstalledLocation->Path;
+        //char* utf8String = convertUnicodeToUTF8((wchar_t*)accessPath->Data());
+        //ResourceManager::getSingleton().addSearchDirectory(utf8String);
+        //free(utf8String);
 
         return globalSuccess;
     }
@@ -199,10 +199,10 @@ namespace Peach3D
         {
             finalUrl = "http://" + finalUrl;
         }
-        wchar_t* wUrl = convertUTF8ToUnicode(finalUrl);
-        Platform::String^ ns = ref new Platform::String(wUrl);
-        free(wUrl);
-        Windows::Foundation::Uri^ uri = ref new Windows::Foundation::Uri(ns);
-        Windows::System::Launcher::LaunchUriAsync(uri);
+        //wchar_t* wUrl = convertUTF8ToUnicode(finalUrl);
+        //Platform::String^ ns = ref new Platform::String(wUrl);
+        //free(wUrl);
+        //Windows::Foundation::Uri^ uri = ref new Windows::Foundation::Uri(ns);
+        //Windows::System::Launcher::LaunchUriAsync(uri);
     }
 }

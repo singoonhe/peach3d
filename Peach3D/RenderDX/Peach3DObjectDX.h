@@ -26,10 +26,18 @@ namespace Peach3D
         * See IObject::render.
         */
         virtual void render(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
+		/**
+		* @brief Render widget list, only for GL3 and DX, called by SceneManager.
+		*/
+		virtual void render(const std::vector<Widget*>& renderList);
+		/**
+		* @brief Render scene node list, only for GL3 and DX, called by Mesh.
+		*/
+		virtual void render(std::vector<SceneNode*> renderList);
 
     protected:
-        ObjectDX(ComPtr<ID3D11Device2> device, ComPtr<ID3D11DeviceContext2> context, const char* name)
-            : IObject(name), mD3DDevice(device), mDeviceContext(context), mRenderState(nullptr),
+        ObjectDX(ComPtr<ID3D12Device> device, const char* name)
+            : IObject(name), mD3DDevice(device), mRenderState(nullptr),
             mVertexBuffer(nullptr), mIndexBuffer(nullptr), mDrawMode(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {}
         virtual ~ObjectDX();
 
@@ -44,7 +52,7 @@ namespace Peach3D
         /**
         * Generate AABB vertex buffers if SceneNode needed.
         */
-        static void generateAABBBuffers(ComPtr<ID3D11Device2> device, ComPtr<ID3D11DeviceContext2> context);
+        static void generateAABBBuffers(ComPtr<ID3D12Device> device, ComPtr<ID3D11DeviceContext2> context);
         /**
         * @brief Render a AABB using object matrix, object AABB data use to scale global AABB.
         * @params attrs Object rendering attr, include matrixes.
@@ -56,7 +64,7 @@ namespace Peach3D
         static void deleteAABBBuffers();
 
     private:
-        ComPtr<ID3D11Device2>          mD3DDevice;
+        ComPtr<ID3D12Device>          mD3DDevice;
         ComPtr<ID3D11DeviceContext2>   mDeviceContext;
         ID3D11Buffer*                  mVertexBuffer;
         ID3D11Buffer*                  mIndexBuffer;

@@ -74,13 +74,13 @@ namespace Peach3D
          */
         virtual void updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime) = 0;
         
-        /** Update SceneNode unifroms for 3d object material. */
-        virtual void updateSceneNodeUnifroms(SceneNode* node) = 0;
+        /** Update SceneNode unifroms for 3d GL2 object material. */
+		virtual void updateSceneNodeUnifroms(SceneNode* node) {}
         /** Update instanced SceneNodes unifroms depend on mProgramUniformList. */
         virtual void updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList) = 0;
         
-        /** Update widget unifroms for 2d object, include matrix/textures... */
-        virtual void updateWidgetUnifroms(Widget* widget) = 0;
+        /** Update widget unifroms for 2d GL2 object, include matrix/textures... */
+		virtual void updateWidgetUnifroms(Widget* widget) {}
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
         virtual void updateInstancedWidgetUnifroms(std::vector<Widget*> renderList) = 0;
         

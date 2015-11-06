@@ -94,9 +94,6 @@
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.cpp">
       <Filter>RenderDX</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.cpp">
-      <Filter>RenderDX</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DCommonDX.cpp">
       <Filter>RenderDX</Filter>
     </ClCompile>
@@ -111,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Peach3D\Support\xxhash\xxhash.cpp">
       <Filter>Support\xxhash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\RenderDX\Peach3DShaderCodeDX.cpp">
+      <Filter>RenderDX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,9 +244,6 @@
       <Filter>RenderDX</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.h">
-      <Filter>RenderDX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DWidgetManagerDX.h">
       <Filter>RenderDX</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DCommonDX.h">

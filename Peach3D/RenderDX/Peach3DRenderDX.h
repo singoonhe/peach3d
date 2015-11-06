@@ -51,10 +51,6 @@ namespace Peach3D
         virtual void getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms);
         //! generate object pixel shader source code
         virtual void getObjectPresetPSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms);
-        //! generate widget vertex shader source code
-        virtual void getWidgetPresetVSSource(const WidgetProgramImpact& impact, std::string* code, std::vector<ProgramUniform>* uniforms);
-        //! generate widget pixel shader source code
-        virtual void getWidgetPresetPSSource(const WidgetProgramImpact& impact, std::string* code, std::vector<ProgramUniform>* uniforms);
         
         //! get Direct2D factory
         ID2D1Factory1* getD2DFactory() { return mD2DFactory; }

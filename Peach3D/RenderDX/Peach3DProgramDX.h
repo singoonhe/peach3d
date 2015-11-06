@@ -27,8 +27,13 @@ namespace Peach3D
         //! update widget unifroms for 2d object, include matrix/textures...
         virtual void updateWidgetUnifroms(Widget* widget);
 
+		/** Update instanced SceneNodes unifroms depend on mProgramUniformList. */
+		virtual void updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList);
+		/** Update instanced widgets unifroms depend on mProgramUniformList. */
+		virtual void updateInstancedWidgetUnifroms(std::vector<Widget*> renderList);
+
     protected:
-        ProgramDX(ComPtr<ID3D11Device2> device, ComPtr<ID3D11DeviceContext2> context, uint pId);
+        ProgramDX(ComPtr<ID3D12Device> device, uint pId);
         virtual ~ProgramDX();
 
         //! compile shader and check result
@@ -47,7 +52,7 @@ namespace Peach3D
         static void deleteGlobalUBO();
 
     protected:
-        ComPtr<ID3D11Device2>          mD3DDevice;            // D3D11 device 
+        ComPtr<ID3D12Device>          mD3DDevice;            // D3D11 device 
         ComPtr<ID3D11DeviceContext2>   mDeviceContext;        // D3D11 device context
         void*                          mVertexShaderData;     // vertex compiled shader data
         ulong                          mVertexShaderDataSize; // vertex compiled shader data length
