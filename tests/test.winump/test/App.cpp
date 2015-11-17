@@ -1,9 +1,10 @@
-﻿#include "pch.h"
-#include "App.h"
+﻿#include "App.h"
+#include "PlatformDelegate.h"
 
 #include <ppltasks.h>
 
 using namespace test;
+using namespace Peach3D;
 
 using namespace concurrency;
 using namespace Windows::ApplicationModel;
@@ -17,6 +18,8 @@ using namespace Windows::Graphics::Display;
 
 // The DirectX 12 Application template is documented at http://go.microsoft.com/fwlink/?LinkID=613670&clcid=0x409
 
+// Peach3D delegate class
+PlatformDelegate gAppDelegate;
 // The main function is only used to initialize our IFrameworkView class.
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^)
@@ -32,7 +35,6 @@ IFrameworkView^ Direct3DApplicationSource::CreateView()
 }
 
 App::App() :
-	m_windowClosed(false),
 	m_windowVisible(true)
 {
 }
@@ -50,6 +52,13 @@ void App::Initialize(CoreApplicationView^ applicationView)
 
 	CoreApplication::Resuming +=
 		ref new EventHandler<Platform::Object^>(this, &App::OnResuming);
+
+	// initialize platform once
+	PlatformCreationParams params;
+	params.delegate = &gAppDelegate;
+	params.MSAA = 0;
+	//params.maxFramsePerSecond = 30.0f;
+	mPlatform.initWithParams(params);
 }
 
 // Called when the CoreWindow object is created (or re-created).
@@ -74,41 +83,32 @@ void App::SetWindow(CoreWindow^ window)
 
 	DisplayInformation::DisplayContentsInvalidated +=
 		ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnDisplayContentsInvalidated);
+
+	//int width, height, displayRotation;
+	//getWindowSizeAndRotation(window, &width, &height, &displayRotation);
+	//// set window and init dx
+	//mPlatform.setStoreWindow(reinterpret_cast<void*>(window), width, height, (DXGI_MODE_ROTATION)displayRotation);
 }
 
 // Initializes scene resources, or loads a previously saved app state.
 void App::Load(Platform::String^ entryPoint)
 {
-	if (m_main == nullptr)
-	{
-		m_main = std::unique_ptr<testMain>(new testMain());
-	}
 }
 
 // This method is called after the window becomes active.
 void App::Run()
 {
-	while (!m_windowClosed)
+	while (mPlatform.isRunning())
 	{
 		if (m_windowVisible)
 		{
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 
-			auto commandQueue = GetDeviceResources()->GetCommandQueue();
-			PIXBeginEvent(commandQueue, 0, L"Update");
+			if (mPlatform.isRenderWindowValid())
 			{
-				m_main->Update();
+				// platform will auto decide if need render frame, this param will be discard
+				mPlatform.renderOneFrame(0.0f);
 			}
-			PIXEndEvent(commandQueue);
-
-			PIXBeginEvent(commandQueue, 0, L"Render");
-			{
-				if (m_main->Render())
-				{
-					GetDeviceResources()->Present();
-				}
-			}
-			PIXEndEvent(commandQueue);
 		}
 		else
 		{
@@ -142,8 +142,8 @@ void App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
 
 	create_task([this, deferral]()
 	{
-		// TODO: Insert your code here.
-		m_main->OnSuspending();
+        // call delegate callback function
+        gAppDelegate.appDidEnterBackground();
 
 		deferral->Complete();
 	});
@@ -155,16 +155,16 @@ void App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 	// and state are persisted when resuming from suspend. Note that this event
 	// does not occur if the app was previously terminated.
 
-	// TODO: Insert your code here.
-	m_main->OnResuming();
+	// call delegate callback functiond();
+    gAppDelegate.appWillEnterForeground();
 }
 
 // Window event handlers.
 
 void App::OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args)
 {
-	GetDeviceResources()->SetLogicalSize(Size(sender->Bounds.Width, sender->Bounds.Height));
-	m_main->OnWindowSizeChanged();
+	//GetDeviceResources()->SetLogicalSize(Size(sender->Bounds.Width, sender->Bounds.Height));
+	//m_main->OnWindowSizeChanged();
 }
 
 void App::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)
@@ -174,44 +174,45 @@ void App::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ ar
 
 void App::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
 {
-	m_windowClosed = true;
+	// exit app
+    mPlatform.terminate();
 }
 
 // DisplayInformation event handlers.
 
 void App::OnDpiChanged(DisplayInformation^ sender, Object^ args)
 {
-	GetDeviceResources()->SetDpi(sender->LogicalDpi);
-	m_main->OnWindowSizeChanged();
+	//GetDeviceResources()->SetDpi(sender->LogicalDpi);
+	//m_main->OnWindowSizeChanged();
 }
 
 void App::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
 {
-	GetDeviceResources()->SetCurrentOrientation(sender->CurrentOrientation);
-	m_main->OnWindowSizeChanged();
+	//GetDeviceResources()->SetCurrentOrientation(sender->CurrentOrientation);
+	//m_main->OnWindowSizeChanged();
 }
 
 void App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
 {
-	GetDeviceResources()->ValidateDevice();
+	//GetDeviceResources()->ValidateDevice();
 }
 
-std::shared_ptr<DX::DeviceResources> App::GetDeviceResources()
-{
-	if (m_deviceResources != nullptr && m_deviceResources->IsDeviceRemoved())
-	{
-		// All references to the existing D3D device must be released before a new device
-		// can be created.
-
-		m_deviceResources = nullptr;
-		m_main->OnDeviceRemoved();
-	}
-
-	if (m_deviceResources == nullptr)
-	{
-		m_deviceResources = std::make_shared<DX::DeviceResources>();
-		m_deviceResources->SetWindow(CoreWindow::GetForCurrentThread());
-		m_main->CreateRenderers(m_deviceResources);
-	}
-	return m_deviceResources;
-}
+//std::shared_ptr<DX::DeviceResources> App::GetDeviceResources()
+//{
+//	if (m_deviceResources != nullptr && m_deviceResources->IsDeviceRemoved())
+//	{
+//		// All references to the existing D3D device must be released before a new device
+//		// can be created.
+//
+//		m_deviceResources = nullptr;
+//		m_main->OnDeviceRemoved();
+//	}
+//
+//	if (m_deviceResources == nullptr)
+//	{
+//		m_deviceResources = std::make_shared<DX::DeviceResources>();
+//		m_deviceResources->SetWindow(CoreWindow::GetForCurrentThread());
+//		m_main->CreateRenderers(m_deviceResources);
+//	}
+//	return m_deviceResources;
+//}

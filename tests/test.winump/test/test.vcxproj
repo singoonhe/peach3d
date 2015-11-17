@@ -104,6 +104,24 @@
   <PropertyGroup>
     <PackageCertificateKeyFile>test_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)..\..\..\Peach3D;$(ProjectDir)..\..\..\Peach3D\Core;$(ProjectDir)..\..\..\Peach3D\GUI;$(ProjectDir)..\..\..\Peach3D\Platform;$(ProjectDir)..\..\..\Peach3D\Support;$(ProjectDir)..\..\..\Peach3D\RenderDX;$(ProjectDir)..\..\source;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)..\..\..\Peach3D;$(ProjectDir)..\..\..\Peach3D\Core;$(ProjectDir)..\..\..\Peach3D\GUI;$(ProjectDir)..\..\..\Peach3D\Platform;$(ProjectDir)..\..\..\Peach3D\Support;$(ProjectDir)..\..\..\Peach3D\RenderDX;$(ProjectDir)..\..\source;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(ProjectDir)..\..\..\Peach3D;$(ProjectDir)..\..\..\Peach3D\Core;$(ProjectDir)..\..\..\Peach3D\GUI;$(ProjectDir)..\..\..\Peach3D\Platform;$(ProjectDir)..\..\..\Peach3D\Support;$(ProjectDir)..\..\..\Peach3D\RenderDX;$(ProjectDir)..\..\source;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>$(ProjectDir)..\..\..\Peach3D;$(ProjectDir)..\..\..\Peach3D\Core;$(ProjectDir)..\..\..\Peach3D\GUI;$(ProjectDir)..\..\..\Peach3D\Platform;$(ProjectDir)..\..\..\Peach3D\Support;$(ProjectDir)..\..\..\Peach3D\RenderDX;$(ProjectDir)..\..\source;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(ProjectDir)..\..\..\Peach3D;$(ProjectDir)..\..\..\Peach3D\Core;$(ProjectDir)..\..\..\Peach3D\GUI;$(ProjectDir)..\..\..\Peach3D\Platform;$(ProjectDir)..\..\..\Peach3D\Support;$(ProjectDir)..\..\..\Peach3D\RenderDX;$(ProjectDir)..\..\source;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(ProjectDir)..\..\..\Peach3D;$(ProjectDir)..\..\..\Peach3D\Core;$(ProjectDir)..\..\..\Peach3D\GUI;$(ProjectDir)..\..\..\Peach3D\Platform;$(ProjectDir)..\..\..\Peach3D\Support;$(ProjectDir)..\..\..\Peach3D\RenderDX;$(ProjectDir)..\..\source;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
       <AdditionalDependencies>mincore.lib;d3d12.lib;dxgi.lib;windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -114,7 +132,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;28204;4819</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -129,7 +147,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;28204;4819</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -144,7 +162,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;28204;4819</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -159,7 +177,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;28204;4819</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -174,7 +192,7 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;28204;4819</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -189,12 +207,25 @@
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4453;28204;4819</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Image Include="..\..\resource\common_down.png" />
+    <Image Include="..\..\resource\common_highlight.png" />
+    <Image Include="..\..\resource\common_normal.png" />
+    <Image Include="..\..\resource\exit_normal.png" />
+    <Image Include="..\..\resource\front_normal.png" />
+    <Image Include="..\..\resource\next_normal.png" />
+    <Image Include="..\..\resource\peach3d_icon.png" />
+    <Image Include="..\..\resource\peach3d_leaf.png" />
+    <Image Include="..\..\resource\press_down.png" />
+    <Image Include="..\..\resource\press_highlight.png" />
+    <Image Include="..\..\resource\press_normal.png" />
+    <Image Include="..\..\resource\restart_normal.png" />
+    <Image Include="..\..\resource\test.ico" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -204,39 +235,42 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\ActionScene.h" />
+    <ClInclude Include="..\..\source\BaseSample.h" />
+    <ClInclude Include="..\..\source\BaseScene.h" />
+    <ClInclude Include="..\..\source\PlatformDelegate.h" />
+    <ClInclude Include="..\..\source\TestScene.h" />
+    <ClInclude Include="..\..\source\UIScene.h" />
     <ClInclude Include="App.h" />
-    <ClInclude Include="Common\d3dx12.h" />
-    <ClInclude Include="Common\DeviceResources.h" />
-    <ClInclude Include="testMain.h" />
-    <ClInclude Include="Common\DirectXHelper.h" />
-    <ClInclude Include="Common\StepTimer.h" />
-    <ClInclude Include="Content\Sample3DSceneRenderer.h" />
-    <ClInclude Include="Content\ShaderStructures.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\ActionScene.cpp" />
+    <ClCompile Include="..\..\source\BaseScene.cpp" />
+    <ClCompile Include="..\..\source\PlatformDelegate.cpp" />
+    <ClCompile Include="..\..\source\TestScene.cpp" />
+    <ClCompile Include="..\..\source\UIScene.cpp" />
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="Common\DeviceResources.cpp" />
-    <ClCompile Include="testMain.cpp" />
-    <ClCompile Include="Content\Sample3DSceneRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="..\..\resource\Cube.mtl" />
+    <None Include="..\..\resource\texcube.mtl" />
     <None Include="test_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Content\SamplePixelShader.hlsl">
-      <ShaderType>Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Content\SampleVertexShader.hlsl">
-      <ShaderType>Vertex</ShaderType>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\pro.winump\Peach3D\Peach3D.vcxproj">
       <Project>{46aa5ea5-b9ec-4e0d-a4fb-1082a912abdc}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\resource\Cube.obj">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\resource\texcube.obj">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

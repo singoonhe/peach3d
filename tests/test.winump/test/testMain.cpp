@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include "testMain.h"
+﻿#include "testMain.h"
 #include "Common\DirectXHelper.h"
 
 using namespace test;

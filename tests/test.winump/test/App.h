@@ -1,8 +1,6 @@
 ﻿#pragma once
 
-#include "pch.h"
-#include "Common\DeviceResources.h"
-#include "testMain.h"
+#include "WinUwp\Peach3DPlatformWinUwp.h"
 
 namespace test
 {
@@ -36,12 +34,10 @@ namespace test
 		void OnDisplayContentsInvalidated(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
 
 	private:
-		// Private accessor for m_deviceResources, protects against device removed errors.
-		std::shared_ptr<DX::DeviceResources> GetDeviceResources();
+		Peach3D::PlatformWinUwp	         mPlatform;
+		std::vector<uint>                mDownClickIds;     // clickId list
+		std::map<uint, Peach3D::Vector2> mDownClickPoss;    // click pos list
 
-		std::shared_ptr<DX::DeviceResources> m_deviceResources;
-		std::unique_ptr<testMain> m_main;
-		bool m_windowClosed;
 		bool m_windowVisible;
 	};
 }
