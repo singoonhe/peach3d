@@ -13,6 +13,7 @@
 #include "Peach3DResourceManager.h"
 
 using namespace Windows::System::Profile;
+using namespace Windows::System::UserProfile;
 using namespace Windows::Security::ExchangeActiveSyncProvisioning;
 namespace Peach3D
 {
@@ -21,7 +22,7 @@ namespace Peach3D
         mLastRecordTime.QuadPart = 0;
 
         // get local language
-        auto topUserLan = Windows::System::UserProfile::GlobalizationPreferences::Languages->GetAt(0);
+        auto topUserLan = GlobalizationPreferences::Languages->GetAt(0);
         auto displayNameData = topUserLan->Data();
         if (wcsncmp(displayNameData, L"zh", 2) == 0) {
             if (wcsncmp(displayNameData, L"zh-Hant", 7) == 0) {
