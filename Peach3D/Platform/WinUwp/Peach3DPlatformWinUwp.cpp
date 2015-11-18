@@ -7,10 +7,13 @@
 //
 
 #include "Peach3DPlatformWinUwp.h"
+#include "Peach3DUtils.h"
 #include "Peach3DRenderDX.h"
 #include "Peach3DTextureDX.h"
 #include "Peach3DResourceManager.h"
 
+using namespace Windows::System::Profile;
+using namespace Windows::Security::ExchangeActiveSyncProvisioning;
 namespace Peach3D
 {
     PlatformWinUwp::PlatformWinUwp()
@@ -18,73 +21,52 @@ namespace Peach3D
         mLastRecordTime.QuadPart = 0;
 
         // get local language
-#if WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP
-        ULONG numLanguages = 0;
-        DWORD cchLanguagesBuffer = 0;
-        BOOL hr = GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &numLanguages, NULL, &cchLanguagesBuffer);
-        if (hr) {
-            WCHAR* pwszLanguagesBuffer = new WCHAR[cchLanguagesBuffer];
-            hr = GetUserPreferredUILanguages(MUI_LANGUAGE_NAME, &numLanguages, pwszLanguagesBuffer, &cchLanguagesBuffer);
-            if (hr) {
-                if (wcsncmp(pwszLanguagesBuffer, L"zh", 2) == 0) {
-                    if (wcsncmp(pwszLanguagesBuffer, L"zh-CN", 5) == 0) {
-                        mLocalLanguage = LanguageType::eChineseHans;
-                    }
-                    else {
-                        mLocalLanguage = LanguageType::eChineseHant;
-                    }
-                }
-                else if (wcsncmp(pwszLanguagesBuffer, L"en", 2) == 0) {
-                    mLocalLanguage = LanguageType::eEnglish;
-                }
-                else if (wcsncmp(pwszLanguagesBuffer, L"fr", 2) == 0) {
-                    mLocalLanguage = LanguageType::eFrench;
-                }
-                else if (wcsncmp(pwszLanguagesBuffer, L"rn", 2) == 0) {
-                    mLocalLanguage = LanguageType::eRussian;
-                }
+        auto topUserLan = Windows::System::UserProfile::GlobalizationPreferences::Languages->GetAt(0);
+        auto displayNameData = topUserLan->Data();
+        if (wcsncmp(displayNameData, L"zh", 2) == 0) {
+            if (wcsncmp(displayNameData, L"zh-Hant", 7) == 0) {
+                mLocalLanguage = LanguageType::eChineseHant;
             }
-            delete[] pwszLanguagesBuffer;
-        }
-        // get OS version string
-        mOSVerStr = "Windows Phone 8.1";
-#else
-        WCHAR languageBuffer[256];
-        int ret = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, 
-            LOCALE_SENGLISHLANGUAGENAME,
-            languageBuffer,
-            256);
-        if (ret) {
-            if (wcsncmp(languageBuffer, L"Chinese", wcslen(L"Chinese")) == 0) {
-                if (wcsncmp(languageBuffer, L"Chinese (Simplified)", wcslen(L"Chinese (Simplified)")) == 0) {
-                    mLocalLanguage = LanguageType::eChineseHans;
-                }
-                else {
-                    mLocalLanguage = LanguageType::eChineseHant;
-                }
-            }
-            else if (wcsncmp(languageBuffer, L"English", wcslen(L"English")) == 0) {
-                mLocalLanguage = LanguageType::eEnglish;
-            }
-            else if (wcsncmp(languageBuffer, L"French", wcslen(L"French")) == 0) {
-                mLocalLanguage = LanguageType::eFrench;
-            }
-            else if (wcsncmp(languageBuffer, L"Russian", wcslen(L"Russian")) == 0) {
-                mLocalLanguage = LanguageType::eRussian;
+            else {
+                mLocalLanguage = LanguageType::eChineseHans;
             }
         }
+        else if (wcsncmp(displayNameData, L"en", 2) == 0) {
+            mLocalLanguage = LanguageType::eEnglish;
+        }
+        else if (wcsncmp(displayNameData, L"fr", 2) == 0) {
+            mLocalLanguage = LanguageType::eFrench;
+        }
+        else if (wcsncmp(displayNameData, L"rn", 2) == 0) {
+            mLocalLanguage = LanguageType::eRussian;
+        }
+
         // get OS version string
-        mOSVerStr = "Windows 8.1";
-#endif
+        auto family = AnalyticsInfo::VersionInfo->DeviceFamily;
+        char* utf8Family = convertUnicodeToUTF8((wchar_t*)family->Data());
+        auto ai = AnalyticsInfo::VersionInfo->DeviceFamilyVersion;
+        long long numVer = _wtoll(ai->Data());
+        ulong v1 = (numVer & 0xFFFF000000000000L) >> 48;
+        ulong v2 = (numVer & 0x0000FFFF00000000L) >> 32;
+        ulong v3 = (numVer & 0x00000000FFFF0000L) >> 16;
+        ulong v4 = (numVer & 0x000000000000FFFFL);
+        mOSVerStr = Utils::formatString("%s %d.%d.%d.%d", utf8Family, v1, v2, v3, v4);
+        free(utf8Family);
+        // get device model string
+        auto deviceInfo = ref new EasClientDeviceInformation();
+        auto modelStr = deviceInfo->SystemManufacturer + L" " + deviceInfo->SystemProductName;
+        char* utf8Model = convertUnicodeToUTF8((wchar_t*)modelStr->Data());
+        mDeviceModel = utf8Model;
+        free(utf8Model);
 
         // get writeable path
-		//Platform::String^ writePath = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
-  //      char* utf8String = convertUnicodeToUTF8((wchar_t*)writePath->Data());
-  //      mWriteablePath = utf8String;
-  //      if (mWriteablePath[mWriteablePath.size() - 1] != '\\') {
-  //          mWriteablePath = mWriteablePath + "\\";
-  //      }
-  //      free(utf8String);
+		Platform::String^ writePath = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
+        char* utf8Dir = convertUnicodeToUTF8((wchar_t*)writePath->Data());
+        mWriteablePath = utf8Dir;
+        if (mWriteablePath[mWriteablePath.size() - 1] != '\\') {
+            mWriteablePath = mWriteablePath + "\\";
+        }
+        free(utf8Dir);
     }
 
     PlatformWinUwp::~PlatformWinUwp()

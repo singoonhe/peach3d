@@ -198,6 +198,7 @@ namespace Peach3D
         RenderFeatureLevel  mFeatureLevel;          // render feature level, OpenGL3 and OpenGL2 use diff GLSL
         LanguageType        mLocalLanguage;         // save local language type, set by PlatformXXX.
         std::string         mOSVerStr;              // OS version string
+        std::string         mDeviceModel;           // device model, include brand and models
         std::string         mWriteablePath;         // platform writeable path
         
         std::list<Scheduler*>       mSchedulerList;     // all scheduler

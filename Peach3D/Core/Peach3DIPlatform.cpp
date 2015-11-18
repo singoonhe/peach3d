@@ -68,6 +68,8 @@ namespace Peach3D
         mLogPrinter->print(LogLevel::eInfo, "Peach3D version: %s", PEACH3D_SDK_VERSION);
         // print OS version
         mLogPrinter->print(LogLevel::eInfo, "OS version: %s", mOSVerStr.c_str());
+        // print device model
+        mLogPrinter->print(LogLevel::eInfo, "Device model: %s", mDeviceModel.c_str());
         // create resource manager
         mResourceMgr = new ResourceManager();
         // create scene manager and init

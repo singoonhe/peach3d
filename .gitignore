@@ -24,3 +24,5 @@ tests/test.winump/test.opensdf
 tests/test.winump/test.sdf
 tests/test.winump/test/ARM/
 tests/test.winump/test/x64/
+tests/test.winump/test/test.vcxproj.user
+
