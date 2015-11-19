@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 singoon.he. All rights reserved.
 //
 
+#include <sys/utsname.h>
 #include "Peach3DPlatformIOS.h"
 #include "Peach3DRenderGL.h"
 #include "Peach3DResourceManager.h"
@@ -33,9 +34,15 @@ namespace Peach3D
         else if ([preferredLang isEqualToString:@"ru"]) {
             mLocalLanguage = LanguageType::eRussian;
         }
+        
         // get OS version string
         NSString *versionString = [[UIDevice currentDevice] systemVersion];
         mOSVerStr = [versionString UTF8String];
+        
+        // get device model
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        mDeviceModel = systemInfo.machine;
         
         // get writeable path
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

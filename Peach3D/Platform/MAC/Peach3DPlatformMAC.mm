@@ -7,6 +7,7 @@
 //
 
 #include <Carbon/Carbon.h>
+#include <sys/sysctl.h>
 #include "Peach3DPlatformMAC.h"
 #include "Peach3DRenderGL.h"
 #include "Peach3DResourceManager.h"
@@ -34,9 +35,20 @@ namespace Peach3D
         else if ([preferredLang isEqualToString:@"ru"]) {
             mLocalLanguage = LanguageType::eRussian;
         }
+        
         // get OS version string
         NSString *versionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
         mOSVerStr = [versionString UTF8String];
+        
+        // get device model
+        size_t len = 0;
+        sysctlbyname("hw.model", NULL, &len, NULL, 0);
+        if (len) {
+            char *model = (char*)malloc(len * sizeof(char));
+            sysctlbyname("hw.model", model, &len, NULL, 0);
+            mDeviceModel = model;
+            free(model);
+        }
 
         // get "application support" dir and add application bundleId
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
