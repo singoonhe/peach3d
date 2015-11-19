@@ -8,6 +8,8 @@
 
 #include <android/bitmap.h>
 #include <sys/stat.h>
+#include <sys/system_properties.h>
+#include "Peach3DUtils.h"
 #include "Peach3DPlatformAndroid.h"
 #include "Peach3DRenderGL.h"
 
@@ -127,6 +129,15 @@ namespace Peach3D
         char verStr[10] = {0};
         sprintf(verStr, "%d", version);
         mOSVerStr = verStr;
+
+        // get device model
+        char man[PROP_VALUE_MAX + 1], mod[PROP_VALUE_MAX + 1];
+        /* A length 0 value indicates that the property is not defined */
+        int lman = __system_property_get("ro.product.manufacturer", man);
+        int lmod = __system_property_get("ro.product.model", mod);
+        if ((lman + lmod) > 0) {
+            mDeviceModel = Utils::formatString("%s (%s)", man, mod);
+        }
 
         // get writeable path, external path first
         if (activity->externalDataPath) {
