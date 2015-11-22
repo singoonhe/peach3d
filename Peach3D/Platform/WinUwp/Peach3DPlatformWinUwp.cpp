@@ -90,10 +90,10 @@ namespace Peach3D
         mFeatureLevel = RenderFeatureLevel::eDX;
 
         // get default resource directory
-        //Platform::String^ accessPath = Package::Current->InstalledLocation->Path;
-        //char* utf8String = convertUnicodeToUTF8((wchar_t*)accessPath->Data());
-        //ResourceManager::getSingleton().addSearchDirectory(utf8String);
-        //free(utf8String);
+        Platform::String^ accessPath = Windows::ApplicationModel::Package::Current->InstalledLocation->Path;
+        char* utf8String = convertUnicodeToUTF8((wchar_t*)accessPath->Data());
+        ResourceManager::getSingleton().addSearchDirectory(utf8String);
+        free(utf8String);
 
         return globalSuccess;
     }
@@ -108,8 +108,7 @@ namespace Peach3D
         // at last, init render after get final window size
         bool success = mRender->initRender(mCreationParams.width, mCreationParams.height);
         bool userSuccess = true;
-        if (success)
-        {
+        if (success) {
             // set swap chain rotation and projective rotation
             RenderDX* nativeRender = static_cast<RenderDX*>(mRender);
             nativeRender->setContentOritation(rotation);
@@ -117,8 +116,7 @@ namespace Peach3D
             // notify IAppDelegate launch finished
             userSuccess = mCreationParams.delegate->appDidFinishLaunching();
 
-            if (userSuccess)
-            {
+            if (userSuccess) {
                 // start animating
                 mAnimating = true;
             }
@@ -133,13 +131,11 @@ namespace Peach3D
         LARGE_INTEGER currentTime;
         QueryPerformanceCounter(&currentTime);
 
-        if (mLastRecordTime.QuadPart > 0)
-        {
+        if (mLastRecordTime.QuadPart > 0) {
             double deltaTime = double(currentTime.QuadPart - mLastRecordTime.QuadPart) / (mFrequency.QuadPart);
             curDeltaTime += deltaTime;
             // if delta time bigger than 1/FPS, render frame.
-            if (curDeltaTime >= perFrameTime)
-            {
+            if (curDeltaTime >= perFrameTime) {
                 IPlatform::renderOneFrame(float(curDeltaTime));
                 curDeltaTime = 0;
             }
@@ -149,8 +145,7 @@ namespace Peach3D
 
     void PlatformWinUwp::resumeAnimating()
     {
-        if (!mAnimating)
-        {
+        if (!mAnimating) {
             IPlatform::resumeAnimating();
             // reset last time
             mLastRecordTime.QuadPart = 0;
@@ -178,14 +173,13 @@ namespace Peach3D
         
         // auto add "http://" header
         std::string finalUrl = url;
-        if (finalUrl.find("http://")==std::string::npos)
-        {
+        if (finalUrl.find("http://")==std::string::npos) {
             finalUrl = "http://" + finalUrl;
         }
-        //wchar_t* wUrl = convertUTF8ToUnicode(finalUrl);
-        //Platform::String^ ns = ref new Platform::String(wUrl);
-        //free(wUrl);
-        //Windows::Foundation::Uri^ uri = ref new Windows::Foundation::Uri(ns);
-        //Windows::System::Launcher::LaunchUriAsync(uri);
+        wchar_t* wUrl = convertUTF8ToUnicode(finalUrl);
+        Platform::String^ ns = ref new Platform::String(wUrl);
+        free(wUrl);
+        Windows::Foundation::Uri^ uri = ref new Windows::Foundation::Uri(ns);
+        Windows::System::Launcher::LaunchUriAsync(uri);
     }
 }
