@@ -1,0 +1,9 @@
+﻿Build started 2015/11/23 20:22:39.
+     1>Project "E:\Programs\Peach3D\tests\test.winump\test\test.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         test.vcxproj -> E:\Programs\Peach3D\tests\test.winump\Debug\test\test.exe
+     1>Done Building Project "E:\Programs\Peach3D\tests\test.winump\test\test.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.69

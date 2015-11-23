@@ -42,26 +42,46 @@ namespace Peach3D
 			debugController->EnableDebugLayer();
 		}
 #endif
-		CreateDXGIFactory1(IID_PPV_ARGS(&mDXFactory));
+        // create dxgi factory
+        CreateDXGIFactory1(IID_PPV_ARGS(&mDXFactory));
+        // choose best adapter for desk, such NVIDIA or ATI
+        UINT i = 0;
+        WCHAR* adapterName = L"";
+        IDXGIAdapter1 *pAdapter = nullptr, *choosedAdapter = nullptr;
+        while (mDXFactory->EnumAdapters1(i++, &pAdapter) != DXGI_ERROR_NOT_FOUND) {
+            DXGI_ADAPTER_DESC1 pDesc;
+            pAdapter->GetDesc1(&pDesc);
+            // choose NVIDIA and ATI first
+            bool isBestAdapter = (pDesc.VendorId == 0x10DE || pDesc.VendorId == 0x1002);
+            if (isBestAdapter || i == 0) {
+                choosedAdapter = pAdapter;
+                adapterName = pDesc.Description;
+                if (isBestAdapter) {
+                    break;
+                }
+            }
+        }
+        // Create the Direct3D 12 API device object
+        HRESULT hr = D3D12CreateDevice(
+            choosedAdapter,						// Using choosed adapter.
+            D3D_FEATURE_LEVEL_11_0,			// Minimum feature level this app can support.
+            IID_PPV_ARGS(&mD3DDevice)		// Returns the Direct3D device created.
+            );
+        if (FAILED(hr)) {
+            // If the initialization fails, fall back to the WARP device.
+            // For more information on WARP, see: 
+            // http://go.microsoft.com/fwlink/?LinkId=286690
 
-		// Create the Direct3D 12 API device object
-		HRESULT hr = D3D12CreateDevice(
-			nullptr,						// Specify nullptr to use the default adapter.
-			D3D_FEATURE_LEVEL_11_0,			// Minimum feature level this app can support.
-			IID_PPV_ARGS(&mD3DDevice)		// Returns the Direct3D device created.
-			);
-		if (FAILED(hr)) {
-			// If the initialization fails, fall back to the WARP device.
-			// For more information on WARP, see: 
-			// http://go.microsoft.com/fwlink/?LinkId=286690
-
-			ComPtr<IDXGIAdapter> warpAdapter;
-			mDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter));
-			D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mD3DDevice));
-		}
-		ComPtr<IDXGIAdapter> dxgiAdapter;
-		LUID adapterID = mD3DDevice->GetAdapterLuid();
-		Peach3DLog(LogLevel::eInfo, "Adapter : %d %u", adapterID.HighPart, adapterID.LowPart);
+            ComPtr<IDXGIAdapter> warpAdapter;
+            mDXFactory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter));
+            D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mD3DDevice));
+            DXGI_ADAPTER_DESC aDesc;
+            warpAdapter->GetDesc(&aDesc);
+            adapterName = aDesc.Description;
+        }
+        char* utf8Name = convertUnicodeToUTF8(adapterName);
+        Peach3DLog(LogLevel::eInfo, "Adapter : %s", utf8Name);
+        free(utf8Name);
 
 		// Create the command queue.
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
