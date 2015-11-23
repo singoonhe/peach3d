@@ -14,14 +14,17 @@ tests/test.android/obj/
 
 # ignore xcode temp files
 pro.winump/.vs/
+pro.winump/Peach3D/Debug/
 pro.winump/Peach3D.sdf
 pro.winump/Peach3D/ARM/
 pro.winump/Peach3D/x64/
 tests/test.winump/.vs/
+tests/test.winump/Debug/
 tests/test.winump/ARM/
 tests/test.winump/x64/
 tests/test.winump/test.opensdf
 tests/test.winump/test.sdf
+tests/test.winump/test/Debug/
 tests/test.winump/test/ARM/
 tests/test.winump/test/x64/
 tests/test.winump/test/test.vcxproj.user
