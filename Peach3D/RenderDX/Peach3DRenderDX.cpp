@@ -33,7 +33,7 @@ namespace Peach3D
         }
     }
 
-    bool RenderDX::createGlobelRender()
+    bool RenderDX::createRender()
     {
 #if defined(_DEBUG)
 		// If the project is in a debug build, enable debugging via SDK Layers.

@@ -17,7 +17,7 @@ namespace Peach3D
 		}
         virtual ~RenderDX();
         //! init not window dependent d3d handlers
-        bool createGlobelRender();
+        bool createRender();
         // init render, will create window dependent handlers
         virtual bool initRender(uint width, uint height);
         // clear old frame before render

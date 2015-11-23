@@ -85,7 +85,7 @@ namespace Peach3D
         // create Render and init global handlers
         mRender = new RenderDX();
         RenderDX* nativeRender = static_cast<RenderDX*>(mRender);
-        bool globalSuccess = nativeRender->createGlobelRender();
+        bool globalSuccess = nativeRender->createRender();
         // save render feature level
         mFeatureLevel = RenderFeatureLevel::eDX;
 
