@@ -23,6 +23,9 @@ namespace Peach3D
         //! be called when app enter foreground
         virtual void appWillEnterForeground() = 0;
         
+        //! be called after window size changed(not include oritation change)
+        virtual void appWindowSizeChanged() {};
+        
         //! user need delete delegate himself
     };
 }
