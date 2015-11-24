@@ -101,7 +101,7 @@ namespace Peach3D
         return true;
     }
 
-    bool RenderDX::initRender(uint width, uint height)
+    bool RenderDX::initRender(float width, float height, DXGI_MODE_ROTATION rotation)
     {
         // call base init
         IRender::initRender(width, height);
@@ -271,7 +271,7 @@ namespace Peach3D
 //        if (!createD2DWICFactory()) {
 //            return false;
 //        }
-        Peach3DLog(LogLevel::eInfo, "Render window's width %d, height %d", width, height);
+        Peach3DLog(LogLevel::eInfo, "Render window's width %f, height %f", width, height);
         // Render initialize success ^-^
         mIsRenderValid = true;
         return true;
@@ -308,42 +308,6 @@ namespace Peach3D
             return false;
         }
         return true;
-    }
-
-    void RenderDX::setContentOritation(DXGI_MODE_ROTATION rotation)
-    {
-        // calc widget and object rotation, WidgetDX and ObjectDX will use this
-        switch (rotation)
-        {
-        case DXGI_MODE_ROTATION_IDENTITY:
-            //m_orientationTransform2D = Matrix3x2F::Identity();
-            //m_orientationTransform3D = ScreenRotation::Rotation0;
-            break;
-        case DXGI_MODE_ROTATION_ROTATE90:
-            //m_orientationTransform2D =
-            //    Matrix3x2F::Rotation(90.0f) *
-            //    Matrix3x2F::Translation(m_logicalSize.Height, 0.0f);
-            //m_orientationTransform3D = ScreenRotation::Rotation270;
-            break;
-        case DXGI_MODE_ROTATION_ROTATE180:
-            //m_orientationTransform2D =
-            //    Matrix3x2F::Rotation(180.0f) *
-            //    Matrix3x2F::Translation(m_logicalSize.Width, m_logicalSize.Height);
-            //m_orientationTransform3D = ScreenRotation::Rotation180;
-            break;
-        case DXGI_MODE_ROTATION_ROTATE270:
-            //m_orientationTransform2D =
-            //    Matrix3x2F::Rotation(270.0f) *
-            //    Matrix3x2F::Translation(0.0f, m_logicalSize.Width);
-            //m_orientationTransform3D = ScreenRotation::Rotation90;
-            break;
-        }
-        // set swap chain rotation
-        if (mSwapChain)
-        {
-            mSwapChain->SetRotation(rotation);
-            Peach3DLog(LogLevel::eInfo, "Swap chain rotation set to %d", int(rotation));
-        }
     }
 
     void RenderDX::prepareForRender()

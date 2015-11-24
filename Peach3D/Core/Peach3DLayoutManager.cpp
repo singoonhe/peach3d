@@ -382,7 +382,7 @@ namespace Peach3D
                        mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
     }
     
-    void LayoutManager::setScreenSize(uint width, uint height)
+    void LayoutManager::setScreenSize(float width, float height)
     {
         mIsLandscape = (width > height);
         float oldWidth = mScreenSize.x, oldHeight = mScreenSize.y;

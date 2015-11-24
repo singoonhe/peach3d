@@ -84,10 +84,8 @@ void App::SetWindow(CoreWindow^ window)
 	DisplayInformation::DisplayContentsInvalidated +=
 		ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnDisplayContentsInvalidated);
 
-	//int width, height, displayRotation;
-	//getWindowSizeAndRotation(window, &width, &height, &displayRotation);
-	//// set window and init dx
-	//mPlatform.setStoreWindow(reinterpret_cast<void*>(window), width, height, (DXGI_MODE_ROTATION)displayRotation);
+	// set window and init dx
+	mPlatform.setStoreWindow(reinterpret_cast<void*>(window));
 }
 
 // Initializes scene resources, or loads a previously saved app state.

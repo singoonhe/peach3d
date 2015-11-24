@@ -17,7 +17,7 @@ using namespace Windows::System::UserProfile;
 using namespace Windows::Security::ExchangeActiveSyncProvisioning;
 namespace Peach3D
 {
-    PlatformWinUwp::PlatformWinUwp()
+    PlatformWinUwp::PlatformWinUwp() : mNativeOrientation(DisplayOrientations::None), mCurrentOrientation(DisplayOrientations::None), mDpi(-1.0f)
     {
         mLastRecordTime.QuadPart = 0;
 
@@ -98,21 +98,20 @@ namespace Peach3D
         return globalSuccess;
     }
 
-    void PlatformWinUwp::setStoreWindow(void* window, int width, int height, DXGI_MODE_ROTATION rotation)
+    void PlatformWinUwp::setStoreWindow(void* window)
     {
         IPlatform::setWindow(window);
-        // save created window size
-        mCreationParams.width = width;
-        mCreationParams.height = height;
 
-        // at last, init render after get final window size
-        bool success = mRender->initRender(mCreationParams.width, mCreationParams.height);
-        bool userSuccess = true;
-        if (success) {
-            // set swap chain rotation and projective rotation
-            RenderDX* nativeRender = static_cast<RenderDX*>(mRender);
-            nativeRender->setContentOritation(rotation);
+        DisplayInformation^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
+        auto winHandler = reinterpret_cast<Windows::UI::Core::CoreWindow^>(mCreationParams.window);
+        mLogicalSize = Windows::Foundation::Size(winHandler->Bounds.Width, winHandler->Bounds.Height);
+        mNativeOrientation = currentDisplayInformation->NativeOrientation;
+        mCurrentOrientation = currentDisplayInformation->CurrentOrientation;
+        mDpi = currentDisplayInformation->LogicalDpi;
 
+        // update render device and sreen size.
+        bool userSuccess = initRenderDX();
+        if (userSuccess) {
             // notify IAppDelegate launch finished
             userSuccess = mCreationParams.delegate->appDidFinishLaunching();
 
@@ -120,6 +119,39 @@ namespace Peach3D
                 // start animating
                 mAnimating = true;
             }
+        }
+    }
+
+    void PlatformWinUwp::setLogicalSize(Windows::Foundation::Size logicalSize)
+    {
+        if (mLogicalSize != logicalSize) {
+            mLogicalSize = logicalSize;
+
+            // update render device and sreen size.
+            initRenderDX();
+        }
+    }
+
+    void PlatformWinUwp::setCurrentOrientation(DisplayOrientations currentOrientation)
+    {
+        if (mCurrentOrientation != currentOrientation) {
+            mCurrentOrientation = currentOrientation;
+
+            // update render device and sreen size.
+            initRenderDX();
+        }
+    }
+
+    void PlatformWinUwp::setDpi(float dpi)
+    {
+        if (dpi != mDpi) {
+            mDpi = dpi;
+            // When the display DPI changes, the logical size of the window (measured in Dips) also changes and needs to be updated.
+            auto winHandler = reinterpret_cast<Windows::UI::Core::CoreWindow^>(mCreationParams.window);
+            mLogicalSize = Windows::Foundation::Size(winHandler->Bounds.Width, winHandler->Bounds.Height);
+
+            // update render device and sreen size.
+            initRenderDX();
         }
     }
 
@@ -189,5 +221,58 @@ namespace Peach3D
         free(wUrl);
         Windows::Foundation::Uri^ uri = ref new Windows::Foundation::Uri(ns);
         Windows::System::Launcher::LaunchUriAsync(uri);
+    }
+
+    bool PlatformWinUwp::initRenderDX()
+    {
+        // The width and height of the swap chain must be based on the window's
+        // natively-oriented width and height. If the window is not in the native
+        // orientation, the dimensions must be reversed.
+        DXGI_MODE_ROTATION displayRotation = computeDisplayRotation();
+        // update game size and rotation, only support rotation 0 and 180
+        if (displayRotation != DXGI_MODE_ROTATION_UNSPECIFIED) {
+            static const float dipsPerInch = 96.0f;
+            // Calculate the necessary render target size in pixels.
+            mCreationParams.width = floorf(mLogicalSize.Width * mDpi / dipsPerInch + 0.5f);
+            mCreationParams.height = floorf(mLogicalSize.Height * mDpi / dipsPerInch + 0.5f);
+
+            // Prevent zero size DirectX content from being created.
+            mCreationParams.width = max(mCreationParams.width, 1);
+            mCreationParams.height = max(mCreationParams.height, 1);
+
+            return static_cast<RenderDX*>(mRender)->initRender(mCreationParams.width, mCreationParams.height, displayRotation);
+        }
+        return false;
+    }
+
+    DXGI_MODE_ROTATION PlatformWinUwp::computeDisplayRotation()
+    {
+        DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
+
+        // Note: NativeOrientation can only be Landscape or Portrait even though
+        // orientation only support 0 and 180.
+        switch (mNativeOrientation) {
+        case DisplayOrientations::Landscape:
+            switch (mCurrentOrientation) {
+            case DisplayOrientations::Landscape:
+                rotation = DXGI_MODE_ROTATION_IDENTITY;
+                break;
+            case DisplayOrientations::LandscapeFlipped:
+                rotation = DXGI_MODE_ROTATION_ROTATE180;
+                break;
+            }
+            break;
+        case DisplayOrientations::Portrait:
+            switch (mCurrentOrientation) {
+            case DisplayOrientations::Portrait:
+                rotation = DXGI_MODE_ROTATION_IDENTITY;
+                break;
+            case DisplayOrientations::PortraitFlipped:
+                rotation = DXGI_MODE_ROTATION_ROTATE180;
+                break;
+            }
+            break;
+        }
+        return rotation;
     }
 }

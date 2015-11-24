@@ -12,6 +12,7 @@
 #include "Peach3DIPlatform.h"
 #include "Peach3DCommonDX.h"
 
+using namespace Windows::Graphics::Display;
 namespace Peach3D
 {
     class PEACH3D_DLL PlatformWinUwp : public IPlatform
@@ -21,8 +22,14 @@ namespace Peach3D
         ~PlatformWinUwp();
         // init windows platform
         virtual bool initWithParams(const PlatformCreationParams &params);
-        // set window handler, init renderdx and set rotate degree
-        virtual void setStoreWindow(void* window, int width, int height, DXGI_MODE_ROTATION rotation);
+        // set window handler, auto init render
+        virtual void setStoreWindow(void* window);
+        /** Reset window logical size. */
+        void setLogicalSize(Windows::Foundation::Size logicalSize);
+        /** Reset window orientation. */
+        void setCurrentOrientation(DisplayOrientations currentOrientation);
+        /** Reset window dpi. */
+        void setDpi(float dpi);
         /** Resume animating */
         virtual void resumeAnimating();
         /** Display content invalid, auto exit. */
@@ -39,9 +46,20 @@ namespace Peach3D
         /** Open url, "http://" is not necessary. */
         virtual void openUrl(const std::string& url);
 
+    protected:
+        /** Calc device current display size and return rotation based on NativeOrientation, then init RenderDX. */
+        bool initRenderDX();
+        /** Calc device current display size. */
+        DXGI_MODE_ROTATION computeDisplayRotation();
+
     private:
         LARGE_INTEGER mLastRecordTime;     // last frame time record
         LARGE_INTEGER mFrequency;          // system frequency
+
+        Windows::Foundation::Size   mLogicalSize;       // window logical size
+        DisplayOrientations         mNativeOrientation; // windows last orientation
+        DisplayOrientations         mCurrentOrientation;// windows current orientation
+        float                       mDpi;               // device screen DPI
     };
 }
 

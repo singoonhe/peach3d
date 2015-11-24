@@ -27,7 +27,7 @@ bool TestScene::init()
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     // create function title
     float labelHeight = 35.0f * LayoutManager::getSingleton().getMinScale();
-    for (auto i = 0; i < gTestSceneList.size(); ++i) {
+    for (size_t i = 0; i < gTestSceneList.size(); ++i) {
         Label* testLabel = Label::create(gTestSceneList[i].title.c_str(), labelHeight);
         testLabel->setAnchorPoint(Vector2(0.5f, 1.0f));
         testLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y - labelHeight * i));

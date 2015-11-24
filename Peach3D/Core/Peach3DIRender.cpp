@@ -15,7 +15,7 @@ namespace Peach3D
 {
     IMPLEMENT_SINGLETON_STATIC(IRender);
     
-    bool IRender::initRender(uint width, uint height)
+    bool IRender::initRender(float width, float height)
     {
         mRenderWidth = width;
         mRenderHeight = height;

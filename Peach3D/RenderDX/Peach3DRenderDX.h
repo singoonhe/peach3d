@@ -19,7 +19,7 @@ namespace Peach3D
         //! init not window dependent d3d handlers
         bool createRender();
         // init render, will create window dependent handlers
-        virtual bool initRender(uint width, uint height);
+        bool initRender(float width, float height, DXGI_MODE_ROTATION rotation);
         // clear old frame before render
         virtual void prepareForRender();
         // open depth test...
@@ -29,8 +29,6 @@ namespace Peach3D
         // present, discard target and stencil view
         virtual void finishForRender();
 
-        //! Set current oritation, this must called after initRender
-        void setContentOritation(DXGI_MODE_ROTATION rotation);
         //! call program update global Unifroms
         void updateGlobalUnifroms(RenderObjectAttr* attrs);
 

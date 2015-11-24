@@ -55,9 +55,9 @@ namespace Peach3D
         }
 
         //! window width
-        int width;
+        float width;
         //! window height
-        int height;
+        float height;
         //! depth buffer bits,16 or 24.
         int zBits;
         //! stencil buffer bits, 0 or 8. zBits must be 0 if zBits set to 16 on Windows.
