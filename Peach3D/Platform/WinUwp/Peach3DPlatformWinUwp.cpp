@@ -152,6 +152,14 @@ namespace Peach3D
         }
     }
 
+    void PlatformWinUwp::displayInvalidExit()
+    {
+        // device last, auto exit
+        auto exitDia = ref new Windows::UI::Popups::MessageDialog(L"Device last, auto exit!");
+        exitDia->ShowAsync();
+        terminate();
+    }
+
     ITexture* PlatformWinUwp::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
         std::map<std::string, std::vector<Rect>>& clicksRect)
     {

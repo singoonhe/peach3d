@@ -23,8 +23,10 @@ namespace Peach3D
         virtual bool initWithParams(const PlatformCreationParams &params);
         // set window handler, init renderdx and set rotate degree
         virtual void setStoreWindow(void* window, int width, int height, DXGI_MODE_ROTATION rotation);
-        //! resume animating
+        /** Resume animating */
         virtual void resumeAnimating();
+        /** Display content invalid, auto exit. */
+        void displayInvalidExit();
         /** Return is current app running. */
         bool isRunning() { return !mTerminating; }
 

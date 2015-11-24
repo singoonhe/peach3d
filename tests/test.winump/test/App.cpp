@@ -195,9 +195,7 @@ void App::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
 void App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
 {
     // device last, auto exit
-    auto exitDia = ref new Windows::UI::Popups::MessageDialog(L"Device last, auto exit!");
-    exitDia->ShowAsync();
-    mPlatform.terminate();
+    mPlatform.displayInvalidExit();
 }
 
 //std::shared_ptr<DX::DeviceResources> App::GetDeviceResources()
