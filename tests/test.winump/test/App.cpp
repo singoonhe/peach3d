@@ -161,8 +161,7 @@ void App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 
 void App::OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args)
 {
-	//GetDeviceResources()->SetLogicalSize(Size(sender->Bounds.Width, sender->Bounds.Height));
-	//m_main->OnWindowSizeChanged();
+    mPlatform.setLogicalSize(Size(sender->Bounds.Width, sender->Bounds.Height));
 }
 
 void App::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)
@@ -180,14 +179,12 @@ void App::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
 
 void App::OnDpiChanged(DisplayInformation^ sender, Object^ args)
 {
-	//GetDeviceResources()->SetDpi(sender->LogicalDpi);
-	//m_main->OnWindowSizeChanged();
+    mPlatform.setDpi(sender->LogicalDpi);
 }
 
 void App::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
 {
-	//GetDeviceResources()->SetCurrentOrientation(sender->CurrentOrientation);
-	//m_main->OnWindowSizeChanged();
+    mPlatform.setCurrentOrientation(sender->CurrentOrientation);
 }
 
 void App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
@@ -195,23 +192,3 @@ void App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Object^ args)
     // device last, auto exit
     mPlatform.displayInvalidExit();
 }
-
-//std::shared_ptr<DX::DeviceResources> App::GetDeviceResources()
-//{
-//	if (m_deviceResources != nullptr && m_deviceResources->IsDeviceRemoved())
-//	{
-//		// All references to the existing D3D device must be released before a new device
-//		// can be created.
-//
-//		m_deviceResources = nullptr;
-//		m_main->OnDeviceRemoved();
-//	}
-//
-//	if (m_deviceResources == nullptr)
-//	{
-//		m_deviceResources = std::make_shared<DX::DeviceResources>();
-//		m_deviceResources->SetWindow(CoreWindow::GetForCurrentThread());
-//		m_main->CreateRenderers(m_deviceResources);
-//	}
-//	return m_deviceResources;
-//}

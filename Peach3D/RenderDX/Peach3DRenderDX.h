@@ -56,26 +56,33 @@ namespace Peach3D
         IDWriteFactory* getDWriteFactory() { return mDWriteFactory; }
         //! get WICImage factory
         IWICImagingFactory* getWICImageFactory() { return mWICImageFactory; }
+        D3D12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView() const;
 
     protected:
         //! Check support MSAA qulity level
         int checkMSAASupportQulityLevel(int MSAA);
         //! create D2D and WIC factorys
         bool createD2DWICFactory();
+        /** Wait for pending GPU work to complete. */
+        void waitForGpu();
 
     private:
         // dx device handlers, ComPtr can't set nullptr, it not a pointer
 		ComPtr<IDXGIFactory4>				mDXFactory;
 		ComPtr<ID3D12Device>				mD3DDevice;
-		ComPtr<ID3D12CommandQueue>			mCommandQueue;
-		ComPtr<ID3D12Fence>					mFence;
-		HANDLE								mFenceEvent;
-		UINT								mCurrentFrame;
-		UINT64								mFenceValues[gDXFrameCount];
+        ComPtr<ID3D12CommandQueue>			mCommandQueue;
+        ComPtr<ID3D12Fence>                 mFence;
+        HANDLE                              mFenceEvent;
+        UINT                                mCurrentFrame;
+        UINT64                              mFenceValues[gDXFrameCount];
 
-        ComPtr<ID3D12GraphicsCommandList>	mCommandList;
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC	mPipelineDesc;
-        ComPtr<IDXGISwapChain3>         mSwapChain;
+        ComPtr<ID3D12Resource>              mRenderTargets[gDXFrameCount];
+        ComPtr<ID3D12DescriptorHeap>        mRtvHeap;
+        UINT                                mRtvDescriptorSize;
+        ComPtr<ID3D12GraphicsCommandList>   mCommandList;
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC  mPipelineDesc;
+        ComPtr<IDXGISwapChain3>             mSwapChain;
+        Matrix4                             mOrientationMatrix;
         ComPtr<ID3D11RenderTargetView>  mTargetView;
         ComPtr<ID3D11DepthStencilView>  mDepthStencilView;
 

@@ -6,6 +6,7 @@
 #include "Peach3DTextureDX.h"
 #include "Peach3DIPlatform.h"
 #include "Peach3DResourceManager.h"
+#include "WinUwp/Peach3DPlatformWinUwp.h"
 
 namespace Peach3D
 {
@@ -105,176 +106,102 @@ namespace Peach3D
     {
         // call base init
         IRender::initRender(size);
-//        // init widget manager
-//        mWidgetMgr = new WidgetManagerDX(mD3DDevice, mDeviceContext);
-//
-//        mIsRenderValid = false;
-//#if (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
-//        // Windows Phone not support resize swapchain
-//        mSwapChain = nullptr;
-//#endif
-//        // reset window dependent handlers
-//        ID3D11RenderTargetView* nullViews[] = {nullptr};
-//        mDeviceContext->OMSetRenderTargets(ARRAYSIZE(nullViews), nullViews, nullptr);
-//        mTargetView = nullptr;
-//        mDepthStencilView = nullptr;
-//        mDeviceContext->Flush();
-//
-//        const PlatformCreationParams& params = IPlatform::getSingletonPtr()->getCreationParams();
-//        if (mSwapChain != nullptr)
-//        {
-//            // resize chain if exist
-//            HRESULT hr = mSwapChain->ResizeBuffers(2, width,
-//                height, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
-//
-//            if (FAILED(hr))
-//            {
-//                if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-//                {
-//                    // device lost, need recreate gloabel device and window deivce
-//                }
-//                Peach3DLog(LogLevel::eError, "Create swap chain failed!");
-//                return false;
-//            }
-//        }
-//        else
-//        {
-//            // check support MSAA level
-//            int MSAA = params.MSAA;
-//            int MSAAQuality = checkMSAASupportQulityLevel(MSAA);
-//            MSAA = (MSAAQuality > 0) ? MSAA : 0;
-//
-//            DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
-//            swapChainDesc.Width = width;
-//            swapChainDesc.Height = height;
-//            swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-//            swapChainDesc.Stereo = false;
-//            swapChainDesc.SampleDesc.Count = 1 + MSAA;
-//            swapChainDesc.SampleDesc.Quality = MSAAQuality;
-//            swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-//            swapChainDesc.BufferCount = 2;
-//            swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-//            swapChainDesc.Flags = 0;
-//            swapChainDesc.Scaling = DXGI_SCALING_NONE;
-//            swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-//
-//            // get dxgi factory2
-//            ComPtr<IDXGIDevice3> dxgiDevice;
-//            mD3DDevice.As(&dxgiDevice);
-//            ComPtr<IDXGIAdapter> dxgiAdapter;
-//            dxgiDevice->GetAdapter(&dxgiAdapter);
-//            ComPtr<IDXGIFactory2> dxgiFactory;
-//            dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
-//            // create new swap chain
-//#if (PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_WINSTORE)
-//			IUnknown* coreWindow = reinterpret_cast<IUnknown*>(params.window);
-//            HRESULT hr = dxgiFactory->CreateSwapChainForCoreWindow(mD3DDevice.Get(), coreWindow, &swapChainDesc, nullptr, &mSwapChain);
-//#else if (PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_WINDESK)
-//			HWND window = (HWND)params.window;
-//			HRESULT hr = dxgiFactory->CreateSwapChainForHwnd(mD3DDevice.Get(), window, &swapChainDesc, NULL, NULL, &mSwapChain);
-//#endif
-//            if (FAILED(hr))
-//            {
-//                Peach3DLog(LogLevel::eError, "Create swap chain failed!");
-//                return false;
-//            }
-//            // 确保 DXGI 不会一次对多个帧排队。这样既可以减小延迟，
-//            // 又可以确保应用程序将只在每个 VSync 之后呈现，从而最大程度地降低功率消耗。
-//            dxgiDevice->SetMaximumFrameLatency(1);
-//        }
-//
-//        // create render target
-//        ComPtr<ID3D11Texture2D> backBuffer;
-//        mSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-//        HRESULT hr = mD3DDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &mTargetView);
-//        if (FAILED(hr))
-//        {
-//            Peach3DLog(LogLevel::eError, "Create render target failed!");
-//            return false;
-//        }
-//
-//        // get used depth stencil format
-//        DXGI_FORMAT dsFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-//        if (params.zBits == 16 && params.sBits == 0 )
-//        {
-//            dsFormat = DXGI_FORMAT_D16_UNORM;
-//        }
-//        // create texture2d for depth and stencil
-//        CD3D11_TEXTURE2D_DESC depthStencilDesc(dsFormat,
-//            width, height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
-//        ComPtr<ID3D11Texture2D> depthStencil;
-//        mD3DDevice->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencil);
-//        // create depth stencil view
-//        CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
-//        hr = mD3DDevice->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, &mDepthStencilView);
-//        if (FAILED(hr))
-//        {
-//            Peach3DLog(LogLevel::eError, "Create depth stencil failed!");
-//            return false;
-//        }
-//
-//        // set viewport
-//        CD3D11_VIEWPORT viewport = CD3D11_VIEWPORT(0.0f, 0.0f, float(width), float(height));
-//        mDeviceContext->RSSetViewports(1, &viewport);
-//
-//        mRasterizerDesc.FillMode = D3D11_FILL_SOLID;
-//        mRasterizerDesc.CullMode = D3D11_CULL_BACK;
-//        mRasterizerDesc.FrontCounterClockwise = TRUE;
-//        mRasterizerDesc.DepthBias = D3D11_DEFAULT_DEPTH_BIAS;
-//        mRasterizerDesc.DepthBiasClamp = D3D11_DEFAULT_DEPTH_BIAS_CLAMP;
-//        mRasterizerDesc.SlopeScaledDepthBias = D3D11_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-//        mRasterizerDesc.DepthClipEnable = TRUE;
-//        mRasterizerDesc.ScissorEnable = FALSE;
-//        mRasterizerDesc.MultisampleEnable = params.MSAA > 0;
-//        mRasterizerDesc.AntialiasedLineEnable = FALSE;
-//        // modify cull mode same as opengl es
-//        ID3D11RasterizerState *rasterizerState = nullptr;
-//        mD3DDevice->CreateRasterizerState(&mRasterizerDesc, &rasterizerState);
-//        mDeviceContext->RSSetState(rasterizerState);
-//
-//        // set default depth and stencil desc
-//        mDepthStencilDesc.DepthEnable = true;
-//        mDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-//        mDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-//        mDepthStencilDesc.StencilEnable = true;
-//        mDepthStencilDesc.StencilReadMask = 0xFF;
-//        mDepthStencilDesc.StencilWriteMask = 0xFF;
-//        mDepthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-//        mDepthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-//        mDepthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-//        mDepthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-//        mDepthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-//        mDepthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-//        mDepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-//        mDepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-//        ID3D11DepthStencilState * pDSState = nullptr;
-//        mD3DDevice->CreateDepthStencilState(&mDepthStencilDesc, &pDSState);
-//        mDeviceContext->OMSetDepthStencilState(pDSState, 1);
-//
-//        // set blend state
-//        D3D11_BLEND_DESC blendState;
-//        blendState.AlphaToCoverageEnable = FALSE;
-//        blendState.IndependentBlendEnable = FALSE;
-//        blendState.RenderTarget[0].BlendEnable = TRUE;
-//        blendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-//        blendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-//        blendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-//        blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-//        blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-//        blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-//        blendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-//        ID3D11BlendState *pBState = nullptr;
-//        mD3DDevice->CreateBlendState(&blendState, &pBState);
-//        mDeviceContext->OMSetBlendState(pBState, NULL, 0xffffffff);
-//
-//        // Create a D2D and WIC factory.
-//        if (!createD2DWICFactory()) {
-//            return false;
-//        }
+        // Wait until all previous GPU work is complete.
+        waitForGpu();
+
+        // Clear the previous window size specific content.
+        for (UINT n = 0; n < gDXFrameCount; n++) {
+            mRenderTargets[n] = nullptr;
+        }
+        mRtvHeap = nullptr;
+
+        if (mSwapChain != nullptr) {
+            // If the swap chain already exists, resize it.
+            HRESULT hr = mSwapChain->ResizeBuffers(gDXFrameCount, lround(size.x), lround(size.y),
+                DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+
+            if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET) {
+                // If the device was removed for any reason, a new device and swap chain will need to be created.
+                static_cast<PlatformWinUwp*>(IPlatform::getSingletonPtr())->displayInvalidExit();
+                // Do not continue execution of this method. DeviceResources will be destroyed and re-created.
+                return false;
+            }
+            else {
+                // some error occur
+            }
+        }
+        else {
+            // Otherwise, create a new one using the same adapter as the existing Direct3D device.
+            DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+            swapChainDesc.Width = lround(size.x);	// Match the size of the window.
+            swapChainDesc.Height = lround(size.y);
+            swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;			// This is the most common swap chain format.
+            swapChainDesc.Stereo = false;
+            swapChainDesc.SampleDesc.Count = 1;							// Don't use multi-sampling.
+            swapChainDesc.SampleDesc.Quality = 0;
+            swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+            swapChainDesc.BufferCount = gDXFrameCount;					// Use triple-buffering to minimize latency.
+            swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	// All Windows Universal apps must use _FLIP_ SwapEffects
+            swapChainDesc.Flags = 0;
+            swapChainDesc.Scaling = DXGI_SCALING_NONE;
+            swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+
+            ComPtr<IDXGISwapChain1> swapChain;
+            auto uwpWindow = IPlatform::getSingleton().getCreationParams().window;
+            mDXFactory->CreateSwapChainForCoreWindow(mCommandQueue.Get(), reinterpret_cast<IUnknown*>(uwpWindow),
+                &swapChainDesc, nullptr, &swapChain); 
+            swapChain.As(&mSwapChain);
+        }
+
+        // Set the proper orientation for the swap chain, and generate
+        // 3D matrix transformations for rendering to the rotated swap chain.
+        // The 3D matrix is specified explicitly to avoid rounding errors.
+        if (rotation == DXGI_MODE_ROTATION_ROTATE180) {
+            mOrientationMatrix = Matrix4::createRotationZ(DEGREE_TO_RADIANS(180.0f));
+        }
+        else {
+            mOrientationMatrix = Matrix4();
+        }
+        mSwapChain->SetRotation(rotation);
+
+        // Create a render target view of the swap chain back buffer.
+        D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+        desc.NumDescriptors = gDXFrameCount;
+        desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        mD3DDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&mRtvHeap));
+        mRtvHeap->SetName(L"Render Target View Descriptor Heap");
+
+        // All pending GPU work was already finished. Update the tracked fence values
+        // to the last value signaled.
+        for (UINT n = 0; n < gDXFrameCount; n++) {
+            mFenceValues[n] = mFenceValues[mCurrentFrame];
+        }
+        mCurrentFrame = 0;
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptor = mRtvHeap->GetCPUDescriptorHandleForHeapStart();
+        mRtvDescriptorSize = mD3DDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        for (UINT n = 0; n < gDXFrameCount; n++)
+        {
+            mSwapChain->GetBuffer(n, IID_PPV_ARGS(&mRenderTargets[n]));
+            mD3DDevice->CreateRenderTargetView(mRenderTargets[n].Get(), nullptr, rtvDescriptor);
+            rtvDescriptor.ptr += mRtvDescriptorSize;
+
+            WCHAR name[25];
+            swprintf_s(name, L"Render Target %d", n);
+            mRenderTargets[n]->SetName(name);
+        }
+
         Peach3DLog(LogLevel::eInfo, "Render window's width %.0f, height %.0f", size.x, size.y);
         // Render initialize success ^-^
         mIsRenderValid = true;
         return true;
+    }
+
+    D3D12_CPU_DESCRIPTOR_HANDLE RenderDX::GetRenderTargetView() const
+    {
+        D3D12_CPU_DESCRIPTOR_HANDLE resHandle = mRtvHeap->GetCPUDescriptorHandleForHeapStart();
+        resHandle.ptr += mCurrentFrame * mRtvDescriptorSize;
+        return resHandle;
     }
 
     bool RenderDX::createD2DWICFactory()
@@ -391,6 +318,19 @@ namespace Peach3D
         // return support MSAA qulity level for MSAA count
         //mD3DDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM, MSAA + 1, &qulityLevels);
         return 0;
+    }
+
+    void RenderDX::waitForGpu()
+    {
+        // Schedule a Signal command in the queue.
+        mCommandQueue->Signal(mFence.Get(), mFenceValues[mCurrentFrame]);
+
+        // Wait until the fence has been crossed.
+        mFence->SetEventOnCompletion(mFenceValues[mCurrentFrame], mFenceEvent);
+        WaitForSingleObjectEx(mFenceEvent, INFINITE, FALSE);
+
+        // Increment the fence value for the current frame.
+        mFenceValues[mCurrentFrame]++;
     }
 
     void RenderDX::getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms)
