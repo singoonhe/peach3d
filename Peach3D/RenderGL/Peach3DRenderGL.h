@@ -28,7 +28,7 @@ namespace Peach3D
     public:
         ~RenderGL();
         // init render, set view port
-        virtual bool initRender(uint width, uint height);
+        virtual bool initRender(const Vector2& size);
         // clear old frame before render
         virtual void prepareForRender();
         // open depth test...

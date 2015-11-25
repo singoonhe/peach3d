@@ -101,14 +101,14 @@ namespace Peach3D
         
         // new opengl view
         NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute*)attribs];
-        NSRect winRect = NSMakeRect(0.f, 0.f, params.width, params.height);
+        NSRect winRect = NSMakeRect(0.f, 0.f, params.winSize.x, params.winSize.y);
         mGLView = [[EAGLViewMAC alloc] initWithFrame:winRect pixelFormat:format];
         
         // enable high resolution
         [mGLView setWantsBestResolutionOpenGLSurface:YES];
         
         // auto set sync
-        GLint swapInt = 1;
+        GLint swapInt = 0;
         [[mGLView openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
         
         // set window
@@ -120,7 +120,7 @@ namespace Peach3D
     {
         // init render gl
         mRender = new RenderGL();
-        bool success = mRender->initRender(mCreationParams.width, mCreationParams.height);
+        bool success = mRender->initRender(mCreationParams.winSize);
         // system version below 10.9 always use GL2, it's 3.x gl func not all ready
         std::string secVerStr = mOSVerStr.substr(mOSVerStr.find('.') + 1);
         if (atof(secVerStr.c_str()) < 9) {
@@ -202,7 +202,7 @@ namespace Peach3D
         CGSize spaceSize = [@" " sizeWithAttributes:attr];
         Vector2 rSize = defined.dim;
         if (FLOAT_EQUAL_0(defined.dim.x)) {
-            rSize.x = (float)mCreationParams.width;
+            rSize.x = (float)mCreationParams.winSize.x;
         }
         
         float curWidth=0.0f, curHeight=0.0f;

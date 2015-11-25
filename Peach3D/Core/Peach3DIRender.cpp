@@ -15,12 +15,10 @@ namespace Peach3D
 {
     IMPLEMENT_SINGLETON_STATIC(IRender);
     
-    bool IRender::initRender(float width, float height)
+    bool IRender::initRender(const Vector2& size)
     {
-        mRenderWidth = width;
-        mRenderHeight = height;
         // also set layout window size
-        LayoutManager::getSingleton().setScreenSize(width, height);
+        LayoutManager::getSingleton().setScreenSize(size);
         // default set render valid, DX or OpenGL can modify it
         mIsRenderValid = true;
         return true;

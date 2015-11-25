@@ -164,7 +164,7 @@ using namespace Peach3D;
     if ([touches count] < 1) return;
     
     const float screenScale = self.view.contentScaleFactor;
-    const float screenHeight = IPlatform::getSingleton().getCreationParams().height;
+    const float screenHeight = IPlatform::getSingleton().getCreationParams().winSize.y;
     std::vector<uint> clickIds;
     std::vector<Vector2> poss;
     for (UITouch* touch in touches)

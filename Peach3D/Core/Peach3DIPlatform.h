@@ -25,8 +25,7 @@ namespace Peach3D
     struct PEACH3D_DLL PlatformCreationParams
     {
         PlatformCreationParams() :
-            width(800),
-            height(600),
+            winSize(800.0f, 600.0f),
             zBits(24),
             sBits(8),
             MSAA(0),
@@ -38,8 +37,7 @@ namespace Peach3D
 
         PlatformCreationParams& operator=(const PlatformCreationParams& other)
         {
-            width = other.width;
-            height = other.height;
+            winSize = other.winSize;
             zBits = other.zBits;
             sBits = other.sBits;
             MSAA = other.MSAA;
@@ -50,10 +48,8 @@ namespace Peach3D
             return *this;
         }
 
-        //! window width
-        float width;
-        //! window height
-        float height;
+        //! window size
+        Vector2 winSize;
         //! depth buffer bits,16 or 24.
         int zBits;
         //! stencil buffer bits, 0 or 8. zBits must be 0 if zBits set to 16 on Windows.

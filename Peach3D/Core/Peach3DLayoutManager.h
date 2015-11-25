@@ -96,7 +96,7 @@ namespace Peach3D
         LayoutManager();
         ~LayoutManager() {}
         /** Set screen size. */
-        void setScreenSize(float width, float height);
+        void setScreenSize(const Vector2& size);
         /** Load widget data and children. */
         void loadWidgetData(Widget* newNode, const XMLElement* nodeEle, Widget* parentNode, const LayoutVarBindFunction& bindFunc);
         /** Create new widget for type name. */

@@ -27,9 +27,8 @@ PlatformDelegate      gGameDelegate;
     
     // init mac platform
     Peach3D::PlatformCreationParams params;
-    params.width = winSize.width;
-    params.height = winSize.height;
-    params.MSAA = 1;
+    params.winSize = Peach3D::Vector2(winSize.width, winSize.height);
+    //params.MSAA = 1;
     params.logPath = "pdtestlog.txt";
     params.delegate = &gGameDelegate;
     gPlatform.initWithParams(params);

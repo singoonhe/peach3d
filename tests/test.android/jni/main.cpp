@@ -61,7 +61,7 @@ static int32_t system_handle_input(struct android_app* app, AInputEvent* event)
         }
         std::vector<uint> clickIds;
         std::vector<Vector2> poss;
-        const float screenHeight = IPlatform::getSingleton().getCreationParams().height;
+        const float screenHeight = IPlatform::getSingleton().getCreationParams().winSize.y;
         if (pointerIndex >= 0 && (cEvent==ClickEvent::eDown || cEvent==ClickEvent::eUp)) {
             int32_t clickId = AMotionEvent_getPointerId(event, pointerIndex);
             float posx = AMotionEvent_getX(event, pointerIndex);

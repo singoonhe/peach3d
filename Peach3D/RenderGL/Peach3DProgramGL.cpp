@@ -254,8 +254,8 @@ namespace Peach3D
             for (auto uniform : mWidgetUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eViewRect: {
-                        const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
-                        float viewRect[] = {0.0f, 0.0f, params.width, params.height};
+                        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+                        float viewRect[] = {0.0f, 0.0f, winSize.x, winSize.y};
                         memcpy(data + uniform.offset/sizeof(float), viewRect, sizeof(float) * 4);
                     }
                         break;
@@ -484,13 +484,13 @@ namespace Peach3D
     
     void ProgramGL::updateWidgetUnifroms(Widget* widget)
     {
-        const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
+        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
         // update widget uniforms in list
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eViewRect:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        float viewRect[] = {0.0f, 0.0f, params.width, params.height};
+                        float viewRect[] = {0.0f, 0.0f, winSize.x, winSize.y};
                         glUniform4fv(location, 1, viewRect);
                     });
                     break;
@@ -512,7 +512,7 @@ namespace Peach3D
                 case UniformNameType::ePatShowRect:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         Vector2 pos;
-                        Vector2 size(params.width, params.height);
+                        Vector2 size = winSize;
                         Widget* patWidget = static_cast<Widget*>(widget->getParentNode());
                         if (widget->isClipEnabled() && patWidget) {
                             pos = patWidget->getPosition(TranslateRelative::eWorld);
@@ -578,7 +578,7 @@ namespace Peach3D
         float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
                                                GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
         
-        const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
+        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
         // set widget params to data
         for (auto i = 0; i < renderList.size(); ++i) {
             int startOffset = 0;
@@ -602,7 +602,7 @@ namespace Peach3D
                         break;
                     case UniformNameType::ePatShowRect: {
                         Vector2 pos;
-                        Vector2 size(params.width, params.height);
+                        Vector2 size = winSize;
                         Widget* patWidget = static_cast<Widget*>(renderList[i]->getParentNode());
                         if (renderList[i]->isClipEnabled() && patWidget) {
                             pos = patWidget->getPosition(TranslateRelative::eWorld);

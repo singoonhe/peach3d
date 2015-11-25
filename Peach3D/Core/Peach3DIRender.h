@@ -24,7 +24,7 @@ namespace Peach3D
         IRender() : mIsRenderValid(false) {}
         virtual ~IRender() {}
         // init render, set view port
-        virtual bool initRender(float width, float height);
+        virtual bool initRender(const Vector2& size);
         //! return render state
         bool isRenderValid() { return mIsRenderValid; }
         // clear old frame before render
@@ -69,8 +69,6 @@ namespace Peach3D
         
     protected:
         bool      mIsRenderValid;               // render is init?
-        float     mRenderWidth;                 // render window width
-        float     mRenderHeight;                // render window height
         Color4    mRenderClearColor;            // default render clear color is Color4Gray
         
         friend class        ResourceManager;

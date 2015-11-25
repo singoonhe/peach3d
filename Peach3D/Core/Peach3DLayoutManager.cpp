@@ -382,11 +382,11 @@ namespace Peach3D
                        mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
     }
     
-    void LayoutManager::setScreenSize(float width, float height)
+    void LayoutManager::setScreenSize(const Vector2& size)
     {
-        mIsLandscape = (width > height);
+        mIsLandscape = (size.x > size.y);
         float oldWidth = mScreenSize.x, oldHeight = mScreenSize.y;
-        mScreenSize = Vector2(float(width), float(height));
+        mScreenSize = size;
         // reset design size and scales
         if (oldWidth < FLT_EPSILON || oldHeight < FLT_EPSILON) {
             mDesignScreenSize = mScreenSize;

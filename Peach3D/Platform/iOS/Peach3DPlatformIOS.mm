@@ -64,16 +64,15 @@ namespace Peach3D
         
         // get screen size
         CGRect screenRect = [UIScreen mainScreen].bounds;
-        mCreationParams.width = screenRect.size.width;
-        mCreationParams.height = screenRect.size.height;
+        mCreationParams.winSize = Vector2(screenRect.size.width, screenRect.size.height);
         
         mGLViewController = [[EAGLViewController alloc] init];
         float screenScale = [[UIScreen mainScreen] scale];
         if (screenScale != 1.0f)
         {
             // enable retina
-            mCreationParams.width  *= screenScale;
-            mCreationParams.height *= screenScale;
+            mCreationParams.winSize.x  *= screenScale;
+            mCreationParams.winSize.y *= screenScale;
             [mGLViewController.view setContentScaleFactor:screenScale];
         }
         // save render feature level
@@ -83,7 +82,7 @@ namespace Peach3D
         
         // init render gl es
         mRender = new RenderGL();
-        bool success = mRender->initRender(mCreationParams.width, mCreationParams.height);
+        bool success = mRender->initRender(mCreationParams.winSize);
         
         bool userSuccess = true;
         if (success)
@@ -144,7 +143,7 @@ namespace Peach3D
         CGSize spaceSize = [@" " sizeWithAttributes:attr];
         Vector2 rSize = defined.dim;
         if (FLOAT_EQUAL_0(defined.dim.x)) {
-            rSize.x = (float)mCreationParams.width;
+            rSize.x = (float)mCreationParams.winSize.x;
         }
         
         float curWidth=0.0f, curHeight=0.0f;

@@ -24,10 +24,10 @@ namespace Peach3D
         ProgramGL::deleteGlobalUBO();
     }
     
-    bool RenderGL::initRender(uint width, uint height)
+    bool RenderGL::initRender(const Vector2& size)
     {
         // call base init
-        IRender::initRender(width, height);
+        IRender::initRender(size);
         
         // renderer info
         std::string vendor = (const char*)glGetString(GL_VENDOR);
@@ -45,8 +45,8 @@ namespace Peach3D
         glEnable(GL_BLEND);
         glEnable(GL_CULL_FACE);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-        glViewport(0, 0, width, height);
-        Peach3DLog(LogLevel::eInfo, "Render window's width %d, height %d", width, height);
+        glViewport(0, 0, int(size.x + 0.5f), int(size.y + 0.5f));
+        Peach3DLog(LogLevel::eInfo, "Render window's width %.1f, height %.1f", size.x, size.y);
         
         return true;
     }

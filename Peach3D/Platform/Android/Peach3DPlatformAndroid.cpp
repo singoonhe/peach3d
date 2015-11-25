@@ -254,13 +254,12 @@ namespace Peach3D
             // save created window size
             eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &width);
             eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &height);
-            mCreationParams.width = width;
-            mCreationParams.height = height;
+            mCreationParams.winSize = Peach3D::Vector2(height, width);
             
             // create Render
             mRender = new RenderGL();
             // at last, init render after get final window size
-            bool success = mRender->initRender(mCreationParams.width, mCreationParams.height);
+            bool success = mRender->initRender(mCreationParams.winSize);
             if (success)
             {
                 // check which GL version should use, add support extensions
@@ -333,7 +332,7 @@ namespace Peach3D
 
     void PlatformAndroid::renderOneFrame(float lastFrameTime)
     {
-        static const long initialFrameTime = 1000000000/mCreationParams.maxFramsePerSecond;
+        static const long initialFrameTime = 1000000000/mCreationParams.maxFPS;
         static uint64_t totalFrameTime = 0;
 
         if  (mAnimating && isRenderWindowValid()) {
@@ -459,7 +458,7 @@ namespace Peach3D
                 totalAlign = (totalAlign << 4) | (int)defined.vAlign;
                 totalAlign = (totalAlign << 4) | (int)defined.hAlign;
                 // call function
-                bitmap = env->CallStaticObjectMethod(activityClazz, bitmapMethodID, textArrayList, imageArrayList,  colorArrayList, clickArrayList, jstrText, (int)defined.fontSize, totalAlign, (int)defined.dim.x, (   int)defined.dim.y, mCreationParams.width);
+                bitmap = env->CallStaticObjectMethod(activityClazz, bitmapMethodID, textArrayList, imageArrayList,  colorArrayList, clickArrayList, jstrText, (int)defined.fontSize, totalAlign, (int)defined.dim.x, (   int)defined.dim.y, mCreationParams.winSize.x);
                 env->DeleteLocalRef(textArrayList);
                 env->DeleteLocalRef(imageArrayList);
                 env->DeleteLocalRef(colorArrayList);
