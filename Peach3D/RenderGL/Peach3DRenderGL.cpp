@@ -46,7 +46,7 @@ namespace Peach3D
         glEnable(GL_CULL_FACE);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         glViewport(0, 0, int(size.x + 0.5f), int(size.y + 0.5f));
-        Peach3DLog(LogLevel::eInfo, "Render window's width %.1f, height %.1f", size.x, size.y);
+        Peach3DLog(LogLevel::eInfo, "Render window's width %.0f, height %.0f", size.x, size.y);
         
         return true;
     }
