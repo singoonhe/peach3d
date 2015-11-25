@@ -255,7 +255,7 @@ namespace Peach3D
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eViewRect: {
                         const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
-                        float viewRect[] = {0.0f, 0.0f, (float)params.width, (float)params.height};
+                        float viewRect[] = {0.0f, 0.0f, params.width, params.height};
                         memcpy(data + uniform.offset/sizeof(float), viewRect, sizeof(float) * 4);
                     }
                         break;
@@ -490,7 +490,7 @@ namespace Peach3D
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eViewRect:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        float viewRect[] = {0.0f, 0.0f, (float)params.width, (float)params.height};
+                        float viewRect[] = {0.0f, 0.0f, params.width, params.height};
                         glUniform4fv(location, 1, viewRect);
                     });
                     break;

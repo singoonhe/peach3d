@@ -105,15 +105,11 @@ namespace Peach3D
         mGLView = [[EAGLViewMAC alloc] initWithFrame:winRect pixelFormat:format];
         
         // enable high resolution
-        if (params.retinaEnable) {
-            [mGLView setWantsBestResolutionOpenGLSurface:YES];
-        }
+        [mGLView setWantsBestResolutionOpenGLSurface:YES];
         
-        // set sync
-        if (params.vsync) {
-            GLint swapInt = 1;
-            [[mGLView openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
-        }
+        // auto set sync
+        GLint swapInt = 1;
+        [[mGLView openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
         
         // set window
         IPlatform::setWindow((__bridge void*)mGLView);

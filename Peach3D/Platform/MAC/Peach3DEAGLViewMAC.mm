@@ -56,7 +56,7 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
     CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat);
     
     // calculate the fixed frame delay time
-    gFixedFrameTime = 1.0 / platform->getCreationParams().maxFramsePerSecond;
+    gFixedFrameTime = 1.0 / platform->getCreationParams().maxFPS;
     // start render loop
     [self resume];
 }

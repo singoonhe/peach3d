@@ -30,9 +30,7 @@ namespace Peach3D
             zBits(24),
             sBits(8),
             MSAA(0),
-            retinaEnable(true),
-            vsync(false),
-            maxFramsePerSecond(60.0f),
+            maxFPS(60.0f),
             window(0),
             logPath(""),
             delegate(nullptr)
@@ -45,9 +43,7 @@ namespace Peach3D
             zBits = other.zBits;
             sBits = other.sBits;
             MSAA = other.MSAA;
-            retinaEnable = other.retinaEnable;
-            vsync = other.vsync;
-            maxFramsePerSecond = other.maxFramsePerSecond;
+            maxFPS = other.maxFPS;
             window = other.window;
             logPath = other.logPath;
             delegate = other.delegate;
@@ -64,12 +60,8 @@ namespace Peach3D
         int sBits;
         //!　Multi-Sample Anti-Aliasing, ios: 4 or 0. android: 1 or 0.
         int MSAA;
-        //! retina enable for iOS and mac
-        bool retinaEnable;
-        //! vsync enable for windows and mac
-        bool vsync;
         //! the max frames per second
-        float maxFramsePerSecond;
+        float maxFPS;
         //! render window pointer
         void *window;
         //!　the file path of log, auto add writeable dir if relative path

@@ -22,7 +22,7 @@ namespace Peach3D
         if (size==Vector2Zero) {
             // default to set win size
             const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
-            widget->setContentSize(Vector2((float)params.width, (float)params.height));
+            widget->setContentSize(Vector2(params.width, params.height));
         }
         return widget;
     }

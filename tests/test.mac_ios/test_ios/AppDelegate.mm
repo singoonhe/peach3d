@@ -22,16 +22,12 @@ PlatformDelegate      gGameDelegate;
     // init ios platform
     Peach3D::PlatformCreationParams params;
 //    params.MSAA = 4;
-//    params.maxFramsePerSecond = 30.0f;
+//    params.maxFPS = 30.0f;
     params.delegate = &gGameDelegate;
     gPlatform.initWithParams(params);
     
     // set window display
     UIViewController* viewController = (__bridge UIViewController*)gPlatform.getCreationParams().window;
-    if ([[UIDevice currentDevice].systemVersion floatValue] < 6.0)
-    {
-        [self.window addSubview: viewController.view];
-    }
     [self.window setRootViewController:viewController];
     [self.window makeKeyAndVisible];
     return YES;

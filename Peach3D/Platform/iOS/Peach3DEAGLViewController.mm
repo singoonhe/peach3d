@@ -78,7 +78,7 @@ using namespace Peach3D;
     [EAGLContext setCurrentContext:self.context];
     
     // set frame per second
-    [self setPreferredFramesPerSecond:params.maxFramsePerSecond];
+    [self setPreferredFramesPerSecond:params.maxFPS];
     [self resume];
     return self;
 }

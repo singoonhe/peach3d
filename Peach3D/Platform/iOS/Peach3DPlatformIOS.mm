@@ -69,7 +69,7 @@ namespace Peach3D
         
         mGLViewController = [[EAGLViewController alloc] init];
         float screenScale = [[UIScreen mainScreen] scale];
-        if (params.retinaEnable && screenScale != 1.0f)
+        if (screenScale != 1.0f)
         {
             // enable retina
             mCreationParams.width  *= screenScale;

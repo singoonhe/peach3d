@@ -28,7 +28,7 @@ namespace Peach3D
         
         const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
         // init object render projection
-        setPerspectiveProjection(90.0f, float(params.width)/float(params.height));
+        setPerspectiveProjection(90.0f, params.width/params.height);
         // init global ambient color
         setGlobalAmbient(Color4(0.5f, 0.5f, 0.5f, 1.0f));
         
@@ -348,8 +348,8 @@ namespace Peach3D
             clickedRay.startPos = mActiveCamera->getPosition();
             // convert to NDZ coord
             const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
-            float x = (2.0f * clickedPos.x) / (float)params.width - 1.0f;
-            float y = (2.0f * clickedPos.y) / (float)params.height - 1.0f;
+            float x = (2.0f * clickedPos.x) / params.width - 1.0f;
+            float y = (2.0f * clickedPos.y) / params.height - 1.0f;
             // use zFar to calc ray
             Vector4 ray_nds(x, y, 1.0f, 1.0f);
             // convert to view coord
