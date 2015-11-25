@@ -128,7 +128,10 @@ namespace Peach3D
             mLogicalSize = logicalSize;
 
             // update render device and sreen size.
-            initRenderDX();
+            // notify app delegate window size changed
+            if (this->initRenderDX()) {
+                mCreationParams.delegate->appWindowSizeChanged();
+            }
         }
     }
 
@@ -154,10 +157,7 @@ namespace Peach3D
             mLogicalSize = Windows::Foundation::Size(winHandler->Bounds.Width, winHandler->Bounds.Height);
 
             // update render device and sreen size.
-            // notify app delegate window size changed
-            if (this->initRenderDX()) {
-                mCreationParams.delegate->appWindowSizeChanged();
-            }
+            this->initRenderDX();
         }
     }
 
