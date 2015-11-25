@@ -157,7 +157,7 @@ namespace Peach3D
 
     void PlatformWinUwp::renderOneFrame(float lastFrameTime)
     {
-        static double perFrameTime = 1 / mCreationParams.maxFramsePerSecond;
+        static double perFrameTime = 1 / mCreationParams.maxFPS;
         static double curDeltaTime = 0.0;
         // get current time and delta
         LARGE_INTEGER currentTime;
@@ -233,14 +233,15 @@ namespace Peach3D
         if (displayRotation != DXGI_MODE_ROTATION_UNSPECIFIED) {
             static const float dipsPerInch = 96.0f;
             // Calculate the necessary render target size in pixels.
-            mCreationParams.width = floorf(mLogicalSize.Width * mDpi / dipsPerInch + 0.5f);
-            mCreationParams.height = floorf(mLogicalSize.Height * mDpi / dipsPerInch + 0.5f);
+            float tWidth = floorf(mLogicalSize.Width * mDpi / dipsPerInch + 0.5f);
+            float tHeight = floorf(mLogicalSize.Height * mDpi / dipsPerInch + 0.5f);
 
             // Prevent zero size DirectX content from being created.
-            mCreationParams.width = max(mCreationParams.width, 1);
-            mCreationParams.height = max(mCreationParams.height, 1);
+            tWidth = max(tWidth, 1);
+            tHeight = max(tHeight, 1);
+            mCreationParams.winSize = Vector2(tWidth, tHeight);
 
-            return static_cast<RenderDX*>(mRender)->initRender(mCreationParams.width, mCreationParams.height, displayRotation);
+            return static_cast<RenderDX*>(mRender)->initRender(mCreationParams.winSize, displayRotation);
         }
         return false;
     }

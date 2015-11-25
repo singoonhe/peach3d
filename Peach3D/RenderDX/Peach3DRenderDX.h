@@ -19,7 +19,7 @@ namespace Peach3D
         //! init not window dependent d3d handlers
         bool createRender();
         // init render, will create window dependent handlers
-        bool initRender(float width, float height, DXGI_MODE_ROTATION rotation);
+        bool initRender(const Vector2& size, DXGI_MODE_ROTATION rotation);
         // clear old frame before render
         virtual void prepareForRender();
         // open depth test...

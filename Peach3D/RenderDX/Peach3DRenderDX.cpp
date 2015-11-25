@@ -101,10 +101,10 @@ namespace Peach3D
         return true;
     }
 
-    bool RenderDX::initRender(float width, float height, DXGI_MODE_ROTATION rotation)
+    bool RenderDX::initRender(const Vector2& size, DXGI_MODE_ROTATION rotation)
     {
         // call base init
-        IRender::initRender(width, height);
+        IRender::initRender(size);
 //        // init widget manager
 //        mWidgetMgr = new WidgetManagerDX(mD3DDevice, mDeviceContext);
 //
@@ -271,7 +271,7 @@ namespace Peach3D
 //        if (!createD2DWICFactory()) {
 //            return false;
 //        }
-        Peach3DLog(LogLevel::eInfo, "Render window's width %f, height %f", width, height);
+        Peach3DLog(LogLevel::eInfo, "Render window's width %.0f, height %.0f", size.x, size.y);
         // Render initialize success ^-^
         mIsRenderValid = true;
         return true;
