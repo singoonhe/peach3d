@@ -478,7 +478,7 @@ namespace Peach3D
             }
         }
         mSearchDirs.push_back(newPath);
-        Peach3DLog(LogLevel::eInfo, "Add search directory : %s", newPath.c_str());
+        Peach3DLog(LogLevel::eInfo, "Add search directory: %s", newPath.c_str());
     }
     
     uchar* ResourceManager::getFileData(const char* relativePath, ulong* size)
