@@ -45,26 +45,27 @@ namespace Peach3D
 #endif
         // create dxgi factory
         CreateDXGIFactory1(IID_PPV_ARGS(&mDXFactory));
-        // choose best adapter for desk, such NVIDIA or ATI
+        // choose best adapter for desk, support DX12 hardware first
         UINT i = 0;
         WCHAR* adapterName = L"";
         IDXGIAdapter1 *pAdapter = nullptr, *choosedAdapter = nullptr;
         while (mDXFactory->EnumAdapters1(i++, &pAdapter) != DXGI_ERROR_NOT_FOUND) {
             DXGI_ADAPTER_DESC1 pDesc;
             pAdapter->GetDesc1(&pDesc);
-            // choose NVIDIA and ATI first
-            bool isBestAdapter = (pDesc.VendorId == 0x10DE || pDesc.VendorId == 0x1002);
-            if (isBestAdapter || i == 0) {
+            // Don't select the Basic Render Driver adapter.
+            if (pDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
+                continue;
+            }
+            bool dx12Supported = SUCCEEDED(D3D12CreateDevice(pAdapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr));
+            if (dx12Supported) {
                 choosedAdapter = pAdapter;
                 adapterName = pDesc.Description;
-                if (isBestAdapter) {
-                    break;
-                }
+                break;
             }
         }
         // Create the Direct3D 12 API device object
         HRESULT hr = D3D12CreateDevice(
-            choosedAdapter,						// Using choosed adapter.
+            choosedAdapter,					// Using choosed adapter.
             D3D_FEATURE_LEVEL_11_0,			// Minimum feature level this app can support.
             IID_PPV_ARGS(&mD3DDevice)		// Returns the Direct3D device created.
             );
@@ -126,7 +127,7 @@ namespace Peach3D
                 // Do not continue execution of this method. DeviceResources will be destroyed and re-created.
                 return false;
             }
-            else {
+            else if (FAILED(hr)) {
                 // some error occur
             }
         }
