@@ -15,6 +15,24 @@
 using namespace Windows::System::Profile;
 using namespace Windows::System::UserProfile;
 using namespace Windows::Security::ExchangeActiveSyncProvisioning;
+
+namespace DisplayMetrics
+{
+    // High resolution displays can require a lot of GPU and battery power to render.
+    // High resolution phones, for example, may suffer from poor battery life if
+    // games attempt to render at 60 frames per second at full fidelity.
+    // The decision to render at full fidelity across all platforms and form factors
+    // should be deliberate.
+    static const bool SupportHighResolutions = false;
+
+    // The default thresholds that define a "high resolution" display. If the thresholds
+    // are exceeded and SupportHighResolutions is false, the dimensions will be scaled
+    // by 50%.
+    static const float DpiThreshold = 192.0f;		// 200% of standard desktop display.
+    static const float WidthThreshold = 1920.0f;	// 1080p width.
+    static const float HeightThreshold = 1080.0f;	// 1080p height.
+};
+
 namespace Peach3D
 {
     PlatformWinUwp::PlatformWinUwp() : mNativeOrientation(DisplayOrientations::None), mCurrentOrientation(DisplayOrientations::None), mDpi(-1.0f)
@@ -231,6 +249,7 @@ namespace Peach3D
 
     bool PlatformWinUwp::initRenderDX()
     {
+        float displayDpi = mDpi;
         // The width and height of the swap chain must be based on the window's
         // natively-oriented width and height. If the window is not in the native
         // orientation, the dimensions must be reversed.
@@ -238,9 +257,20 @@ namespace Peach3D
         // update game size and rotation, only support rotation 0 and 180
         if (displayRotation != DXGI_MODE_ROTATION_UNSPECIFIED) {
             static const float dipsPerInch = 96.0f;
+            // To improve battery life on high resolution devices, render to a smaller render target
+            // and allow the GPU to scale the output when it is presented.
+            if (!DisplayMetrics::SupportHighResolutions && mDpi > DisplayMetrics::DpiThreshold) {
+                float width = floorf(mLogicalSize.Width * mDpi / dipsPerInch + 0.5f);
+                float height = floorf(mLogicalSize.Height * mDpi / dipsPerInch + 0.5f);
+
+                if (width > DisplayMetrics::WidthThreshold && height > DisplayMetrics::HeightThreshold) {
+                    // To scale the app we change the effective DPI. Logical size does not change.
+                    displayDpi /= 2.0f;
+                }
+            }
             // Calculate the necessary render target size in pixels.
-            float tWidth = floorf(mLogicalSize.Width * mDpi / dipsPerInch + 0.5f);
-            float tHeight = floorf(mLogicalSize.Height * mDpi / dipsPerInch + 0.5f);
+            float tWidth = floorf(mLogicalSize.Width * displayDpi / dipsPerInch + 0.5f);
+            float tHeight = floorf(mLogicalSize.Height * displayDpi / dipsPerInch + 0.5f);
 
             // Prevent zero size DirectX content from being created.
             tWidth = max(tWidth, 1);
