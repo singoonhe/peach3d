@@ -1,4 +1,5 @@
 
+#include "d3dx12.h"
 #include "Peach3DRenderDX.h"
 #include "Peach3DLogPrinter.h"
 #include "Peach3DProgramDX.h"
@@ -133,6 +134,7 @@ namespace Peach3D
         }
         else {
             // Otherwise, create a new one using the same adapter as the existing Direct3D device.
+            DXGI_SCALING scaling = DisplayMetrics::SupportHighResolutions ? DXGI_SCALING_NONE : DXGI_SCALING_STRETCH;
             DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
             swapChainDesc.Width = lround(size.x);	// Match the size of the window.
             swapChainDesc.Height = lround(size.y);
@@ -144,7 +146,7 @@ namespace Peach3D
             swapChainDesc.BufferCount = gDXFrameCount;					// Use triple-buffering to minimize latency.
             swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	// All Windows Universal apps must use _FLIP_ SwapEffects
             swapChainDesc.Flags = 0;
-            swapChainDesc.Scaling = DXGI_SCALING_NONE;
+            swapChainDesc.Scaling = scaling;
             swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
             ComPtr<IDXGISwapChain1> swapChain;
@@ -166,30 +168,61 @@ namespace Peach3D
         mSwapChain->SetRotation(rotation);
 
         // Create a render target view of the swap chain back buffer.
-        D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-        desc.NumDescriptors = gDXFrameCount;
-        desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        mD3DDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&mRtvHeap));
-        mRtvHeap->SetName(L"Render Target View Descriptor Heap");
+        {
+            D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+            desc.NumDescriptors = gDXFrameCount;
+            desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+            desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+            mD3DDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&mRtvHeap));
+            mRtvHeap->SetName(L"Render Target View Descriptor Heap");
+
+            mCurrentFrame = 0;
+            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvDescriptor(mRtvHeap->GetCPUDescriptorHandleForHeapStart());
+            mRtvDescriptorSize = mD3DDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+            for (UINT n = 0; n < gDXFrameCount; n++) {
+                mSwapChain->GetBuffer(n, IID_PPV_ARGS(&mRenderTargets[n]));
+                mD3DDevice->CreateRenderTargetView(mRenderTargets[n].Get(), nullptr, rtvDescriptor);
+                rtvDescriptor.Offset(mRtvDescriptorSize);
+
+                WCHAR name[25];
+                swprintf_s(name, L"Render Target %d", n);
+                mRenderTargets[n]->SetName(name);
+            }
+        }
+
+        // Create a depth stencil view.
+        {
+            D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+            dsvHeapDesc.NumDescriptors = 1;
+            dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+            dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+            mD3DDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&mDsvHeap));
+
+            D3D12_HEAP_PROPERTIES depthHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+            D3D12_RESOURCE_DESC depthResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, 
+                static_cast<UINT>(size.x), static_cast<UINT>(size.y), 1, 0, 1, 0,
+                D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+
+            D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
+            depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+            depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
+            depthOptimizedClearValue.DepthStencil.Stencil = 0;
+
+            mD3DDevice->CreateCommittedResource(&depthHeapProperties, D3D12_HEAP_FLAG_NONE, &depthResourceDesc,
+                D3D12_RESOURCE_STATE_DEPTH_WRITE, &depthOptimizedClearValue, IID_PPV_ARGS(&mDepthStencil));
+
+            D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+            dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+            dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+            dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+            mD3DDevice->CreateDepthStencilView(mDepthStencil.Get(), &dsvDesc, mDsvHeap->GetCPUDescriptorHandleForHeapStart());
+        }
 
         // All pending GPU work was already finished. Update the tracked fence values
         // to the last value signaled.
         for (UINT n = 0; n < gDXFrameCount; n++) {
             mFenceValues[n] = mFenceValues[mCurrentFrame];
-        }
-        mCurrentFrame = 0;
-        D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptor = mRtvHeap->GetCPUDescriptorHandleForHeapStart();
-        mRtvDescriptorSize = mD3DDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-        for (UINT n = 0; n < gDXFrameCount; n++)
-        {
-            mSwapChain->GetBuffer(n, IID_PPV_ARGS(&mRenderTargets[n]));
-            mD3DDevice->CreateRenderTargetView(mRenderTargets[n].Get(), nullptr, rtvDescriptor);
-            rtvDescriptor.ptr += mRtvDescriptorSize;
-
-            WCHAR name[25];
-            swprintf_s(name, L"Render Target %d", n);
-            mRenderTargets[n]->SetName(name);
         }
 
         Peach3DLog(LogLevel::eInfo, "Render window's width %.0f, height %.0f", size.x, size.y);
@@ -276,15 +309,19 @@ namespace Peach3D
 
     void RenderDX::finishForRender()
     {
-        // the first param is svnc
+        // The first argument instructs DXGI to block until VSync, putting the application
+        // to sleep until the next VSync. This ensures we don't waste any cycles rendering
+        // frames that will never be displayed to the screen.
         HRESULT hr = mSwapChain->Present(1, 0);
-        // discard view content
-        //mDeviceContext->DiscardView(mTargetView.Get());
-        //mDeviceContext->DiscardView(mDepthStencilView.Get());
 
-        if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-        {
-            // device lost, need recreate gloabel device and window deivce
+        // If the device was removed either by a disconnection or a driver upgrade, we 
+        // must recreate all device resources.
+        if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET) {
+            // If the device was removed for any reason, a new device and swap chain will need to be created.
+            static_cast<PlatformWinUwp*>(IPlatform::getSingletonPtr())->displayInvalidExit();
+        }
+        else if (SUCCEEDED(hr)) {
+            MoveToNextFrame();
         }
     }
 
@@ -332,6 +369,26 @@ namespace Peach3D
 
         // Increment the fence value for the current frame.
         mFenceValues[mCurrentFrame]++;
+    }
+
+    void RenderDX::MoveToNextFrame()
+    {
+        // Schedule a Signal command in the queue.
+        const UINT64 currentFenceValue = mFenceValues[mCurrentFrame];
+        mCommandQueue->Signal(mFence.Get(), currentFenceValue);
+
+        // Advance the frame index.
+        mCurrentFrame = (mCurrentFrame + 1) % gDXFrameCount;
+
+        // Check to see if the next frame is ready to start.
+        if (mFence->GetCompletedValue() < mFenceValues[mCurrentFrame])
+        {
+            mFence->SetEventOnCompletion(mFenceValues[mCurrentFrame], mFenceEvent);
+            WaitForSingleObjectEx(mFenceEvent, INFINITE, FALSE);
+        }
+
+        // Set the fence value for the next frame.
+        mFenceValues[mCurrentFrame] = currentFenceValue + 1;
     }
 
     void RenderDX::getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms)

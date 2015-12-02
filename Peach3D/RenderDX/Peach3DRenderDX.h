@@ -65,6 +65,8 @@ namespace Peach3D
         bool createD2DWICFactory();
         /** Wait for pending GPU work to complete. */
         void waitForGpu();
+        /** Prepare to render the next frame.*/
+        void MoveToNextFrame();
 
     private:
         // dx device handlers, ComPtr can't set nullptr, it not a pointer
@@ -79,6 +81,8 @@ namespace Peach3D
         ComPtr<ID3D12Resource>              mRenderTargets[gDXFrameCount];
         ComPtr<ID3D12DescriptorHeap>        mRtvHeap;
         UINT                                mRtvDescriptorSize;
+        ComPtr<ID3D12DescriptorHeap>        mDsvHeap;
+        ComPtr<ID3D12Resource>              mDepthStencil;
         ComPtr<ID3D12GraphicsCommandList>   mCommandList;
         D3D12_GRAPHICS_PIPELINE_STATE_DESC  mPipelineDesc;
         ComPtr<IDXGISwapChain3>             mSwapChain;

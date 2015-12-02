@@ -13,6 +13,23 @@
 #include "Peach3DCommonDX.h"
 
 using namespace Windows::Graphics::Display;
+
+namespace DisplayMetrics
+{
+    // High resolution displays can require a lot of GPU and battery power to render.
+    // High resolution phones, for example, may suffer from poor battery life if
+    // games attempt to render at 60 frames per second at full fidelity.
+    // The decision to render at full fidelity across all platforms and form factors
+    // should be deliberate.
+    static const bool SupportHighResolutions = false;
+
+    // The default thresholds that define a "high resolution" display. If the thresholds
+    // are exceeded and SupportHighResolutions is false, the dimensions will be scaled
+    // by 50%.
+    static const float DpiThreshold = 192.0f;		// 200% of standard desktop display.
+    static const float WidthThreshold = 1920.0f;	// 1080p width.
+    static const float HeightThreshold = 1080.0f;	// 1080p height.
+};
 namespace Peach3D
 {
     class PEACH3D_DLL PlatformWinUwp : public IPlatform
