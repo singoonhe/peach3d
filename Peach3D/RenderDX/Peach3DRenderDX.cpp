@@ -92,15 +92,39 @@ namespace Peach3D
 		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 		mD3DDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mCommandQueue));
 
-		ComPtr<ID3D12CommandAllocator>	commandAllocators[gDXFrameCount];
 		for (UINT n = 0; n < gDXFrameCount; n++) {
-			mD3DDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocators[n]));
+			mD3DDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mCommandAllocators[n]));
 		}
 		// Create synchronization objects.
 		mD3DDevice->CreateFence(mFenceValues[mCurrentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
 		mFenceValues[mCurrentFrame]++;
-
 		mFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+
+        // Create a root signature with a single constant buffer slot.
+        {
+            CD3DX12_DESCRIPTOR_RANGE range;
+            CD3DX12_ROOT_PARAMETER parameter;
+            range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+            parameter.InitAsDescriptorTable(1, &range, D3D12_SHADER_VISIBILITY_VERTEX);
+
+            D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags =
+                D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | // Only the input assembler stage needs access to the constant buffer.
+                D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+                D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+                D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+                D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+            CD3DX12_ROOT_SIGNATURE_DESC descRootSignature;
+            descRootSignature.Init(1, &parameter, 0, nullptr, rootSignatureFlags);
+
+            ComPtr<ID3DBlob> pSignature;
+            ComPtr<ID3DBlob> pError;
+            D3D12SerializeRootSignature(&descRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf());
+            mD3DDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&mRootSignature));
+        }
+
+        // Create a command list.
+        mD3DDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mCommandAllocators[mCurrentFrame].Get(), nullptr, IID_PPV_ARGS(&mCommandList)));
+        mCommandList->Close();
         return true;
     }
 

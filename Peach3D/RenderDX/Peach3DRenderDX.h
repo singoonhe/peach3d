@@ -73,6 +73,7 @@ namespace Peach3D
 		ComPtr<IDXGIFactory4>				mDXFactory;
 		ComPtr<ID3D12Device>				mD3DDevice;
         ComPtr<ID3D12CommandQueue>			mCommandQueue;
+        ComPtr<ID3D12CommandAllocator>	    mCommandAllocators[gDXFrameCount];
         ComPtr<ID3D12Fence>                 mFence;
         HANDLE                              mFenceEvent;
         UINT                                mCurrentFrame;
@@ -83,6 +84,7 @@ namespace Peach3D
         UINT                                mRtvDescriptorSize;
         ComPtr<ID3D12DescriptorHeap>        mDsvHeap;
         ComPtr<ID3D12Resource>              mDepthStencil;
+        ComPtr<ID3D12RootSignature>			mRootSignature;
         ComPtr<ID3D12GraphicsCommandList>   mCommandList;
         D3D12_GRAPHICS_PIPELINE_STATE_DESC  mPipelineDesc;
         ComPtr<IDXGISwapChain3>             mSwapChain;
