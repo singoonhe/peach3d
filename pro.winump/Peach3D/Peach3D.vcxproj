@@ -255,6 +255,10 @@
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DRenderDX.h" />
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureDX.h" />
     <ClInclude Include="..\..\Peach3D\RenderDX\Peach3DTextureLoader.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdCommonFuncShader2D.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorShader2D.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorShader3D.h" />
+    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorUVShader2D.h" />
     <ClInclude Include="..\..\Peach3D\Support\tinyxml2\tinyxml2.h" />
     <ClInclude Include="..\..\Peach3D\Support\xxhash\xxhash.h" />
   </ItemGroup>
