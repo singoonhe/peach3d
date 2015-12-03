@@ -123,7 +123,7 @@ namespace Peach3D
         }
 
         // Create a command list.
-        mD3DDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mCommandAllocators[mCurrentFrame].Get(), nullptr, IID_PPV_ARGS(&mCommandList)));
+        mD3DDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mCommandAllocators[mCurrentFrame].Get(), nullptr, IID_PPV_ARGS(&mCommandList));
         mCommandList->Close();
         return true;
     }
@@ -297,18 +297,31 @@ namespace Peach3D
 
     void RenderDX::prepareForRender()
     {
-        // Specify the render target we created as the output target.
-        //mDeviceContext->OMSetRenderTargets(1, mTargetView.GetAddressOf(), mDepthStencilView.Get());
-        //// Clear the render target to a solid color.
-        //mDeviceContext->ClearRenderTargetView(mTargetView.Get(), (float*)&mRenderClearColor);
-        //// is need clean stencil
-        //static bool isStencilEnabled = (IPlatform::getSingleton().getCreationParams().sBits > 0);
-        //UINT clearBit = D3D11_CLEAR_DEPTH;
-        //if (isStencilEnabled)
-        //{
-        //    clearBit = clearBit | D3D11_CLEAR_STENCIL;
-        //}
-        //mDeviceContext->ClearDepthStencilView(mDepthStencilView.Get(), clearBit, 1.0f, 0);
+        mCommandAllocators[mCurrentFrame]->Reset();
+        // The command list can be reset anytime after ExecuteCommandList() is called.
+        mCommandList->Reset(mCommandAllocators[mCurrentFrame].Get(), nullptr);
+
+        // Set the graphics root signature to be used by this frame.
+        mCommandList->SetGraphicsRootSignature(mRootSignature.Get());
+        // Set the viewport and scissor rectangle.
+        auto winSize = IPlatform::getSingleton().getCreationParams().winSize;
+        D3D12_VIEWPORT viewport = { 0.0f, 0.0f, winSize.x, winSize.y, 0.0f, 1.0f };
+        mCommandList->RSSetViewports(1, &viewport);
+        D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(winSize.x), static_cast<LONG>(winSize.y) };
+        mCommandList->RSSetScissorRects(1, &scissorRect);
+
+        // Indicate this resource will be in use as a render target.
+        CD3DX12_RESOURCE_BARRIER renderTargetResourceBarrier =
+            CD3DX12_RESOURCE_BARRIER::Transition(mRenderTargets[mCurrentFrame].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+        mCommandList->ResourceBarrier(1, &renderTargetResourceBarrier);
+
+        // clear view
+        FLOAT clearColor[] = { mRenderClearColor.r, mRenderClearColor.g, mRenderClearColor.b, mRenderClearColor.a };
+        D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = CD3DX12_CPU_DESCRIPTOR_HANDLE(mRtvHeap->GetCPUDescriptorHandleForHeapStart(), mCurrentFrame, mRtvDescriptorSize);
+        D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = CD3DX12_CPU_DESCRIPTOR_HANDLE(mDsvHeap->GetCPUDescriptorHandleForHeapStart());
+        mCommandList->ClearRenderTargetView(renderTargetView, clearColor, 0, nullptr);
+        mCommandList->ClearDepthStencilView(depthStencilView, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+        mCommandList->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
     }
 
     void RenderDX::prepareForObjectRender()
@@ -333,6 +346,16 @@ namespace Peach3D
 
     void RenderDX::finishForRender()
     {
+        // Indicate that the render target will now be used to present when the command list is done executing.
+        CD3DX12_RESOURCE_BARRIER presentResourceBarrier =
+            CD3DX12_RESOURCE_BARRIER::Transition(mRenderTargets[mCurrentFrame].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+        mCommandList->ResourceBarrier(1, &presentResourceBarrier);
+        mCommandList->Close();
+
+        // Execute the command list.
+        ID3D12CommandList* ppCommandLists[] = { mCommandList.Get() };
+        mCommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
         // The first argument instructs DXGI to block until VSync, putting the application
         // to sleep until the next VSync. This ensures we don't waste any cycles rendering
         // frames that will never be displayed to the screen.
