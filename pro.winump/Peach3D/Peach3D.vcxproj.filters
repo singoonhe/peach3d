@@ -262,16 +262,7 @@
       <Filter>Support\xxhash</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\Peach3D.h" />
-    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorUVShader2D.h">
-      <Filter>RenderDX\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdCommonFuncShader2D.h">
-      <Filter>RenderDX\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorShader2D.h">
-      <Filter>RenderDX\shader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorShader3D.h">
+    <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdShaderUniforms.h">
       <Filter>RenderDX\shader</Filter>
     </ClInclude>
   </ItemGroup>
@@ -303,5 +294,13 @@
     <Filter Include="RenderDX\shader">
       <UniqueIdentifier>{5ef6e51d-0aa8-49d6-bfa3-9f6020247432}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\Peach3D\RenderDX\shader\pdPosColorPixel2D.hlsl">
+      <Filter>RenderDX\shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Peach3D\RenderDX\shader\pdPosColorVert2D.hlsl">
+      <Filter>RenderDX\shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
