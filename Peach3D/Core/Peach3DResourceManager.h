@@ -104,6 +104,7 @@ namespace Peach3D
         ResourceManager();
         ~ResourceManager();
         
+        ShaderCode*     mPresetShader;      // preset shader codes
         TextureFilter   mTexFilter;         // texture filter, default nearest
         bool            mTexMipMapEnabled;  // texture is mipmap enabled, default false
         

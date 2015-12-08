@@ -23,6 +23,8 @@
 		184CCB1E1A1759A50088CDEF /* Peach3DEventDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184CCB1C1A1759A50088CDEF /* Peach3DEventDispatcher.cpp */; };
 		184CCB1F1A1759A50088CDEF /* Peach3DEventDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184CCB1C1A1759A50088CDEF /* Peach3DEventDispatcher.cpp */; };
 		184CCB201A1759A50088CDEF /* Peach3DEventDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 184CCB1D1A1759A50088CDEF /* Peach3DEventDispatcher.h */; };
+		184E9BC31C173B1600569B30 /* Peach3DShaderCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184E9BC21C173B1600569B30 /* Peach3DShaderCode.cpp */; };
+		184E9BC41C173B1600569B30 /* Peach3DShaderCode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184E9BC21C173B1600569B30 /* Peach3DShaderCode.cpp */; };
 		1855EE6019D7F97100BECCD0 /* Peach3DMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 1855EE5F19D7F97100BECCD0 /* Peach3DMaterial.h */; };
 		185959B61B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185959B41B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp */; };
 		185959B71B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185959B41B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp */; };
@@ -192,6 +194,7 @@
 		1849747E1A5FBE8D0070640A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		184CCB1C1A1759A50088CDEF /* Peach3DEventDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DEventDispatcher.cpp; sourceTree = "<group>"; };
 		184CCB1D1A1759A50088CDEF /* Peach3DEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DEventDispatcher.h; sourceTree = "<group>"; };
+		184E9BC21C173B1600569B30 /* Peach3DShaderCode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DShaderCode.cpp; sourceTree = "<group>"; };
 		1855EE5F19D7F97100BECCD0 /* Peach3DMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DMaterial.h; sourceTree = "<group>"; };
 		185959B41B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DShaderCodeGL.cpp; sourceTree = "<group>"; };
 		18595A331B4448E800FFB5F5 /* Peach3DShaderCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peach3DShaderCode.h; sourceTree = "<group>"; };
@@ -455,6 +458,7 @@
 				18ACF4BF19D543140020F943 /* Peach3DSceneNode.h */,
 				1859A5031A3C4A0D008073D9 /* Peach3DScheduler.h */,
 				18ACF4C019D543140020F943 /* Peach3DSingleton.h */,
+				184E9BC21C173B1600569B30 /* Peach3DShaderCode.cpp */,
 				18595A331B4448E800FFB5F5 /* Peach3DShaderCode.h */,
 				18EB6EE41A6415C700811B80 /* Peach3DTypes.h */,
 				18EB6EE51A6421E300811B80 /* Peach3DUtils.cpp */,
@@ -757,6 +761,7 @@
 				18B2AB7F19E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
 				185D825B1B08B4B10034F25E /* tinyxml2.cpp in Sources */,
 				18ACF52819D543140020F943 /* Peach3DEAGLViewMAC.mm in Sources */,
+				184E9BC31C173B1600569B30 /* Peach3DShaderCode.cpp in Sources */,
 				18ACF53819D543140020F943 /* Peach3DRenderGL.cpp in Sources */,
 				18ACF4F719D543140020F943 /* Peach3DITexture.cpp in Sources */,
 				18ACF51519D543140020F943 /* Peach3DSceneNode.cpp in Sources */,
@@ -801,6 +806,7 @@
 				18B2AB8019E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
 				185D825C1B08B4B10034F25E /* tinyxml2.cpp in Sources */,
 				18ACF53919D543140020F943 /* Peach3DRenderGL.cpp in Sources */,
+				184E9BC41C173B1600569B30 /* Peach3DShaderCode.cpp in Sources */,
 				18ACF4F819D543140020F943 /* Peach3DITexture.cpp in Sources */,
 				18ACF51619D543140020F943 /* Peach3DSceneNode.cpp in Sources */,
 				18ACF4F419D543140020F943 /* Peach3DIRender.cpp in Sources */,

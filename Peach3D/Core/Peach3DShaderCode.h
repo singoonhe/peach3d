@@ -63,9 +63,9 @@ namespace Peach3D
     {
     public:
         /* Return shader code by name */
-        static const ShaderCodeData& getShaderCode(const std::string& name);
+        const ShaderCodeData& getShaderCode(const std::string& name);
         /* Return shader uniforms by name */
-        static const std::vector<ProgramUniform>& getProgramUniforms(const std::string& name);
+        const std::vector<ProgramUniform>& getProgramUniforms(const std::string& name);
         
         /* Return shader uniforms by name */
         static uint getUniformFloatBits(UniformDataType type);
@@ -73,19 +73,10 @@ namespace Peach3D
         static UniformNameType getUniformNameType(const std::string& name);
         
         /* Free all shader code, called in ResourceManager. */
-        static void freeShaderCodeData()
-        {
-            for (auto iter = mShaderMap.begin(); iter != mShaderMap.end(); ++iter) {
-                if (iter->second.size > 0) {
-                    printf("free shader code :%d\n", iter->second.size);
-                    free(iter->second.data);
-                }
-            }
-            mShaderMap.clear();
-        }
+        void freeShaderCodeData();
     public:
-        static std::map<std::string, ShaderCodeData> mShaderMap;
-        static std::map<std::string, std::vector<ProgramUniform>> mUniformsMap;
+        std::map<std::string, ShaderCodeData> mShaderMap;
+        std::map<std::string, std::vector<ProgramUniform>> mUniformsMap;
         static std::map<UniformDataType, uint> mUniformsBitsMap;
         static std::map<std::string, UniformNameType> mUniformsNamesMap;
     };

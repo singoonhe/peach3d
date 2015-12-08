@@ -28,6 +28,7 @@ namespace Peach3D
     
     ResourceManager::ResourceManager() : mTexFilter(TextureFilter::eLinear), mTexMipMapEnabled(false)
     {
+        mPresetShader = new ShaderCode();
         // init vertex attri list
         if (mVertexAttrList.size() == 0)
         {
@@ -55,6 +56,8 @@ namespace Peach3D
         for (auto iter=mProgramMap.begin(); iter!=mProgramMap.end(); iter++) {
             render->deleteProgram(iter->second);
         }
+        // free shader code data
+        mPresetShader->freeShaderCodeData();
     }
     
     ITexture* ResourceManager::addTexture(const char* file)
@@ -428,9 +431,9 @@ namespace Peach3D
     
     IProgram* ResourceManager::getPresetProgram(uint verType, const std::string& verName, const std::string& fragName)
     {
-        ShaderCodeData verData = ShaderCode::getShaderCode(verName);
+        ShaderCodeData verData = mPresetShader->getShaderCode(verName);
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
-        ShaderCodeData fragData = ShaderCode::getShaderCode(fragName);
+        ShaderCodeData fragData = mPresetShader->getShaderCode(fragName);
 #endif
         if (verData.size > 0) {
             std::string name = verName + fragName;
@@ -450,7 +453,7 @@ namespace Peach3D
                 // set vertex type
                 program->setVertexType(verType);
                 // set object uniform
-                program->setProgramUniformsDesc(ShaderCode::getProgramUniforms(verName));
+                program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(verName));
                 
                 if (program->isProgramValid()) {
                     Peach3DLog(LogLevel::eInfo, "Create new preset program \"%s\" success", name.c_str());

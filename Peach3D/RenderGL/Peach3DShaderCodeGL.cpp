@@ -18,11 +18,6 @@
 
 namespace Peach3D
 {
-    std::map<std::string, ShaderCodeData> ShaderCode::mShaderMap;
-    std::map<std::string, std::vector<ProgramUniform>> ShaderCode::mUniformsMap;
-    std::map<UniformDataType, uint> ShaderCode::mUniformsBitsMap;
-    std::map<std::string, UniformNameType> ShaderCode::mUniformsNamesMap;
-    
     ShaderCodeData generateShaderCodeData(const char* code1, const char* code2 = "")
     {
         ulong code1Len = strlen(code1), code2Len = strlen(code2);
@@ -33,7 +28,6 @@ namespace Peach3D
         }
         return ShaderCodeData(shaderData, int(code1Len + code2Len));
     }
-    
     
     const ShaderCodeData& ShaderCode::getShaderCode(const std::string& name)
     {
@@ -75,36 +69,5 @@ namespace Peach3D
             }
         }
         return mUniformsMap[name];
-    }
-    
-    uint ShaderCode::getUniformFloatBits(UniformDataType type)
-    {
-        if (mUniformsBitsMap.empty()) {
-            mUniformsBitsMap[UniformDataType::eFloat] = 1;
-            mUniformsBitsMap[UniformDataType::eVector2] = 2;
-            mUniformsBitsMap[UniformDataType::eVector3] = 3;
-            mUniformsBitsMap[UniformDataType::eVector4] = 4;
-            mUniformsBitsMap[UniformDataType::eMatrix4] = 16;
-        }
-        return mUniformsBitsMap[type];
-    }
-    
-    UniformNameType ShaderCode::getUniformNameType(const std::string& name)
-    {
-        if (mUniformsNamesMap.empty()) {
-            mUniformsNamesMap["pd_viewRect"] = UniformNameType::eViewRect;
-            mUniformsNamesMap["pd_showRect"] = UniformNameType::eShowRect;
-            mUniformsNamesMap["pd_anRot"] = UniformNameType::eAnRot;
-            mUniformsNamesMap["pd_patShowRect"] = UniformNameType::ePatShowRect;
-            mUniformsNamesMap["pd_patAnRot"] = UniformNameType::ePatAnRot;
-            mUniformsNamesMap["pd_diffuse"] = UniformNameType::eDiffuse;
-            mUniformsNamesMap["pd_uvRect"] = UniformNameType::eUVRect;
-            mUniformsNamesMap["pd_texEffect"] = UniformNameType::eTexEffect;
-            
-            mUniformsNamesMap["pd_projMatrix"] = UniformNameType::eProjMatrix;
-            mUniformsNamesMap["pd_viewMatrix"] = UniformNameType::eViewMatrix;
-            mUniformsNamesMap["pd_modelMatrix"] = UniformNameType::eModelMatrix;
-        }
-        return mUniformsNamesMap[name];
     }
 }

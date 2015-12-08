@@ -10,8 +10,6 @@
 
 namespace Peach3D
 {
-    std::map<std::string, ShaderCodeData> ShaderCode::mShaderMap;
-    std::map<std::string, std::vector<ProgramUniform>> ShaderCode::mUniformsMap;
     std::map<UniformDataType, uint> ShaderCode::mUniformsBitsMap;
     std::map<std::string, UniformNameType> ShaderCode::mUniformsNamesMap;
     
@@ -44,5 +42,15 @@ namespace Peach3D
             mUniformsNamesMap["pd_modelMatrix"] = UniformNameType::eModelMatrix;
         }
         return mUniformsNamesMap[name];
+    }
+    
+    void ShaderCode::freeShaderCodeData()
+    {
+        for (auto iter = mShaderMap.begin(); iter != mShaderMap.end(); ++iter) {
+            if (iter->second.size > 0) {
+                free(iter->second.data);
+            }
+        }
+        mShaderMap.clear();
     }
 }
