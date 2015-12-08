@@ -14,7 +14,7 @@
 namespace Peach3D
 {
     // vertex shader
-    const std::string& gCommonVertexFunc2D = "vec4 convertPosition2(vec4 viewRect, vec2 vertex, vec4 showRect, vec3 anRot) { \n"
+    const char* gCommonVertexFunc2D = "vec4 convertPosition2(vec4 viewRect, vec2 vertex, vec4 showRect, vec3 anRot) { \n"
     "   vec4 relRect = vec4(showRect.x/viewRect.z, showRect.y/viewRect.w, showRect.z/viewRect.z, showRect.w/viewRect.w); \n"
     "   vec2 renderPos = vec2(relRect.x - relRect.z * anRot.x, relRect.y - relRect.w * anRot.y); \n"
     "   /* Convert vertexs to widget rect. algorithm : x=w*(v.x+1)+2*p.x-1. */ \n"
@@ -34,7 +34,7 @@ namespace Peach3D
     "       return vec4(posX, posY, 0.0, 1.0); \n"
     "   } \n"
     "} \n";
-    const std::string& gCommonFragClipFunc2D = "void clipFragment(vec4 patShowRect, vec3 patAnRot) { \n"
+    const char* gCommonFragClipFunc2D = "void clipFragment(vec4 patShowRect, vec3 patAnRot) { \n"
     "   vec2 anchorSize = vec2(patAnRot.x * patShowRect.z, patAnRot.y * patShowRect.w); \n"
     "   if (patAnRot.z > 0.0001) { \n"
     "       vec2 offset = vec2(gl_FragCoord.x - patShowRect.x, gl_FragCoord.y - patShowRect.y); \n"

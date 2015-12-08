@@ -50,11 +50,20 @@ namespace Peach3D
         uint            offset; // current uniform offset, uniforms may not closely packed
     };
     
+    // defined shader code data
+    struct PEACH3D_DLL ShaderCodeData
+    {
+        ShaderCodeData() {data=nullptr; size=0;}
+        ShaderCodeData(char* _data, int _size) : data(_data), size(_size) {}
+        char*   data;   // shader code data pointer
+        int     size;   // shader code data size
+    };
+    
     class ShaderCode
     {
     public:
         /* Return shader code by name */
-        static const std::string& getShaderCode(const std::string& name);
+        static const ShaderCodeData& getShaderCode(const std::string& name);
         /* Return shader uniforms by name */
         static const std::vector<ProgramUniform>& getProgramUniforms(const std::string& name);
         
@@ -63,8 +72,19 @@ namespace Peach3D
         /* Return shader uniform name by type */
         static UniformNameType getUniformNameType(const std::string& name);
         
+        /* Free all shader code, called in ResourceManager. */
+        static void freeShaderCodeData()
+        {
+            for (auto iter = mShaderMap.begin(); iter != mShaderMap.end(); ++iter) {
+                if (iter->second.size > 0) {
+                    printf("free shader code :%d\n", iter->second.size);
+                    free(iter->second.data);
+                }
+            }
+            mShaderMap.clear();
+        }
     public:
-        static std::map<std::string, std::string> mShaderMap;
+        static std::map<std::string, ShaderCodeData> mShaderMap;
         static std::map<std::string, std::vector<ProgramUniform>> mUniformsMap;
         static std::map<UniformDataType, uint> mUniformsBitsMap;
         static std::map<std::string, UniformNameType> mUniformsNamesMap;

@@ -428,11 +428,11 @@ namespace Peach3D
     
     IProgram* ResourceManager::getPresetProgram(uint verType, const std::string& verName, const std::string& fragName)
     {
-        std::string verShaderCode = ShaderCode::getShaderCode(verName);
+        ShaderCodeData verData = ShaderCode::getShaderCode(verName);
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
-        std::string fragShaderCode = ShaderCode::getShaderCode(fragName);
+        ShaderCodeData fragData = ShaderCode::getShaderCode(fragName);
 #endif
-        if (verShaderCode.size() > 0) {
+        if (verData.size > 0) {
             std::string name = verName + fragName;
             uint hashPID = XXH32((void*)name.c_str(), (int)name.size(), 0);
             
@@ -443,9 +443,9 @@ namespace Peach3D
                 // create a new preset program
                 IProgram* program = IRender::getSingletonPtr()->createProgram(hashPID);
                 // add shader code to program
-                program->setVertexShader(verShaderCode.c_str(), (int)verShaderCode.size(), false);
+                program->setVertexShader(verData.data, verData.size, false);
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
-                program->setPixelShader(fragShaderCode.c_str(), (int)fragShaderCode.size(), false);
+                program->setPixelShader(fragData.data, fragData.size, false);
 #endif
                 // set vertex type
                 program->setVertexType(verType);
