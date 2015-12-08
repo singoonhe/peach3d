@@ -280,6 +280,7 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DResourceManager.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneManager.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneNode.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DShaderCode.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DUtils.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DVector.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DWidget.cpp" />
