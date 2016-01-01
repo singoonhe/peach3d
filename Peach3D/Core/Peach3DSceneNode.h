@@ -10,11 +10,10 @@
 #define PEACH3D_SCENENODE_H
 
 #include "Peach3DNode.h"
-#include "Peach3DLogPrinter.h"
 #include "Peach3DVector3.h"
 #include "Peach3DMatrix4.h"
 #include "Peach3DQuaternion.h"
-#include "Peach3DMaterial.h"
+#include "Peach3DRenderNode.h"
 #include "Peach3DAABB.h"
 
 namespace Peach3D
@@ -33,25 +32,9 @@ namespace Peach3D
         //! is attached mesh
         bool isAttachedMesh() {return mAttachedMesh!=nullptr;}
         
-        //! get node material, the name is object's name
+        //! get node RenderNode, the name is object's name
         //! this must call after attchMesh...
-        Material* getMaterial(const char* name)
-        {
-            if (mNodeMtlMap.find(name) != mNodeMtlMap.end()) {
-                return &mNodeMtlMap[name];
-            }
-            else {
-                Peach3DLog(LogLevel::eError, "Can't find material in Node, is attchMesh forget to call?");
-                return nullptr;
-            }
-        }
-        /**
-         * Replace object's index texture, it must be called after attach mesh.
-         * @params name Object name.
-         * @params index Object textures index.
-         */
-        //!
-        void replaceTextureByIndex(const char* name, int index, ITexture* texture);
+        RenderNode* getRenderNode(const char* name);
         
         /** Create child scene node by attris. */
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));
@@ -113,10 +96,10 @@ namespace Peach3D
         
         /* Update rendering attributes, about world rect/rotate/scale... */
         virtual void updateRenderingAttributes(float lastFrameTime);
-        /** Get render state calc hash content, it's decide will instancing render. */
-        virtual std::string getRenderStateString();
-        /** Get preset program when not set program. */
-        virtual void setPresetProgram() {};
+        /** Will be discard */
+        virtual std::string getRenderStateString() {return "";}
+        /** Will be discard */
+        virtual void setPresetProgram() {}
         
     private:
         Mesh*           mAttachedMesh;  // attached object
@@ -135,7 +118,7 @@ namespace Peach3D
         bool            mPickEnabled;   // is object picking eanbled
         bool            mPickAlways;    // is object always picking eanbled, even not render
         
-        std::map<std::string, Material>     mNodeMtlMap;    // scene node material
+        std::map<std::string, RenderNode*>  mRenderNodeMap; // scene node inclued RenderNode
         friend class SceneManager;      //! SceneManager can call destructor function.
     };
 }

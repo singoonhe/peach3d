@@ -11,6 +11,7 @@
 #include "Peach3DResourceManager.h"
 #include "Peach3DEventDispatcher.h"
 #include "Peach3DUtils.h"
+#include "Peach3DLogPrinter.h"
 #include "Peach3DButton.h"
 #include "Peach3DLabel.h"
 

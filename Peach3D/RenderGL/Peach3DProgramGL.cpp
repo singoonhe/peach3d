@@ -467,9 +467,9 @@ namespace Peach3D
                     break;
                 case UniformNameType::eDiffuse:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        const Color4& diffuse = node->getMaterial("Object")->getDiffuse();
-                        float colour[] = {diffuse.r, diffuse.g, diffuse.b, node->getAlpha()};
-                        glUniform4fv(location, 1, colour);
+//                        const Color4& diffuse = node->getMaterial("Object")->getDiffuse();
+//                        float colour[] = {diffuse.r, diffuse.g, diffuse.b, node->getAlpha()};
+//                        glUniform4fv(location, 1, colour);
                     });
                     break;
                 default:

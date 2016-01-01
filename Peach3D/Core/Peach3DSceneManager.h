@@ -14,6 +14,7 @@
 #include "Peach3DSceneNode.h"
 #include "Peach3DCamera.h"
 #include "Peach3DMesh.h"
+#include "Peach3DSingleton.h"
 #include "Peach3DScheduler.h"
 
 namespace Peach3D

@@ -406,7 +406,7 @@ namespace Peach3D
                         {
                             // set material shininess
                             std::string vecStr = (*iter).substr(3).c_str();
-                            currentMtl->setShininess((float)atof(vecStr.c_str()));
+                            currentMtl->shininess = (float)atof(vecStr.c_str());
                         }
                     }
                         break;
@@ -418,15 +418,15 @@ namespace Peach3D
                         {
                             case 'a':
                                 // set material ambient
-                                currentMtl->setAmbient(Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str())));
+                                currentMtl->ambient = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
                                 break;
                             case 'd':
                                 // set material diffuse
-                                currentMtl->setDiffuse(Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str())));
+                                currentMtl->diffuse = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
                                 break;
                             case 's':
                                 // set material specular
-                                currentMtl->setSpecular(Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str())));
+                                currentMtl->specular = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
                                 break;
                         }
                     }
@@ -451,9 +451,9 @@ namespace Peach3D
                                     if ((*iter).first.compare(name) == 0)
                                     {
                                         // set texture wrap
-                                        currentMtl->tranverseTextures([&iter](int index, ITexture* tex){
+                                        for (auto tex : currentMtl->textureList) {
                                             tex->setWrap((*iter).second->texWrap);
-                                        });
+                                        }
                                         obj->setMaterial(*currentMtl);
                                         
                                         // add texture to obj mtl

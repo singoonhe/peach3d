@@ -37,21 +37,21 @@ namespace Peach3D
     {
         Peach3DAssert(mesh, "Can't attach a null Object to Node");
         mAttachedMesh = mesh;
-        // copy template material to node
-        mNodeMtlMap.clear();
+        // new all render node for objects
+        mRenderNodeMap.clear();
         mesh->tranverseObjects([&](const char* name, IObject* object) {
-            mNodeMtlMap[name] = object->getObjectMaterial();
+            mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
     }
     
-    void SceneNode::replaceTextureByIndex(const char* name, int index, ITexture* texture)
+    RenderNode* SceneNode::getRenderNode(const char* name)
     {
-        Material* objNodeMtl = getMaterial(name);
-        if (objNodeMtl && index < int(objNodeMtl->mTextureList.size()) && index >=0) {
-            objNodeMtl->mTextureList[index] = texture;
+        if (mRenderNodeMap.find(name) != mRenderNodeMap.end()) {
+            return mRenderNodeMap[name];
         }
         else {
-            Peach3DLog(LogLevel::eWarn, "Can't replace invalid texture index %d or material can't find", index);
+            Peach3DLog(LogLevel::eError, "Can't find RenderNode, is attchMesh forget to call?");
+            return nullptr;
         }
     }
     
@@ -166,12 +166,7 @@ namespace Peach3D
             return mScale;
         }
     }
-    
-    std::string SceneNode::getRenderStateString()
-    {
-        return "";
-    }
-    
+            
     void SceneNode::updateRenderingAttributes(float lastFrameTime)
     {
         if (mIsRenderDirty) {
@@ -189,14 +184,19 @@ namespace Peach3D
                 mWorldScale = mWorldScale * parent->getScale(TranslateRelative::eWorld);
             }
             
+            Matrix4 modelMatrix;
             // update matrix. Sequence: scale, rotation, translation
             Matrix4 scaleMat4 = Matrix4::createScaling(mWorldScale.x, mWorldScale.y, mWorldScale.z);
             Matrix4 translateMat4 = Matrix4::createTranslation(mWorldPosition.x, mWorldPosition.y, mWorldPosition.z);
             if (mRotateUseVec) {
-                mModelMatrix = translateMat4 * Matrix4::createRotationPitchYawRoll(mRotation.x, mRotation.y, mRotation.z) * scaleMat4;
+                modelMatrix = translateMat4 * Matrix4::createRotationPitchYawRoll(mRotation.x, mRotation.y, mRotation.z) * scaleMat4;
             }
             else {
-                mModelMatrix = translateMat4 * Matrix4::createRotationQuaternion(mRotateQuat) * scaleMat4;
+                modelMatrix = translateMat4 * Matrix4::createRotationQuaternion(mRotateQuat) * scaleMat4;
+            }
+            // set model matrix to all child RenderNode
+            for (auto node : mRenderNodeMap) {
+                node.second->setModelMatrix(modelMatrix);
             }
             
             mIsRenderDirty = false;

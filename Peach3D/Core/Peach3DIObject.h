@@ -85,6 +85,9 @@ namespace Peach3D
          * @params transform Base AABB transform matrix, it will recalc AABB.
          */
         AABB getAABB(const Matrix4& transform);
+        
+        /** Reture object name. */
+        const std::string& getName() { return mObjectName; }
 
     protected:
         //! create object by IRender, user can't call constructor function.
@@ -94,8 +97,8 @@ namespace Peach3D
 
     protected:
         std::string    mObjectName;        // name of object
-        IProgram*      mRenderProgram;     // current used program's name
-        bool           mIsPresetProgram;   // is preset program used
+        IProgram*      mRenderProgram;     // current used program's name, will be discard
+        bool           mIsPresetProgram;   // is preset program used, will be discard
         Material       mObjectMtl;         // object material, scene node template material
 
         uint           mIndexBufferSize;   // index buffer byte count
