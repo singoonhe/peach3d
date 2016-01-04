@@ -65,11 +65,6 @@ namespace Peach3D
         virtual const Material& getObjectMaterial()const { return mObjectMtl; }
         //! set object material, only mesh loader should call it
         virtual void setMaterial(const Material& mtl) { mObjectMtl = mtl; }
-        //! add texture to object material, this must be called before node attached
-        virtual void addTextureToMaterial(ITexture* texture);
-        //! set index texture to uv scroll, should be call after addTextureToMaterial
-        //! user can set this index to enable uv scroll
-        virtual void useIndexTextureToScroll(uint index);
         
         /**
          * @brief Render widget list, only for GL3 and DX, called by SceneManager.
@@ -98,7 +93,6 @@ namespace Peach3D
     protected:
         std::string    mObjectName;        // name of object
         IProgram*      mRenderProgram;     // current used program's name, will be discard
-        bool           mIsPresetProgram;   // is preset program used, will be discard
         Material       mObjectMtl;         // object material, scene node template material
 
         uint           mIndexBufferSize;   // index buffer byte count

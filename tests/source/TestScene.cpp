@@ -9,6 +9,7 @@
 #include "TestScene.h"
 #include "UIScene.h"
 #include "ActionScene.h"
+#include "MeshScene.h"
 
 struct SceneLinker {
     std::string title;
@@ -16,7 +17,8 @@ struct SceneLinker {
 };
 
 std::vector<SceneLinker> gTestSceneList = {{"UI Test", []()->BaseScene* {return new UIScene();}},
-    {"Actions Test", []()->BaseScene* {return new ActionScene();}}};
+    {"Actions Test", []()->BaseScene* {return new ActionScene();}},
+    {"Mesh Test", []()->BaseScene* {return new MeshScene();}}};
 
 bool TestScene::init()
 {

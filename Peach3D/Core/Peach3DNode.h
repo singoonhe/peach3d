@@ -48,9 +48,7 @@ namespace Peach3D
         //! is point in node zone, node must visibled
         virtual bool isPointInZone(const Vector2& point) {return mVisible;}
         /** get is need rendering */
-        virtual bool isNeedRender() {return mNeedRender && mRenderProgram;}
-        /** Get render hash. */
-        uint getRenderStateHash()const {return mRenderStateHash;}
+        virtual bool isNeedRender() {return mNeedRender;}
         
         virtual void setVisible(bool visible) {mVisible = visible;}
         bool getVisible() {return mVisible;}
@@ -60,9 +58,6 @@ namespace Peach3D
         
         virtual void setAlpha(float alpha) { mAlpha = alpha; }
         float getAlpha() { return mAlpha; }
-        
-        void useProgramForRender(IProgram* program);
-        IProgram* getProgramForRender() {return mRenderProgram;}
         
         void setSwallowEvents(bool swallow) {mSwallowEvents = swallow;}
         bool isSwallowEvents() { return mSwallowEvents; }
@@ -84,7 +79,7 @@ namespace Peach3D
         void prepareForRender(float lastFrameTime);
     protected:
         //! user can't call constructor function.
-        Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true), mAlpha(1.0f), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true), mMode(DrawMode::eTriangle) {}
+        Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true), mAlpha(1.0f), mMode(DrawMode::eTriangle) {}
         //! clean node and all child node, user can't call destructor function.
         virtual ~Node();
         /** Set Node rendering attribute need update (pos, size, rotate...). */
@@ -117,11 +112,6 @@ namespace Peach3D
         
         bool               mIsRenderDirty;  // is render attribute need update
         bool               mNeedRender;     // is node need render. (alpha==0, visible==false, will cause didn't render)
-        Matrix4            mModelMatrix;    //*********** ui or SceneNode transpose matrix, will be discard
-        
-        IProgram*          mRenderProgram;  // render program
-        uint               mRenderStateHash;// render state hash, used for instancing render
-        bool               mIsRenderHashDirty; // is render state hash need update
         
         bool               mSignDeleted;    // sign to need deleted next frame
         bool               mSignClean;      // sign to need clean next frame

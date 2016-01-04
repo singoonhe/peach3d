@@ -20,10 +20,13 @@ namespace Peach3D
     "}; \n"
     "in vec3 pd_vertex; \n"
     "in mat4 pd_modelMatrix; \n"
+    "in vec4 pd_diffuse; \n"
+    "out vec4 f_diffuse; \n"
     "void main(void) \n"
     "{ \n"
     "   mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix; \n"
     "   gl_Position = mvpMatrix * vec4(pd_vertex, 1.0); \n"
+    "   f_diffuse = pd_diffuse; \n"
     "}";
     // fragment shader
     const char* g3PosColorFragShader3D = "in vec4 f_diffuse; \n"

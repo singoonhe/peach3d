@@ -15,17 +15,8 @@ namespace Peach3D
 {
     Color4  IObject::mAABBColor = Color4Black;
 
-    IObject::IObject(const char* name) : mObjectName(name), mRenderProgram(nullptr),mIsPresetProgram(true),mVertexBufferSize(0), mIndexBufferSize(0), mVertexDataStride(0), mIndexDataType(IndexType::eUShort)
+    IObject::IObject(const char* name) : mObjectName(name), mVertexBufferSize(0), mIndexBufferSize(0), mVertexDataStride(0), mIndexDataType(IndexType::eUShort)
     {
-    }
-
-    void IObject::useProgramForRender(IProgram* program)
-    {
-        Peach3DAssert(program, "Object could not use a null program!");
-        // use new program
-        mRenderProgram = program;
-        // use custom program, update program no longer
-        mIsPresetProgram = false;
     }
 
     bool IObject::setVertexBuffer(const void* data, uint size, uint type)
@@ -154,31 +145,5 @@ namespace Peach3D
             return AABB(min, max);
         }
         return mObjectAABB;
-    }
-    
-    void IObject::addTextureToMaterial(ITexture* texture)
-    {
-        Peach3DAssert(texture, "Can't add null texture to material");
-        if (texture) {
-            if (mObjectMtl.textureList.size() < PEACH3D_OBJECT_TEXTURE_COUNT_MAX) {
-                mObjectMtl.textureList.push_back(texture);
-                // rechoose program when Itexture changed
-                if (mIsPresetProgram) {
-//                    mRenderProgram = ResourceManager::getSingleton().getObjectPresetProgram(mVertexDataType, mObjectMtl);
-                }
-            }
-            else {
-                Peach3DLog(LogLevel::eWarn, "Peach3D only support count %d object textures", PEACH3D_OBJECT_TEXTURE_COUNT_MAX);
-            }
-        }
-    }
-    
-    void IObject::useIndexTextureToScroll(uint index)
-    {
-        if (index < mObjectMtl.textureList.size())
-        {
-            // enable uv scroll and set the texture index affected
-            mObjectMtl.UVScrollTexIndex = index;
-        }
     }
 }

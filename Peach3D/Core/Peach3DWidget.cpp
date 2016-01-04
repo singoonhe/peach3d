@@ -11,6 +11,7 @@
 #include "Peach3DSceneManager.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DUtils.h"
+#include "xxhash/xxhash.h"
 
 namespace Peach3D
 {
@@ -27,7 +28,7 @@ namespace Peach3D
         return widget;
     }
     
-    Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false)
+    Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true)
     {
         // set default diffuse color, not show widget
         mDiffColor = Color4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -125,6 +126,16 @@ namespace Peach3D
         }
     }
     
+    void Widget::useProgramForRender(IProgram* program)
+    {
+        Peach3DAssert(program, "Object could not use a null program!");
+        if (program) {
+            // use new program
+            mRenderProgram = program;
+            mIsRenderHashDirty = true;
+        }
+    }
+    
     void Widget::setLocalZOrder(int order)
     {
         mLocalZOrder = order;
@@ -186,6 +197,16 @@ namespace Peach3D
                 return wa->getLocalZOrder() < wb->getLocalZOrder();
             });
             mChildNeedSort = false;
+        }
+        
+        // calc render hash code
+        if (mIsRenderHashDirty && mNeedRender) {
+            // set program first
+            setPresetProgram();
+            
+            std::string states = getRenderStateString();
+            mRenderStateHash = XXH32((void*)states.c_str(), (int)states.size(), 0);
+            mIsRenderHashDirty = false;
         }
         
         if (mIsRenderDirty) {

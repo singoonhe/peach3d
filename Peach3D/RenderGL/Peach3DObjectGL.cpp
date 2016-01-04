@@ -293,9 +293,6 @@ namespace Peach3D
             
             bindObjectVertexAttrib();
         }
-        
-        // set object uniforms for GL3 and GL2, also set global uniforms for GL2
-        mRenderProgram->updateObjectUnifroms(attrs, mtl, lastFrameTime);
     }
     
     void ObjectGL::generateAABBBuffers()

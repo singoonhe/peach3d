@@ -58,6 +58,13 @@ namespace Peach3D
         /** Get anchor point. */
         const Vector2& getAnchorPoint()const {return mAnchor;}
         
+        /** get is need rendering */
+        virtual bool isNeedRender() {return mNeedRender && mRenderProgram;}
+        /** Get render hash. */
+        uint getRenderStateHash()const {return mRenderStateHash;}
+        
+        void useProgramForRender(IProgram* program);
+        IProgram* getProgramForRender() {return mRenderProgram;}
         /** Set diffuse color. */
         virtual void setColor(const Color4& color) {mDiffColor = color; Node::setAlpha(color.a);}
         /** Get diffuse color. */
@@ -105,6 +112,10 @@ namespace Peach3D
         Vector2     mWorldScale;        // cache world scaling
         float       mWorldRotate;       // cache world rotate
         Rect        mWorldAnchorRect;   // cache world rendering rect, pos with anchor
+        
+        IProgram*   mRenderProgram;     // render program
+        uint        mRenderStateHash;   // render state hash, used for instancing render
+        bool        mIsRenderHashDirty; // is render state hash need update
         
         bool        mChildNeedSort;     // children need sort when addChild()
         int         mLocalZOrder;       // widget local zorder

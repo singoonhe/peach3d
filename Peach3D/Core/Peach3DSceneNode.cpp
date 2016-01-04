@@ -226,13 +226,14 @@ namespace Peach3D
         if (mAttachedMesh) {
             updateRenderingAttributes(0.0f);
             // check mesh objects
+            /*
             IObject* interObject = mAttachedMesh->getRayIntersectObjectWithTranslation(mModelMatrix, ray);
             if (interObject) {
                 if (outObject) {
                     *outObject = interObject;
                 }
                 return true;
-            }
+            }*/
         }
         return false;
     }

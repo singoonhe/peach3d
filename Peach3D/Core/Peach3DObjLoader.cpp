@@ -296,8 +296,7 @@ namespace Peach3D
         objMeshVertexDataParse(orignData, objInfoMap, meshPosCount, meshNormalCount, meshUVCount, &meshPosCache, &meshNormalCache, &meshUVCache);
         
         // calc vertex format and index type
-        for (auto iter : objInfoMap)
-        {
+        for (auto iter : objInfoMap) {
             std::map<std::string, uint>& pointsIndexMap = iter.second->pointsIndexMap;
             if (pointsIndexMap.size() > 0 && iter.second->indexCount > 0) {
                 // create IObject
@@ -371,28 +370,26 @@ namespace Peach3D
             Peach3DInfoLog("Search mtl file in obj dir : %s", dir.c_str());
             fileData = ResourceManager::getSingleton().getFileData((dir+mtlFile).c_str(), &fileLength);
         }
-        if (fileLength > 0 && fileData)
-        {
+        if (fileLength > 0 && fileData) {
             // split mtl data
             std::vector<std::string> lineList = Utils::split((const char*)fileData, '\n');
             
             Material* currentMtl = nullptr;
-            for (auto iter=lineList.begin(); iter!=lineList.end(); ++iter)
-            {
+            for (auto iter=lineList.begin(); iter!=lineList.end(); ++iter) {
                 // delete the last '\r'
                 if (iter->rfind('\r')!=std::string::npos) {
                     *iter = iter->substr(0, iter->size() - 1);
                 }
-                switch ((*iter)[0])
-                {
+                switch ((*iter)[0]) {
                     case 'n':
                     {
                         // set new material
                         std::vector<std::string> mtlList = Utils::split(iter->c_str(), ' ');
-                        if (mtlList[0].compare("newmtl") == 0 && mtlList.size() >= 2)
-                        {
-                            if (currentMtl)
-                            {
+                        if (mtlList[0].compare("newmtl") == 0 && mtlList.size() >= 2) {
+                            if (currentMtl) {
+                                // set material to object
+                                setMaterialToObject(currentMtl, dMesh, objInfoMap);
+                                
                                 delete currentMtl;
                                 currentMtl = nullptr;
                             }
@@ -402,8 +399,7 @@ namespace Peach3D
                         break;
                     case 'N':
                     {
-                        if ((*iter)[1] == 's')
-                        {
+                        if ((*iter)[1] == 's') {
                             // set material shininess
                             std::string vecStr = (*iter).substr(3).c_str();
                             currentMtl->shininess = (float)atof(vecStr.c_str());
@@ -414,8 +410,7 @@ namespace Peach3D
                     {
                         std::string vecStr = (*iter).substr(3).c_str();
                         std::vector<std::string> colorList = Utils::split(vecStr.c_str(), ' ');
-                        switch ((*iter)[1])
-                        {
+                        switch ((*iter)[1]) {
                             case 'a':
                                 // set material ambient
                                 currentMtl->ambient = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
@@ -434,48 +429,48 @@ namespace Peach3D
                     case 'm':
                     {
                         std::vector<std::string> mtlList = Utils::split(iter->c_str(), ' ');
-                        if (mtlList[0].compare("map_Kd") == 0 && mtlList.size() >= 2)
-                        {
+                        if (mtlList[0].compare("map_Kd") == 0 && mtlList.size() >= 2) {
                             std::string relativePath = mtlList[1].substr(mtlList[1].rfind('/') == std::string::npos ? 0 : mtlList[1].rfind('/') + 1);
                             ITexture* tex = ResourceManager::getSingleton().addTexture(relativePath.c_str());
                             if (!tex && dir.size() > 0){
                                 // read mtl from absolute path
                                 tex = ResourceManager::getSingleton().addTexture((dir + relativePath).c_str());
+                                // add texture to material
+                                currentMtl->textureList.push_back(tex);
                             }
-                            
-                            // set material to object
-                            dMesh->tranverseObjects([&](const char* name, IObject* obj) {
-                                for (auto iter=objInfoMap.begin(); iter!=objInfoMap.end(); ++iter)
-                                {
-                                    // set object material
-                                    if ((*iter).first.compare(name) == 0)
-                                    {
-                                        // set texture wrap
-                                        for (auto tex : currentMtl->textureList) {
-                                            tex->setWrap((*iter).second->texWrap);
-                                        }
-                                        obj->setMaterial(*currentMtl);
-                                        
-                                        // add texture to obj mtl
-                                        if (tex) {
-                                            obj->addTextureToMaterial(tex);
-                                        }
-                                        break ;
-                                    }
-                                }
-                            });
                         }
                     }
                         break;
                 }
             }
             // release material
-            if (currentMtl)
-            {
+            if (currentMtl) {
+                // set material to object
+                setMaterialToObject(currentMtl, dMesh, objInfoMap);
+                
                 delete currentMtl;
+                currentMtl = nullptr;
             }
             
             free(fileData);
         }
+    }
+    
+    void ObjLoader::setMaterialToObject(Material* mat, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)
+    {
+        // set material to object
+        dMesh->tranverseObjects([&](const char* name, IObject* obj) {
+            for (auto iter=objInfoMap.begin(); iter!=objInfoMap.end(); ++iter) {
+                // set object material
+                if ((*iter).first.compare(name) == 0) {
+                    // set texture wrap
+                    for (auto tex : mat->textureList) {
+                        tex->setWrap((*iter).second->texWrap);
+                    }
+                    obj->setMaterial(*mat);
+                    break ;
+                }
+            }
+        });
     }
 }

@@ -8,7 +8,6 @@
 
 #include "Peach3DNode.h"
 #include "Peach3DIPlatform.h"
-#include "xxhash/xxhash.h"
 
 namespace Peach3D
 {
@@ -101,14 +100,6 @@ namespace Peach3D
         }
     }
     
-    void Node::useProgramForRender(IProgram* program)
-    {
-        Peach3DAssert(program, "Object could not use a null program!");
-        // use new program
-        mRenderProgram = program;
-        mIsRenderHashDirty = true;
-    }
-    
     void Node::prepareForRender(float lastFrameTime)
     {
         ActionImplement::prepareForRender(lastFrameTime);
@@ -124,15 +115,6 @@ namespace Peach3D
         // update render attributes
         // Notice: function "updateRenderingAttributes" may change render state.
         updateRenderingAttributes(lastFrameTime);
-        // calc render hash code
-        if (mIsRenderHashDirty && mNeedRender) {
-            // set program first
-            setPresetProgram();
-            
-            std::string states = getRenderStateString();
-            mRenderStateHash = XXH32((void*)states.c_str(), (int)states.size(), 0);
-            mIsRenderHashDirty = false;
-        }
         // delete children node
         for (auto delIter = mChildNodeList.begin(); delIter != mChildNodeList.end();) {
             if ((*delIter)->isNeedDelete()) {

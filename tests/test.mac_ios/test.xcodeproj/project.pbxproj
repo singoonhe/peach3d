@@ -19,6 +19,8 @@
 		184107101B6CBB65005133E2 /* next_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1841070C1B6CBB65005133E2 /* next_normal.png */; };
 		184107131B6CBCAD005133E2 /* UIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184107111B6CBCAD005133E2 /* UIScene.cpp */; };
 		184107141B6CBCAD005133E2 /* UIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184107111B6CBCAD005133E2 /* UIScene.cpp */; };
+		184C3BC01C3AB6E20073B598 /* MeshScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */; };
+		184C3BC11C3AB6E20073B598 /* MeshScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */; };
 		185959C01B440AF600FFB5F5 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185959BF1B440AF500FFB5F5 /* Carbon.framework */; };
 		185ED00319B4773F00801CA0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185ED00219B4773F00801CA0 /* Cocoa.framework */; };
 		185ED1C81B70E10A0012667B /* press_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 185ED1C51B70E10A0012667B /* press_down.png */; };
@@ -109,6 +111,8 @@
 		1841070C1B6CBB65005133E2 /* next_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next_normal.png; sourceTree = "<group>"; };
 		184107111B6CBCAD005133E2 /* UIScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIScene.cpp; sourceTree = "<group>"; };
 		184107121B6CBCAD005133E2 /* UIScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScene.h; sourceTree = "<group>"; };
+		184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshScene.cpp; sourceTree = "<group>"; };
+		184C3BBF1C3AB6E20073B598 /* MeshScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshScene.h; sourceTree = "<group>"; };
 		185959BF1B440AF500FFB5F5 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		185ECFFF19B4773F00801CA0 /* test_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		185ED00219B4773F00801CA0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -328,17 +332,19 @@
 		18F9F4D119C5E3DF0023C83B /* source */ = {
 			isa = PBXGroup;
 			children = (
+				18F439EA1B72495E00D9B788 /* ActionScene.cpp */,
+				18F439EB1B72495E00D9B788 /* ActionScene.h */,
+				184106FC1B6B8E2D005133E2 /* BaseSample.h */,
+				184107041B6CAD4B005133E2 /* BaseScene.cpp */,
+				184107051B6CAD4B005133E2 /* BaseScene.h */,
+				184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */,
+				184C3BBF1C3AB6E20073B598 /* MeshScene.h */,
 				18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */,
 				18F9F4D619C5E5640023C83B /* PlatformDelegate.h */,
 				188637F519D02BED00BD6FE3 /* TestScene.cpp */,
 				188637F619D02BED00BD6FE3 /* TestScene.h */,
-				184106FC1B6B8E2D005133E2 /* BaseSample.h */,
-				184107041B6CAD4B005133E2 /* BaseScene.cpp */,
-				184107051B6CAD4B005133E2 /* BaseScene.h */,
 				184107111B6CBCAD005133E2 /* UIScene.cpp */,
 				184107121B6CBCAD005133E2 /* UIScene.h */,
-				18F439EA1B72495E00D9B788 /* ActionScene.cpp */,
-				18F439EB1B72495E00D9B788 /* ActionScene.h */,
 			);
 			name = source;
 			path = ../source;
@@ -504,6 +510,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				184107131B6CBCAD005133E2 /* UIScene.cpp in Sources */,
+				184C3BC01C3AB6E20073B598 /* MeshScene.cpp in Sources */,
 				188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107061B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
@@ -518,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				184107141B6CBCAD005133E2 /* UIScene.cpp in Sources */,
+				184C3BC11C3AB6E20073B598 /* MeshScene.cpp in Sources */,
 				188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107071B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
