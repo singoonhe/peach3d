@@ -32,7 +32,8 @@ namespace Peach3D
     // defined object global UBO info
     GLuint ProgramGL::mObjectUBOId = GL_INVALID_INDEX;
     GLint ProgramGL::mObjectUBOSize = 0;
-    std::vector<ProgramUniform>  ProgramGL::mObjectUBOUniforms;
+    std::vector<ProgramUniform>  ProgramGL::mObjectUBOUniforms = {ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4),
+                                                                  ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4)};
     
     bool ProgramGL::setVertexShader(const char* data, int size, bool isCompiled)
     {
@@ -245,6 +246,34 @@ namespace Peach3D
         }
     }
     
+    void ProgramGL::updateGlobalObjectUnifroms()
+    {
+        if (mObjectUBOId != GL_INVALID_INDEX) {
+            glBindBuffer(GL_UNIFORM_BUFFER, mObjectUBOId);
+            // map global buffer and copy memory on GL3
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mObjectUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            SceneManager* sgr = SceneManager::getSingletonPtr();
+            for (auto uniform : mObjectUBOUniforms) {
+                switch (ShaderCode::getUniformNameType(uniform.name)) {
+                    case UniformNameType::eProjMatrix: {
+                        const Matrix4& projMatrix = sgr->getProjectionMatrix();
+                        memcpy(data + uniform.offset/sizeof(float), projMatrix.mat, sizeof(float)*16);
+                    }
+                        break;
+                    case UniformNameType::eViewMatrix: {
+                        const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
+                        memcpy(data + uniform.offset/sizeof(float), viewMatrix.mat, sizeof(float)*16);
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            glUnmapBuffer(GL_UNIFORM_BUFFER);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        }
+    }
+    
     void ProgramGL::updateGlobalWidgetUnifroms()
     {
         if (mWidgetUBOId != GL_INVALID_INDEX) {
@@ -445,31 +474,33 @@ namespace Peach3D
 
     void ProgramGL::updateRenderNodeUnifroms(RenderNode* node)
     {
-        // update scene node uniforms in list
+        SceneManager* sgr = SceneManager::getSingletonPtr();
+        const Material& objMat = node->getMaterial();
+        // update object uniforms in list
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eProjMatrix:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        const Matrix4& projMatrix = SceneManager::getSingleton().getProjectionMatrix();
+                        const Matrix4& projMatrix = sgr->getProjectionMatrix();
                         glUniformMatrix4fv(location, 1, false, projMatrix.mat);
                     });
                     break;
                 case UniformNameType::eViewMatrix:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        const Matrix4& viewMatrix = SceneManager::getSingleton().getActiveCamera()->getViewMatrix();
+                        const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
                         glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
                     });
                     break;
                 case UniformNameType::eModelMatrix:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        // node->getmodel
+                        const Matrix4& modelMat = node->getModelMatrix();
+                        glUniformMatrix4fv(location, 1, false, modelMat.mat);
                     });
                     break;
                 case UniformNameType::eDiffuse:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-//                        const Color4& diffuse = node->getMaterial("Object")->getDiffuse();
-//                        float colour[] = {diffuse.r, diffuse.g, diffuse.b, node->getAlpha()};
-//                        glUniform4fv(location, 1, colour);
+                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.diffuse.a};
+                        glUniform4fv(location, 1, color);
                     });
                     break;
                 default:
@@ -480,6 +511,46 @@ namespace Peach3D
     
     void ProgramGL::updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList)
     {
+        // resize render buffer size
+        int needCount = (int)renderList.size() - mInstancedCount;
+        if (needCount > 0) {
+            int formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
+            createInstancedAttriDataAndBuffer(mInstancedCount + std::max(needCount, formulaCount));
+        }
+        
+        // copy attri data to instanced buffer
+        glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
+        uint copySize = mUniformsSize * (uint)renderList.size();
+        float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
+                                               GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+        
+        // set object params to data
+        for (auto i = 0; i < renderList.size(); ++i) {
+            int startOffset = 0;
+            int uniformOffset = (mUniformsSize / 4) * i;
+            const Material& objMat = renderList[i]->getMaterial();
+            for (auto uniform : mProgramUniformList) {
+                switch (ShaderCode::getUniformNameType(uniform.name)) {
+                    case UniformNameType::eModelMatrix: {
+                        const Matrix4& modelMat = renderList[i]->getModelMatrix();
+                        memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
+                        startOffset += 16;
+                    }
+                        break;
+                    case UniformNameType::eDiffuse: {
+                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.diffuse.a};
+                        memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
+                        startOffset += 4;
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        // unmap instanced attribute buffer
+        glUnmapBuffer(GL_ARRAY_BUFFER);
     }
     
     void ProgramGL::updateWidgetUnifroms(Widget* widget)

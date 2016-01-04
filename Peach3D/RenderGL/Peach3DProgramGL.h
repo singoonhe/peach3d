@@ -61,6 +61,8 @@ namespace Peach3D
         /** Bind global uniforms, used for GL3. */
         void bindGlobalUniforms();
         
+        /** Update object global uniform buffer, only RenderGL call it for GL3. */
+        static void updateGlobalObjectUnifroms();
         /** Update widget global uniform buffer, only RenderGL call it for GL3. */
         static void updateGlobalWidgetUnifroms();
         /** Delete all global uniform buffer, only RenderGL call it for GL3. */

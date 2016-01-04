@@ -114,7 +114,7 @@ namespace Peach3D
         
         // update object global uniforms for GL3
         if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-            ProgramGL::updateGlobalWidgetUnifroms();
+            ProgramGL::updateGlobalObjectUnifroms();
         }
     }
     
