@@ -443,7 +443,7 @@ namespace Peach3D
         }
     }
 
-    void ProgramGL::updateSceneNodeUnifroms(SceneNode* node)
+    void ProgramGL::updateRenderNodeUnifroms(RenderNode* node)
     {
         // update scene node uniforms in list
         for (auto uniform : mProgramUniformList) {
@@ -478,7 +478,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList)
+    void ProgramGL::updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList)
     {
     }
     
@@ -563,7 +563,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateInstancedWidgetUnifroms(std::vector<Widget*> renderList)
+    void ProgramGL::updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList)
     {
         // resize render buffer size
         int needCount = (int)renderList.size() - mInstancedCount;

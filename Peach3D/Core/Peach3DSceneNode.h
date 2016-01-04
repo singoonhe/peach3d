@@ -32,9 +32,10 @@ namespace Peach3D
         //! is attached mesh
         bool isAttachedMesh() {return mAttachedMesh!=nullptr;}
         
-        //! get node RenderNode, the name is object's name
-        //! this must call after attchMesh...
+        /** Get named RenderNode, this must call after attchMesh. */
         RenderNode* getRenderNode(const char* name);
+        /** Get is need rendering. */
+        virtual bool isNeedRender() {return Node::isNeedRender() && mAttachedMesh;}
         
         /** Create child scene node by attris. */
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));
@@ -84,6 +85,11 @@ namespace Peach3D
          * @params outObject Return intersect object if ray intersect to mesh and outObject param exist.
          */
         bool isRayIntersect(const Ray& ray, IObject** outObject=nullptr);
+        
+        /** Traverse RenderNode, will auto call lambda func. */
+        void tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc);
+        /** Judge is need render. */
+        void prepareForRender(float lastFrameTime);
         
     protected:
         //! init SceneNode with position, rotation, scale

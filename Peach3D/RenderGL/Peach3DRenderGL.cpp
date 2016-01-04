@@ -111,6 +111,11 @@ namespace Peach3D
     {
         // open depth test
         glEnable(GL_DEPTH_TEST);
+        
+        // update object global uniforms for GL3
+        if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            ProgramGL::updateGlobalWidgetUnifroms();
+        }
     }
     
     void RenderGL::prepareForWidgetRender()
@@ -118,7 +123,7 @@ namespace Peach3D
         // close depth test
         glDisable(GL_DEPTH_TEST);
         
-        // update widget global uniforms for GL3 and DX
+        // update widget global uniforms for GL3
         if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
             ProgramGL::updateGlobalWidgetUnifroms();
         }

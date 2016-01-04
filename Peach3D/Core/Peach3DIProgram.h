@@ -52,7 +52,7 @@ namespace Peach3D
     
     class Material;
     class Widget;
-    class SceneNode;
+    class RenderNode;
     struct RenderObjectAttr;
     class PEACH3D_DLL IProgram
     {
@@ -74,15 +74,15 @@ namespace Peach3D
          */
         virtual void updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime) = 0;
         
-        /** Update SceneNode unifroms for 3d GL2 object material. */
-		virtual void updateSceneNodeUnifroms(SceneNode* node) {}
-        /** Update instanced SceneNodes unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList) = 0;
+        /** Update RenderNode unifroms for 3d GL2 object material. */
+		virtual void updateRenderNodeUnifroms(RenderNode* node) {}
+        /** Update instanced RenderNodes unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList) = 0;
         
         /** Update widget unifroms for 2d GL2 object, include matrix/textures... */
 		virtual void updateWidgetUnifroms(Widget* widget) {}
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedWidgetUnifroms(std::vector<Widget*> renderList) = 0;
+        virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList) = 0;
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;

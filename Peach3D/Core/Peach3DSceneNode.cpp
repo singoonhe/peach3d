@@ -166,7 +166,25 @@ namespace Peach3D
             return mScale;
         }
     }
-            
+    
+    void SceneNode::tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc)
+    {
+        for (auto iter=mRenderNodeMap.begin(); iter!=mRenderNodeMap.end(); ++iter) {
+            // tranverse all child with param func
+            callFunc(iter->first.c_str(), iter->second);
+        }
+    }
+    
+    void SceneNode::prepareForRender(float lastFrameTime)
+    {
+        Node::prepareForRender(lastFrameTime);
+        
+        // update all RenderNode
+        for (auto node : mRenderNodeMap) {
+            node.second->prepareForRender(lastFrameTime);
+        }
+    }
+    
     void SceneNode::updateRenderingAttributes(float lastFrameTime)
     {
         if (mIsRenderDirty) {

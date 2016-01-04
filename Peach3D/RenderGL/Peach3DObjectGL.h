@@ -37,9 +37,9 @@ namespace Peach3D
          */
         virtual void render(const std::vector<Widget*>& renderList);
         /**
-         * @brief Render scene node list, only for GL3 and DX, called by Mesh.
+         * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
          */
-        virtual void render(std::vector<SceneNode*> renderList);
+        virtual void render(const std::vector<RenderNode*>& renderList);
         
     protected:
         /**

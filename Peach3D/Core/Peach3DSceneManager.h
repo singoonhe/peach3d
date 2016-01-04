@@ -87,8 +87,8 @@ namespace Peach3D
         std::vector<Camera*>    mCameraList;        // scene camera list
         Camera*                 mActiveCamera;      // current active camera
         
-        std::vector<SceneNode*> mRenderSceneNodeList;   // cache render scene node list
-        std::vector<SceneNode*> mPickSceneNodeList;     // cache picking scene node list
+        std::vector<RenderNode*>    mRenderNodeList;// cache 3d render node list
+        std::vector<SceneNode*>     mPickSceneNodeList; // cache picking scene node list
     };
 }
 

@@ -15,7 +15,6 @@
 
 namespace Peach3D
 {
-    class SceneNode;
     class PEACH3D_DLL Mesh
     {
     public:
@@ -29,22 +28,13 @@ namespace Peach3D
          * Traverse objects, will auto call lambda func.
          * This func will used to copy object materials to node.
          */
-        void tranverseObjects(std::function<void(const char*, IObject*)> callFunc)
-        {
-            for (auto iter=mObjectMap.begin(); iter!=mObjectMap.end(); ++iter)
-            {
-                // tranverse all child with param func
-                callFunc(iter->first.c_str(), iter->second);
-            }
-        }
+        void tranverseObjects(std::function<void(const char*, IObject*)> callFunc);
         /**
          * @brief Get Object intersect ray.
          * @params translate SceneNode translate matrix.
          * @return First Object will return, nullptr will return if no Object intersect to ray.
          */
         IObject* getRayIntersectObjectWithTranslation(const Matrix4& translate, const Ray& ray);
-        // render mesh, render all objects
-        void render(const std::vector<SceneNode*>& renderList);
         
     protected:
         Mesh(const char* name) : mMeshName(name) {}

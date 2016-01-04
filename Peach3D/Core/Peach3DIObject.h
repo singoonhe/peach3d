@@ -36,7 +36,7 @@ namespace Peach3D
     };
     
     class Widget;
-    class SceneNode;
+    class RenderNode;
     class PEACH3D_DLL IObject
     {
     public:
@@ -76,9 +76,9 @@ namespace Peach3D
          */
         virtual void render(const std::vector<Widget*>& renderList) = 0;
         /**
-         * @brief Render scene node list, only for GL3 and DX, called by Mesh.
+         * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
          */
-        virtual void render(std::vector<SceneNode*> renderList) = 0;
+        virtual void render(const std::vector<RenderNode*>& renderList) = 0;
         
         /**
          * Return object AABB, it should be called after "setVertexBuffer".

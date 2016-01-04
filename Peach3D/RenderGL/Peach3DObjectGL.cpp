@@ -13,7 +13,7 @@
 #include "Peach3DRenderGL.h"
 #include "Peach3DTextureGL.h"
 #include "Peach3DSprite.h"
-#include "Peach3DSceneNode.h"
+#include "Peach3DRenderNode.h"
 #include "Peach3DResourceManager.h"
 
 namespace Peach3D
@@ -102,14 +102,14 @@ namespace Peach3D
         }
     }
     
-    void ObjectGL::render(std::vector<SceneNode*> renderList)
+    void ObjectGL::render(const std::vector<RenderNode*>& renderList)
     {
         size_t listSize = renderList.size();
         Peach3DAssert(listSize > 0, "Can't render empty node list.");
         do {
             IF_BREAK(listSize == 0, nullptr);
             
-            SceneNode* firstNode = renderList[0];
+            RenderNode* firstNode = renderList[0];
             IProgram* usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             
@@ -124,17 +124,17 @@ namespace Peach3D
             }
             
             // enable render state, flip using shader
-            Sprite* texSprite = dynamic_cast<Sprite*>(firstNode);
-            if (texSprite && texSprite->getTexture()) {
-                GLuint glTextureId = static_cast<TextureGL*>(texSprite->getTexture())->getGLTextureId();
-                static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, 0);
+            auto firMat = firstNode->getMaterial();
+            for (auto i = 0; i < firMat.getTextureCount(); i++) {
+                GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i])->getGLTextureId();
+                static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, i);
             }
             
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                 // update instanced uniforms
-                usedProgram->updateInstancedSceneNodeUnifroms(renderList);
-                // draw widget once
+                usedProgram->updateInstancedRenderNodeUnifroms(renderList);
+                // draw objects once
                 glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
                 PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
@@ -142,7 +142,7 @@ namespace Peach3D
             else {
                 for (size_t i = 0; i < listSize; ++i) {
                     // update current widget uniforms
-                    usedProgram->updateSceneNodeUnifroms(renderList[i]);
+                    usedProgram->updateRenderNodeUnifroms(renderList[i]);
                     // draw one widget
                     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
                     PD_ADD_DRAWCALL(1);
@@ -150,7 +150,7 @@ namespace Peach3D
                 }
             }
             // disable render state
-            if (texSprite && texSprite->getTexture()) {
+            if (firMat.getTextureCount() > 0) {
                 glBindTexture(GL_TEXTURE_2D, 0);
             }
             

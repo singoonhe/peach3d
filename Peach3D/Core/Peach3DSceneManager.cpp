@@ -209,7 +209,7 @@ namespace Peach3D
         mActiveCamera->prepareForRender(lastFrameTime);
         
         // clear render and picking scene node list
-        mRenderSceneNodeList.clear();
+        mRenderNodeList.clear();
         mPickSceneNodeList.clear();
         // update root node and add children to render list
         mRootSceneNode->prepareForRender(lastFrameTime);
@@ -217,33 +217,32 @@ namespace Peach3D
             this->addSceneNodeToCacheList(childNode, lastFrameTime);
         });
         
-        // must after widget prepare, because may be no program created.
-        IRender* mainRender = IRender::getSingletonPtr();
-        mainRender->prepareForObjectRender();
         // sort all scene node for instanced draw
         if (PD_RENDERLEVEL() != RenderFeatureLevel::eGL2) {
-            std::sort(mRenderSceneNodeList.begin(), mRenderSceneNodeList.end(), [](Node* a, Node* b) {
-                return static_cast<SceneNode*>(a)->getRenderStateHash() > static_cast<SceneNode*>(b)->getRenderStateHash();
+            std::sort(mRenderNodeList.begin(), mRenderNodeList.end(), [](RenderNode* a, RenderNode* b) {
+                return a->getRenderHash() > b->getRenderHash();
             });
         }
         
+        IRender* mainRender = IRender::getSingletonPtr();
+        mainRender->prepareForObjectRender();
         // draw all scene node
-        SceneNode* lastRenderNode = nullptr;
-        std::vector<SceneNode*> curNodeList;
-        for (size_t i = 0; i < mRenderSceneNodeList.size(); ++i) {
-            SceneNode* curNode = mRenderSceneNodeList[i];
-            if (lastRenderNode && lastRenderNode->getRenderStateHash() != curNode->getRenderStateHash()){
-                // render current widgets
-                lastRenderNode->getAttachedMesh()->render(curNodeList);
+        RenderNode* lastRenderNode = nullptr;
+        std::vector<RenderNode*> curNodeList;
+        for (size_t i = 0; i < mRenderNodeList.size(); ++i) {
+            RenderNode* curNode = mRenderNodeList[i];
+            if (lastRenderNode && lastRenderNode->getRenderHash() != curNode->getRenderHash()){
+                // render current objects
+                lastRenderNode->getObject()->render(curNodeList);
                 curNodeList.clear();
             }
-            // add widget to cache list for next rendering
+            // add object to cache list for next rendering
             curNodeList.push_back(curNode);
             lastRenderNode = curNode;
         }
         if (curNodeList.size() > 0) {
-            // render last widgets
-            lastRenderNode->getAttachedMesh()->render(curNodeList);
+            // render last objects
+            lastRenderNode->getObject()->render(curNodeList);
         }
         
         /*
@@ -309,7 +308,10 @@ namespace Peach3D
         // prepare render first for update "NeedRender"
         rNode->prepareForRender(lastFrameTime);
         if (node->isNeedRender()) {
-            mRenderSceneNodeList.push_back(rNode);
+            // cache all RenderNode from SceneNode
+            rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
+                mRenderNodeList.push_back(node);
+            });
         }
         bool pickEnabled = rNode->isPickingEnabled();
         if (pickEnabled && (node->isNeedRender() || rNode->isPickingAlways())) {

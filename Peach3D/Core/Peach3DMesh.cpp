@@ -8,7 +8,6 @@
 
 #include "Peach3DMesh.h"
 #include "Peach3DIPlatform.h"
-#include "Peach3DSceneNode.h"
 
 namespace Peach3D
 {
@@ -38,6 +37,14 @@ namespace Peach3D
         return nullptr;
     }
     
+    void Mesh::tranverseObjects(std::function<void(const char*, IObject*)> callFunc)
+    {
+        for (auto iter=mObjectMap.begin(); iter!=mObjectMap.end(); ++iter) {
+            // tranverse all child with param func
+            callFunc(iter->first.c_str(), iter->second);
+        }
+    }
+    
     IObject* Mesh::getRayIntersectObjectWithTranslation(const Matrix4& translate, const Ray& ray)
     {
         for (auto iter=mObjectMap.begin(); iter!=mObjectMap.end(); ++iter) {
@@ -48,15 +55,7 @@ namespace Peach3D
         }
         return nullptr;
     }
-    
-    void Mesh::render(const std::vector<SceneNode*>& renderList)
-    {
-        // render all object, sort object and so on ...
-        for (auto obj : mObjectMap) {
-            obj.second->render(renderList);
-        }
-    }
-    
+        
     Mesh::~Mesh()
     {
         IRender* render = IRender::getSingletonPtr();

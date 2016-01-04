@@ -38,15 +38,15 @@ namespace Peach3D
          */
         virtual void updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
         
-        /** Update SceneNode unifroms for 3d object material. */
-        virtual void updateSceneNodeUnifroms(SceneNode* node);
-        /** Update instanced SceneNodes unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList);
+        /** Update RenderNode unifroms for 3d object material. */
+        virtual void updateRenderNodeUnifroms(RenderNode* node);
+        /** Update instanced RenderNode unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
         
         /** Update widget unifroms for 2d object, include matrix/textures... */
         virtual void updateWidgetUnifroms(Widget* widget);
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedWidgetUnifroms(std::vector<Widget*> renderList);
+        virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList);
         
     protected:
         //! compile program, this will be called automatically.
