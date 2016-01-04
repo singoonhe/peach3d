@@ -209,7 +209,7 @@ namespace Peach3D
         mActiveCamera->prepareForRender(lastFrameTime);
         
         // clear render and picking scene node list
-        mRenderNodeList.clear();
+        mRenderNodeMap.clear();
         mPickSceneNodeList.clear();
         // update root node and add children to render list
         mRootSceneNode->prepareForRender(lastFrameTime);
@@ -217,20 +217,13 @@ namespace Peach3D
             this->addSceneNodeToCacheList(childNode, lastFrameTime);
         });
         
-        // sort all scene node for instanced draw
-        if (PD_RENDERLEVEL() != RenderFeatureLevel::eGL2) {
-            std::sort(mRenderNodeList.begin(), mRenderNodeList.end(), [](RenderNode* a, RenderNode* b) {
-                return a->getRenderHash() > b->getRenderHash();
-            });
-        }
-        
         IRender* mainRender = IRender::getSingletonPtr();
         mainRender->prepareForObjectRender();
         // draw all scene node
         RenderNode* lastRenderNode = nullptr;
         std::vector<RenderNode*> curNodeList;
-        for (size_t i = 0; i < mRenderNodeList.size(); ++i) {
-            RenderNode* curNode = mRenderNodeList[i];
+        for (auto iter : mRenderNodeMap) {
+            RenderNode* curNode = iter.second;
             if (lastRenderNode && lastRenderNode->getRenderHash() != curNode->getRenderHash()){
                 // render current objects
                 lastRenderNode->getObject()->render(curNodeList);
@@ -310,7 +303,7 @@ namespace Peach3D
         if (node->isNeedRender()) {
             // cache all RenderNode from SceneNode
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
-                mRenderNodeList.push_back(node);
+                mRenderNodeMap.insert(std::make_pair(node->getRenderHash(), node));
             });
         }
         bool pickEnabled = rNode->isPickingEnabled();
