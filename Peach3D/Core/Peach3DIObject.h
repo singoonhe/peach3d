@@ -40,8 +40,9 @@ namespace Peach3D
     class PEACH3D_DLL IObject
     {
     public:
-        //! Set this object use program. If tihs not be set, system will auto choose program.
-        virtual void useProgramForRender(IProgram* program);
+        /** Set template program, all using current Object Node will use current program first. */
+        void setProgram(IProgram* program) { mObjectProgram = program; }
+        IProgram* getProgram() { return mObjectProgram; }
 
         /**
         * @brief Set vertex buffer data for render object.
@@ -59,12 +60,9 @@ namespace Peach3D
         */
         virtual void setIndexBuffer(const void*data, uint size, IndexType type = IndexType::eUShort);
         
-        //! get object material
-        //! object material is template, only mesh loader could modify.
-        //! modify scene node material to control displayed object
-        virtual const Material& getObjectMaterial()const { return mObjectMtl; }
-        //! set object material, only mesh loader should call it
-        virtual void setMaterial(const Material& mtl) { mObjectMtl = mtl; }
+        /** Set object template material, modify RenderNode material for each node. */
+        void setMaterial(const Material& mtl) { mObjectMtl = mtl; }
+        const Material& getMaterial()const { return mObjectMtl; }
         
         /**
          * @brief Render widget list, only for GL3 and DX, called by SceneManager.
@@ -92,7 +90,7 @@ namespace Peach3D
 
     protected:
         std::string    mObjectName;        // name of object
-        IProgram*      mRenderProgram;     // current used program's name, will be discard
+        IProgram*      mObjectProgram;     // current used template program
         Material       mObjectMtl;         // object material, scene node template material
 
         uint           mIndexBufferSize;   // index buffer byte count

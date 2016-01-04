@@ -19,7 +19,11 @@ namespace Peach3D
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
         // copy object template material for node
-        mMaterial = obj->getObjectMaterial();
+        mMaterial = obj->getMaterial();
+        // copy object template program for node if exist
+        if (obj->getProgram()) {
+            setRenderProgram(obj->getProgram());
+        }
     }
     void RenderNode::resetTextureByIndex(int index, ITexture* texture)
     {
