@@ -100,8 +100,7 @@ namespace Peach3D
         // is need clean stencil
         static bool isStencilEnabled = (IPlatform::getSingleton().getCreationParams().sBits > 0);
         GLbitfield clearBit = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-        if (isStencilEnabled)
-        {
+        if (isStencilEnabled) {
             clearBit = clearBit | GL_STENCIL_BUFFER_BIT;
         }
         glClear(clearBit);

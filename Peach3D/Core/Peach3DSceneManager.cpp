@@ -25,6 +25,8 @@ namespace Peach3D
         mRootSceneNode = new SceneNode();
         // create default main camera
         mActiveCamera = createLockedCamera();
+        // make base object (size 1.f) in camera's field
+        mActiveCamera->setPosition(Vector3(0.f, 0.f, 10.f));
         
         const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
         // init object render projection

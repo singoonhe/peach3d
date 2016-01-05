@@ -130,23 +130,25 @@ namespace Peach3D
                 static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, i);
             }
             
+            GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+            GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                 // update instanced uniforms
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
                 // draw objects once
-                glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
+                glDrawElementsInstanced(GL_TRIANGLES, indexCount, indexType, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
-                PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
+                PD_ADD_DRAWTRIAGNLE((indexCount * (GLsizei)listSize) / 3);
             }
             else {
                 for (size_t i = 0; i < listSize; ++i) {
                     // update current widget uniforms
                     usedProgram->updateRenderNodeUnifroms(renderList[i]);
                     // draw one widget
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+                    glDrawElements(GL_TRIANGLES, indexCount, indexType, 0);
                     PD_ADD_DRAWCALL(1);
-                    PD_ADD_DRAWTRIAGNLE(2);
+                    PD_ADD_DRAWTRIAGNLE(indexCount / 3);
                 }
             }
             // disable render state
