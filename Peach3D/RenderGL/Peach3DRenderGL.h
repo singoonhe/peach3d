@@ -65,10 +65,6 @@ namespace Peach3D
         /** \params the name of new OpenGL ES program.
          \return pointer of new program, return nullptr if create failed. */
         virtual IProgram* createProgram(uint pId);
-        //! generate object vertex shader source code
-        virtual void getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms);
-        //! generate object pixel shader source code
-        virtual void getObjectPresetPSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms);
 
     protected:
         //! filter which extension gpu supported

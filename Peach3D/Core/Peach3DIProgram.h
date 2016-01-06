@@ -50,10 +50,8 @@ namespace Peach3D
         eMatrix,    // matrix attr in vertex, this will talk 4 size
     };
     
-    class Material;
     class Widget;
     class RenderNode;
-    struct RenderObjectAttr;
     class PEACH3D_DLL IProgram
     {
     public:
@@ -65,14 +63,6 @@ namespace Peach3D
         virtual void setVertexType(uint type) { mVertexType = type; }
         //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList) {mProgramUniformList = uniformList;}
-
-        /**
-         * @brief Update object uniforms for 3d object.
-         * @params attrs Object rendering attrs, include much matrixs(projective/camera/model).
-         * @params mtl Object material, include light params and textures. If it's nullptr, only update attrs uniforms.
-         * @params lastFrameTime Auto update uniforms param.
-         */
-        virtual void updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime) = 0;
         
         /** Update RenderNode unifroms for 3d GL2 object material. */
 		virtual void updateRenderNodeUnifroms(RenderNode* node) {}

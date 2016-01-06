@@ -14,7 +14,6 @@
 
 namespace Peach3D
 {
-    class RenderObjectAttr;
     class ProgramGL : public IProgram
     {
         //! declare class RenderGL is friend class, so RenderGL can call constructor function.
@@ -33,10 +32,6 @@ namespace Peach3D
         virtual bool useAsRenderProgram();
         /** Active textures, index from 0. */
         void activeTextures(GLuint texId, uint index);
-        /** 
-         * Update object uniforms for 3d object, see IProgram::updateObjectUnifroms.
-         */
-        virtual void updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
         
         /** Update RenderNode unifroms for 3d object material. */
         virtual void updateRenderNodeUnifroms(RenderNode* node);

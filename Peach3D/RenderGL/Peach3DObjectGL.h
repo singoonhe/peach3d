@@ -59,10 +59,6 @@ namespace Peach3D
          */
         void cleanObjectIndexBuffer();
         /**
-         * Bind buffers for render and update render unifroms, more info see "render".
-         */
-        void bindBaseAttrBuffer(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
-        /**
          * Generate AABB vertex buffers if SceneNode needed.
          */
         static void generateAABBBuffers();
@@ -70,7 +66,7 @@ namespace Peach3D
          * @brief Render a AABB using object matrix, object AABB data use to scale global AABB.
          * @params attrs Object rendering attr, include matrixes.
          */
-        void renderAABB(RenderObjectAttr* attrs);
+        // void renderAABB(RenderObjectAttr* attrs);
         /**
          * Delete AABB vertex buffers, it could be called by RenderGL.
          */

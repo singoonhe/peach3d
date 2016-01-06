@@ -283,20 +283,6 @@ namespace Peach3D
         } while(0);
     }
     
-    void ObjectGL::bindBaseAttrBuffer(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
-    {
-        if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-            // bind vertex array
-            glBindVertexArray(mVertexArrayId);
-        }
-        else {
-            glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-            
-            bindObjectVertexAttrib();
-        }
-    }
-    
     void ObjectGL::generateAABBBuffers()
     {
         // generate vertex buffer for AABB rendering
@@ -344,11 +330,11 @@ namespace Peach3D
         }
     }
     
+    /*
     void ObjectGL::renderAABB(RenderObjectAttr* attrs)
     {
         // generate AABB buffers if needed
         generateAABBBuffers();
-        /*
         AABB nodeAABB = getAABB(*attrs->modelMatrix);
         if (nodeAABB.isValid()) {
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
@@ -390,8 +376,8 @@ namespace Peach3D
             }
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        } */
-    }
+        }
+    }*/
     
     void ObjectGL::deleteAABBBuffers()
     {

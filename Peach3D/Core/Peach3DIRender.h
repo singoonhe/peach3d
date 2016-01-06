@@ -60,12 +60,6 @@ namespace Peach3D
         virtual IProgram* createProgram(uint pId) = 0;
         //! delete program
         virtual void deleteProgram(IProgram* program) { delete program; }
-
-    protected:
-        //! generate object vertex shader source code
-        virtual void getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms) = 0;
-        //! generate object pixel shader source code
-        virtual void getObjectPresetPSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms) = 0;
         
     protected:
         bool      mIsRenderValid;               // render is init?

@@ -40,7 +40,7 @@ namespace Peach3D
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
         void resetTextureByIndex(int index, ITexture* texture);
         /** Set render program, preset program will be set default. */
-        void setRenderProgram(IProgram* program) { mRenderProgram = program; }
+        void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         IProgram* getProgramForRender() { return mRenderProgram; }
         
         IObject* getObject() const { return mRenderObj; }
