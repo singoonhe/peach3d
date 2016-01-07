@@ -9,15 +9,16 @@
 #include "Peach3DShaderCode.h"
 #include "Peach3DIPlatform.h"
 #include "shader/pdCommonFuncShader2D.h"
-#include "shader/pd2PosColorShader2D.h"
-#include "shader/pd2PosColorShader3D.h"
-#include "shader/pd2PosColorUVShader2D.h"
-#include "shader/pd3PosColorShader2D.h"
-#include "shader/pd3PosColorShader3D.h"
-#include "shader/pd3PosColorUVShader2D.h"
+#include "shader/pdPosColorShader2D.h"
+#include "shader/pdPosColorShader3D.h"
+#include "shader/pdPosColorUVShader2D.h"
 
 namespace Peach3D
 {
+    const std::vector<ProgramUniform> gGlobalUniforms2D = {ProgramUniform("pd_viewRect", UniformDataType::eVector4),};
+    const std::vector<ProgramUniform> gGlobalUniforms3D = {ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4),
+        ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4)};
+    
     ShaderCodeData generateShaderCodeData(const char* code1, const char* code2 = "")
     {
         ulong code1Len = strlen(code1), code2Len = strlen(code2);
@@ -29,26 +30,23 @@ namespace Peach3D
         return ShaderCodeData(shaderData, int(code1Len + code2Len));
     }
     
+    void mergeUniformsToFront(std::vector<ProgramUniform>& dst, const std::vector<ProgramUniform>& source)
+    {
+        for (auto uniform : source) {
+            dst.insert(dst.begin(), uniform);
+        }
+    }
+    
     const ShaderCodeData& ShaderCode::getShaderCode(const std::string& name)
     {
         // add all shader code if list is empty
         if (mShaderMap.empty()) {
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-                mShaderMap["PosColorVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, g3PosColorVerShader2D);
-                mShaderMap["PosColorFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, g3PosColorFragShader2D);
-                mShaderMap["PosColorUVVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, g3PosColorUVVerShader2D);
-                mShaderMap["PosColorUVFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, g3PosColorUVFragShader2D);
-                mShaderMap["PosColorVerShader3D"] = generateShaderCodeData(g3PosColorVerShader3D);
-                mShaderMap["PosColorFragShader3D"] = generateShaderCodeData(g3PosColorFragShader3D);
-            }
-            else {
-                mShaderMap["PosColorVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, g2PosColorVerShader2D);
-                mShaderMap["PosColorFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, g2PosColorFragShader2D);
-                mShaderMap["PosColorUVVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, g2PosColorUVVerShader2D);
-                mShaderMap["PosColorUVFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, g2PosColorUVFragShader2D);
-                mShaderMap["PosColorVerShader3D"] = generateShaderCodeData(g2PosColorVerShader3D);
-                mShaderMap["PosColorFragShader3D"] = generateShaderCodeData(g2PosColorFragShader3D);
-            }
+            mShaderMap["PosColorVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, gPosColorVerShader2D);
+            mShaderMap["PosColorFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, gPosColorFragShader2D);
+            mShaderMap["PosColorUVVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, gPosColorUVVerShader2D);
+            mShaderMap["PosColorUVFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, gPosColorUVFragShader2D);
+            mShaderMap["PosColorVerShader3D"] = generateShaderCodeData(gPosColorVerShader3D);
+            mShaderMap["PosColorFragShader3D"] = generateShaderCodeData(gPosColorFragShader3D);
         }
         return mShaderMap[name];
     }
@@ -58,15 +56,14 @@ namespace Peach3D
         // add all shader uniforms if list is empty
         if (mUniformsMap.empty()) {
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
-                mUniformsMap["PosColorVerShader2D"] = g2PosColorUniforms2D;
-                mUniformsMap["PosColorUVVerShader2D"] = g2PosColorUVUniforms2D;
-                mUniformsMap["PosColorVerShader3D"] = g2PosColorUniforms3D;
+                // gl2 need add global uniforms
+                mergeUniformsToFront(gPosColorUniforms2D, gGlobalUniforms2D);
+                mergeUniformsToFront(gPosColorUVUniforms2D, gGlobalUniforms2D);
+                mergeUniformsToFront(gPosColorUniforms3D, gGlobalUniforms3D);
             }
-            else {
-                mUniformsMap["PosColorVerShader2D"] = g3PosColorUniforms2D;
-                mUniformsMap["PosColorUVVerShader2D"] = g3PosColorUVUniforms2D;
-                mUniformsMap["PosColorVerShader3D"] = g3PosColorUniforms3D;
-            }
+            mUniformsMap["PosColorVerShader2D"] =  gPosColorUniforms2D;
+            mUniformsMap["PosColorUVVerShader2D"] = gPosColorUVUniforms2D;
+            mUniformsMap["PosColorVerShader3D"] = gPosColorUniforms3D;
         }
         return mUniformsMap[name];
     }

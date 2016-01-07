@@ -44,13 +44,10 @@
 		187559FE1A1C2D8900296C7B /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187559FD1A1C2D8900296C7B /* CoreVideo.framework */; };
 		18811A491A2DECB2004108A0 /* Peach3DIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18811A481A2DECB2004108A0 /* Peach3DIScene.cpp */; };
 		18811A4A1A2DECB2004108A0 /* Peach3DIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18811A481A2DECB2004108A0 /* Peach3DIScene.cpp */; };
-		1889B11E1BE0B40A0025AA2E /* pd3PosColorShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B11D1BE0B40A0025AA2E /* pd3PosColorShader2D.h */; };
 		1889B1221BE0B9E50025AA2E /* pdCommonFuncShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1211BE0B9E50025AA2E /* pdCommonFuncShader2D.h */; };
-		1889B1241BE0BBF80025AA2E /* pd3PosColorUVShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1231BE0BBF80025AA2E /* pd3PosColorUVShader2D.h */; };
-		1889B1271BE0DA610025AA2E /* pd2PosColorShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1251BE0DA610025AA2E /* pd2PosColorShader2D.h */; };
-		1889B1281BE0DA610025AA2E /* pd2PosColorUVShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1261BE0DA610025AA2E /* pd2PosColorUVShader2D.h */; };
-		1889B12A1BE10BC20025AA2E /* pd3PosColorShader3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1291BE10BC20025AA2E /* pd3PosColorShader3D.h */; };
-		1889B1301BE111130025AA2E /* pd2PosColorShader3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B12F1BE111130025AA2E /* pd2PosColorShader3D.h */; };
+		1889B1271BE0DA610025AA2E /* pdPosColorShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1251BE0DA610025AA2E /* pdPosColorShader2D.h */; };
+		1889B1281BE0DA610025AA2E /* pdPosColorUVShader2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B1261BE0DA610025AA2E /* pdPosColorUVShader2D.h */; };
+		1889B1301BE111130025AA2E /* pdPosColorShader3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 1889B12F1BE111130025AA2E /* pdPosColorShader3D.h */; };
 		1895828D1AFB2DAC00936092 /* Peach3DActionImplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1895828B1AFB2DAC00936092 /* Peach3DActionImplement.cpp */; };
 		1895828E1AFB2DAC00936092 /* Peach3DActionImplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1895828B1AFB2DAC00936092 /* Peach3DActionImplement.cpp */; };
 		1895828F1AFB2DAC00936092 /* Peach3DActionImplement.h in Headers */ = {isa = PBXBuildFile; fileRef = 1895828C1AFB2DAC00936092 /* Peach3DActionImplement.h */; };
@@ -215,13 +212,10 @@
 		185ED18719B4884900801CA0 /* Peach3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3D.h; sourceTree = "<group>"; };
 		187559FD1A1C2D8900296C7B /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		18811A481A2DECB2004108A0 /* Peach3DIScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DIScene.cpp; sourceTree = "<group>"; };
-		1889B11D1BE0B40A0025AA2E /* pd3PosColorShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pd3PosColorShader2D.h; sourceTree = "<group>"; };
 		1889B1211BE0B9E50025AA2E /* pdCommonFuncShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdCommonFuncShader2D.h; sourceTree = "<group>"; };
-		1889B1231BE0BBF80025AA2E /* pd3PosColorUVShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pd3PosColorUVShader2D.h; sourceTree = "<group>"; };
-		1889B1251BE0DA610025AA2E /* pd2PosColorShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pd2PosColorShader2D.h; sourceTree = "<group>"; };
-		1889B1261BE0DA610025AA2E /* pd2PosColorUVShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pd2PosColorUVShader2D.h; sourceTree = "<group>"; };
-		1889B1291BE10BC20025AA2E /* pd3PosColorShader3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pd3PosColorShader3D.h; sourceTree = "<group>"; };
-		1889B12F1BE111130025AA2E /* pd2PosColorShader3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pd2PosColorShader3D.h; sourceTree = "<group>"; };
+		1889B1251BE0DA610025AA2E /* pdPosColorShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdPosColorShader2D.h; sourceTree = "<group>"; };
+		1889B1261BE0DA610025AA2E /* pdPosColorUVShader2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdPosColorUVShader2D.h; sourceTree = "<group>"; };
+		1889B12F1BE111130025AA2E /* pdPosColorShader3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdPosColorShader3D.h; sourceTree = "<group>"; };
 		1895828B1AFB2DAC00936092 /* Peach3DActionImplement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DActionImplement.cpp; sourceTree = "<group>"; };
 		1895828C1AFB2DAC00936092 /* Peach3DActionImplement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DActionImplement.h; sourceTree = "<group>"; };
 		18A272E719E6707E00145FDB /* Peach3DObjLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DObjLoader.cpp; sourceTree = "<group>"; };
@@ -400,12 +394,9 @@
 		1889B11C1BE0B40A0025AA2E /* shader */ = {
 			isa = PBXGroup;
 			children = (
-				1889B1251BE0DA610025AA2E /* pd2PosColorShader2D.h */,
-				1889B12F1BE111130025AA2E /* pd2PosColorShader3D.h */,
-				1889B1261BE0DA610025AA2E /* pd2PosColorUVShader2D.h */,
-				1889B11D1BE0B40A0025AA2E /* pd3PosColorShader2D.h */,
-				1889B1291BE10BC20025AA2E /* pd3PosColorShader3D.h */,
-				1889B1231BE0BBF80025AA2E /* pd3PosColorUVShader2D.h */,
+				1889B1251BE0DA610025AA2E /* pdPosColorShader2D.h */,
+				1889B12F1BE111130025AA2E /* pdPosColorShader3D.h */,
+				1889B1261BE0DA610025AA2E /* pdPosColorUVShader2D.h */,
 				1889B1211BE0B9E50025AA2E /* pdCommonFuncShader2D.h */,
 			);
 			path = shader;
@@ -597,15 +588,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				18155ADF1ACE42B500F81778 /* Peach3DAABB.h in Headers */,
-				1889B11E1BE0B40A0025AA2E /* pd3PosColorShader2D.h in Headers */,
 				185D825D1B08B4B10034F25E /* tinyxml2.h in Headers */,
-				1889B12A1BE10BC20025AA2E /* pd3PosColorShader3D.h in Headers */,
 				18ACF4E919D543140020F943 /* Peach3DIAppDelegate.h in Headers */,
 				18ACF53019D543140020F943 /* Peach3DCommonGL.h in Headers */,
 				18ACF53619D543140020F943 /* Peach3DProgramGL.h in Headers */,
 				18ACF50E19D543140020F943 /* Peach3DQuaternion.h in Headers */,
 				18FEECC019B810970002BA89 /* xxhash.h in Headers */,
-				1889B1301BE111130025AA2E /* pd2PosColorShader3D.h in Headers */,
+				1889B1301BE111130025AA2E /* pdPosColorShader3D.h in Headers */,
 				18F9F53719C6C52A0023C83B /* Peach3DLib_MAC-Prefix.pch in Headers */,
 				18EB6EDD1A636D8A00811B80 /* Peach3DLabel.h in Headers */,
 				18ACF51C19D543140020F943 /* Peach3DVector3.h in Headers */,
@@ -629,7 +618,7 @@
 				182892161A49B222003009D9 /* Peach3DSprite.h in Headers */,
 				18B2AB8119E8C5460041AC1E /* Peach3DImageParse.h in Headers */,
 				184CCB201A1759A50088CDEF /* Peach3DEventDispatcher.h in Headers */,
-				1889B1271BE0DA610025AA2E /* pd2PosColorShader2D.h in Headers */,
+				1889B1271BE0DA610025AA2E /* pdPosColorShader2D.h in Headers */,
 				18ACF4E619D543140020F943 /* Peach3DColor4.h in Headers */,
 				18ACF4FF19D543140020F943 /* Peach3DLogPrinter.h in Headers */,
 				18ACF4EC19D543140020F943 /* Peach3DIObject.h in Headers */,
@@ -651,9 +640,8 @@
 				18ACF51119D543140020F943 /* Peach3DResourceManager.h in Headers */,
 				18ACF4EF19D543140020F943 /* Peach3DIPlatform.h in Headers */,
 				18ACF51719D543140020F943 /* Peach3DSceneNode.h in Headers */,
-				1889B1241BE0BBF80025AA2E /* pd3PosColorUVShader2D.h in Headers */,
 				185D82531B0884C00034F25E /* Peach3DWorldManager.h in Headers */,
-				1889B1281BE0DA610025AA2E /* pd2PosColorUVShader2D.h in Headers */,
+				1889B1281BE0DA610025AA2E /* pdPosColorUVShader2D.h in Headers */,
 				18ACF4E819D543140020F943 /* Peach3DRect.h in Headers */,
 				18ACF4FC19D543140020F943 /* Peach3DWidget.h in Headers */,
 			);

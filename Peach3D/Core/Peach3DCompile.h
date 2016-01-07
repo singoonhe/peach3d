@@ -120,6 +120,7 @@
 #define PD_PIOVER180    0.017453f       // PD_PI/180
 #define PD_PIUNDER180   57.295779f      // 180/PD_PI
 #define PD_UINT_MAX     ((uint)-1)
+#define STRINGIFY(A)    #A
 
 #define RADIANS_TO_DEGREE(radians)  ((radians)*PD_PIUNDER180)
 #define DEGREE_TO_RADIANS(degree) ((degree)*PD_PIOVER180)
