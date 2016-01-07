@@ -85,8 +85,12 @@ void BaseScene::changeToSample(int index)
 {
     if (mSampleList.size() > 0) {
         if (mCurSample) {
+            // delete all widgets except demo UI
             mSampleWidget->deleteAllChildren();
+            // delete all SceneNode
+            SceneManager::getSingleton().getRootSceneNode()->deleteAllChildren();
             delete mCurSample;
+            mCurSample = nullptr;
         }
         // create new sample and init
         mCurSample = mSampleList[index]();
