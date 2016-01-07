@@ -57,7 +57,7 @@ namespace Peach3D
     in vec4 f_diffuse;
     out vec4 out_FragColor;
     \n#else\n
-        varying vec4 f_patShowRect;
+    varying vec4 f_patShowRect;
     varying vec3 f_patAnRot;
     varying vec4 f_diffuse;
     \n#endif\n

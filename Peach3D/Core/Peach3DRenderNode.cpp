@@ -46,7 +46,12 @@ namespace Peach3D
         if (mIsRenderCodeDirty) {
             // set preset program first if needed
             if (!mRenderProgram) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexTypePosition3, "PosColorVerShader3D", "PosColorFragShader3D");
+                if (mMaterial.getTextureCount() > 0) {
+                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexTypePosition3, "PosColorUVVerShader3D", "PosColorUVFragShader3D");
+                }
+                else {
+                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexTypePosition3, "PosColorVerShader3D", "PosColorFragShader3D");
+                }
             }
             // calc render unique hash code
             std::string renderState = Utils::formatString("Name:%sProgram:%u", mObjSpliceName.c_str(), mRenderProgram->getProgramId());

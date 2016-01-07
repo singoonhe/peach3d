@@ -20,13 +20,13 @@ namespace Peach3D
         vec4 pd_viewRect;
     };
     in vec2 pd_vertex;
-    in vec4 pd_showRect;   /* Widget position under anchor and size.*/
-    in vec3 pd_anRot;      /* Widget anchor/rotate.*/
-    in vec4 pd_patShowRect;/* Widget parent position under anchor and size.*/
-    in vec3 pd_patAnRot;   /* Widget parent anchor/rotate.*/
+    in vec4 pd_showRect;    /* Widget position under anchor and size.*/
+    in vec3 pd_anRot;       /* Widget anchor/rotate.*/
+    in vec4 pd_patShowRect; /* Widget parent position under anchor and size.*/
+    in vec3 pd_patAnRot;    /* Widget parent anchor/rotate.*/
     in vec4 pd_diffuse;
     in vec4 pd_uvRect;
-    in vec3 pd_texEffect; /* Sprite scale negative and gray effect. */
+    in vec3 pd_texEffect;   /* Sprite scale negative and gray effect. */
     out vec4 f_patShowRect;
     out vec3 f_patAnRot;
     out vec4 f_diffuse;
@@ -41,7 +41,7 @@ namespace Peach3D
     uniform vec3 pd_patAnRot;   /* Widget parent anchor/rotate.*/
     uniform vec4 pd_diffuse;
     uniform vec4 pd_uvRect;
-    uniform vec3 pd_texEffect; /* Sprite scale negative and gray effect. */
+    uniform vec3 pd_texEffect;  /* Sprite scale negative and gray effect. */
     varying vec4 f_patShowRect;
     varying vec3 f_patAnRot;
     varying vec4 f_diffuse;
@@ -69,7 +69,7 @@ namespace Peach3D
     in vec4 f_diffuse;
     in vec2 f_uv;
     in float f_gray;
-    uniform sampler2D pd_texture0;
+    uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
     out vec4 out_FragColor;
     \n#else\n
     varying vec4 f_patShowRect;
@@ -77,7 +77,7 @@ namespace Peach3D
     varying vec4 f_diffuse;
     varying vec2 f_uv;
     varying float f_gray;
-    uniform sampler2D pd_texture0;
+    uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
     \n#endif\n
 
     void main(void)

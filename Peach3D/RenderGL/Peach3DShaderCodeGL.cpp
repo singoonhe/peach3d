@@ -12,6 +12,7 @@
 #include "shader/pdPosColorShader2D.h"
 #include "shader/pdPosColorShader3D.h"
 #include "shader/pdPosColorUVShader2D.h"
+#include "shader/pdPosColorUVShader3D.h"
 
 namespace Peach3D
 {
@@ -47,6 +48,8 @@ namespace Peach3D
             mShaderMap["PosColorUVFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, gPosColorUVFragShader2D);
             mShaderMap["PosColorVerShader3D"] = generateShaderCodeData(gPosColorVerShader3D);
             mShaderMap["PosColorFragShader3D"] = generateShaderCodeData(gPosColorFragShader3D);
+            mShaderMap["PosColorUVVerShader3D"] = generateShaderCodeData(gPosColorUVVerShader3D);
+            mShaderMap["PosColorUVFragShader3D"] = generateShaderCodeData(gPosColorUVFragShader3D);
         }
         return mShaderMap[name];
     }
@@ -64,6 +67,7 @@ namespace Peach3D
             mUniformsMap["PosColorVerShader2D"] =  gPosColorUniforms2D;
             mUniformsMap["PosColorUVVerShader2D"] = gPosColorUVUniforms2D;
             mUniformsMap["PosColorVerShader3D"] = gPosColorUniforms3D;
+            mUniformsMap["PosColorUVVerShader3D"] = gPosColorUVUniforms3D;
         }
         return mUniformsMap[name];
     }

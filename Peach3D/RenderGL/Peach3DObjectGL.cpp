@@ -285,6 +285,7 @@ namespace Peach3D
     
     void ObjectGL::generateAABBBuffers()
     {
+        /*
         // generate vertex buffer for AABB rendering
         if (!mAABBVertexBuffer && !mAABBIndexBuffer) {
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
@@ -327,7 +328,7 @@ namespace Peach3D
             // generate program
             Material AABBMtl;
 //            mAABBProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexTypePosition3|VertexTypeColor4, AABBMtl);
-        }
+        }*/
     }
     
     /*

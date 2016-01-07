@@ -140,6 +140,7 @@
 		18B5645F1C3513E50043E3C9 /* Peach3DRenderNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18B5645D1C3513E50043E3C9 /* Peach3DRenderNode.cpp */; };
 		18B564601C3513E50043E3C9 /* Peach3DRenderNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18B5645D1C3513E50043E3C9 /* Peach3DRenderNode.cpp */; };
 		18B564611C3513E50043E3C9 /* Peach3DRenderNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 18B5645E1C3513E50043E3C9 /* Peach3DRenderNode.h */; };
+		18BE16AA1C3E9081000592A4 /* pdPosColorUVShader3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BE16A91C3E9081000592A4 /* pdPosColorUVShader3D.h */; };
 		18EB6EDB1A636D8A00811B80 /* Peach3DLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18EB6ED91A636D8A00811B80 /* Peach3DLabel.cpp */; };
 		18EB6EDC1A636D8A00811B80 /* Peach3DLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18EB6ED91A636D8A00811B80 /* Peach3DLabel.cpp */; };
 		18EB6EDD1A636D8A00811B80 /* Peach3DLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 18EB6EDA1A636D8A00811B80 /* Peach3DLabel.h */; };
@@ -283,6 +284,7 @@
 		18B4F6DF19F3F63C009D3A64 /* Peach3DButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DButton.h; sourceTree = "<group>"; };
 		18B5645D1C3513E50043E3C9 /* Peach3DRenderNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DRenderNode.cpp; sourceTree = "<group>"; };
 		18B5645E1C3513E50043E3C9 /* Peach3DRenderNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DRenderNode.h; sourceTree = "<group>"; };
+		18BE16A91C3E9081000592A4 /* pdPosColorUVShader3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdPosColorUVShader3D.h; sourceTree = "<group>"; };
 		18EB6ED91A636D8A00811B80 /* Peach3DLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DLabel.cpp; sourceTree = "<group>"; };
 		18EB6EDA1A636D8A00811B80 /* Peach3DLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DLabel.h; sourceTree = "<group>"; };
 		18EB6EE41A6415C700811B80 /* Peach3DTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peach3DTypes.h; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 				1889B1251BE0DA610025AA2E /* pdPosColorShader2D.h */,
 				1889B12F1BE111130025AA2E /* pdPosColorShader3D.h */,
 				1889B1261BE0DA610025AA2E /* pdPosColorUVShader2D.h */,
+				18BE16A91C3E9081000592A4 /* pdPosColorUVShader3D.h */,
 				1889B1211BE0B9E50025AA2E /* pdCommonFuncShader2D.h */,
 			);
 			path = shader;
@@ -607,6 +610,7 @@
 				18ACF4F919D543140020F943 /* Peach3DITexture.h in Headers */,
 				18EB6EE91A6421E300811B80 /* Peach3DUtils.h in Headers */,
 				1855EE6019D7F97100BECCD0 /* Peach3DMaterial.h in Headers */,
+				18BE16AA1C3E9081000592A4 /* pdPosColorUVShader3D.h in Headers */,
 				185D824E1B08849C0034F25E /* Peach3DLayoutManager.h in Headers */,
 				18ACF50819D543140020F943 /* Peach3DMesh.h in Headers */,
 				1859A5061A3C4A0D008073D9 /* Peach3DScheduler.h in Headers */,

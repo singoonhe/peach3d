@@ -20,13 +20,11 @@
 namespace Peach3D
 {
     // define vertex type, vertex data sequence must like this
-#define VertexTypePosition2     0x0001  // vertex position is float2
-#define VertexTypePosition3     0x0002  // vertex position is float3, ePosition2 will be discard
-#define VertexTypeColor4        0x0004  // vertex have color, float4
-#define VertexTypeNormal        0x0008  // vertex have normal, float3
-#define VertexTypePSize         0x0010  // vertex have point size, usually be used for particle
-#define VertexTypeUV            0x0020  // vertex have UV coord
-#define VertexTypeMatrix        0x0040  // model matrix, only for gl3 draw instance
+    const uint VertexTypePosition2  = 0x0001;   // vertex position is float2
+    const uint VertexTypePosition3  = 0x0002;   // vertex position is float3, ePosition2 will be discard
+    const uint VertexTypeNormal     = 0x0008;   // vertex have normal, float3
+    const uint VertexTypePSize      = 0x0010;   // vertex have point size, usually be used for particle
+    const uint VertexTypeUV         = 0x0020;   // vertex have UV coord
 
     // define index type
     enum class PEACH3D_DLL IndexType

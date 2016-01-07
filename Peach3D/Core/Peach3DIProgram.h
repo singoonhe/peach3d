@@ -13,41 +13,24 @@
 #include "Peach3DVector2.h"
 #include "Peach3DShaderCode.h"
 
-// define the common shader vertex name, VertexTypePosition2 or VertexTypePosition3
-const char pdShaderVertexAttribName[]     = "pd_vertex";
-// define the common shader color name
-const char pdShaderColorAttribName[]      = "pd_color";
-// define the common shader normal name
-const char pdShaderNormalAttribName[]     = "pd_normal";
-// define the common shader pSize name
-const char pdShaderPSizeAttribName[]      = "pd_pSize";
-// define the common shader texture coord name
-const char pdShaderUVAttribName[]         = "pd_uv";
-// define global uniforms
-const char pdShaderProjMatrixUniformName[]    = "pd_projMatrix";
-const char pdShaderViewMatrixUniformName[]    = "pd_viewMatrix";
-const char pdShaderAmbientUniformName[]       = "pd_ambient";
-// define object or widget unifroms
-const char pdShaderModelMatrixUniformName[]   = "pd_modelMatrix";
-// define object texture scroll UV name
-const char pdShaderScrollUVUniformName[]      = "pd_scrollUV";
-// define object textures
-const char pdShaderTexture0UniformName[]      = "pd_texture0";
-const char pdShaderTexture1UniformName[]      = "pd_texture1";
-const char pdShaderTexture2UniformName[]      = "pd_texture2";
-const char pdShaderTexture3UniformName[]      = "pd_texture3";
-
 namespace Peach3D
 {
+    // define the common shader vertex name, VertexTypePosition2 or VertexTypePosition3
+    const char pdShaderVertexAttribName[]     = "pd_vertex";
+    // define the common shader normal name
+    const char pdShaderNormalAttribName[]     = "pd_normal";
+    // define the common shader pSize name
+    const char pdShaderPSizeAttribName[]      = "pd_pSize";
+    // define the common shader texture coord name
+    const char pdShaderUVAttribName[]         = "pd_uv";
+    
     // enum attrs bind location for GL3
     enum class PEACH3D_DLL DefaultAttrLocation
     {
         eVertex,    // position attr in vertex
-        eColor,     // color attr in vertex
         eNormal,    // normal attr in vertex
         ePSize,     // PSize attr in vertex
         eUV,        // uv attr in vertex
-        eMatrix,    // matrix attr in vertex, this will talk 4 size
     };
     
     class Widget;

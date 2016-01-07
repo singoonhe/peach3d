@@ -34,11 +34,9 @@ namespace Peach3D
         {
             mVertexAttrList.push_back(VertexAttrInfo(VertexTypePosition2, 2 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexTypePosition3, 3 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypeColor4, 4 * sizeof(float), DefaultAttrLocation::eColor, pdShaderColorAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexTypeNormal, 3 * sizeof(float), DefaultAttrLocation::eNormal, pdShaderNormalAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexTypePSize, sizeof(float), DefaultAttrLocation::ePSize, pdShaderPSizeAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexTypeUV, 2 * sizeof(float), DefaultAttrLocation::eUV, pdShaderUVAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypeMatrix, 16 * sizeof(float), DefaultAttrLocation::eMatrix, pdShaderModelMatrixUniformName));
         }
         /* add default search dir in platform instance, most platform use different dir */
     }
