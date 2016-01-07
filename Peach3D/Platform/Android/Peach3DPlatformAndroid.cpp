@@ -30,8 +30,7 @@ JNIEXPORT jobject JNICALL Java_com_peach3d_lib_Peach3DActivity_nativeCreateBitma
     // get texture file data
     const char *fileStr = env->GetStringUTFChars(file, NULL);
     uchar *texData = Peach3D::ResourceManager::getSingleton().getFileData(fileStr, &texLength);
-    if (texLength > 0 && texData)
-    {
+    if (texLength > 0 && texData) {
         jclass bitmapfactory_class=nullptr;
         do {
             bitmapfactory_class = (jclass)env->FindClass("android/graphics/BitmapFactory");
@@ -84,8 +83,7 @@ namespace Peach3D
     void PlatformAndroid::deleteRenderDependency()
     {
         // delete EGL
-        if (mDisplay != EGL_NO_DISPLAY) 
-        {
+        if (mDisplay != EGL_NO_DISPLAY) {
             eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
             if (mContext != EGL_NO_CONTEXT) {
                 eglDestroyContext(mDisplay, mContext);
@@ -198,15 +196,13 @@ namespace Peach3D
         void* oldWindow = mCreationParams.window;
         IPlatform::setWindow(window);
 
-        if (!oldWindow)
-        {
+        if (!oldWindow) {
             // init display
             mDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
             eglInitialize(mDisplay, 0, 0);
-            
+
             // initialize EGL config with OpenGL ES 3.0
-            EGLint attribs[] =
-            {
+            EGLint attribs[] = {
                 EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, // OpenGL ES 2.0. This must be set, if not some device     using OpenGL ES-CM 1.1 will report error "called unimplemented OpenGL ES API"
                 EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
                 EGL_BLUE_SIZE, 8,
@@ -220,54 +216,47 @@ namespace Peach3D
             };
             EGLint numConfigs;
             eglChooseConfig(mDisplay, attribs, &mEGLConfig, 1, &numConfigs);
-            
+
             // set render android native window
             eglGetConfigAttrib(mDisplay, mEGLConfig, EGL_NATIVE_VISUAL_ID, &mEGLFormat);
         }
         ANativeWindow_setBuffersGeometry((ANativeWindow*)window, 0, 0, mEGLFormat);
         // create surface, destroy old surface
-        if (mSurface != EGL_NO_SURFACE)
-        {
+        if (mSurface != EGL_NO_SURFACE) {
             eglDestroySurface(mDisplay, mSurface);
             mSurface = EGL_NO_SURFACE;
         }
         mSurface = eglCreateWindowSurface(mDisplay, mEGLConfig, (ANativeWindow*)window, NULL);
-        if (!oldWindow)
-        {
+        if (!oldWindow) {
             // set egl context client version 2. OpenGL ES CM 1.1 will use if not set.
             EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
             mContext = eglCreateContext(mDisplay, mEGLConfig, NULL, context_attribs);
-            if (mContext == EGL_NO_CONTEXT)
-            {
+            if (mContext == EGL_NO_CONTEXT) {
                 // use OpenGL ES CM 1.1 if version 2 failed
                 mContext = eglCreateContext(mDisplay, mEGLConfig, NULL, NULL);
             }
         }
-        if (eglMakeCurrent(mDisplay, mSurface, mSurface, mContext) == EGL_FALSE)
-        {
+        if (eglMakeCurrent(mDisplay, mSurface, mSurface, mContext) == EGL_FALSE) {
             Peach3DLog(LogLevel::eError, "Unable to eglMakeCurrent");
             return ;
         }
-        if (!oldWindow)
-        {
+        if (!oldWindow) {
             EGLint width, height;
             // save created window size
             eglQuerySurface(mDisplay, mSurface, EGL_WIDTH, &width);
             eglQuerySurface(mDisplay, mSurface, EGL_HEIGHT, &height);
-            mCreationParams.winSize = Peach3D::Vector2(height, width);
-            
+            mCreationParams.winSize = Peach3D::Vector2(width, height);
+
             // create Render
             mRender = new RenderGL();
             // at last, init render after get final window size
             bool success = mRender->initRender(mCreationParams.winSize);
-            if (success)
-            {
+            if (success) {
                 // check which GL version should use, add support extensions
                 addExtensionsSupport(mRender);
-                
+
                 // notify IAppDelegate launch finished
-                if (mCreationParams.delegate->appDidFinishLaunching())
-                {
+                if (mCreationParams.delegate->appDidFinishLaunching()) {
                     // start animating
                     mAnimating = true;
                 }
@@ -279,50 +268,42 @@ namespace Peach3D
     {
         RenderGL* glRender = (RenderGL*)render;
         // check opengl es which version used
-        if (glRender->isTypeExtersionSupport(GLExtensionType::eAndroidGL3))
-        {
+        if (glRender->isTypeExtersionSupport(GLExtensionType::eAndroidGL3)) {
             // save OpenGL ES version 3
             mFeatureLevel = RenderFeatureLevel::eGL3;
             Peach3DLog(LogLevel::eInfo, "Render feature level GL3 be used");
         }
-        else
-        {
+        else {
             // save OpenGL ES version 2
             mFeatureLevel = RenderFeatureLevel::eGL2;
             Peach3DLog(LogLevel::eInfo, "Render feature level GL2 be used");
 
 #ifdef ANDROID_DYNAMIC_ES3
             // add VAO func for extension
-            if (glRender->isTypeExtersionSupport(GLExtensionType::eVertexArray))
-            {
+            if (glRender->isTypeExtersionSupport(GLExtensionType::eVertexArray)) {
                 glGenVertexArrays = (PFNGLGENVERTEXARRAYSOESPROC)eglGetProcAddress ( "glGenVertexArraysOES" );
                 glBindVertexArray = (PFNGLBINDVERTEXARRAYOESPROC)eglGetProcAddress ( "glBindVertexArrayOES" );
                 glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSOESPROC)eglGetProcAddress ( "glDeleteVertexArraysOES" );
                 glIsVertexArray = (PFNGLISVERTEXARRAYOESPROC)eglGetProcAddress ( "glIsVertexArrayOES" );
 
-                if (!glGenVertexArrays || !glBindVertexArray || !glDeleteVertexArrays || !glIsVertexArray)
-                {
+                if (!glGenVertexArrays || !glBindVertexArray || !glDeleteVertexArrays || !glIsVertexArray) {
                     // can't get adress, extersion is not supported
                     glRender->deleteExtersionSupport(GLExtensionType::eVertexArray);
                 }
-                else
-                {
+                else {
                     Peach3DLog(LogLevel::eInfo, "GL extension vertex_array_object is supported");
                 }
             }
             // add map buffer func for extension
-            if (glRender->isTypeExtersionSupport(GLExtensionType::eMapBuffer))
-            {
+            if (glRender->isTypeExtersionSupport(GLExtensionType::eMapBuffer)) {
                 glMapBufferOES = (PFNGLMAPBUFFEROESPROC)eglGetProcAddress ( "glMapBufferOES" );
                 glUnmapBufferOES = (PFNGLUNMAPBUFFEROESPROC)eglGetProcAddress ( "glUnmapBufferOES" );
 
-                if (!glMapBufferOES || !glUnmapBufferOES)
-                {
+                if (!glMapBufferOES || !glUnmapBufferOES) {
                     // can't get adress, extersion is not supported
                     glRender->deleteExtersionSupport(GLExtensionType::eMapBuffer);
                 }
-                else
-                {
+                else {
                     Peach3DLog(LogLevel::eInfo, "GL extension mapbuffer is supported");
                 }
             }
@@ -422,7 +403,7 @@ namespace Peach3D
                     Peach3DErrorLog("Get static method \"createTextBitmap\" failed!");
                     break;
                 }
-    
+
                 // generate params
                 jclass jclsStr = env->FindClass("java/lang/String");
                 jobjectArray textArrayList = env->NewObjectArray(textList.size(), jclsStr, 0);
@@ -430,8 +411,7 @@ namespace Peach3D
                 jintArray colorArrayList = env->NewIntArray(textList.size());
                 jbooleanArray clickArrayList = env->NewBooleanArray(textList.size());
                 env->DeleteLocalRef(jclsStr);
-                for (int i=0; i<textList.size(); i++)
-                {
+                for (int i=0; i<textList.size(); i++) {
                     // save text list
                     jstring textString = env->NewStringUTF(textList[i].text.c_str());
                     env->SetObjectArrayElement(textArrayList, i, textString);
@@ -464,7 +444,7 @@ namespace Peach3D
                 env->DeleteLocalRef(colorArrayList);
                 env->DeleteLocalRef(clickArrayList);
                 env->DeleteLocalRef(jstrText);
-    
+
                 // create texture from android bitmap
                 AndroidBitmapInfo bmpInfo={0};
                 if(AndroidBitmap_getInfo(env, bitmap, &bmpInfo)<0) {
@@ -480,7 +460,7 @@ namespace Peach3D
                 texture = ResourceManager::getSingleton().createTexture(dataFromBmp, bufSize, bmpInfo.width, bmpInfo.   height, TextureFormat::eRGBA8);
                 AndroidBitmap_unlockPixels(env, bitmap);
             } while (0);
-    
+
             // release bitmap
             if (bitmap) {
                 env->DeleteLocalRef(bitmap);
@@ -495,7 +475,7 @@ namespace Peach3D
     void PlatformAndroid::openUrl(const std::string& url)
     {
         if (url.size()==0) return;
-        
+
         callJniFunc([&](JNIEnv* env, jclass activityClazz) {
             // auto add "http://" header
             std::string finalUrl = url;
