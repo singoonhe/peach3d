@@ -24,9 +24,11 @@ Core/Peach3DMesh.cpp \
 Core/Peach3DNode.cpp \
 Core/Peach3DObjLoader.cpp \
 Core/Peach3DQuaternion.cpp \
+Core/Peach3DRenderNode.cpp \
 Core/Peach3DResourceManager.cpp \
 Core/Peach3DSceneManager.cpp \
 Core/Peach3DSceneNode.cpp \
+Core/Peach3DShaderCode.cpp \
 Core/Peach3DUtils.cpp \
 Core/Peach3DVector.cpp \
 Core/Peach3DWidget.cpp \
@@ -58,7 +60,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/Platform \
                     $(LOCAL_PATH)/Support \
                     $(LOCAL_PATH)/RenderGL
-                    
+
 LOCAL_CPPFLAGS += -frtti
 LOCAL_CFLAGS += -DANDROID_DYNAMIC_ES3
 LOCAL_EXPORT_CFLAGS += -DANDROID_DYNAMIC_ES3

@@ -22,7 +22,8 @@ LOCAL_SRC_FILES := main.cpp \
 ../../source/TestScene.cpp \
 ../../source/BaseScene.cpp \
 ../../source/UIScene.cpp \
-../../source/ActionScene.cpp
+../../source/ActionScene.cpp \
+../../source/MeshScene.cpp
 
 LOCAL_LDLIBS    := -llog -landroid
 LOCAL_WHOLE_STATIC_LIBRARIES := android_native_app_glue Peach3DLib
