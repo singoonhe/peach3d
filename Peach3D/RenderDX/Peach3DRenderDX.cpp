@@ -372,12 +372,6 @@ namespace Peach3D
         }
     }
 
-    void RenderDX::updateGlobalUnifroms(RenderObjectAttr* attrs)
-    {
-        // call program to update global UBO
-        ProgramDX::updateGlobalUnifroms(attrs);
-    }
-
     ITexture* RenderDX::createTexture(const char* name)
     {
         Peach3DAssert(strlen(name)>0, "The texture name can't be null");
@@ -438,8 +432,9 @@ namespace Peach3D
         mFenceValues[mCurrentFrame] = currentFenceValue + 1;
     }
 
+    /*
     void RenderDX::getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms)
-    {/*
+    {
         uint vertexType = params[0];
         bool scrollEnabled = params[2] < params[1]; // enable uv scroll if scrolltexindex is valid
         std::vector<std::string> codeList;
@@ -520,7 +515,7 @@ namespace Peach3D
         codeList.push_back("    return vertexShaderOutput;\n"
             "}\n");
         std::for_each(codeList.begin(), codeList.end(), [&](const std::string &piece){ *code += piece; });
-        Peach3DLog(LogLevel::eInfo, "vertex code: \n%s", code->c_str());*/
+        Peach3DLog(LogLevel::eInfo, "vertex code: \n%s", code->c_str());
     }
 
     void RenderDX::getObjectPresetPSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms)
@@ -585,5 +580,5 @@ namespace Peach3D
         codeList.push_back("}\n");
         std::for_each(codeList.begin(), codeList.end(), [&](const std::string &piece){ *code += piece; });
         Peach3DLog(LogLevel::eInfo, "pixel code: \n%s", code->c_str());
-    }
+    }*/
 }

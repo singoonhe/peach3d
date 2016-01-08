@@ -71,8 +71,9 @@ namespace Peach3D
         }*/
     }
 
+    /*
     void ObjectDX::render(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
-    {/*
+    {
         // check is need choose preset program
         IObject::render(attrs, mtl, lastFrameTime);
 
@@ -125,37 +126,16 @@ namespace Peach3D
             if (attrs->showAABB) {
                 renderAABB(attrs);
             }
-        }*/
-    }
+        }
+    }*/
 
 	void ObjectDX::render(const std::vector<Widget*>& renderList)
 	{
 	}
 
-	void ObjectDX::render(std::vector<SceneNode*> renderList)
+	void ObjectDX::render(const std::vector<RenderNode*>& renderList)
 	{
 	}
-
-    void ObjectDX::bindBaseAttrBuffer(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
-    {
-        // enable vertex buffer
-        UINT offset = 0;
-        mDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &mVertexDataStride, &offset);
-        // enable index buffer
-        if (mIndexBuffer)
-        {
-            if (mIndexDataType == IndexType::eUShort)
-            {
-                mDeviceContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-            }
-            else if (mIndexDataType == IndexType::eUInt)
-            {
-                mDeviceContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-            }
-        }
-        // set object uniforms and material, global uniforms has update before rendering
-        mRenderProgram->updateObjectUnifroms(attrs, mtl, lastFrameTime);
-    }
 
     void ObjectDX::generateAABBBuffers(ComPtr<ID3D12Device> device, ComPtr<ID3D11DeviceContext2> context)
     {/*
@@ -204,8 +184,9 @@ namespace Peach3D
         }*/
     }
 
+    /*
     void ObjectDX::renderAABB(RenderObjectAttr* attrs)
-    {/*
+    {
         // generate AABB buffers if needed
         generateAABBBuffers(mD3DDevice, mDeviceContext);
         const UINT offset = 0, vertexStride = 7 * sizeof(float);
@@ -240,8 +221,8 @@ namespace Peach3D
             mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
             mDeviceContext->DrawIndexed(6, 10, 0);
             PD_ADD_DRAWCALL(1);
-        }*/
-    }
+        }
+    }*/
 
     void ObjectDX::deleteAABBBuffers()
     {

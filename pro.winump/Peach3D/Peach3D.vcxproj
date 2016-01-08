@@ -231,6 +231,7 @@
     <ClInclude Include="..\..\Peach3D\Core\Peach3DObjLoader.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DQuaternion.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DRect.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DRenderNode.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DResourceManager.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DSceneManager.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DSceneNode.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DNode.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DObjLoader.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DQuaternion.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DRenderNode.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DResourceManager.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneManager.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DSceneNode.cpp" />

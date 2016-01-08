@@ -31,7 +31,7 @@ namespace Peach3D
             return ;
         }
         auto texCount = mMaterial.textureList.size();
-        if (index >=0 && index < texCount) {
+        if (index >= 0 && index < int(texCount)) {
             mMaterial.textureList[index] = texture;
             // sign render hash need update
             mIsRenderCodeDirty = true;

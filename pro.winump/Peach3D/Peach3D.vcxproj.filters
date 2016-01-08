@@ -115,6 +115,9 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DShaderCode.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DRenderNode.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Peach3D\Core\Peach3DResourceManager.h">
@@ -267,6 +270,9 @@
     <ClInclude Include="..\..\Peach3D\Peach3D.h" />
     <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdShaderUniforms.h">
       <Filter>RenderDX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DRenderNode.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

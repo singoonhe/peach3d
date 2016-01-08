@@ -50,6 +50,9 @@
     <ClCompile Include="..\..\source\BaseScene.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\MeshScene.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -71,6 +74,9 @@
     <ClInclude Include="..\..\source\BaseSample.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\MeshScene.h">
+      <Filter>source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -81,6 +87,12 @@
       <Filter>resource</Filter>
     </None>
     <None Include="..\..\resource\Cube.mtl">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\resource\Cube.obj">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\resource\texcube.obj">
       <Filter>resource</Filter>
     </None>
   </ItemGroup>
@@ -124,13 +136,5 @@
     <Image Include="..\..\resource\test.ico">
       <Filter>resource</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\..\resource\texcube.obj">
-      <Filter>resource</Filter>
-    </Object>
-    <Object Include="..\..\resource\Cube.obj">
-      <Filter>resource</Filter>
-    </Object>
   </ItemGroup>
 </Project>

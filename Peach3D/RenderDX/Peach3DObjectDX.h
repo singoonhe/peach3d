@@ -20,20 +20,14 @@ namespace Peach3D
         */
         virtual void setIndexBuffer(const void*data, uint size, IndexType type);
 
-        //! ebable buffers for render
-        virtual void bindBaseAttrBuffer(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
         /**
-        * See IObject::render.
+        * @brief Render widget list, only for GL3 and DX, called by SceneManager.
         */
-        virtual void render(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
-		/**
-		* @brief Render widget list, only for GL3 and DX, called by SceneManager.
-		*/
-		virtual void render(const std::vector<Widget*>& renderList);
-		/**
-		* @brief Render scene node list, only for GL3 and DX, called by Mesh.
-		*/
-		virtual void render(std::vector<SceneNode*> renderList);
+        virtual void render(const std::vector<Widget*>& renderList);
+        /**
+        * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
+        */
+        virtual void render(const std::vector<RenderNode*>& renderList);
 
     protected:
         ObjectDX(ComPtr<ID3D12Device> device, const char* name)
@@ -57,7 +51,7 @@ namespace Peach3D
         * @brief Render a AABB using object matrix, object AABB data use to scale global AABB.
         * @params attrs Object rendering attr, include matrixes.
         */
-        void renderAABB(RenderObjectAttr* attrs);
+        //void renderAABB(RenderObjectAttr* attrs);
         /**
         * Delete AABB vertex buffers, it could be called by RenderDX.
         */

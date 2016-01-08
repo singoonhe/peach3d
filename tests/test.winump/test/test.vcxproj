@@ -238,6 +238,7 @@
     <ClInclude Include="..\..\source\ActionScene.h" />
     <ClInclude Include="..\..\source\BaseSample.h" />
     <ClInclude Include="..\..\source\BaseScene.h" />
+    <ClInclude Include="..\..\source\MeshScene.h" />
     <ClInclude Include="..\..\source\PlatformDelegate.h" />
     <ClInclude Include="..\..\source\TestScene.h" />
     <ClInclude Include="..\..\source\UIScene.h" />
@@ -246,6 +247,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\ActionScene.cpp" />
     <ClCompile Include="..\..\source\BaseScene.cpp" />
+    <ClCompile Include="..\..\source\MeshScene.cpp" />
     <ClCompile Include="..\..\source\PlatformDelegate.cpp" />
     <ClCompile Include="..\..\source\TestScene.cpp" />
     <ClCompile Include="..\..\source\UIScene.cpp" />

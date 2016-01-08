@@ -22,15 +22,11 @@ namespace Peach3D
 
         //! Set current object use this program.
         virtual bool useAsRenderProgram();
-        //! update object unifroms for 3d object, include matrix/textures/lighting/uv ...
-        virtual void updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime);
-        //! update widget unifroms for 2d object, include matrix/textures...
-        virtual void updateWidgetUnifroms(Widget* widget);
 
-		/** Update instanced SceneNodes unifroms depend on mProgramUniformList. */
-		virtual void updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList);
-		/** Update instanced widgets unifroms depend on mProgramUniformList. */
-		virtual void updateInstancedWidgetUnifroms(std::vector<Widget*> renderList);
+        /** Update instanced RenderNode unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
+        /** Update instanced widgets unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList);
 
     protected:
         ProgramDX(ComPtr<ID3D12Device> device, uint pId);
@@ -42,12 +38,10 @@ namespace Peach3D
         virtual void createInputLayout();
         //! Delete dx program.
         void cleanProgram();
-        //! bind global uniforms for 3d object
-        void bindGlobalUniformsForObject();
-        //! bind object uniforms for 3d object
-        void bindProgramUniformsForObject();
-        //! update global uniform buffer
-        static void updateGlobalUnifroms(RenderObjectAttr* attrs);
+        /** Update object global uniform buffer. */
+        static void updateGlobalObjectUnifroms();
+        /** Update widget global uniform buffer. */
+        static void updateGlobalWidgetUnifroms();
         //! delete global uniform buffer
         static void deleteGlobalUBO();
 

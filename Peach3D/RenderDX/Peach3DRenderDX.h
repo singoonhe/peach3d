@@ -29,9 +29,6 @@ namespace Peach3D
         // present, discard target and stencil view
         virtual void finishForRender();
 
-        //! call program update global Unifroms
-        void updateGlobalUnifroms(RenderObjectAttr* attrs);
-
         //! Create renderable object.
         /** \params the name of new renderable object.
             \retuan retuan the new object pointer, return nullptr if create failed. */
@@ -44,11 +41,6 @@ namespace Peach3D
         /** \params the name of new OpenGL ES program.
         \return pointer of new program, return nullptr if create failed. */
         virtual IProgram* createProgram(uint pId);
-
-        //! generate object vertex shader source code
-        virtual void getObjectPresetVSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms);
-        //! generate object pixel shader source code
-        virtual void getObjectPresetPSSource(uint* params, std::string* code, std::vector<ProgramUniform>* uniforms);
         
         //! get Direct2D factory
         ID2D1Factory1* getD2DFactory() { return mD2DFactory; }

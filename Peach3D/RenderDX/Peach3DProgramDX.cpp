@@ -20,10 +20,10 @@ namespace Peach3D
         if (mGUniformOffsetMap.size() == 0)
         {
             //mGlobalUpdateContext = context;
-            mGUniformOffsetMap[pdShaderProjMatrixUniformName] = 0;
-            mGUniformOffsetMap[pdShaderViewMatrixUniformName] = 16;
-            mGUniformOffsetMap[pdShaderAmbientUniformName] = 32;
-            mGlobalUboSize = (mGUniformOffsetMap[pdShaderAmbientUniformName] + 4) * sizeof(float);
+            //mGUniformOffsetMap[pdShaderProjMatrixUniformName] = 0;
+            //mGUniformOffsetMap[pdShaderViewMatrixUniformName] = 16;
+            //mGUniformOffsetMap[pdShaderAmbientUniformName] = 32;
+            //mGlobalUboSize = (mGUniformOffsetMap[pdShaderAmbientUniformName] + 4) * sizeof(float);
         }
     }
 
@@ -175,6 +175,7 @@ namespace Peach3D
         }*/
     }
 
+    /*
     void ProgramDX::updateObjectUnifroms(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
     {
         if (mOUniformBuffer)
@@ -212,10 +213,11 @@ namespace Peach3D
                 });
             }
         }
-    }
+    }*/
 
+    /*
     void ProgramDX::updateWidgetUnifroms(Widget* widget)
-    {/*
+    {
         if (mOUniformBuffer)
         {
             D3D11_MAPPED_SUBRESOURCE subData;
@@ -245,10 +247,10 @@ namespace Peach3D
                 mDeviceContext->PSSetShaderResources(UINT(i), 1, &dxTexRV);
                 mDeviceContext->PSSetSamplers(UINT(i), 1, &dxTexState);
             }
-        }*/
-    }
+        }
+    }*/
 
-    void ProgramDX::bindGlobalUniformsForObject()
+    void ProgramDX::updateGlobalObjectUnifroms()
     {/*
         // create global uniform buffer
         if (mGUniformBuffer == nullptr)
@@ -259,39 +261,24 @@ namespace Peach3D
         }*/
     }
 
-    void ProgramDX::bindProgramUniformsForObject()
+    void ProgramDX::updateGlobalWidgetUnifroms()
     {
         // release object uniform buffer if has created
-        if (mOUniformBuffer)
-        {
-            mOUniformBuffer->Release();
-            mOUniformBuffer = nullptr;
-        }
+        //if (mOUniformBuffer)
+        //{
+        //    mOUniformBuffer->Release();
+        //    mOUniformBuffer = nullptr;
+        //}
         // create object uniform buffer
         //CD3D11_BUFFER_DESC constantBufferDesc(mObjectUboSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
         //mD3DDevice->CreateBuffer(&constantBufferDesc, nullptr, &mOUniformBuffer);
     }
 
-    void ProgramDX::updateGlobalUnifroms(RenderObjectAttr* attrs)
-    {/*
-        // update global uniforms, called before render objects
-        if (mGUniformBuffer)
-        {
-            D3D11_MAPPED_SUBRESOURCE subData;
-            mGlobalUpdateContext->Map(mGUniformBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subData);
-            float* dataBuffer = (float*)subData.pData;
-            memcpy(dataBuffer + mGUniformOffsetMap[pdShaderProjMatrixUniformName], attrs->projMatrix->getTranspose().mat, 16 * sizeof(float));
-            memcpy(dataBuffer + mGUniformOffsetMap[pdShaderViewMatrixUniformName], attrs->viewMatrix->getTranspose().mat, 16 * sizeof(float));
-            memcpy(dataBuffer + mGUniformOffsetMap[pdShaderAmbientUniformName], attrs->ambient, 4 * sizeof(float));
-            mGlobalUpdateContext->Unmap(mGUniformBuffer, 0);
-        }*/
-    }
-
-	void ProgramDX::updateInstancedSceneNodeUnifroms(std::vector<SceneNode*> renderList)
+	void ProgramDX::updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList)
 	{
 	}
 
-	void ProgramDX::updateInstancedWidgetUnifroms(std::vector<Widget*> renderList)
+	void ProgramDX::updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList)
 	{
 	}
 
