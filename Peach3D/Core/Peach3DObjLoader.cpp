@@ -435,9 +435,9 @@ namespace Peach3D
                             if (!tex && dir.size() > 0){
                                 // read mtl from absolute path
                                 tex = ResourceManager::getSingleton().addTexture((dir + relativePath).c_str());
-                                // add texture to material
-                                currentMtl->textureList.push_back(tex);
                             }
+                            // add texture to material
+                            currentMtl->textureList.push_back(tex);
                         }
                     }
                         break;

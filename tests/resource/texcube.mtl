@@ -9,4 +9,4 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /Users/apple/Documents/workspace/Peach3D/tests/resource/peach1.png
+map_Kd peach3d_icon.png
