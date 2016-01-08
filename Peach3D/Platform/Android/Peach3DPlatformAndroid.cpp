@@ -438,7 +438,7 @@ namespace Peach3D
                 totalAlign = (totalAlign << 4) | (int)defined.vAlign;
                 totalAlign = (totalAlign << 4) | (int)defined.hAlign;
                 // call function
-                bitmap = env->CallStaticObjectMethod(activityClazz, bitmapMethodID, textArrayList, imageArrayList,  colorArrayList, clickArrayList, jstrText, (int)defined.fontSize, totalAlign, (int)defined.dim.x, (   int)defined.dim.y, mCreationParams.winSize.x);
+                bitmap = env->CallStaticObjectMethod(activityClazz, bitmapMethodID, textArrayList, imageArrayList,  colorArrayList, clickArrayList, jstrText, (int)defined.fontSize, totalAlign, (int)defined.dim.x, (int)defined.dim.y, (int)mCreationParams.winSize.x);
                 env->DeleteLocalRef(textArrayList);
                 env->DeleteLocalRef(imageArrayList);
                 env->DeleteLocalRef(colorArrayList);
