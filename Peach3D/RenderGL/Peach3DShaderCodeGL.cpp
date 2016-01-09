@@ -63,6 +63,7 @@ namespace Peach3D
                 mergeUniformsToFront(gPosColorUniforms2D, gGlobalUniforms2D);
                 mergeUniformsToFront(gPosColorUVUniforms2D, gGlobalUniforms2D);
                 mergeUniformsToFront(gPosColorUniforms3D, gGlobalUniforms3D);
+                mergeUniformsToFront(gPosColorUVUniforms3D, gGlobalUniforms3D);
             }
             mUniformsMap["PosColorVerShader2D"] =  gPosColorUniforms2D;
             mUniformsMap["PosColorUVVerShader2D"] = gPosColorUVUniforms2D;
