@@ -62,10 +62,10 @@ namespace Peach3D
     {
         \n#ifdef PD_LEVEL_GL3\n
         vec4 tex_color0 = texture( pd_texture0, f_uv );
-        out_FragColor = mix(f_diffuse, tex_color0, tex_color0.a);
+        out_FragColor = f_diffuse * tex_color0;
         \n#else\n
         vec4 tex_color0 = texture2D( pd_texture0, f_uv );
-        gl_FragColor = mix(f_diffuse, tex_color0, tex_color0.a);
+        gl_FragColor = f_diffuse * tex_color0;
         \n#endif\n
     });
 
