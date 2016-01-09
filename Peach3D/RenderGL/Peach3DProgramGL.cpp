@@ -372,7 +372,7 @@ namespace Peach3D
         if (mUniformLocateMap.find(name) == mUniformLocateMap.end()) {
             uniformLocation = glGetUniformLocation(mProgram, name.c_str());
             if (uniformLocation < 0) {
-                Peach3DLog(LogLevel::eError, "Program %d can't find the attribute name %s", mProgramId, name.c_str());
+                Peach3DLog(LogLevel::eError, "Program %u can't find the attribute name %s", mProgramId, name.c_str());
             }
             mUniformLocateMap[name] = uniformLocation;
         }
