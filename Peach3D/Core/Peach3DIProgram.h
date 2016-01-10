@@ -15,7 +15,7 @@
 
 namespace Peach3D
 {
-    // define the common shader vertex name, VertexTypePosition2 or VertexTypePosition3
+    // define the common shader vertex name, VertexType::Point2 or VertexType::Point3
     const char pdShaderVertexAttribName[]     = "pd_vertex";
     // define the common shader normal name
     const char pdShaderNormalAttribName[]     = "pd_normal";

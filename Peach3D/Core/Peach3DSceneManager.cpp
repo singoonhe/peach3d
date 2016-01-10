@@ -120,7 +120,7 @@ namespace Peach3D
             IObject* widgetObj = IRender::getSingleton().createObject(Utils::formatString("pd_WidgetObject%d", program).c_str());
             float fixedVertexData[] = {-1.0f,1.0f, -1.0f,-1.0f, 1.0f,1.0f, 1.0f,-1.0f};
             ushort fixedIndexData[] = {0, 1, 3, 0, 3, 2};
-            widgetObj->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexTypePosition2);
+            widgetObj->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2);
             widgetObj->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
             
             mWidgetObject[program] = widgetObj;
@@ -201,7 +201,7 @@ namespace Peach3D
         glVertexAttribPointer(DefaultAttrLocation::eColor, 4, GL_FLOAT, GL_FALSE, vStride, PEACH3D_BUFFER_OFFSET(3 * sizeof(float)));
         
         Material AABBMtl;
-        rayProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexTypePosition3|VertexTypeColor4, AABBMtl);
+        rayProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexType::Point3|VertexTypeColor4, AABBMtl);
     }
      */
     

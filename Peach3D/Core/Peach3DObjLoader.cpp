@@ -100,16 +100,16 @@ namespace Peach3D
                             if (!info->vertexType)
                             {
                                 info->vertexStep = 3;
-                                info->vertexType = VertexTypePosition3;
+                                info->vertexType = VertexType::Point3;
                                 if (line.find("//") != std::string::npos) {
-                                    info->vertexType |= VertexTypeNormal;
+                                    info->vertexType |= VertexType::Normal;
                                     info->vertexStep += 3;
                                 }
                                 else if (line.find('/') != std::string::npos) {
-                                    info->vertexType |= VertexTypeUV;
+                                    info->vertexType |= VertexType::UV;
                                     info->vertexStep += 2;
                                     if (line.find('/') != line.rfind('/')) {
-                                        info->vertexType |= VertexTypeNormal;
+                                        info->vertexType |= VertexType::Normal;
                                         info->vertexStep += 3;
                                     }
                                 }

@@ -32,11 +32,11 @@ namespace Peach3D
         // init vertex attri list
         if (mVertexAttrList.size() == 0)
         {
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypePosition2, 2 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypePosition3, 3 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypeNormal, 3 * sizeof(float), DefaultAttrLocation::eNormal, pdShaderNormalAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypePSize, sizeof(float), DefaultAttrLocation::ePSize, pdShaderPSizeAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexTypeUV, 2 * sizeof(float), DefaultAttrLocation::eUV, pdShaderUVAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::Point2, 2 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::Point3, 3 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::Normal, 3 * sizeof(float), DefaultAttrLocation::eNormal, pdShaderNormalAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::PSize, sizeof(float), DefaultAttrLocation::ePSize, pdShaderPSizeAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::UV, 2 * sizeof(float), DefaultAttrLocation::eUV, pdShaderUVAttribName));
         }
         /* add default search dir in platform instance, most platform use different dir */
     }

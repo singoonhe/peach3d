@@ -204,9 +204,9 @@ namespace Peach3D
         Peach3DAssert(globalIndex != GL_INVALID_INDEX, "block GlobalUnifroms must include in vertex shader");
         
         if (globalIndex != GL_INVALID_INDEX) {
-            GLuint* globalUBOId = (mVertexType & VertexTypePosition3) ? &mObjectUBOId : &mWidgetUBOId;
-            GLint* globalUBOSize = (mVertexType & VertexTypePosition3) ? &mObjectUBOSize : &mWidgetUBOSize;
-            auto uniformList = (mVertexType & VertexTypePosition3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms;
+            GLuint* globalUBOId = (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId;
+            GLint* globalUBOSize = (mVertexType & VertexType::Point3) ? &mObjectUBOSize : &mWidgetUBOSize;
+            auto uniformList = (mVertexType & VertexType::Point3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms;
             // create global UBO if it not exist
             if ((*globalUBOId) == GL_INVALID_INDEX) {
                 // get global unifrom size, may different on platforms
@@ -233,7 +233,7 @@ namespace Peach3D
                 glBindBuffer(GL_UNIFORM_BUFFER, 0);
                 free(names);
                 
-                if (mVertexType & VertexTypePosition3) {
+                if (mVertexType & VertexType::Point3) {
                     Peach3DLog(LogLevel::eInfo, "Create global object UBO success for GL3");
                 }
                 else {
@@ -651,7 +651,7 @@ namespace Peach3D
             //! this is very Important, just like bind array buffer and index buffer
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                 glBindBufferBase(GL_UNIFORM_BUFFER, GLOBAL_UBO_BINDING_POINT,
-                                 (mVertexType & VertexTypePosition3) ? mObjectUBOId: mWidgetUBOId);
+                                 (mVertexType & VertexType::Point3) ? mObjectUBOId: mWidgetUBOId);
             }
             return true;
         }

@@ -327,7 +327,7 @@ namespace Peach3D
             glLineWidth(2.0f);
             // generate program
             Material AABBMtl;
-//            mAABBProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexTypePosition3|VertexTypeColor4, AABBMtl);
+//            mAABBProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexType::Point3|VertexTypeColor4, AABBMtl);
         }*/
     }
     

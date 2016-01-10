@@ -21,9 +21,9 @@ bool PlatformDelegate::appDidFinishLaunching()
     Peach3D::ResourceManager* resourceMgr = Peach3D::ResourceManager::getSingletonPtr();
 //    std::vector<ProgramUniform> uniformList = {ProgramUniform(pdShaderModelMatrixUniformName, UniformType::eMatrix4)};
 //#if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_DX11
-//    IProgram* program = resourceMgr->addProgram("demoVertexShader.cso", "demoPixelShader.cso", VertexTypePosition3 | VertexTypeColor4 | VertexTypeUV, uniformList);
+//    IProgram* program = resourceMgr->addProgram("demoVertexShader.cso", "demoPixelShader.cso", VertexType::Point3 | VertexTypeColor4 | VertexType::UV, uniformList);
 //#else
-//    IProgram* program = resourceMgr->addProgram("demoShader.vsh", "demoShader.fsh", VertexTypePosition3|VertexTypeColor4|VertexTypeUV, uniformList);
+//    IProgram* program = resourceMgr->addProgram("demoShader.vsh", "demoShader.fsh", VertexType::Point3|VertexTypeColor4|VertexType::UV, uniformList);
 //#endif
     
     // create mesh
@@ -53,7 +53,7 @@ bool PlatformDelegate::appDidFinishLaunching()
         vertex[i*step+5] = (i==2 ? 0.5f : 0.0f);
     }
     object1->useProgramForRender(program);
-    object1->setVertexBuffer(vertex, 4 * step*sizeof(float), VertexTypePosition3 | VertexTypeColor4);
+    object1->setVertexBuffer(vertex, 4 * step*sizeof(float), VertexType::Point3 | VertexTypeColor4);
     free(vertex);
     
     // create striangleslist test object
@@ -83,7 +83,7 @@ bool PlatformDelegate::appDidFinishLaunching()
         rectangle[i*step + 5] = (i == 2 ? 0.5f : 0.0f);
     }
     object2->useProgramForRender(program);
-    object2->setVertexBuffer(rectangle, 6 * step*sizeof(float), VertexTypePosition3 | VertexTypeColor4);
+    object2->setVertexBuffer(rectangle, 6 * step*sizeof(float), VertexType::Point3 | VertexTypeColor4);
     free(rectangle);
     */
     
@@ -150,7 +150,7 @@ bool PlatformDelegate::appDidFinishLaunching()
         eleVertex[i*step + 6] = 1.0f;
     }
 //    objectIndex->useProgramForRender(program);
-//    objectIndex->setVertexBuffer(eleVertex, 8 * step*sizeof(float), VertexTypePosition3 | VertexTypeColor4 | VertexTypeUV);
+//    objectIndex->setVertexBuffer(eleVertex, 8 * step*sizeof(float), VertexType::Point3 | VertexTypeColor4 | VertexType::UV);
     free(eleVertex);
     // init index buffer
     ushort eleIndex[] = {0, 1, 2, 0, 2, 3,  4, 7, 6, 4, 6, 5,  0, 4, 5, 0, 5, 1,  1, 5, 6, 1, 6, 2,  2, 6, 7, 2, 7, 3,  4, 0, 3, 4, 3, 7};

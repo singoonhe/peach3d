@@ -47,10 +47,10 @@ namespace Peach3D
             // set preset program first if needed
             if (!mRenderProgram) {
                 if (mMaterial.getTextureCount() > 0) {
-                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexTypePosition3 | VertexTypeUV, "PosColorUVVerShader3D", "PosColorUVFragShader3D");
+                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point3 | VertexType::UV, "PosColorUVVerShader3D", "PosColorUVFragShader3D");
                 }
                 else {
-                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexTypePosition3, "PosColorVerShader3D", "PosColorFragShader3D");
+                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point3, "PosColorVerShader3D", "PosColorFragShader3D");
                 }
             }
             // calc render unique hash code

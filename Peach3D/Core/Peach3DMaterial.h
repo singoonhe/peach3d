@@ -79,6 +79,7 @@ namespace Peach3D
         Color4  diffuse;
         Color4  specular;
         float   shininess;
+        
         Vector2 UVScrollSpeed;     // texture uv scroll speed
         Vector2 CurUVOffset;       // current uv scroll offset
         uint    UVScrollTexIndex;  // default is PD_UINT_MAX, not enable uv scroll

@@ -21,7 +21,7 @@ namespace Peach3D
 
     bool IObject::setVertexBuffer(const void* data, uint size, uint type)
     {
-        Peach3DAssert((type & VertexTypePosition3) || (type & VertexTypePosition2), "VertexTypePosition must be included in IObject vertex buffer");
+        Peach3DAssert((type & VertexType::Point3) || (type & VertexType::Point2), "VertexType::Point must be included in IObject vertex buffer");
         // check vertex type, delete repeated type
         mVertexDataType = type;
         mVertexBufferSize = size;

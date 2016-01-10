@@ -128,7 +128,7 @@ namespace Peach3D
     {
         // set default program
         if (!mRenderProgram) {
-            mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexTypePosition2, "PosColorUVVerShader2D", "PosColorUVFragShader2D");
+            mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorUVVerShader2D", "PosColorUVFragShader2D");
         }
     }
 }
