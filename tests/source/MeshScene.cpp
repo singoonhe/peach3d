@@ -13,6 +13,7 @@ bool MeshScene::init()
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new ObjSample();});
     mSampleList.push_back([]()->BaseSample* {return new ObjTexSample();});
+    mSampleList.push_back([]()->BaseSample* {return new DrawModeSample();});
     
     // init base scene
     BaseScene::init();
@@ -76,4 +77,26 @@ void ObjTexSample::init(Widget* parentWidget)
     cubeNode2->getRenderNode("Cube")->resetTextureByIndex(0, ResourceManager::getSingleton().addTexture("peach3d_leaf.png"));
     // rotate repeat
     cubeNode2->runAction(Repeat::createForever(RotateBy3D::create(Vector3(DEGREE_TO_RADIANS(360.0f), 0.0f, 0.0f), 5.0f)));
+}
+
+void DrawModeSample::init(Widget* parentWidget)
+{
+    // set title and desc
+    mTitle = "Draw Mesh with different mode";
+    mDesc = "draw .obj file with different mode, same mode node will draw batch";
+    // load mesh
+    auto rottNode = SceneManager::getSingleton().getRootSceneNode();
+    auto cubeMesh = ResourceManager::getSingleton().addMesh("Cube.obj");
+    auto cubeNode = rottNode->createChild(Vector3(-6.f, 0.f, 0.f));
+    cubeNode->attachMesh(cubeMesh);
+    // rotate repeat
+    cubeNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
+    
+    // create 9 nodes
+    for (auto i=0; i<9; i++) {
+        auto cubeNodex = rottNode->createChild(Vector3((i % 3) * 4 - 2.f, (i / 3) * 4.f - 4.f, 0.f));
+        cubeNodex->setDrawMode(DrawMode::eLine);
+        cubeNodex->attachMesh(cubeMesh);
+        cubeNodex->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(180.0f), 0.0f), (i / 3) * 2.f + 1.0f)));
+    }
 }

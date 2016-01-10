@@ -27,7 +27,7 @@ namespace Peach3D
                 resMode = GL_POINTS;
                 break;
             case DrawMode::eLine:
-                resMode = GL_LINES;
+                resMode = GL_LINE_STRIP;
                 break;
             default:
                 break;
