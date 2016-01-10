@@ -12,6 +12,7 @@
 #include "Peach3DMatrix4.h"
 #include "Peach3DMaterial.h"
 #include "Peach3DIObject.h"
+#include "Peach3DNode.h"
 
 namespace Peach3D
 {
@@ -32,6 +33,8 @@ namespace Peach3D
         const Matrix4& getModelMatrix() { return mModelMatrix; }
         void setMaterial(const Material& mate) { mMaterial = mate; mIsRenderCodeDirty = true; }
         const Material& getMaterial() { return mMaterial; }
+        void setDrawMode(DrawMode mode) {mMode = mode;}
+        DrawMode getDrawMode() {return mMode;}
         
         void setAmbient(const Color4& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color4& diffuse) { mMaterial.diffuse = diffuse; }
@@ -58,6 +61,7 @@ namespace Peach3D
         Material        mMaterial;      // render object material
         IObject*        mRenderObj;     // render object
         IProgram*       mRenderProgram; // render program
+        DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering

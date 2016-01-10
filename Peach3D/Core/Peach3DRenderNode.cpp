@@ -14,7 +14,7 @@
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true)
+    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mMode(DrawMode::eTriangle)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
@@ -54,7 +54,7 @@ namespace Peach3D
                 }
             }
             // calc render unique hash code
-            std::string renderState = Utils::formatString("Name:%sProgram:%u", mObjSpliceName.c_str(), mRenderProgram->getProgramId());
+            std::string renderState = Utils::formatString("Name:%sProgram:%uDrawMode:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mMode);
             for (auto tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();
             }

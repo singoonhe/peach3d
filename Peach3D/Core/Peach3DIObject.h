@@ -24,9 +24,9 @@ namespace Peach3D
     {
         const uint Point2 = 0x0001;   // vertex position is float2
         const uint Point3 = 0x0002;   // vertex position is float3, ePosition2 will be discard
-        const uint Normal = 0x0008;   // vertex have normal, float3
-        const uint PSize = 0x0010;    // vertex have point size, usually be used for particle
-        const uint UV = 0x0020;       // vertex have UV coord
+        const uint Normal = 0x0004;   // vertex have normal, float3
+        const uint PSize  = 0x0008;   // vertex have point size, usually be used for particle
+        const uint UV     = 0x0010;   // vertex have UV coord
     }
 
     // define index type

@@ -42,6 +42,8 @@ namespace Peach3D
         mesh->tranverseObjects([&](const char* name, IObject* object) {
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
+        // init RenderNode draw mode
+        setDrawMode(mMode);
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)
@@ -52,6 +54,15 @@ namespace Peach3D
         else {
             Peach3DLog(LogLevel::eError, "Can't find RenderNode, is attchMesh forget to call?");
             return nullptr;
+        }
+    }
+    
+    void SceneNode::setDrawMode(DrawMode mode)
+    {
+        Node::setDrawMode(mode);
+        // set all RenderNode draw mode
+        for (auto node : mRenderNodeMap) {
+            node.second->setDrawMode(mode);
         }
     }
     

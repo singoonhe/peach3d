@@ -25,10 +25,9 @@ namespace Peach3D
     
     enum class PEACH3D_DLL DrawMode
     {
-        ePoint,         // node draw with point model
-        eLine,          // node draw with line model
-        eTriangle,      // node draw with triangle model
-        eLineTriangle,  // node draw with line model and triangle model
+        ePoint,     // node draw with point model
+        eLine,      // node draw with line model
+        eTriangle,  // node draw with triangle model
     };
     
     class PEACH3D_DLL Node : public ActionImplement
@@ -65,7 +64,7 @@ namespace Peach3D
         void setCustomData(const std::string& key, const std::string& value);
         std::string getCustomData(const std::string& key);
         
-        void setDrawMode(DrawMode mode) {mMode = mode;}
+        virtual void setDrawMode(DrawMode mode) {mMode = mode;}
         DrawMode getDrawMode() {return mMode;}
         
         /** Find child node by tag name, will iterative search children. */

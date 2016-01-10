@@ -176,7 +176,7 @@ namespace Peach3D
     
     std::string Widget::getRenderStateString()
     {
-        return Utils::formatString("Program:%u", mRenderProgram->getProgramId());
+        return Utils::formatString("Program:%uDrawMode:%d", mRenderProgram->getProgramId(), (int)mMode);
     }
     
     void Widget::setPresetProgram()

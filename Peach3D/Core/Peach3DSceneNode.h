@@ -36,6 +36,8 @@ namespace Peach3D
         RenderNode* getRenderNode(const char* name);
         /** Get is need rendering. */
         virtual bool isNeedRender() {return Node::isNeedRender() && mAttachedMesh;}
+        /** Auto set child RenderNode draw mode. */
+        virtual void setDrawMode(DrawMode mode);
         
         /** Create child scene node by attris. */
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));

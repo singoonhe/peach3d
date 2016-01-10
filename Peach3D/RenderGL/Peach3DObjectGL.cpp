@@ -18,6 +18,23 @@
 
 namespace Peach3D
 {
+    /** Convert Node draw mode to OpenGL mode. */
+    static GLenum convertDrawModeToGL(DrawMode mode)
+    {
+        GLenum resMode = GL_TRIANGLES;
+        switch (mode) {
+            case DrawMode::ePoint:
+                resMode = GL_POINTS;
+                break;
+            case DrawMode::eLine:
+                resMode = GL_LINES;
+                break;
+            default:
+                break;
+        }
+        return resMode;
+    }
+    
     GLuint ObjectGL::mAABBVertexArrayId = 0;
     GLuint ObjectGL::mAABBVertexBuffer = 0;
     GLuint ObjectGL::mAABBIndexBuffer = 0;
@@ -132,12 +149,13 @@ namespace Peach3D
             
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
             GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
+            GLenum glDrawMode = convertDrawModeToGL(firstNode->getDrawMode());
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                 // update instanced uniforms
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
                 // draw objects once
-                glDrawElementsInstanced(GL_TRIANGLES, indexCount, indexType, 0, (GLsizei)listSize);
+                glDrawElementsInstanced(glDrawMode, indexCount, indexType, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
                 PD_ADD_DRAWTRIAGNLE((indexCount * (GLsizei)listSize) / 3);
             }
@@ -146,7 +164,7 @@ namespace Peach3D
                     // update current widget uniforms
                     usedProgram->updateRenderNodeUnifroms(renderList[i]);
                     // draw one widget
-                    glDrawElements(GL_TRIANGLES, indexCount, indexType, 0);
+                    glDrawElements(glDrawMode, indexCount, indexType, 0);
                     PD_ADD_DRAWCALL(1);
                     PD_ADD_DRAWTRIAGNLE(indexCount / 3);
                 }
@@ -250,12 +268,13 @@ namespace Peach3D
                 static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, 0);
             }
             
+            GLenum glDrawMode = convertDrawModeToGL(firstNode->getDrawMode());
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                 // update instanced uniforms
                 usedProgram->updateInstancedWidgetUnifroms(renderList);
                 // draw widget once
-                glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
+                glDrawElementsInstanced(glDrawMode, 6, GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
                 PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
             }
@@ -264,7 +283,7 @@ namespace Peach3D
                     // update current widget uniforms
                     usedProgram->updateWidgetUnifroms(renderList[i]);
                     // draw one widget
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+                    glDrawElements(glDrawMode, 6, GL_UNSIGNED_SHORT, 0);
                     PD_ADD_DRAWCALL(1);
                     PD_ADD_DRAWTRIAGNLE(2);
                 }
