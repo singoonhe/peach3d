@@ -64,9 +64,6 @@ namespace Peach3D
         void setCustomData(const std::string& key, const std::string& value);
         std::string getCustomData(const std::string& key);
         
-        virtual void setDrawMode(DrawMode mode) {mMode = mode;}
-        DrawMode getDrawMode() {return mMode;}
-        
         /** Find child node by tag name, will iterative search children. */
         Node* findChildByName(const std::string& name);
         /** Traverse child nodes, will auto call lambda func. */
@@ -78,7 +75,7 @@ namespace Peach3D
         void prepareForRender(float lastFrameTime);
     protected:
         //! user can't call constructor function.
-        Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true), mAlpha(1.0f), mMode(DrawMode::eTriangle) {}
+        Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true), mAlpha(1.0f) {}
         //! clean node and all child node, user can't call destructor function.
         virtual ~Node();
         /** Set Node rendering attribute need update (pos, size, rotate...). */
@@ -107,7 +104,6 @@ namespace Peach3D
         bool               mSwallowEvents;  // is swallow events
         bool               mVisible;        // is Node visible
         float              mAlpha;          // node alpha, SceneNode diffuse color in material
-        DrawMode           mMode;           // node draw mode, Points/Lines/Triangles
         
         bool               mIsRenderDirty;  // is render attribute need update
         bool               mNeedRender;     // is node need render. (alpha==0, visible==false, will cause didn't render)

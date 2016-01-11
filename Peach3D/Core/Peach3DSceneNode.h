@@ -36,8 +36,10 @@ namespace Peach3D
         RenderNode* getRenderNode(const char* name);
         /** Get is need rendering. */
         virtual bool isNeedRender() {return Node::isNeedRender() && mAttachedMesh;}
+        
         /** Auto set child RenderNode draw mode. */
-        virtual void setDrawMode(DrawMode mode);
+        void setDrawMode(DrawMode mode);
+        DrawMode getDrawMode() {return mMode;}
         
         /** Create child scene node by attris. */
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));
@@ -121,6 +123,7 @@ namespace Peach3D
         Vector3         mWorldScale;    // cache scene node world scale
         Vector3         mWorldRotation; // cache scene node world rotation
         float           mDepthBias;     // rendering depth bias, valid if bigger than 0.0f
+        DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         bool            mIsAABBShow;    // is AABB show using line
         bool            mPickEnabled;   // is object picking eanbled

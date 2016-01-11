@@ -14,7 +14,7 @@
 
 namespace Peach3D
 {
-    SceneNode::SceneNode(const Vector3& pos, const Vector3& rotation, const Vector3& scale) : Node()
+    SceneNode::SceneNode(const Vector3& pos, const Vector3& rotation, const Vector3& scale) : Node(), mMode(DrawMode::eTriangle)
     {
         init();
         mPosition = pos;
@@ -59,7 +59,7 @@ namespace Peach3D
     
     void SceneNode::setDrawMode(DrawMode mode)
     {
-        Node::setDrawMode(mode);
+        mMode = mode;
         // set all RenderNode draw mode
         for (auto node : mRenderNodeMap) {
             node.second->setDrawMode(mode);
