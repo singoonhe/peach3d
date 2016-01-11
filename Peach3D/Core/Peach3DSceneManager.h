@@ -56,7 +56,7 @@ namespace Peach3D
 
     protected:
         //! create object by IPlatform, user can't call constructor function.
-        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr)  {}
+        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mOBBObject(nullptr)  {}
         //! delete object by IPlatform, user can't call destructor function.
         virtual ~SceneManager();
         //! init
@@ -67,11 +67,13 @@ namespace Peach3D
         /** Create draw stats node. */
         void createDrawStatsNode();
         /** Auto generate widget render object, each program need IObject on GL3. */
-        IObject* autoGenerateWidgetObject(uint program);
+        IObject* autoGenerateWidgetObject(Widget* node);
+        /** Auto generate OBB render object. */
+        void generateOBBObject();
         /** Add render and picking scene node to cache list, also prepare for render. */
         void addSceneNodeToCacheList(Node* node, float lastFrameTime);
         /** Add render widget to cache list, also prepare for render. */
-        void addWidgetToList(int* zOrder, Widget* widget, float lastFrameTime);
+        void addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime);
 
     protected:
         SceneNode*              mRootSceneNode;    // root scene node
@@ -83,12 +85,14 @@ namespace Peach3D
         Widget*                 mDebugDrawNode;     // draw stats widget
         std::vector<Widget*>    mRenderWidgetList;  // cache widget list
         std::map<uint, IObject*>    mWidgetObject;  // object use to render widget map, key is render state hash
+        IObject*                mOBBObject;         // object for render OBB
         
         std::vector<Camera*>    mCameraList;        // scene camera list
         Camera*                 mActiveCamera;      // current active camera
         
-        std::multimap<uint, RenderNode*> mRenderNodeMap;// cache 3d render node map, using "multimap" to reduce sort
-        std::vector<SceneNode*>     mPickSceneNodeList; // cache picking scene node list
+        std::vector<RenderNode*>            mRenderOBBList;     // cache OBB render node list
+        std::multimap<uint, RenderNode*>    mRenderNodeMap;     // cache 3d render node map, using "multimap" to reduce sort
+        std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
     };
 }
 
