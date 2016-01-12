@@ -85,7 +85,7 @@ namespace Peach3D
         static GLint    mWidgetUBOSize; // widget global uniform buffer size for GL3
         static std::vector<ProgramUniform>  mWidgetUBOUniforms;
         static GLuint   mObjectUBOId;   // object global uniform buffer id for GL3
-        static GLint    mObjectUBOSize; // widget global uniform buffer size for GL3
+        static GLint    mObjectUBOSize; // object global uniform buffer size for GL3
         static std::vector<ProgramUniform>  mObjectUBOUniforms;
         
         std::function<uint(const std::string&, std::vector<Widget*>, float*, uint)> mGL3ExtendFunc;

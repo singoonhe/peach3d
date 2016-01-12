@@ -40,17 +40,27 @@ namespace Peach3D
     GLuint ObjectGL::mAABBIndexBuffer = 0;
     IProgram* ObjectGL::mAABBProgram = 0;
     
-    ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0),mVertexArrayId(0)
+    ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
     }
     
-    void ObjectGL::generateObjectVertexArray()
+    void ObjectGL::generateProgramVertexArray(GLuint programId)
     {
-        if (PD_GLEXT_VERTEXARRAY_SUPPORT() && !mVertexArrayId) {
-            glGenVertexArrays(1, &mVertexArrayId);
+        // check is new VAO for program need
+        if (mVAOMap.find(programId) == mVAOMap.end()) {
+            GLuint vaoId = 0;
+            glGenVertexArrays(1, &vaoId);
+            glBindVertexArray(vaoId);
+            // bind vertex buffer and index buffer
+            glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+            bindObjectVertexAttrib();
+            mVAOMap[programId] = vaoId;
         }
-        // also bind vertex array
-        glBindVertexArray(mVertexArrayId);
+        else {
+            // also bind vertex array
+            glBindVertexArray(mVAOMap[programId]);
+        }
     }
     
     void ObjectGL::bindObjectVertexAttrib()
@@ -73,23 +83,14 @@ namespace Peach3D
     {
         // base object setVertexBuffer
         bool result = IObject::setVertexBuffer(data, size, type);
-        
 		// delete old vertex buffer
 		cleanObjectVertexBuffer();
         
         // create vertex buffer
         if (data && size>0 && result) {
-            generateObjectVertexArray();
-            
             glGenBuffers(1, &mVertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
             glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-
-            // unbind vertex array
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                bindObjectVertexAttrib();
-                glBindVertexArray(0);
-            }
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
         
@@ -100,21 +101,14 @@ namespace Peach3D
     {
         // base object setIndexBuffer
         IObject::setIndexBuffer(data, size, type);
-        
         // delete old index buffer
         cleanObjectIndexBuffer();
         
         // create index buffer
         if (data && size>0) {
-            generateObjectVertexArray();
-            
             glGenBuffers(1, &mIndexBuffer);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
-            
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(0);
-            }
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
     }
@@ -132,7 +126,8 @@ namespace Peach3D
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(mVertexArrayId);
+                GLuint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram->getProgramId() : 0;
+                generateProgramVertexArray(programId);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -253,7 +248,8 @@ namespace Peach3D
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(mVertexArrayId);
+                GLuint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram->getProgramId() : 0;
+                generateProgramVertexArray(programId);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -427,14 +423,17 @@ namespace Peach3D
             // delete vertex object
             glDeleteBuffers(1, &mVertexBuffer);
             mVertexBuffer = 0;
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                // delete vertex array
-                glDeleteVertexArrays(1, &mVertexArrayId);
-                mVertexArrayId = 0;
-            }
             // set vertex size and stride to zero
             mVertexBufferSize = 0;
             mVertexDataStride = 0;
+            
+            // delete all vertex array
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT() && mVAOMap.size() > 0) {
+                for (auto vao : mVAOMap) {
+                    glDeleteVertexArrays(1, &vao.second);
+                }
+                mVAOMap.clear();
+            }
         }
     }
     
@@ -446,6 +445,14 @@ namespace Peach3D
             mIndexBuffer = 0;
             // set index size and stride to zero
             mIndexBufferSize = 0;
+            
+            // delete all vertex array
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT() && mVAOMap.size() > 0) {
+                for (auto vao : mVAOMap) {
+                    glDeleteVertexArrays(1, &vao.second);
+                }
+                mVAOMap.clear();
+            }
         }
     }
     

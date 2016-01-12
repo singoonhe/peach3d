@@ -41,6 +41,9 @@ namespace Peach3D
         if (IPlatform::getSingleton().getIsDrawStats()) {
             createDrawStatsNode();
         }
+        
+        // create a IObject for widget rendering
+        createPresetObjects();
     }
 
     SceneManager::~SceneManager()
@@ -51,11 +54,6 @@ namespace Peach3D
         }
         mCameraList.clear();
         mActiveCamera = nullptr;
-        // clean all widget Object
-        for (auto wObj : mWidgetObject) {
-            IRender::getSingleton().deleteObject(wObj.second);
-        }
-        mWidgetObject.clear();
         // clean root scene node and all child node
         if (mRootSceneNode) {
             delete mRootSceneNode;
@@ -72,17 +70,27 @@ namespace Peach3D
             delete mRootWidget;
             mRootWidget = nullptr;
         }
+        // clean preset objects
+        if (mWidgetObject) {
+            IRender::getSingleton().deleteObject(mWidgetObject);
+            mWidgetObject = nullptr;
+        }
+        if (mOBBObject) {
+            IRender::getSingleton().deleteObject(mOBBObject);
+            mOBBObject = nullptr;
+        }
     }
     
     void SceneManager::reset()
     {
+        // delete all SceneNode
         mRootSceneNode->deleteAllChildren();
+        // delete all widget except DebugWidget
         mRootWidget->tranverseChildNode([&](size_t, Node* child){
             if (child != mDebugDrawNode) {
                 mRootWidget->deleteChild(child);
             }
         });
-        // can't delete widget Object, problem not deleted.
     }
     
     void SceneManager::createDrawStatsNode()
@@ -113,34 +121,26 @@ namespace Peach3D
         }
     }
     
-    IObject* SceneManager::autoGenerateWidgetObject(Widget* node)
+    void SceneManager::createPresetObjects()
     {
-        uint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? node->getProgramForRender()->getProgramId() : 0;
-        if (mWidgetObject.find(programId) == mWidgetObject.end()) {
+        if (!mWidgetObject) {
             // create IObject for widget rendering
-            IObject* widgetObj = IRender::getSingleton().createObject(Utils::formatString("pd_WidgetObject%d", programId).c_str());
+            mWidgetObject = IRender::getSingleton().createObject("pd_WidgetObject");
             float fixedVertexData[] = {-1.0f,1.0f, -1.0f,-1.0f, 1.0f,1.0f, 1.0f,-1.0f};
             ushort fixedIndexData[] = {0, 1, 3, 0, 3, 2};
-            widgetObj->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2);
-            widgetObj->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
-            
-            mWidgetObject[programId] = widgetObj;
+            mWidgetObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2);
+            mWidgetObject->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
         }
-        return mWidgetObject[programId];
-    }
-    
-    void SceneManager::generateOBBObject()
-    {
         if (!mOBBObject) {
             // create IObject for OBB rendering
-            IObject* obbObj = IRender::getSingleton().createObject("pd_OBBObject");
+            mOBBObject = IRender::getSingleton().createObject("pd_OBBObject");
             float fixedVertexData[] = {-0.5, -0.5, -0.5,  0.5, -0.5, -0.5,
                 0.5, 0.5, -0.5,  -0.5, 0.5, -0.5,
                 -0.5, -0.5, 0.5,  0.5, -0.5, 0.5,
                 0.5, 0.5, 0.5,  -0.5, 0.5, 0.5,};
             ushort fixedIndexData[] = {0, 1, 1, 2, 2, 3, 0, 3,  4, 5, 5, 6, 6, 7, 4, 7,  0, 4, 1, 5, 2, 6, 3, 7};
-            obbObj->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2);
-            obbObj->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
+            mOBBObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2);
+            mOBBObject->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
         }
     }
     
@@ -259,7 +259,6 @@ namespace Peach3D
         
         // draw all OBB
         if (mRenderOBBList.size() > 0) {
-            generateOBBObject();
             mOBBObject->render(mRenderOBBList);
         }
         
@@ -303,8 +302,7 @@ namespace Peach3D
             Widget* curWidget = mRenderWidgetList[i];
             if (lastRenderWidget && lastRenderWidget->getRenderStateHash() != curWidget->getRenderStateHash()){
                 // render current widgets
-                IObject* widgetObj = autoGenerateWidgetObject(lastRenderWidget);
-                widgetObj->render(curList);
+                mWidgetObject->render(curList);
                 curList.clear();
             }
             // add widget to cache list for next rendering
@@ -313,8 +311,7 @@ namespace Peach3D
         }
         if (curList.size() > 0) {
             // render last widgets
-            IObject* widgetObj = autoGenerateWidgetObject(lastRenderWidget);
-            widgetObj->render(curList);
+            mWidgetObject->render(curList);
         }
     }
     
