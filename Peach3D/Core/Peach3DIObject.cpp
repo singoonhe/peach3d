@@ -29,18 +29,15 @@ namespace Peach3D
         
         const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
         // calculate position stride
-        for (auto info=infoList.begin(); info!=infoList.end(); ++info)
-        {
-            uint typeValue = (*info).type, typeSize = (*info).size;
-            if (typeValue & mVertexDataType)
-            {
+        for (auto info : infoList) {
+            uint typeValue = info.type, typeSize = info.size;
+            if (typeValue & mVertexDataType) {
                 mVertexDataStride += typeSize;
             }
         }
         
         // check data size
-        if (mVertexDataStride >0 && (size % mVertexDataStride) > 0)
-        {
+        if (mVertexDataStride >0 && (size % mVertexDataStride) > 0) {
             Peach3DLog(LogLevel::eError, "Object %s set vertx failed, type and data size not matched", mObjectName.c_str());
             return false;
         }
