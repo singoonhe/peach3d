@@ -10,11 +10,12 @@
 #include "Peach3DLogPrinter.h"
 #include "Peach3DUtils.h"
 #include "xxhash/xxhash.h"
+#include "Peach3DSceneManager.h"
 #include "Peach3DResourceManager.h"
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mMode(DrawMode::eTriangle)
+    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mMode(DrawMode::eTriangle)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
@@ -25,6 +26,18 @@ namespace Peach3D
             setRenderProgram(obj->getProgram());
         }
     }
+    
+    void RenderNode::setOBBEnabled(bool enable)
+    {
+        if (enable && !mRenderOBB) {
+            mRenderOBB = new OBB(mRenderObj->getBorderMin(), mRenderObj->getBorderMax());
+        }
+        else if (mRenderOBB && !enable) {
+            delete mRenderOBB;
+            mRenderOBB = nullptr;
+        }
+    }
+    
     void RenderNode::resetTextureByIndex(int index, ITexture* texture)
     {
         if (!texture) {

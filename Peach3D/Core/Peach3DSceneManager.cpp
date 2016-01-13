@@ -20,6 +20,8 @@ namespace Peach3D
     {
         // default set clear color to gray
         IRender::getSingletonPtr()->setRenderClearColor(Color4Gray);
+        // set default OBB color to green
+        setGlobalOBBColor(Color4Green);
         
         // create root scene node
         mRootSceneNode = new SceneNode();
@@ -134,12 +136,12 @@ namespace Peach3D
         if (!mOBBObject) {
             // create IObject for OBB rendering
             mOBBObject = IRender::getSingleton().createObject("pd_OBBObject");
-            float fixedVertexData[] = {-0.5, -0.5, -0.5,  0.5, -0.5, -0.5,
-                0.5, 0.5, -0.5,  -0.5, 0.5, -0.5,
-                -0.5, -0.5, 0.5,  0.5, -0.5, 0.5,
-                0.5, 0.5, 0.5,  -0.5, 0.5, 0.5,};
+            float fixedVertexData[] = {-0.5f, -0.5f, -0.5f,  0.5f, -0.5f, -0.5f,
+                0.5f, 0.5f, -0.5f,  -0.5f, 0.5f, -0.5f,
+                -0.5f, -0.5f, 0.5f,  0.5f, -0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,  -0.5f, 0.5f, 0.5f};
             ushort fixedIndexData[] = {0, 1, 1, 2, 2, 3, 0, 3,  4, 5, 5, 6, 6, 7, 4, 7,  0, 4, 1, 5, 2, 6, 3, 7};
-            mOBBObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2);
+            mOBBObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point3);
             mOBBObject->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
         }
     }
@@ -334,9 +336,11 @@ namespace Peach3D
         }
         
         // cache OBB node
-        if (false) {
+        if (rNode->getOBBEnabled()) {
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
-                mRenderOBBList.push_back(node);
+                if (node->getOBBEnabled()) {
+                    mRenderOBBList.push_back(node->getRenderOBB());
+                }
             });
         }
         

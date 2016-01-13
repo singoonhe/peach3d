@@ -40,6 +40,10 @@ namespace Peach3D
          * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
          */
         virtual void render(const std::vector<RenderNode*>& renderList);
+        /**
+         * @brief Render OBB list, only for GL3 and DX, called by SceneManager.
+         */
+        virtual void render(const std::vector<OBB*>& renderList);
         
     protected:
         /**
@@ -83,6 +87,7 @@ namespace Peach3D
         static GLuint mAABBVertexBuffer;    // vertex buffer for AABB rendering
         static GLuint mAABBIndexBuffer;     // vertex buffer for AABB rendering
         static IProgram* mAABBProgram;      // AABB rendering program
+        static IProgram* mOBBProgram;       // OBB rendering program
     };
 }
 

@@ -15,6 +15,7 @@
 #include "Peach3DTextureGL.h"
 #include "Peach3DSprite.h"
 #include "Peach3DUtils.h"
+#include "Peach3DOBB.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DSceneManager.h"
 
@@ -451,7 +452,88 @@ namespace Peach3D
                     }
                         break;
                     case UniformNameType::eDiffuse: {
-                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.diffuse.a};
+                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, 0.5};
+                        memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
+                        startOffset += 4;
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        // unmap instanced attribute buffer
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+    }
+    
+    void ProgramGL::updateOBBUnifroms(OBB* obb)
+    {
+        SceneManager* sgr = SceneManager::getSingletonPtr();
+        Color4 OBBColor = SceneManager::getSingleton().getGlobalOBBColor();
+        // update object uniforms in list
+        for (auto uniform : mProgramUniformList) {
+            switch (ShaderCode::getUniformNameType(uniform.name)) {
+                case UniformNameType::eProjMatrix:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        const Matrix4& projMatrix = sgr->getProjectionMatrix();
+                        glUniformMatrix4fv(location, 1, false, projMatrix.mat);
+                    });
+                    break;
+                case UniformNameType::eViewMatrix:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
+                        glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
+                    });
+                    break;
+                case UniformNameType::eModelMatrix:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        const Matrix4& modelMat = obb->getModelMatrix();
+                        glUniformMatrix4fv(location, 1, false, modelMat.mat);
+                    });
+                    break;
+                case UniformNameType::eDiffuse:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {OBBColor.r, OBBColor.g, OBBColor.b, OBBColor.a};
+                        glUniform4fv(location, 1, color);
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    void ProgramGL::updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList)
+    {
+        // resize render buffer size
+        int needCount = (int)renderList.size() - mInstancedCount;
+        if (needCount > 0) {
+            int formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
+            createInstancedAttriDataAndBuffer(mInstancedCount + std::max(needCount, formulaCount));
+        }
+        
+        // copy attri data to instanced buffer
+        glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
+        uint copySize = mUniformsSize * (uint)renderList.size();
+        float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
+                                               GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+        
+        Color4 OBBColor = SceneManager::getSingleton().getGlobalOBBColor();
+        // set object params to data
+        for (auto i = 0; i < renderList.size(); ++i) {
+            int startOffset = 0;
+            int uniformOffset = (mUniformsSize / 4) * i;
+            for (auto uniform : mProgramUniformList) {
+                switch (ShaderCode::getUniformNameType(uniform.name)) {
+                    case UniformNameType::eModelMatrix: {
+                        const Matrix4& modelMat = renderList[i]->getModelMatrix();
+                        memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
+                        startOffset += 16;
+                    }
+                        break;
+                    case UniformNameType::eDiffuse: {
+                        float color[] = {OBBColor.r, OBBColor.g, OBBColor.b, OBBColor.a};
                         memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
                         startOffset += 4;
                     }

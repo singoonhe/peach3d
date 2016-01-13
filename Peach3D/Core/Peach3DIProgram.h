@@ -35,6 +35,7 @@ namespace Peach3D
     
     class Widget;
     class RenderNode;
+    class OBB;
     class PEACH3D_DLL IProgram
     {
     public:
@@ -56,6 +57,11 @@ namespace Peach3D
 		virtual void updateWidgetUnifroms(Widget* widget) {}
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
         virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList) = 0;
+        
+        /** Update OBB unifroms for GL2. */
+        virtual void updateOBBUnifroms(OBB* obb) = 0;
+        /** Update instanced OBB unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList) = 0;
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;

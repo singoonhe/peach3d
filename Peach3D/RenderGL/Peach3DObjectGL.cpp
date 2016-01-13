@@ -38,10 +38,14 @@ namespace Peach3D
     GLuint ObjectGL::mAABBVertexArrayId = 0;
     GLuint ObjectGL::mAABBVertexBuffer = 0;
     GLuint ObjectGL::mAABBIndexBuffer = 0;
-    IProgram* ObjectGL::mAABBProgram = 0;
+    IProgram* ObjectGL::mAABBProgram = nullptr;
+    IProgram* ObjectGL::mOBBProgram = nullptr;
     
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
+        if (!mOBBProgram) {
+            mOBBProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point3, "PosColorVerShader3D", "PosColorFragShader3D");
+        }
     }
     
     void ObjectGL::generateProgramVertexArray(GLuint programId)
@@ -116,7 +120,7 @@ namespace Peach3D
     void ObjectGL::render(const std::vector<RenderNode*>& renderList)
     {
         size_t listSize = renderList.size();
-        Peach3DAssert(listSize > 0, "Can't render empty node list.");
+        Peach3DAssert(listSize > 0, "Can't render empty scene node list.");
         do {
             IF_BREAK(listSize == 0, nullptr);
             
@@ -177,68 +181,11 @@ namespace Peach3D
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         } while(0);
     }
-    /*
-    void ObjectGL::render(RenderObjectAttr* attrs, Material* mtl, float lastFrameTime)
-    {
-        // check is need choose preset program
-        IObject::render(attrs, mtl, lastFrameTime);
-        
-        // use as current render program
-        if (mVertexBuffer && mRenderProgram && mRenderProgram->useAsRenderProgram()) {
-            // bind vertex buffer and index buffer, set program uniforms
-            this->bindBaseAttrBuffer(attrs, mtl, lastFrameTime);
-            
-            // enable depth bias
-            float biasFactor = attrs->depthBias;
-            if (biasFactor > FLT_EPSILON || biasFactor < -FLT_EPSILON) {
-                glEnable(GL_POLYGON_OFFSET_FILL);
-                float units = (biasFactor > FLT_EPSILON) ? 1.0f : -1.0f;
-                glPolygonOffset(1.0f * biasFactor, units);
-            }
-            
-            if (mIndexBuffer) {
-                // draw as triangles when indexs exist
-                if (mIndexDataType == IndexType::eUShort) {
-                    glDrawElements(GL_TRIANGLES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
-                    PD_ADD_DRAWCALL(1);
-                    PD_ADD_DRAWTRIAGNLE(mIndexBufferSize/(sizeof(ushort)*3));
-                }
-                else if (mIndexDataType == IndexType::eUInt) {
-                    glDrawElements(GL_TRIANGLES, mIndexBufferSize/sizeof(uint), GL_UNSIGNED_INT, 0);
-                    PD_ADD_DRAWCALL(1);
-                    PD_ADD_DRAWTRIAGNLE(mIndexBufferSize/(sizeof(uint)*3));
-                }
-            }
-            else {
-                // draw as trangles or trianglestrip if index not exist
-                glDrawArrays(GL_TRIANGLES, 0, mVertexBufferSize/mVertexDataStride);
-                PD_ADD_DRAWCALL(1);
-                PD_ADD_DRAWTRIAGNLE(mVertexBufferSize/(mVertexDataStride*3));
-            }
-            // disable depth bias after rendering
-            if (biasFactor > FLT_EPSILON || biasFactor < -FLT_EPSILON) {
-                glDisable(GL_POLYGON_OFFSET_FILL);
-            }
-            
-            // unbind vertex and textures
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(0);
-            }
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-            
-            // check AABB need show
-            if (attrs->showAABB) {
-                renderAABB(attrs);
-            }
-        }
-    }
-    */
+    
     void ObjectGL::render(const std::vector<Widget*>& renderList)
     {
         size_t listSize = renderList.size();
-        Peach3DAssert(listSize > 0, "Can't render empty node list.");
+        Peach3DAssert(listSize > 0, "Can't render empty widget node list.");
         do {
             IF_BREAK(listSize == 0, nullptr);
             
@@ -286,6 +233,57 @@ namespace Peach3D
             // disable render state
             if (texSprite && texSprite->getTexture()) {
                 glBindTexture(GL_TEXTURE_2D, 0);
+            }
+            
+            // unbind vertex and textures
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+                glBindVertexArray(0);
+            }
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        } while(0);
+    }
+    
+    void ObjectGL::render(const std::vector<OBB*>& renderList)
+    {
+        size_t listSize = renderList.size();
+        Peach3DAssert(listSize > 0, "Can't render empty OBB node list.");
+        do {
+            IF_BREAK(listSize == 0, nullptr);
+            
+            IF_BREAK(!mOBBProgram || !mOBBProgram->useAsRenderProgram(), nullptr);
+            
+            // bind vertex and index
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+                GLuint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? mOBBProgram->getProgramId() : 0;
+                generateProgramVertexArray(programId);
+            }
+            else {
+                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+                bindObjectVertexAttrib();
+            }
+            
+            // set line width once
+            glLineWidth(2.0f);
+            // rendering
+            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                // update instanced uniforms
+                mOBBProgram->updateInstancedOBBUnifroms(renderList);
+                // draw OBB once
+                glDrawElementsInstanced(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
+                PD_ADD_DRAWCALL(1);
+                PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
+            }
+            else {
+                for (size_t i = 0; i < listSize; ++i) {
+                    // update current OBB uniforms
+                    mOBBProgram->updateOBBUnifroms(renderList[i]);
+                    // draw one OBB
+                    glDrawElements(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
+                    PD_ADD_DRAWCALL(1);
+                    PD_ADD_DRAWTRIAGNLE(2);
+                }
             }
             
             // unbind vertex and textures

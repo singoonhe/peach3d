@@ -26,6 +26,7 @@ namespace Peach3D
     {
         mScale = Vector3(1.0f, 1.0f, 1.0f);
         mAttachedMesh = nullptr;
+        mOBBEnable = false;
         mIsAABBShow = false;
         mPickEnabled = false;
         mPickAlways = false;
@@ -63,6 +64,15 @@ namespace Peach3D
         // set all RenderNode draw mode
         for (auto node : mRenderNodeMap) {
             node.second->setDrawMode(mode);
+        }
+    }
+    
+    void SceneNode::setOBBEnabled(bool enable)
+    {
+        mOBBEnable = enable;
+        // set all RenderNode draw mode
+        for (auto node : mRenderNodeMap) {
+            node.second->setOBBEnabled(enable);
         }
     }
     
@@ -213,19 +223,24 @@ namespace Peach3D
                 mWorldScale = mWorldScale * parent->getScale(TranslateRelative::eWorld);
             }
             
-            Matrix4 modelMatrix;
+            Matrix4 rotateMatrix;
             // update matrix. Sequence: scale, rotation, translation
-            Matrix4 scaleMat4 = Matrix4::createScaling(mWorldScale.x, mWorldScale.y, mWorldScale.z);
-            Matrix4 translateMat4 = Matrix4::createTranslation(mWorldPosition.x, mWorldPosition.y, mWorldPosition.z);
+            Matrix4 scaleMat = Matrix4::createScaling(mWorldScale.x, mWorldScale.y, mWorldScale.z);
+            Matrix4 translateMat = Matrix4::createTranslation(mWorldPosition.x, mWorldPosition.y, mWorldPosition.z);
             if (mRotateUseVec) {
-                modelMatrix = translateMat4 * Matrix4::createRotationPitchYawRoll(mRotation.x, mRotation.y, mRotation.z) * scaleMat4;
+                rotateMatrix = Matrix4::createRotationPitchYawRoll(mRotation.x, mRotation.y, mRotation.z);
             }
             else {
-                modelMatrix = translateMat4 * Matrix4::createRotationQuaternion(mRotateQuat) * scaleMat4;
+                rotateMatrix = Matrix4::createRotationQuaternion(mRotateQuat);
             }
+            Matrix4 modelMatrix = translateMat * rotateMatrix * scaleMat;
             // set model matrix to all child RenderNode
             for (auto node : mRenderNodeMap) {
                 node.second->setModelMatrix(modelMatrix);
+                OBB* renderOBB = node.second->getRenderOBB();
+                if (renderOBB) {
+                    renderOBB->setModelMatrix(translateMat, rotateMatrix, scaleMat);
+                }
             }
             
             mIsRenderDirty = false;

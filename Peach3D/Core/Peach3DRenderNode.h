@@ -33,8 +33,10 @@ namespace Peach3D
         const Matrix4& getModelMatrix() { return mModelMatrix; }
         void setMaterial(const Material& mate) { mMaterial = mate; mIsRenderCodeDirty = true; }
         const Material& getMaterial() { return mMaterial; }
-        void setDrawMode(DrawMode mode) {mMode = mode;}
-        DrawMode getDrawMode() {return mMode;}
+        void setDrawMode(DrawMode mode) { mMode = mode; }
+        DrawMode getDrawMode() { return mMode; }
+        void setOBBEnabled(bool enable);
+        bool getOBBEnabled() { return mRenderOBB; }
         
         void setAmbient(const Color4& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color4& diffuse) { mMaterial.diffuse = diffuse; }
@@ -46,6 +48,7 @@ namespace Peach3D
         void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         IProgram* getProgramForRender() { return mRenderProgram; }
         
+        OBB* getRenderOBB() const { return mRenderOBB; }
         IObject* getObject() const { return mRenderObj; }
         uint getRenderHash() { return mRenderHash; }
         /** Recalc render code if needed. */
@@ -61,6 +64,7 @@ namespace Peach3D
         Material        mMaterial;      // render object material
         IObject*        mRenderObj;     // render object
         IProgram*       mRenderProgram; // render program
+        OBB*            mRenderOBB;     // render OBB, only init when used
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         std::string     mObjSpliceName; // (mesh name + object name), keep unique

@@ -16,6 +16,7 @@
 #include "Peach3DMatrix4.h"
 #include "Peach3DMaterial.h"
 #include "Peach3DAABB.h"
+#include "Peach3DOBB.h"
 
 namespace Peach3D
 {
@@ -73,6 +74,10 @@ namespace Peach3D
          * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
          */
         virtual void render(const std::vector<RenderNode*>& renderList) = 0;
+        /**
+         * @brief Render OBB list, only for GL3 and DX, called by SceneManager.
+         */
+        virtual void render(const std::vector<OBB*>& renderList) = 0;
         
         /**
          * Return object AABB, it should be called after "setVertexBuffer".
@@ -80,8 +85,9 @@ namespace Peach3D
          */
         AABB getAABB(const Matrix4& transform);
         
-        /** Reture object name. */
         const std::string& getName() { return mObjectName; }
+        const Vector3& getBorderMax() { return mBorderMax; }
+        const Vector3& getBorderMin() { return mBorderMin; }
 
     protected:
         //! create object by IRender, user can't call constructor function.
@@ -100,6 +106,8 @@ namespace Peach3D
         
         IndexType      mIndexDataType;     // index data type, short or int
         uint           mVertexDataType;    // vertex data format type
+        Vector3        mBorderMax;         // object base border max
+        Vector3        mBorderMin;         // object base border min
         AABB           mObjectAABB;        // object AABB
         static Color4  mAABBColor;         // AABB render color
 

@@ -42,30 +42,29 @@ namespace Peach3D
             return false;
         }
         
-        // calc AABB
+        // calc border
         const float* vData = (float*)data;
-        for (size_t i=0; i<(size / mVertexDataStride); ++i)
-        {
+        for (size_t i=0; i<(size / mVertexDataStride); ++i) {
             // x
-            if (vData[0] < mObjectAABB.min.x) {
-                mObjectAABB.min.x = vData[0];
+            if (vData[0] < mBorderMin.x) {
+                mBorderMin.x = vData[0];
             }
-            if (vData[0] > mObjectAABB.max.x) {
-                mObjectAABB.max.x = vData[0];
+            if (vData[0] > mBorderMax.x) {
+                mBorderMax.x = vData[0];
             }
             // y
-            if (vData[1] < mObjectAABB.min.y) {
-                mObjectAABB.min.y = vData[1];
+            if (vData[1] < mBorderMin.y) {
+                mBorderMin.y = vData[1];
             }
-            if (vData[1] > mObjectAABB.max.y) {
-                mObjectAABB.max.y = vData[1];
+            if (vData[1] > mBorderMax.y) {
+                mBorderMax.y = vData[1];
             }
             // z
-            if (vData[2] < mObjectAABB.min.z) {
-                mObjectAABB.min.z = vData[2];
+            if (vData[2] < mBorderMin.z) {
+                mBorderMin.z = vData[2];
             }
-            if (vData[2] > mObjectAABB.max.z) {
-                mObjectAABB.max.z = vData[2];
+            if (vData[2] > mBorderMax.z) {
+                mBorderMax.z = vData[2];
             }
             vData = vData + mVertexDataStride/sizeof(float);
         }

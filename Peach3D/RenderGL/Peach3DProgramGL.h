@@ -43,6 +43,11 @@ namespace Peach3D
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
         virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList);
         
+        /** Update OBB unifroms for GL2. */
+        virtual void updateOBBUnifroms(OBB* obb);
+        /** Update instanced OBB unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList);
+        
     protected:
         //! compile program, this will be called automatically.
         void compileProgram();

@@ -18,27 +18,29 @@ namespace Peach3D
     class PEACH3D_DLL OBB
     {
     public:
-        OBB() {}
-        OBB(const OBB& _aabb) {min = _aabb.min; max = _aabb.max;}
-        OBB(const Vector3& _min, const Vector3& _max) { min = _min; max = _max; }
-        OBB &operator=(const OBB& other) { min = other.min; max = other.max; return *this; }
+        OBB(const OBB& _aabb) {min = _aabb.min; max = _aabb.max; calcCacheMatrix();}
+        OBB(const Vector3& _min, const Vector3& _max) { min = _min; max = _max; calcCacheMatrix();}
+        OBB &operator=(const OBB& other) { min = other.min; max = other.max; calcCacheMatrix(); return *this; }
         
         /** If max <= min, it not valid. */
         bool isValid() {return !(min.x > max.x || min.y > max.y || min.z > max.z);}
         /** Check is Ray intersect. */
         //bool isRayIntersect(const Ray& ray);
         
-        void setModelMatrix(const Matrix4& mat) { mModelMat = mat; }
+        void setModelMatrix(const Matrix4& translate, const Matrix4& rotate, const Matrix4& scale);
         const Matrix4& getModelMatrix() { return mModelMat; }
-        void setDiffuse(const Color4& color) { mDiffuse = color; }
-        const Color4& getDiffuse() { return mDiffuse; }
         
-    public:
+    private:
+        /** Calc cache scale matrix and translate matrix. */
+        void calcCacheMatrix();
+        
+    private:
         Vector3 min;    // min position
         Vector3 max;    // max position
         
-        Matrix4 mModelMat;  // OBB translate same as Object
-        Color4  mDiffuse;   // OBB line color
+        Matrix4 mScaleMat;      // OBB cache scale mat
+        Matrix4 mTranslateMat;  // OBB cache translate mat
+        Matrix4 mModelMat;      // OBB translate same as Object
     };
 }
 
