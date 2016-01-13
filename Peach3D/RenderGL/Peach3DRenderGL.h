@@ -35,8 +35,6 @@ namespace Peach3D
         virtual void prepareForObjectRender();
         // close depth test...
         virtual void prepareForWidgetRender();
-        //! Set render clear color.
-        inline void setRenderClearColor(const Color4& color);
         //! return is support type gl extersion
         bool isTypeExtersionSupport(GLExtensionType type)
         {
@@ -47,11 +45,15 @@ namespace Peach3D
         void deleteExtersionSupport(GLExtensionType type)
         {
             auto typeIter = std::find(mExtensionList.begin(), mExtensionList.end(), type);
-            if (typeIter != mExtensionList.end())
-            {
+            if (typeIter != mExtensionList.end()) {
                 mExtensionList.erase(typeIter);
             }
         }
+        
+        /** Set render clear color, call GL once. */
+        virtual void setRenderClearColor(const Color4& color);
+        /** Set render lines width, call GL once. */
+        virtual void setRenderLineWidth(float newWidth);
         
         //! Create renderable object.
         /** \params the name of new renderable object.

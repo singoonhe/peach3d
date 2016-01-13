@@ -470,7 +470,7 @@ namespace Peach3D
     void ProgramGL::updateOBBUnifroms(OBB* obb)
     {
         SceneManager* sgr = SceneManager::getSingletonPtr();
-        Color4 OBBColor = SceneManager::getSingleton().getGlobalOBBColor();
+        Color4 OBBColor = IRender::getSingleton().getRenderOBBColor();
         // update object uniforms in list
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
@@ -519,7 +519,7 @@ namespace Peach3D
         float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
                                                GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
         
-        Color4 OBBColor = SceneManager::getSingleton().getGlobalOBBColor();
+        Color4 OBBColor = IRender::getSingleton().getRenderOBBColor();
         // set object params to data
         for (auto i = 0; i < renderList.size(); ++i) {
             int startOffset = 0;

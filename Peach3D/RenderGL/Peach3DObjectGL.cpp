@@ -264,8 +264,6 @@ namespace Peach3D
                 bindObjectVertexAttrib();
             }
             
-            // set line width once
-            glLineWidth(2.0f);
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                 // update instanced uniforms

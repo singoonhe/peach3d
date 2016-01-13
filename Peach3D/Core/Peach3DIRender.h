@@ -21,7 +21,7 @@ namespace Peach3D
     class PEACH3D_DLL IRender : public Singleton < IRender >
     {
     public:
-        IRender() : mIsRenderValid(false) {}
+        IRender() : mIsRenderValid(false), mLineWidth(2.0f) {}
         virtual ~IRender() {}
         // init render, set view port
         virtual bool initRender(const Vector2& size);
@@ -39,8 +39,12 @@ namespace Peach3D
          */
         virtual void finishForRender() {}
 
-        virtual void setRenderClearColor(const Color4& color) { mRenderClearColor = color;}
+        virtual void setRenderClearColor(const Color4& newColor) { mRenderClearColor = newColor;}
         Color4 getRenderClearColor()const { return mRenderClearColor; }
+        void setRenderOBBColor(const Color4& newColor) { mOBBColor = newColor; }
+        const Color4& getRenderOBBColor() {return mOBBColor;}
+        virtual void setRenderLineWidth(float newWidth) { mLineWidth = newWidth; }
+        float getRenderLineWidth() {return mLineWidth;}
 
         //! Create renderable object.
         /** \params the name of new renderable object.
@@ -62,8 +66,10 @@ namespace Peach3D
         virtual void deleteProgram(IProgram* program) { delete program; }
         
     protected:
-        bool      mIsRenderValid;               // render is init?
-        Color4    mRenderClearColor;            // default render clear color is Color4Gray
+        bool      mIsRenderValid;       // render is init?
+        Color4    mRenderClearColor;    // default render clear color is Color4Gray
+        Color4    mOBBColor;            // OBB lines render color
+        float     mLineWidth;           // draw line width, include OBB
         
         friend class        ResourceManager;
         friend class        SceneManager;

@@ -95,6 +95,13 @@ namespace Peach3D
         glClearColor(mRenderClearColor.r, mRenderClearColor.g, mRenderClearColor.b, mRenderClearColor.a);
     }
     
+    void RenderGL::setRenderLineWidth(float newWidth)
+    {
+        IRender::setRenderLineWidth(newWidth);
+        // modify opengl lines width
+        glLineWidth(newWidth);
+    }
+    
     void RenderGL::prepareForRender()
     {
         // is need clean stencil

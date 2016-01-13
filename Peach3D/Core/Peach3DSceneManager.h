@@ -39,8 +39,6 @@ namespace Peach3D
         Widget* getRootWidget() { return mRootWidget; }
         void setGlobalAmbient(const Color4& newColor) { mAmbientColor = newColor; }
         const Color4& getGlobalAmbient() {return mAmbientColor;}
-        void setGlobalOBBColor(const Color4& newColor) { mOBBColor = newColor; }
-        const Color4& getGlobalOBBColor() {return mOBBColor;}
         
         /** Set perspective projection. */
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
@@ -80,7 +78,6 @@ namespace Peach3D
         Widget*                 mRootWidget;       // root Widget
         Matrix4                 mProjectionMatrix; // used projective matrix for object
         Color4                  mAmbientColor;     // global ambient color
-        Color4                  mOBBColor;         // OBB lines render color
         
         Scheduler*              mDrawUpdateSchedule;// draw stats update schedule
         Widget*                 mDebugDrawNode;     // draw stats widget

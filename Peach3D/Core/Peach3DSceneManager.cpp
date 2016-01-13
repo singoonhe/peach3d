@@ -18,10 +18,13 @@ namespace Peach3D
     
     void SceneManager::init()
     {
+        IRender* curRender = IRender::getSingletonPtr();
         // default set clear color to gray
-        IRender::getSingletonPtr()->setRenderClearColor(Color4Gray);
+        curRender->setRenderClearColor(Color4Gray);
         // set default OBB color to green
-        setGlobalOBBColor(Color4Green);
+        curRender->setRenderOBBColor(Color4Green);
+        // set default lines width
+        curRender->setRenderLineWidth(2.0f);
         
         // create root scene node
         mRootSceneNode = new SceneNode();
