@@ -34,4 +34,9 @@ class DrawModeSample : public BaseSample
     void init(Widget* parentWidget);
 };
 
+class OBBSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+};
+
 #endif /* defined(MESH_SCENE_H) */

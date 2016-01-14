@@ -14,6 +14,7 @@ bool MeshScene::init()
     mSampleList.push_back([]()->BaseSample* {return new ObjSample();});
     mSampleList.push_back([]()->BaseSample* {return new ObjTexSample();});
     mSampleList.push_back([]()->BaseSample* {return new DrawModeSample();});
+    mSampleList.push_back([]()->BaseSample* {return new OBBSample();});
     
     // init base scene
     BaseScene::init();
@@ -98,5 +99,27 @@ void DrawModeSample::init(Widget* parentWidget)
         cubeNodex->setDrawMode(DrawMode::eLine);
         cubeNodex->attachMesh(cubeMesh);
         cubeNodex->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(180.0f), 0.0f), (i / 3) * 2.f + 1.0f)));
+    }
+}
+
+void OBBSample::init(Widget* parentWidget)
+{
+    // set title and desc
+    mTitle = "Draw Mesh with OBB";
+    mDesc = "draw .obj file with OBB, all OBB could draw batch";
+    // load mesh
+    auto rottNode = SceneManager::getSingleton().getRootSceneNode();
+    auto cubeMesh = ResourceManager::getSingleton().addMesh("texcube.obj");
+    auto cubeNode = rottNode->createChild(Vector3(-6.f, 0.f, 0.f));
+    cubeNode->attachMesh(cubeMesh);
+    // rotate repeat
+    cubeNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(-360.0f), 0.0f), 5.0f)));
+    
+    // create 9 nodes
+    for (auto i=0; i<9; i++) {
+        auto cubeNodex = rottNode->createChild(Vector3((i % 3) * 5 - 1.f, (i / 3) * 4.f - 4.f, 0.f));
+        cubeNodex->setOBBEnabled(true);
+        cubeNodex->attachMesh(cubeMesh);
+        cubeNodex->runAction(Repeat::createListForever(MoveBy3D::create(Vector3(0.f, 1.f, 0.f), 0.25f), MoveBy3D::create(Vector3(0.f, -1.f, 0.f), 1.5f), nullptr));
     }
 }

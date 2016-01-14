@@ -42,8 +42,9 @@ namespace Peach3D
         mesh->tranverseObjects([&](const char* name, IObject* object) {
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
-        // init RenderNode draw mode
+        // init RenderNode render status
         setDrawMode(mMode);
+        setOBBEnabled(mOBBEnable);
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)
