@@ -11,7 +11,6 @@
 
 #include "Peach3DCompile.h"
 #include "Peach3DIObject.h"
-#include "Peach3DAABB.h"
 
 namespace Peach3D
 {

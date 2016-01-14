@@ -221,8 +221,8 @@ namespace Peach3D
         glEnableVertexAttribArray(DefaultAttrLocation::eColor);
         glVertexAttribPointer(DefaultAttrLocation::eColor, 4, GL_FLOAT, GL_FALSE, vStride, PEACH3D_BUFFER_OFFSET(3 * sizeof(float)));
         
-        Material AABBMtl;
-        rayProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexType::Point3|VertexTypeColor4, AABBMtl);
+        Material rayMtl;
+        rayProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexType::Point3|VertexTypeColor4, rayMtl);
     }
      */
     

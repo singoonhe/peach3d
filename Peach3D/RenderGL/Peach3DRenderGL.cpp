@@ -18,8 +18,6 @@ namespace Peach3D
 {
     RenderGL::~RenderGL()
     {
-        // delete global AABB buffers
-        ObjectGL::deleteAABBBuffers();
         // delete object global UBO
         ProgramGL::deleteGlobalUBO();
     }
@@ -119,7 +117,7 @@ namespace Peach3D
         glEnable(GL_DEPTH_TEST);
         
         // update object global uniforms for GL3
-        if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+        if (PD_RENDERLEVEL_GL3()) {
             ProgramGL::updateGlobalObjectUnifroms();
         }
     }
@@ -130,7 +128,7 @@ namespace Peach3D
         glDisable(GL_DEPTH_TEST);
         
         // update widget global uniforms for GL3
-        if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+        if (PD_RENDERLEVEL_GL3()) {
             ProgramGL::updateGlobalWidgetUnifroms();
         }
     }

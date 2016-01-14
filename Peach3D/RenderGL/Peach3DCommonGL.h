@@ -33,6 +33,6 @@
 // check opengl extersion support
 #define PD_GLEXT_SUPPORT(ext) ((RenderGL*)IRender::getSingletonPtr())->isTypeExtersionSupport(ext)
 // check opengl "VertexArray" extersion support
-#define PD_GLEXT_VERTEXARRAY_SUPPORT() (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3 || PD_GLEXT_SUPPORT(GLExtensionType::eVertexArray))
+#define PD_GLEXT_VERTEXARRAY_SUPPORT() (PD_RENDERLEVEL_GL3() || PD_GLEXT_SUPPORT(GLExtensionType::eVertexArray))
 
 #endif

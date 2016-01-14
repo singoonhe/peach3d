@@ -18,7 +18,7 @@ namespace Peach3D
     class PEACH3D_DLL OBB
     {
     public:
-        OBB(const OBB& _aabb) {min = _aabb.min; max = _aabb.max; calcCacheMatrix();}
+        OBB(const OBB& _obb) {min = _obb.min; max = _obb.max; calcCacheMatrix();}
         OBB(const Vector3& _min, const Vector3& _max) { min = _min; max = _max; calcCacheMatrix();}
         OBB &operator=(const OBB& other) { min = other.min; max = other.max; calcCacheMatrix(); return *this; }
         

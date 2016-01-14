@@ -13,8 +13,6 @@
 
 namespace Peach3D
 {
-    Color4  IObject::mAABBColor = Color4Black;
-
     IObject::IObject(const char* name) : mObjectName(name), mVertexBufferSize(0), mIndexBufferSize(0), mVertexDataStride(0), mIndexDataType(IndexType::eUShort), mObjectProgram(nullptr)
     {
     }

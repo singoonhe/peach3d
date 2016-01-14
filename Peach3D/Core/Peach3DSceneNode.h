@@ -14,7 +14,6 @@
 #include "Peach3DMatrix4.h"
 #include "Peach3DQuaternion.h"
 #include "Peach3DRenderNode.h"
-#include "Peach3DAABB.h"
 
 namespace Peach3D
 {
@@ -77,9 +76,7 @@ namespace Peach3D
          */
         void setDepthBias(float depthBias) { mDepthBias = depthBias; }
         float getDepthBias() { return mDepthBias; }
-        
-        void showAABB(bool show) {mIsAABBShow = show;}
-        bool isAABBShow() {return mIsAABBShow;}
+
         /**
          * Set node picking enabled.
          * @params always Set is picking enabled always even it will not rendering, false for default.
@@ -129,7 +126,6 @@ namespace Peach3D
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         bool            mOBBEnable;     // is OBB display enable
-        bool            mIsAABBShow;    // is AABB show using line
         bool            mPickEnabled;   // is object picking eanbled
         bool            mPickAlways;    // is object always picking eanbled, even not render
         

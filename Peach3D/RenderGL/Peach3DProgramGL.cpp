@@ -188,7 +188,7 @@ namespace Peach3D
             mProgramValid = true;
             
             // bind gobal uniforms when GL3 support
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 bindGlobalUniforms();
             }
         }
@@ -300,7 +300,7 @@ namespace Peach3D
     
     void ProgramGL::bindProgramVertexAttrib()
     {
-        if (mAttriBuffer && PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+        if (mAttriBuffer && PD_RENDERLEVEL_GL3()) {
             glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
             
             // bind program instace buffer
@@ -331,7 +331,7 @@ namespace Peach3D
     {
         // resize render buffer size
         uint needCount = count - mInstancedCount;
-        if (needCount > 0 && PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+        if (needCount > 0 && PD_RENDERLEVEL_GL3()) {
             // save current instanced data count
             uint formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
             mInstancedCount = mInstancedCount + std::max(needCount, formulaCount);
@@ -368,7 +368,7 @@ namespace Peach3D
     {
         IProgram::setProgramUniformsDesc(uniformList);
         
-        if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3 && uniformList.size() > 0) {
+        if (PD_RENDERLEVEL_GL3() && uniformList.size() > 0) {
             // save one instanced uniform buffer size
             mUniformsSize = 0;
             for (auto uniform : uniformList) {
@@ -466,7 +466,7 @@ namespace Peach3D
                         }
                             break;
                         case UniformNameType::eDiffuse: {
-                            float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, 0.1};
+                            float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.diffuse.a};
                             memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
                             startOffset += 4;
                         }
@@ -730,7 +730,7 @@ namespace Peach3D
             
             // bind uniform buffer for GL3
             //! this is very Important, just like bind array buffer and index buffer
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 glBindBufferBase(GL_UNIFORM_BUFFER, GLOBAL_UBO_BINDING_POINT,
                                  (mVertexType & VertexType::Point3) ? mObjectUBOId: mWidgetUBOId);
             }

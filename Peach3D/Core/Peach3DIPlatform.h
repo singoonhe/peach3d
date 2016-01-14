@@ -196,6 +196,7 @@ namespace Peach3D
     
     // get render feature level
 #define PD_RENDERLEVEL() IPlatform::getSingletonPtr()->getRenderFeatureLevel()
+#define PD_RENDERLEVEL_GL3() (IPlatform::getSingletonPtr()->getRenderFeatureLevel() == RenderFeatureLevel::eGL3)
 #if PEACH3D_DEBUG == 1
     // add draw call count and triangle count
     #define PD_ADD_DRAWCALL(count) IPlatform::getSingletonPtr()->addDrawCallCount(count)

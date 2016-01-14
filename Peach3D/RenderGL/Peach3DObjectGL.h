@@ -63,19 +63,6 @@ namespace Peach3D
          * Delete gl object index buffer.
          */
         void cleanObjectIndexBuffer();
-        /**
-         * Generate AABB vertex buffers if SceneNode needed.
-         */
-        static void generateAABBBuffers();
-        /**
-         * @brief Render a AABB using object matrix, object AABB data use to scale global AABB.
-         * @params attrs Object rendering attr, include matrixes.
-         */
-        // void renderAABB(RenderObjectAttr* attrs);
-        /**
-         * Delete AABB vertex buffers, it could be called by RenderGL.
-         */
-        static void deleteAABBBuffers();
         
         
     private:
@@ -84,11 +71,6 @@ namespace Peach3D
         
         std::map<GLuint, GLuint> mVAOMap;   // each program need different VAO (program will create VBO, bind to VAO)
         static IProgram* mOBBProgram;       // OBB rendering program
-        
-        static GLuint mAABBVertexArrayId;   // vertex array id for AABB rendering
-        static GLuint mAABBVertexBuffer;    // vertex buffer for AABB rendering
-        static GLuint mAABBIndexBuffer;     // vertex buffer for AABB rendering
-        static IProgram* mAABBProgram;      // AABB rendering program
     };
 }
 

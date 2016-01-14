@@ -27,7 +27,6 @@ namespace Peach3D
         mScale = Vector3(1.0f, 1.0f, 1.0f);
         mAttachedMesh = nullptr;
         mOBBEnable = false;
-        mIsAABBShow = false;
         mPickEnabled = false;
         mPickAlways = false;
         mDepthBias = 0.0f;

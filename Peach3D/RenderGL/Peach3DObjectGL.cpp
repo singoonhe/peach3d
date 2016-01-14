@@ -35,10 +35,7 @@ namespace Peach3D
         return resMode;
     }
     
-    GLuint ObjectGL::mAABBVertexArrayId = 0;
-    GLuint ObjectGL::mAABBVertexBuffer = 0;
-    GLuint ObjectGL::mAABBIndexBuffer = 0;
-    IProgram* ObjectGL::mAABBProgram = nullptr;
+    /** Special program used for OBB rendering. */
     IProgram* ObjectGL::mOBBProgram = nullptr;
     
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
@@ -61,7 +58,9 @@ namespace Peach3D
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
             bindObjectVertexAttrib();
             // bind program buffer for GL3
-            static_cast<ProgramGL*>(program)->bindProgramVertexAttrib();
+            if (program && PD_RENDERLEVEL_GL3()) {
+                static_cast<ProgramGL*>(program)->bindProgramVertexAttrib();
+            }
             mVAOMap[programId] = vaoId;
         }
         else {
@@ -130,14 +129,14 @@ namespace Peach3D
             RenderNode* firstNode = renderList[0];
             IProgram* usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
             }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram : nullptr);
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? usedProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -156,7 +155,7 @@ namespace Peach3D
             GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
             GLenum glDrawMode = convertDrawModeToGL(firstNode->getDrawMode());
             // rendering
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 // draw objects once
                 glDrawElementsInstanced(glDrawMode, indexCount, indexType, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
@@ -196,14 +195,14 @@ namespace Peach3D
             Widget* firstNode = renderList[0];
             IProgram* usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
                 usedProgram->updateInstancedWidgetUnifroms(renderList);
             }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram : nullptr);
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? usedProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -219,7 +218,7 @@ namespace Peach3D
             }
             
             // rendering
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 // draw widget once
                 glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
@@ -257,14 +256,14 @@ namespace Peach3D
             IF_BREAK(listSize == 0, nullptr);
             
             IF_BREAK(!mOBBProgram || !mOBBProgram->useAsRenderProgram(), nullptr);
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
                 mOBBProgram->updateInstancedOBBUnifroms(renderList);
             }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? mOBBProgram : nullptr);
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mOBBProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -273,7 +272,7 @@ namespace Peach3D
             }
             
             // rendering
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            if (PD_RENDERLEVEL_GL3()) {
                 // draw OBB once
                 glDrawElementsInstanced(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
@@ -297,125 +296,6 @@ namespace Peach3D
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         } while(0);
-    }
-    
-    void ObjectGL::generateAABBBuffers()
-    {
-        /*
-        // generate vertex buffer for AABB rendering
-        if (!mAABBVertexBuffer && !mAABBIndexBuffer) {
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                // general vertex array
-                glGenVertexArrays(1, &mAABBVertexArrayId);
-                glBindVertexArray(mAABBVertexArrayId);
-            }
-            
-            glGenBuffers(1, &mAABBVertexBuffer);
-            glBindBuffer(GL_ARRAY_BUFFER, mAABBVertexBuffer);
-            GLfloat globalVertex[] = {-0.5, -0.5, -0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                0.5, -0.5, -0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                0.5,  0.5, -0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                -0.5,  0.5, -0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                -0.5, -0.5,  0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                0.5, -0.5,  0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                0.5,  0.5,  0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a,
-                -0.5,  0.5,  0.5, mAABBColor.r, mAABBColor.g, mAABBColor.b, mAABBColor.a};
-            glBufferData(GL_ARRAY_BUFFER, sizeof(globalVertex), globalVertex, GL_STATIC_DRAW);
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                const GLsizei vStride = 7*sizeof(float);
-                glEnableVertexAttribArray(static_cast<GLuint>(DefaultAttrLocation::eVertex));
-                glVertexAttribPointer(static_cast<GLuint>(DefaultAttrLocation::eVertex), 3, GL_FLOAT, GL_FALSE, vStride, 0);
-                glEnableVertexAttribArray(static_cast<GLuint>(DefaultAttrLocation::eColor));
-                glVertexAttribPointer(static_cast<GLuint>(DefaultAttrLocation::eColor), 4, GL_FLOAT, GL_FALSE, vStride, PEACH3D_BUFFER_OFFSET(3 * sizeof(float)));
-            }
-            GLushort globalIndex[] = {0, 1, 1, 2, 2, 3, 0, 3,  4, 5, 5, 6, 6, 7, 4, 7,  0, 4, 1, 5, 2, 6, 3, 7};
-            glGenBuffers(1, &mAABBIndexBuffer);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mAABBIndexBuffer);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(globalIndex), globalIndex, GL_STATIC_DRAW);
-            
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(0);
-            }
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            
-            // set line width once
-            glLineWidth(2.0f);
-            // generate program
-            Material AABBMtl;
-//            mAABBProgram = ResourceManager::getSingleton().getObjectPresetProgram(VertexType::Point3|VertexTypeColor4, AABBMtl);
-        }*/
-    }
-    
-    /*
-    void ObjectGL::renderAABB(RenderObjectAttr* attrs)
-    {
-        // generate AABB buffers if needed
-        generateAABBBuffers();
-        AABB nodeAABB = getAABB(*attrs->modelMatrix);
-        if (nodeAABB.isValid()) {
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(mAABBVertexArrayId);
-            }
-            else {
-                glBindBuffer(GL_ARRAY_BUFFER, mAABBVertexBuffer);
-                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mAABBIndexBuffer);
-                // attrib need always set if vertexarray disable
-                const GLsizei vStride = 7*sizeof(float);
-                glEnableVertexAttribArray(static_cast<GLuint>(DefaultAttrLocation::eVertex));
-                glVertexAttribPointer(static_cast<GLuint>(DefaultAttrLocation::eVertex), 3, GL_FLOAT, GL_FALSE, vStride, 0);
-                glEnableVertexAttribArray(static_cast<GLuint>(DefaultAttrLocation::eColor));
-                glVertexAttribPointer(static_cast<GLuint>(DefaultAttrLocation::eColor), 4, GL_FLOAT, GL_FALSE, vStride, PEACH3D_BUFFER_OFFSET(3 * sizeof(float)));
-            }
-            
-            // update AABB model matrix
-            Vector3 AABBSize = Vector3(nodeAABB.max.x - nodeAABB.min.x,
-                                       nodeAABB.max.y - nodeAABB.min.y,
-                                       nodeAABB.max.z - nodeAABB.min.z);
-            Vector3 AABBCenter = Vector3((nodeAABB.max.x + nodeAABB.min.x) / 2.0f,
-                                         (nodeAABB.max.y + nodeAABB.min.y) / 2.0f,
-                                         (nodeAABB.max.z + nodeAABB.min.z) / 2.0f);
-            Matrix4 AABBTranslateMat = Matrix4::createTranslation(AABBCenter.x, AABBCenter.y, AABBCenter.z);
-            Matrix4 AABBScaleMat = Matrix4::createScaling(AABBSize.x, AABBSize.y, AABBSize.z);
-            Matrix4 AABBMat = AABBTranslateMat * AABBScaleMat;
-            attrs->modelMatrix = &AABBMat;
-            // set program
-            mAABBProgram->useAsRenderProgram();
-            mAABBProgram->updateObjectUnifroms(attrs, nullptr, 0.0f);
-            // modelMatrix not enabled, it point to a local Matrix4.
-            attrs->modelMatrix = nullptr;
-            // draw AABB, DepthBias not supported when rendering LINE.
-            glDrawElements(GL_LINES, 24, GL_UNSIGNED_SHORT, 0);
-            PD_ADD_DRAWCALL(1);
-            
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                glBindVertexArray(0);
-            }
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        }
-    }*/
-    
-    void ObjectGL::deleteAABBBuffers()
-    {
-        if (mAABBIndexBuffer)
-        {
-            // delete vertex object
-            glDeleteBuffers(1, &mAABBIndexBuffer);
-            mAABBIndexBuffer = 0;
-            if (PD_GLEXT_VERTEXARRAY_SUPPORT())
-            {
-                // delete vertex array
-                glDeleteVertexArrays(1, &mAABBVertexArrayId);
-                mAABBVertexArrayId = 0;
-            }
-        }
-        if (mAABBIndexBuffer)
-        {
-            // delete index object
-            glDeleteBuffers(1, &mAABBIndexBuffer);
-            mAABBIndexBuffer = 0;
-        }
     }
     
     void ObjectGL::cleanObjectVertexBuffer()

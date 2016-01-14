@@ -109,7 +109,6 @@ namespace Peach3D
         Vector3        mBorderMax;         // object base border max
         Vector3        mBorderMin;         // object base border min
         AABB           mObjectAABB;        // object AABB
-        static Color4  mAABBColor;         // AABB render color
 
         friend class   IRender;
     };
