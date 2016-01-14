@@ -298,47 +298,70 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::createInstancedAttriDataAndBuffer(uint count)
+    void ProgramGL::bindProgramVertexAttrib()
     {
-        Peach3DAssert(count > 0, "Attribute data size must bigger than 0!");
-        if (count > 0) {
+        if (mAttriBuffer && PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+            glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
+            
+            // bind program instace buffer
+            GLuint curOffset = 0;
+            for (auto uniform : mProgramUniformList) {
+                uint uniformFloatSize = ShaderCode::getUniformFloatBits(uniform.dType);
+                uint repeatCount = (uniform.dType == UniformDataType::eMatrix4) ? 4 : 1;
+                uniformFloatSize = (uniform.dType == UniformDataType::eMatrix4) ? (uniformFloatSize / 4) : uniformFloatSize;
+                
+                // get current uniform locate by name
+                GLint curLocate = glGetAttribLocation(mProgram, uniform.name.c_str());
+                Peach3DAssert(curLocate >= 0, "Can't get uniform locate from name!");
+                if (curLocate >= 0) {
+                    for (auto i = 0; i < repeatCount; ++i) {
+                        glEnableVertexAttribArray(curLocate);
+                        glVertexAttribPointer(curLocate, uniformFloatSize, GL_FLOAT, GL_FALSE, mUniformsSize,
+                                              PEACH3D_BUFFER_OFFSET(curOffset));
+                        glVertexAttribDivisor(curLocate, 1);
+                        curOffset += uniformFloatSize * sizeof(float);
+                        curLocate ++;
+                    }
+                }
+            }
+        }
+    }
+    
+    float* ProgramGL::beginMapInstanceUniformBuffer(uint count)
+    {
+        // resize render buffer size
+        uint needCount = count - mInstancedCount;
+        if (needCount > 0 && PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
             // save current instanced data count
-            mInstancedCount = count;
+            uint formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
+            mInstancedCount = mInstancedCount + std::max(needCount, formulaCount);
             
             // generate attribute buffer, vertex array have bind now
             if (mAttriBuffer == 0) {
                 glGenBuffers(1, &mAttriBuffer);
-                glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
-                // bind color attri
-                GLuint curOffset = 0;
-                for (auto uniform : mProgramUniformList) {
-                    uint uniformFloatSize = ShaderCode::getUniformFloatBits(uniform.dType);
-                    uint repeatCount = (uniform.dType == UniformDataType::eMatrix4) ? 4 : 1;
-                    uniformFloatSize = (uniform.dType == UniformDataType::eMatrix4) ? (uniformFloatSize / 4) : uniformFloatSize;
-                    
-                    // get current uniform locate by name
-                    GLint curLocate = glGetAttribLocation(mProgram, uniform.name.c_str());
-                    Peach3DAssert(curLocate >= 0, "Can't get uniform locate from name!");
-                    if (curLocate >= 0) {
-                        for (auto i = 0; i < repeatCount; ++i) {
-                            glEnableVertexAttribArray(curLocate);
-                            glVertexAttribPointer(curLocate, uniformFloatSize, GL_FLOAT, GL_FALSE, mUniformsSize,
-                                                  PEACH3D_BUFFER_OFFSET(curOffset));
-                            glVertexAttribDivisor(curLocate, 1);
-                            curOffset += uniformFloatSize * sizeof(float);
-                            curLocate ++;
-                        }
-                    }
-                }
             }
-            else {
-                glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
-            }
-            
+            glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
             // bind instanced uniform buffer
-            glBufferData(GL_ARRAY_BUFFER, mUniformsSize * count, nullptr, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, mUniformsSize * mInstancedCount, nullptr, GL_DYNAMIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
+        
+        float* data = nullptr;
+        if (mAttriBuffer) {
+            // copy attri data to instanced buffer
+            glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
+            uint copySize = mUniformsSize * count;
+            data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
+                                            GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+        }
+        return data;
+    }
+
+    void ProgramGL::endMapInstanceUniformBuffer()
+    {
+        // unmap instanced attribute buffer
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     
     void ProgramGL::setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList)
@@ -425,46 +448,38 @@ namespace Peach3D
     
     void ProgramGL::updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList)
     {
-        // resize render buffer size
-        int needCount = (int)renderList.size() - mInstancedCount;
-        if (needCount > 0) {
-            int formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
-            createInstancedAttriDataAndBuffer(mInstancedCount + std::max(needCount, formulaCount));
-        }
+        // map insanced attribute buffer
+        float *data = beginMapInstanceUniformBuffer((uint)renderList.size());
         
-        // copy attri data to instanced buffer
-        glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
-        uint copySize = mUniformsSize * (uint)renderList.size();
-        float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
-                                               GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-        
-        // set object params to data
-        for (auto i = 0; i < renderList.size(); ++i) {
-            int startOffset = 0;
-            int uniformOffset = (mUniformsSize / 4) * i;
-            const Material& objMat = renderList[i]->getMaterial();
-            for (auto uniform : mProgramUniformList) {
-                switch (ShaderCode::getUniformNameType(uniform.name)) {
-                    case UniformNameType::eModelMatrix: {
-                        const Matrix4& modelMat = renderList[i]->getModelMatrix();
-                        memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
-                        startOffset += 16;
+        if (data) {
+            // set object params to data
+            for (auto i = 0; i < renderList.size(); ++i) {
+                int startOffset = 0;
+                int uniformOffset = (mUniformsSize / 4) * i;
+                const Material& objMat = renderList[i]->getMaterial();
+                for (auto uniform : mProgramUniformList) {
+                    switch (ShaderCode::getUniformNameType(uniform.name)) {
+                        case UniformNameType::eModelMatrix: {
+                            const Matrix4& modelMat = renderList[i]->getModelMatrix();
+                            memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
+                            startOffset += 16;
+                        }
+                            break;
+                        case UniformNameType::eDiffuse: {
+                            float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, 0.1};
+                            memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
+                            startOffset += 4;
+                        }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    case UniformNameType::eDiffuse: {
-                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, 0.5};
-                        memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
-                        startOffset += 4;
-                    }
-                        break;
-                    default:
-                        break;
                 }
             }
+            
+            // unmap instanced attribute buffer
+            endMapInstanceUniformBuffer();
         }
-        
-        // unmap instanced attribute buffer
-        glUnmapBuffer(GL_ARRAY_BUFFER);
     }
     
     void ProgramGL::updateOBBUnifroms(OBB* obb)
@@ -506,46 +521,38 @@ namespace Peach3D
     
     void ProgramGL::updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList)
     {
-        // resize render buffer size
-        int needCount = (int)renderList.size() - mInstancedCount;
-        if (needCount > 0) {
-            int formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
-            createInstancedAttriDataAndBuffer(mInstancedCount + std::max(needCount, formulaCount));
-        }
+        // map insanced attribute buffer
+        float *data = beginMapInstanceUniformBuffer((uint)renderList.size());
         
-        // copy attri data to instanced buffer
-        glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
-        uint copySize = mUniformsSize * (uint)renderList.size();
-        float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
-                                               GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-        
-        Color4 OBBColor = IRender::getSingleton().getRenderOBBColor();
-        // set object params to data
-        for (auto i = 0; i < renderList.size(); ++i) {
-            int startOffset = 0;
-            int uniformOffset = (mUniformsSize / 4) * i;
-            for (auto uniform : mProgramUniformList) {
-                switch (ShaderCode::getUniformNameType(uniform.name)) {
-                    case UniformNameType::eModelMatrix: {
-                        const Matrix4& modelMat = renderList[i]->getModelMatrix();
-                        memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
-                        startOffset += 16;
+        if (data) {
+            Color4 OBBColor = IRender::getSingleton().getRenderOBBColor();
+            // set object params to data
+            for (auto i = 0; i < renderList.size(); ++i) {
+                int startOffset = 0;
+                int uniformOffset = (mUniformsSize / 4) * i;
+                for (auto uniform : mProgramUniformList) {
+                    switch (ShaderCode::getUniformNameType(uniform.name)) {
+                        case UniformNameType::eModelMatrix: {
+                            const Matrix4& modelMat = renderList[i]->getModelMatrix();
+                            memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
+                            startOffset += 16;
+                        }
+                            break;
+                        case UniformNameType::eDiffuse: {
+                            float color[] = {OBBColor.r, OBBColor.g, OBBColor.b, OBBColor.a};
+                            memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
+                            startOffset += 4;
+                        }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    case UniformNameType::eDiffuse: {
-                        float color[] = {OBBColor.r, OBBColor.g, OBBColor.b, OBBColor.a};
-                        memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
-                        startOffset += 4;
-                    }
-                        break;
-                    default:
-                        break;
                 }
             }
+            
+            // unmap instanced attribute buffer
+            endMapInstanceUniformBuffer();
         }
-        
-        // unmap instanced attribute buffer
-        glUnmapBuffer(GL_ARRAY_BUFFER);
     }
     
     void ProgramGL::updateWidgetUnifroms(Widget* widget)
@@ -631,97 +638,89 @@ namespace Peach3D
     
     void ProgramGL::updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList)
     {
-        // resize render buffer size
-        int needCount = (int)renderList.size() - mInstancedCount;
-        if (needCount > 0) {
-            int formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
-            createInstancedAttriDataAndBuffer(mInstancedCount + std::max(needCount, formulaCount));
-        }
+        // map insanced attribute buffer
+        float *data = beginMapInstanceUniformBuffer((uint)renderList.size());
         
-        // copy attri data to instanced buffer
-        glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
-        uint copySize = mUniformsSize * (uint)renderList.size();
-        float *data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
-                                               GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-        
-        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
-        // set widget params to data
-        for (auto i = 0; i < renderList.size(); ++i) {
-            int startOffset = 0;
-            int uniformOffset = (mUniformsSize / 4) * i;
-            for (auto uniform : mProgramUniformList) {
-                switch (ShaderCode::getUniformNameType(uniform.name)) {
-                    case UniformNameType::eShowRect: {
-                        const Vector2& pos = renderList[i]->getPosition(TranslateRelative::eWorld);
-                        const Vector2& size = renderList[i]->getContentSize(TranslateRelative::eWorld);
-                        float rect[] = {pos.x, pos.y, size.x, size.y};
-                        memcpy(data + uniformOffset + startOffset, rect, 4 * sizeof(float));
-                        startOffset += 4;
-                    }
-                        break;
-                    case UniformNameType::eAnRot: {
-                        const Vector2& anchor = renderList[i]->getAnchorPoint();
-                        float anRot[] = {anchor.x, anchor.y, renderList[i]->getRotation(TranslateRelative::eWorld)};
-                        memcpy(data + uniformOffset + startOffset, anRot, 3 * sizeof(float));
-                        startOffset += 3;
-                    }
-                        break;
-                    case UniformNameType::ePatShowRect: {
-                        Vector2 pos;
-                        Vector2 size = winSize;
-                        Widget* patWidget = static_cast<Widget*>(renderList[i]->getParentNode());
-                        if (renderList[i]->isClipEnabled() && patWidget) {
-                            pos = patWidget->getPosition(TranslateRelative::eWorld);
-                            size = patWidget->getContentSize(TranslateRelative::eWorld);
+        if (data) {
+            const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+            // set widget params to data
+            for (auto i = 0; i < renderList.size(); ++i) {
+                int startOffset = 0;
+                int uniformOffset = (mUniformsSize / 4) * i;
+                for (auto uniform : mProgramUniformList) {
+                    switch (ShaderCode::getUniformNameType(uniform.name)) {
+                        case UniformNameType::eShowRect: {
+                            const Vector2& pos = renderList[i]->getPosition(TranslateRelative::eWorld);
+                            const Vector2& size = renderList[i]->getContentSize(TranslateRelative::eWorld);
+                            float rect[] = {pos.x, pos.y, size.x, size.y};
+                            memcpy(data + uniformOffset + startOffset, rect, 4 * sizeof(float));
+                            startOffset += 4;
                         }
-                        float rect[] = {pos.x, pos.y, size.x, size.y};
-                        memcpy(data + uniformOffset + startOffset, rect, 4 * sizeof(float));
-                        startOffset += 4;
-                    }
-                        break;
-                    case UniformNameType::ePatAnRot: {
-                        Vector2 anchor;
-                        float rotate = 0.0f;
-                        Widget* patWidget = static_cast<Widget*>(renderList[i]->getParentNode());
-                        if (renderList[i]->isClipEnabled() && patWidget) {
-                            rotate = patWidget->getRotation(TranslateRelative::eWorld);
-                            anchor = patWidget->getAnchorPoint();
+                            break;
+                        case UniformNameType::eAnRot: {
+                            const Vector2& anchor = renderList[i]->getAnchorPoint();
+                            float anRot[] = {anchor.x, anchor.y, renderList[i]->getRotation(TranslateRelative::eWorld)};
+                            memcpy(data + uniformOffset + startOffset, anRot, 3 * sizeof(float));
+                            startOffset += 3;
                         }
-                        float anRot[] = {anchor.x, anchor.y, rotate};
-                        memcpy(data + uniformOffset + startOffset, anRot, 3 * sizeof(float));
-                        startOffset += 3;
+                            break;
+                        case UniformNameType::ePatShowRect: {
+                            Vector2 pos;
+                            Vector2 size = winSize;
+                            Widget* patWidget = static_cast<Widget*>(renderList[i]->getParentNode());
+                            if (renderList[i]->isClipEnabled() && patWidget) {
+                                pos = patWidget->getPosition(TranslateRelative::eWorld);
+                                size = patWidget->getContentSize(TranslateRelative::eWorld);
+                            }
+                            float rect[] = {pos.x, pos.y, size.x, size.y};
+                            memcpy(data + uniformOffset + startOffset, rect, 4 * sizeof(float));
+                            startOffset += 4;
+                        }
+                            break;
+                        case UniformNameType::ePatAnRot: {
+                            Vector2 anchor;
+                            float rotate = 0.0f;
+                            Widget* patWidget = static_cast<Widget*>(renderList[i]->getParentNode());
+                            if (renderList[i]->isClipEnabled() && patWidget) {
+                                rotate = patWidget->getRotation(TranslateRelative::eWorld);
+                                anchor = patWidget->getAnchorPoint();
+                            }
+                            float anRot[] = {anchor.x, anchor.y, rotate};
+                            memcpy(data + uniformOffset + startOffset, anRot, 3 * sizeof(float));
+                            startOffset += 3;
+                        }
+                            break;
+                        case UniformNameType::eDiffuse: {
+                            const Color4& color = renderList[i]->getColor();
+                            float colour[] = {color.r, color.g, color.b, renderList[i]->getAlpha()};
+                            memcpy(data + uniformOffset + startOffset, colour, 4 * sizeof(float));
+                            startOffset += 4;
+                        }
+                            break;
+                        case UniformNameType::eUVRect: {
+                            const Rect& texCoord = static_cast<Sprite*>(renderList[i])->getTextureRect();
+                            float coord[] = {texCoord.pos.x, texCoord.pos.y, texCoord.size.x, texCoord.size.y};
+                            memcpy(data + uniformOffset + startOffset, coord, 4 * sizeof(float));
+                            startOffset += 4;
+                        }
+                            break;
+                        case UniformNameType::eTexEffect: {
+                            const Vector2& scale = renderList[i]->getScale();
+                            float gray = static_cast<Sprite*>(renderList[i])->isGrayscaleEnabled() ? 1.f : 0.f;
+                            float effect[] = {scale.x > 0.f ? 1.f : -1.f, scale.y > 0.f ? 1.f : -1.f, gray};
+                            memcpy(data + uniformOffset + startOffset, effect, 3 * sizeof(float));
+                            startOffset += 3;
+                        }
+                            break;
+                        default:
+                            break;
                     }
-                        break;
-                    case UniformNameType::eDiffuse: {
-                        const Color4& color = renderList[i]->getColor();
-                        float colour[] = {color.r, color.g, color.b, renderList[i]->getAlpha()};
-                        memcpy(data + uniformOffset + startOffset, colour, 4 * sizeof(float));
-                        startOffset += 4;
-                    }
-                        break;
-                    case UniformNameType::eUVRect: {
-                        const Rect& texCoord = static_cast<Sprite*>(renderList[i])->getTextureRect();
-                        float coord[] = {texCoord.pos.x, texCoord.pos.y, texCoord.size.x, texCoord.size.y};
-                        memcpy(data + uniformOffset + startOffset, coord, 4 * sizeof(float));
-                        startOffset += 4;
-                    }
-                        break;
-                    case UniformNameType::eTexEffect: {
-                        const Vector2& scale = renderList[i]->getScale();
-                        float gray = static_cast<Sprite*>(renderList[i])->isGrayscaleEnabled() ? 1.f : 0.f;
-                        float effect[] = {scale.x > 0.f ? 1.f : -1.f, scale.y > 0.f ? 1.f : -1.f, gray};
-                        memcpy(data + uniformOffset + startOffset, effect, 3 * sizeof(float));
-                        startOffset += 3;
-                    }
-                        break;
-                    default:
-                        break;
                 }
             }
+            
+            // unmap instanced attribute buffer
+            endMapInstanceUniformBuffer();
         }
-        
-        // unmap instanced attribute buffer
-        glUnmapBuffer(GL_ARRAY_BUFFER);
     }
     
     bool ProgramGL::useAsRenderProgram()

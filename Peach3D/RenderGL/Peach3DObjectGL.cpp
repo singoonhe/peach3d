@@ -48,8 +48,9 @@ namespace Peach3D
         }
     }
     
-    void ObjectGL::generateProgramVertexArray(GLuint programId)
+    void ObjectGL::generateProgramVertexArray(IProgram* program)
     {
+        GLuint programId = program ? program->getProgramId() : 0;
         // check is new VAO for program need
         if (mVAOMap.find(programId) == mVAOMap.end()) {
             GLuint vaoId = 0;
@@ -59,6 +60,8 @@ namespace Peach3D
             glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
             bindObjectVertexAttrib();
+            // bind program buffer for GL3
+            static_cast<ProgramGL*>(program)->bindProgramVertexAttrib();
             mVAOMap[programId] = vaoId;
         }
         else {
@@ -127,11 +130,14 @@ namespace Peach3D
             RenderNode* firstNode = renderList[0];
             IProgram* usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
+            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                // update instanced uniforms
+                usedProgram->updateInstancedRenderNodeUnifroms(renderList);
+            }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                GLuint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram->getProgramId() : 0;
-                generateProgramVertexArray(programId);
+                generateProgramVertexArray((PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -151,8 +157,6 @@ namespace Peach3D
             GLenum glDrawMode = convertDrawModeToGL(firstNode->getDrawMode());
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-                // update instanced uniforms
-                usedProgram->updateInstancedRenderNodeUnifroms(renderList);
                 // draw objects once
                 glDrawElementsInstanced(glDrawMode, indexCount, indexType, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
@@ -192,11 +196,14 @@ namespace Peach3D
             Widget* firstNode = renderList[0];
             IProgram* usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
+            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                // update instanced uniforms
+                usedProgram->updateInstancedWidgetUnifroms(renderList);
+            }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                GLuint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram->getProgramId() : 0;
-                generateProgramVertexArray(programId);
+                generateProgramVertexArray((PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? usedProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -213,8 +220,6 @@ namespace Peach3D
             
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-                // update instanced uniforms
-                usedProgram->updateInstancedWidgetUnifroms(renderList);
                 // draw widget once
                 glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);
@@ -252,11 +257,14 @@ namespace Peach3D
             IF_BREAK(listSize == 0, nullptr);
             
             IF_BREAK(!mOBBProgram || !mOBBProgram->useAsRenderProgram(), nullptr);
+            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                // update instanced uniforms
+                mOBBProgram->updateInstancedOBBUnifroms(renderList);
+            }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                GLuint programId = (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? mOBBProgram->getProgramId() : 0;
-                generateProgramVertexArray(programId);
+                generateProgramVertexArray((PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) ? mOBBProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -266,8 +274,6 @@ namespace Peach3D
             
             // rendering
             if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-                // update instanced uniforms
-                mOBBProgram->updateInstancedOBBUnifroms(renderList);
                 // draw OBB once
                 glDrawElementsInstanced(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
                 PD_ADD_DRAWCALL(1);

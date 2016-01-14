@@ -28,6 +28,8 @@ namespace Peach3D
         //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList);
         
+        /** Bind instance vertex attrib, used for GL3. */
+        void bindProgramVertexAttrib();
         //! Set current object use this program.
         virtual bool useAsRenderProgram();
         /** Active textures, index from 0. */
@@ -49,15 +51,17 @@ namespace Peach3D
         virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList);
         
     protected:
-        //! compile program, this will be called automatically.
+        /** Compile program, this will be called automatically. */
         void compileProgram();
-        //! bind system attrs, live position\color\normal and so on...
+        /** Bind system attrs, live position\color\normal and so on... */
         void bindProgramAttrs();
-        //! create vertex shader or pixel from memeory
+        /** Create vertex shader or pixel from memeory. */
         GLuint loadShaderFromMemory(GLenum type, const char* data, int size);
         
-        /** Create instanced attribute data buffer, used for GL3. */
-        void createInstancedAttriDataAndBuffer(uint count);
+        /** Begin map instance buffer to write for GL3. */
+        float* beginMapInstanceUniformBuffer(uint count);
+        /** End map instance buffer for GL3. */
+        void endMapInstanceUniformBuffer();
         /** Bind global uniforms, used for GL3. */
         void bindGlobalUniforms();
         

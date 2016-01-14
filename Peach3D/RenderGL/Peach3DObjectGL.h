@@ -47,10 +47,10 @@ namespace Peach3D
         
     protected:
         /**
-         * Generate or bind VAO for programId, each program need a new VAO for DrawInstance.
+         * Generate or bind VAO for program, each program need a new VAO for DrawInstance.
          * Every program will generate a VBO for DrawInstance.
          */
-        void generateProgramVertexArray(GLuint programId);
+        void generateProgramVertexArray(IProgram* program);
         /**
          * Bind object vertex attrib, once called if VertexArray supported.
          */
@@ -81,13 +81,14 @@ namespace Peach3D
     private:
         GLuint mVertexBuffer;   // object own vertex buffer
         GLuint mIndexBuffer;    // object own index buffer
+        
         std::map<GLuint, GLuint> mVAOMap;   // each program need different VAO (program will create VBO, bind to VAO)
+        static IProgram* mOBBProgram;       // OBB rendering program
         
         static GLuint mAABBVertexArrayId;   // vertex array id for AABB rendering
         static GLuint mAABBVertexBuffer;    // vertex buffer for AABB rendering
         static GLuint mAABBIndexBuffer;     // vertex buffer for AABB rendering
         static IProgram* mAABBProgram;      // AABB rendering program
-        static IProgram* mOBBProgram;       // OBB rendering program
     };
 }
 

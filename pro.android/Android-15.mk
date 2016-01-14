@@ -22,6 +22,7 @@ Core/Peach3DLogPrinter.cpp \
 Core/Peach3DMatrix4.cpp \
 Core/Peach3DMesh.cpp \
 Core/Peach3DNode.cpp \
+Core/Peach3DOBB.cpp \
 Core/Peach3DObjLoader.cpp \
 Core/Peach3DQuaternion.cpp \
 Core/Peach3DRenderNode.cpp \
