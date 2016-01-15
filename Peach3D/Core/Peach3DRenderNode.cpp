@@ -37,10 +37,18 @@ namespace Peach3D
     
     void RenderNode::setOBBEnabled(bool enable)
     {
-        if (enable && !mRenderOBB) {
-            mRenderOBB = new OBB(mRenderObj->getBorderMin(), mRenderObj->getBorderMax());
+        if (enable) {
+            // auto generate OBB for drawing
+            generateOBB();
         }
         mOBBEnable = enable;
+    }
+    
+    void RenderNode::generateOBB()
+    {
+        if (!mRenderOBB) {
+            mRenderOBB = new OBB(mRenderObj->getBorderMin(), mRenderObj->getBorderMax());
+        }
     }
     
     void RenderNode::resetTextureByIndex(int index, ITexture* texture)
@@ -57,14 +65,6 @@ namespace Peach3D
         else {
             Peach3DLog(LogLevel::eWarn, "Can't reset invalid texture index %d in material", index);
         }
-    }
-    
-    bool RenderNode::isRayIntersect(const Ray& ray)
-    {
-        if (!mRenderOBB) {
-            mRenderOBB = new OBB(mRenderObj->getBorderMin(), mRenderObj->getBorderMax());
-        }
-        return mRenderOBB->isRayIntersect(ray);
     }
     
     void RenderNode::prepareForRender(float lastFrameTime)

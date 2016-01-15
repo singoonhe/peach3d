@@ -36,8 +36,14 @@ namespace Peach3D
         const Material& getMaterial() { return mMaterial; }
         void setDrawMode(DrawMode mode) { mMode = mode; }
         DrawMode getDrawMode() { return mMode; }
+        
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
+        /** Generate OBB for picking or drawing. */
+        void generateOBB();
+        OBB* getRenderOBB() const { return mRenderOBB; }
+        /** Check is ray intersect to current node. */
+        bool isRayIntersect(const Ray& ray) { generateOBB(); return mRenderOBB->isRayIntersect(ray); }
         
         void setAmbient(const Color4& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color4& diffuse) { mMaterial.diffuse = diffuse; }
@@ -49,10 +55,6 @@ namespace Peach3D
         void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         IProgram* getProgramForRender() { return mRenderProgram; }
         
-        /** Check is ray intersect to current node. */
-        bool isRayIntersect(const Ray& ray);
-        
-        OBB* getRenderOBB() const { return mRenderOBB; }
         IObject* getObject() const { return mRenderObj; }
         uint getRenderHash() { return mRenderHash; }
         /** Recalc render code if needed. */

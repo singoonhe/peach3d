@@ -72,6 +72,8 @@
 		18B2AB6D19E7BE770041AC1E /* texcubeShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 18B2AB6A19E7BE770041AC1E /* texcubeShader.fsh */; };
 		18B2AB6E19E7BE770041AC1E /* texcubeShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */; };
 		18B2AB6F19E7BE770041AC1E /* texcubeShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */; };
+		18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16E01C4933F5000592A4 /* TouchScene.cpp */; };
+		18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16E01C4933F5000592A4 /* TouchScene.cpp */; };
 		18BF2DBA19B6BBF60006872A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F31C1F19B5D8B00089E78E /* OpenGL.framework */; };
 		18D756001A5AA54E00635CD1 /* common_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D755FD1A5AA54E00635CD1 /* common_down.png */; };
 		18D756011A5AA54E00635CD1 /* common_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D755FD1A5AA54E00635CD1 /* common_down.png */; };
@@ -158,6 +160,8 @@
 		18B2AB6319E7AD910041AC1E /* texcube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = texcube.obj; sourceTree = "<group>"; };
 		18B2AB6A19E7BE770041AC1E /* texcubeShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = texcubeShader.fsh; sourceTree = "<group>"; };
 		18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = texcubeShader.vsh; sourceTree = "<group>"; };
+		18BE16E01C4933F5000592A4 /* TouchScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchScene.cpp; sourceTree = "<group>"; };
+		18BE16E11C4933F5000592A4 /* TouchScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchScene.h; sourceTree = "<group>"; };
 		18D755FD1A5AA54E00635CD1 /* common_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_down.png; sourceTree = "<group>"; };
 		18D755FE1A5AA54E00635CD1 /* common_highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_highlight.png; sourceTree = "<group>"; };
 		18D755FF1A5AA54E00635CD1 /* common_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_normal.png; sourceTree = "<group>"; };
@@ -343,6 +347,8 @@
 				18F9F4D619C5E5640023C83B /* PlatformDelegate.h */,
 				188637F519D02BED00BD6FE3 /* TestScene.cpp */,
 				188637F619D02BED00BD6FE3 /* TestScene.h */,
+				18BE16E01C4933F5000592A4 /* TouchScene.cpp */,
+				18BE16E11C4933F5000592A4 /* TouchScene.h */,
 				184107111B6CBCAD005133E2 /* UIScene.cpp */,
 				184107121B6CBCAD005133E2 /* UIScene.h */,
 			);
@@ -515,6 +521,7 @@
 				18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107061B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
 				18F9F4D719C5E5640023C83B /* PlatformDelegate.cpp in Sources */,
+				18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */,
 				187CF64119C72A3100C8094C /* main.m in Sources */,
 				187CF63F19C71BBC00C8094C /* AppDelegate.mm in Sources */,
 			);
@@ -530,6 +537,7 @@
 				18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107071B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
 				187CF63319C7053100C8094C /* PlatformDelegate.cpp in Sources */,
+				18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */,
 				187CF60A19C7019000C8094C /* AppDelegate.mm in Sources */,
 				187CF60619C7019000C8094C /* main.m in Sources */,
 			);

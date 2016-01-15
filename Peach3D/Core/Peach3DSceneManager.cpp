@@ -96,6 +96,8 @@ namespace Peach3D
                 mRootWidget->deleteChild(child);
             }
         });
+        // also delete root widget listener
+        EventDispatcher::getSingleton().deleteClickEventListener(mRootWidget);
     }
     
     void SceneManager::createDrawStatsNode()

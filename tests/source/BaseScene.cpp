@@ -87,6 +87,8 @@ void BaseScene::changeToSample(int index)
         if (mCurSample) {
             // delete all widgets except demo UI
             mSampleWidget->deleteAllChildren();
+            // also delete sample widget listener
+            EventDispatcher::getSingleton().deleteClickEventListener(mSampleWidget);
             // delete all SceneNode
             SceneManager::getSingleton().getRootSceneNode()->deleteAllChildren();
             delete mCurSample;

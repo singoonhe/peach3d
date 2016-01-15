@@ -43,6 +43,16 @@ namespace Peach3D
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable; }
         
+        /**
+         * Set node picking enabled, auto generate OBB for all RenderNode.
+         * @params always Set is picking enabled always even it will not rendering, false for default.
+         */
+        void setPickingEnabled(bool enable, bool always = false);
+        bool isPickingEnabled() {return mPickEnabled;}
+        bool isPickingAlways() {return mPickAlways;}
+        /** Is ray intersect to attached mesh, return RenderNode if ray intersected. */
+        RenderNode* isRayIntersect(const Ray& ray);
+        
         /** Create child scene node by attris. */
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));
         /** Create child scene node by name. */
@@ -76,17 +86,6 @@ namespace Peach3D
          */
         void setDepthBias(float depthBias) { mDepthBias = depthBias; }
         float getDepthBias() { return mDepthBias; }
-
-        /**
-         * Set node picking enabled.
-         * @params always Set is picking enabled always even it will not rendering, false for default.
-         */
-        void setPickingEnabled(bool enable, bool always = false) {mPickEnabled = enable; mPickAlways = always;}
-        bool isPickingEnabled() {return mPickEnabled;}
-        bool isPickingAlways() {return mPickAlways;}
-        
-        /** Is ray intersect to attached mesh, return RenderNode if ray intersected. */
-        RenderNode* isRayIntersect(const Ray& ray);
         
         /** Traverse RenderNode, will auto call lambda func. */
         void tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc);

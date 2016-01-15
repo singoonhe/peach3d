@@ -42,9 +42,10 @@ namespace Peach3D
         mesh->tranverseObjects([&](const char* name, IObject* object) {
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
-        // init RenderNode render status
+        // init RenderNode render status, so functions can called after attachMesh
         setDrawMode(mMode);
         setOBBEnabled(mOBBEnable);
+        setPickingEnabled(mPickEnabled, mPickAlways);
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)
@@ -74,6 +75,18 @@ namespace Peach3D
         for (auto node : mRenderNodeMap) {
             node.second->setOBBEnabled(enable);
         }
+    }
+    
+    void SceneNode::setPickingEnabled(bool enable, bool always)
+    {
+        if (enable) {
+            // autl generate all OBB for picking
+            for (auto node : mRenderNodeMap) {
+                node.second->generateOBB();
+            }
+        }
+        mPickEnabled = enable;
+        mPickAlways = always;
     }
     
     SceneNode* SceneNode::createChild(const Vector3& pos, const Vector3& rotation, const Vector3& scale)
