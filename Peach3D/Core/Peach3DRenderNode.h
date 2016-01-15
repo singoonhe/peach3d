@@ -20,6 +20,7 @@ namespace Peach3D
     {
     public:
         RenderNode(const std::string& meshName, IObject* obj);
+        ~RenderNode();
         
         /*
         void setWorldPosition(const Vector3& pos) { mWorldPosition = pos; }
@@ -36,7 +37,7 @@ namespace Peach3D
         void setDrawMode(DrawMode mode) { mMode = mode; }
         DrawMode getDrawMode() { return mMode; }
         void setOBBEnabled(bool enable);
-        bool getOBBEnabled() { return mRenderOBB; }
+        bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
         
         void setAmbient(const Color4& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color4& diffuse) { mMaterial.diffuse = diffuse; }
@@ -47,6 +48,9 @@ namespace Peach3D
         /** Set render program, preset program will be set default. */
         void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         IProgram* getProgramForRender() { return mRenderProgram; }
+        
+        /** Check is ray intersect to current node. */
+        bool isRayIntersect(const Ray& ray);
         
         OBB* getRenderOBB() const { return mRenderOBB; }
         IObject* getObject() const { return mRenderObj; }
@@ -64,7 +68,8 @@ namespace Peach3D
         Material        mMaterial;      // render object material
         IObject*        mRenderObj;     // render object
         IProgram*       mRenderProgram; // render program
-        OBB*            mRenderOBB;     // render OBB, only init when used
+        OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
+        bool            mOBBEnable;     // is OBB display enable
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         std::string     mObjSpliceName; // (mesh name + object name), keep unique

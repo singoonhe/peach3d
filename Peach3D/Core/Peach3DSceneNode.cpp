@@ -247,20 +247,18 @@ namespace Peach3D
         }
     }
     
-    bool SceneNode::isRayIntersect(const Ray& ray, IObject** outObject)
+    RenderNode* SceneNode::isRayIntersect(const Ray& ray)
     {
-        if (mAttachedMesh) {
+        if (mRenderNodeMap.size() > 0) {
             updateRenderingAttributes(0.0f);
-            // check mesh objects
-            /*
-            IObject* interObject = mAttachedMesh->getRayIntersectObjectWithTranslation(mModelMatrix, ray);
-            if (interObject) {
-                if (outObject) {
-                    *outObject = interObject;
+            
+            // check all RenderNode
+            for (auto node : mRenderNodeMap) {
+                if (node.second->isRayIntersect(ray)) {
+                    return node.second;
                 }
-                return true;
-            }*/
+            }
         }
-        return false;
+        return nullptr;
     }
 }

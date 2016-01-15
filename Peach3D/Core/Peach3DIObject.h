@@ -15,7 +15,6 @@
 #include "Peach3DVector3.h"
 #include "Peach3DMatrix4.h"
 #include "Peach3DMaterial.h"
-#include "Peach3DAABB.h"
 #include "Peach3DOBB.h"
 
 namespace Peach3D
@@ -79,12 +78,6 @@ namespace Peach3D
          */
         virtual void render(const std::vector<OBB*>& renderList) = 0;
         
-        /**
-         * Return object AABB, it should be called after "setVertexBuffer".
-         * @params transform Base AABB transform matrix, it will recalc AABB.
-         */
-        AABB getAABB(const Matrix4& transform);
-        
         const std::string& getName() { return mObjectName; }
         const Vector3& getBorderMax() { return mBorderMax; }
         const Vector3& getBorderMin() { return mBorderMin; }
@@ -108,7 +101,6 @@ namespace Peach3D
         uint           mVertexDataType;    // vertex data format type
         Vector3        mBorderMax;         // object base border max
         Vector3        mBorderMin;         // object base border min
-        AABB           mObjectAABB;        // object AABB
 
         friend class   IRender;
     };

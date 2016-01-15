@@ -15,29 +15,31 @@
 
 namespace Peach3D
 {
+    // define ray struct
+    struct PEACH3D_DLL Ray
+    {
+        Vector3 startPos;   // ray start position
+        Vector3 delta;      // ray direction and length
+    };
+    
     class PEACH3D_DLL OBB
     {
     public:
-        OBB(const OBB& _obb) {min = _obb.min; max = _obb.max; calcCacheMatrix();}
-        OBB(const Vector3& _min, const Vector3& _max) { min = _min; max = _max; calcCacheMatrix();}
-        OBB &operator=(const OBB& other) { min = other.min; max = other.max; calcCacheMatrix(); return *this; }
+        OBB(const OBB& _obb) { mScaleMat = _obb.mScaleMat; mTranslateMat = _obb.mTranslateMat; }
+        OBB(const Vector3& _min, const Vector3& _max) { calcCacheMatrix(_min, _max); }
+        OBB &operator=(const OBB& other) { mScaleMat = other.mScaleMat; mTranslateMat = other.mTranslateMat; return *this; }
         
-        /** If max <= min, it not valid. */
-        bool isValid() {return !(min.x > max.x || min.y > max.y || min.z > max.z);}
         /** Check is Ray intersect. */
-        //bool isRayIntersect(const Ray& ray);
+        bool isRayIntersect(const Ray& ray);
         
         void setModelMatrix(const Matrix4& translate, const Matrix4& rotate, const Matrix4& scale);
         const Matrix4& getModelMatrix() { return mModelMat; }
         
     private:
         /** Calc cache scale matrix and translate matrix. */
-        void calcCacheMatrix();
+        void calcCacheMatrix(const Vector3& min, const Vector3& max);
         
     private:
-        Vector3 min;    // min position
-        Vector3 max;    // max position
-        
         Matrix4 mScaleMat;      // OBB cache scale mat
         Matrix4 mTranslateMat;  // OBB cache translate mat
         Matrix4 mModelMat;      // OBB translate same as Object

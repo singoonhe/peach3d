@@ -49,9 +49,10 @@ namespace Peach3D
         /**
          * @brief Get clicked SceneNode, this will use a ray(camera ray) to check crossing with SceneNodes.
          * @params clickedPos The clicked point.
+         * @params name Return clicked RenderNode in clicked SceneNode.
          * @return Return nullptr if no SceneNode crossed with camera ray.
          */
-        SceneNode* getWindowClickedNode(const Vector2& clickedPos);
+        SceneNode* getWindowClickedNode(const Vector2& clickedPos, RenderNode** outNode = nullptr);
         
 
     protected:

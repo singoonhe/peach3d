@@ -286,7 +286,7 @@ namespace Peach3D
             // set program
             rayProgram->useAsRenderProgram();
             rayProgram->updateObjectUnifroms(&mGlobalObjectAttrs, nullptr, 0.0f);
-            // draw AABB
+            // draw ray
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1, 0);
             glDrawArrays(GL_LINES, 0, 2);
@@ -373,7 +373,7 @@ namespace Peach3D
         }
     }
     
-    SceneNode* SceneManager::getWindowClickedNode(const Vector2& clickedPos)
+    SceneNode* SceneManager::getWindowClickedNode(const Vector2& clickedPos, RenderNode** outNode)
     {
         if (mActiveCamera) {
             Ray clickedRay;
@@ -398,9 +398,12 @@ namespace Peach3D
                 
                 // check is node cross with clickedRay
                 for (auto node : mPickSceneNodeList) {
-                    SceneNode* pickingNode = static_cast<SceneNode*>(node);
-                    if (pickingNode->isRayIntersect(clickedRay)) {
-                        return pickingNode;
+                    RenderNode* pickRenderNode = node->isRayIntersect(clickedRay);
+                    if (pickRenderNode) {
+                        if (outNode) {
+                            *outNode = pickRenderNode;
+                        }
+                        return node;
                     }
                 }
             }

@@ -15,7 +15,7 @@
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mMode(DrawMode::eTriangle)
+    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
@@ -27,15 +27,20 @@ namespace Peach3D
         }
     }
     
+    RenderNode::~RenderNode()
+    {
+        if (mRenderOBB) {
+            delete mRenderOBB;
+            mRenderOBB = nullptr;
+        }
+    }
+    
     void RenderNode::setOBBEnabled(bool enable)
     {
         if (enable && !mRenderOBB) {
             mRenderOBB = new OBB(mRenderObj->getBorderMin(), mRenderObj->getBorderMax());
         }
-        else if (mRenderOBB && !enable) {
-            delete mRenderOBB;
-            mRenderOBB = nullptr;
-        }
+        mOBBEnable = enable;
     }
     
     void RenderNode::resetTextureByIndex(int index, ITexture* texture)
@@ -52,6 +57,14 @@ namespace Peach3D
         else {
             Peach3DLog(LogLevel::eWarn, "Can't reset invalid texture index %d in material", index);
         }
+    }
+    
+    bool RenderNode::isRayIntersect(const Ray& ray)
+    {
+        if (!mRenderOBB) {
+            mRenderOBB = new OBB(mRenderObj->getBorderMin(), mRenderObj->getBorderMax());
+        }
+        return mRenderOBB->isRayIntersect(ray);
     }
     
     void RenderNode::prepareForRender(float lastFrameTime)

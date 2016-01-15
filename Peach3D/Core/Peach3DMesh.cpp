@@ -45,17 +45,6 @@ namespace Peach3D
         }
     }
     
-    IObject* Mesh::getRayIntersectObjectWithTranslation(const Matrix4& translate, const Ray& ray)
-    {
-        for (auto iter=mObjectMap.begin(); iter!=mObjectMap.end(); ++iter) {
-            AABB oAABB = iter->second->getAABB(translate);
-            if (oAABB.isValid() && oAABB.isRayIntersect(ray)) {
-                return iter->second;
-            }
-        }
-        return nullptr;
-    }
-        
     Mesh::~Mesh()
     {
         IRender* render = IRender::getSingletonPtr();

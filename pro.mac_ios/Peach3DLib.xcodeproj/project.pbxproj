@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18155ADD1ACE42B500F81778 /* Peach3DAABB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18155ADB1ACE42B500F81778 /* Peach3DAABB.cpp */; };
-		18155ADE1ACE42B500F81778 /* Peach3DAABB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18155ADB1ACE42B500F81778 /* Peach3DAABB.cpp */; };
-		18155ADF1ACE42B500F81778 /* Peach3DAABB.h in Headers */ = {isa = PBXBuildFile; fileRef = 18155ADC1ACE42B500F81778 /* Peach3DAABB.h */; };
 		181AE5FB1AF8CC6400D17FC2 /* Peach3DAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 181AE5F91AF8CC6400D17FC2 /* Peach3DAction.cpp */; };
 		181AE5FC1AF8CC6400D17FC2 /* Peach3DAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 181AE5F91AF8CC6400D17FC2 /* Peach3DAction.cpp */; };
 		181AE5FD1AF8CC6400D17FC2 /* Peach3DAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 181AE5FA1AF8CC6400D17FC2 /* Peach3DAction.h */; };
@@ -187,8 +184,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		18155ADB1ACE42B500F81778 /* Peach3DAABB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DAABB.cpp; sourceTree = "<group>"; };
-		18155ADC1ACE42B500F81778 /* Peach3DAABB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DAABB.h; sourceTree = "<group>"; };
 		181AE5F91AF8CC6400D17FC2 /* Peach3DAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DAction.cpp; sourceTree = "<group>"; };
 		181AE5FA1AF8CC6400D17FC2 /* Peach3DAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DAction.h; sourceTree = "<group>"; };
 		182892121A49B222003009D9 /* Peach3DSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DSprite.cpp; sourceTree = "<group>"; };
@@ -413,8 +408,6 @@
 		18ACF49A19D543140020F943 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				18155ADB1ACE42B500F81778 /* Peach3DAABB.cpp */,
-				18155ADC1ACE42B500F81778 /* Peach3DAABB.h */,
 				181AE5F91AF8CC6400D17FC2 /* Peach3DAction.cpp */,
 				181AE5FA1AF8CC6400D17FC2 /* Peach3DAction.h */,
 				1895828B1AFB2DAC00936092 /* Peach3DActionImplement.cpp */,
@@ -597,7 +590,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18155ADF1ACE42B500F81778 /* Peach3DAABB.h in Headers */,
 				185D825D1B08B4B10034F25E /* tinyxml2.h in Headers */,
 				18ACF4E919D543140020F943 /* Peach3DIAppDelegate.h in Headers */,
 				18ACF53019D543140020F943 /* Peach3DCommonGL.h in Headers */,
@@ -765,7 +757,6 @@
 				18EB6EE71A6421E300811B80 /* Peach3DUtils.cpp in Sources */,
 				18ACF50919D543140020F943 /* Peach3DNode.cpp in Sources */,
 				18ACF4E319D543140020F943 /* Peach3DCamera.cpp in Sources */,
-				18155ADD1ACE42B500F81778 /* Peach3DAABB.cpp in Sources */,
 				18ACF50319D543140020F943 /* Peach3DMatrix4.cpp in Sources */,
 				18B2AB7F19E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
 				185D825B1B08B4B10034F25E /* tinyxml2.cpp in Sources */,
@@ -812,7 +803,6 @@
 				18EB6EE81A6421E300811B80 /* Peach3DUtils.cpp in Sources */,
 				18ACF50A19D543140020F943 /* Peach3DNode.cpp in Sources */,
 				18ACF4E419D543140020F943 /* Peach3DCamera.cpp in Sources */,
-				18155ADE1ACE42B500F81778 /* Peach3DAABB.cpp in Sources */,
 				18ACF50419D543140020F943 /* Peach3DMatrix4.cpp in Sources */,
 				18B2AB8019E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
 				185D825C1B08B4B10034F25E /* tinyxml2.cpp in Sources */,

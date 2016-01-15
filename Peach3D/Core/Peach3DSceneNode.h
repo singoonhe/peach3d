@@ -84,11 +84,9 @@ namespace Peach3D
         void setPickingEnabled(bool enable, bool always = false) {mPickEnabled = enable; mPickAlways = always;}
         bool isPickingEnabled() {return mPickEnabled;}
         bool isPickingAlways() {return mPickAlways;}
-        /**
-         * Is ray intersect to attached mesh.
-         * @params outObject Return intersect object if ray intersect to mesh and outObject param exist.
-         */
-        bool isRayIntersect(const Ray& ray, IObject** outObject=nullptr);
+        
+        /** Is ray intersect to attached mesh, return RenderNode if ray intersected. */
+        RenderNode* isRayIntersect(const Ray& ray);
         
         /** Traverse RenderNode, will auto call lambda func. */
         void tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc);
