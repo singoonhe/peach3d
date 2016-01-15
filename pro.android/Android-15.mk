@@ -7,7 +7,6 @@ LOCAL_MODULE := Peach3DLib
 LOCAL_MODULE_FILENAME := libpeach3d
 
 LOCAL_SRC_FILES := \
-Core/Peach3DAABB.cpp \
 Core/Peach3DAction.cpp \
 Core/Peach3DActionImplement.cpp \
 Core/Peach3DCamera.cpp \
