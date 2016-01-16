@@ -48,7 +48,7 @@ namespace Peach3D
         void triggerKeyboardEvent(KeyboardEvent event, KeyCode code);
         
     protected:
-        // sort all event node
+        /** Sort all event node depend on zorder, put SceneNode back. */
         void sortEventNodes();
         // hold time scheduler callback
         void holdSchedulerCallback(float interval);
@@ -58,8 +58,8 @@ namespace Peach3D
         void triggerGestureEvent(ClickEvent event, std::vector<uint> clickIds, const std::vector<Vector2>& poss);
         
     private:
-        std::map<Node*, ClickListenerFunction>  mClickNodeMap;
-        std::vector<Node*>                      mNodeList;
+        std::map<Node*, ClickListenerFunction>  mClickNodeMap;      // node event map
+        std::vector<Node*>                      mNodeList;          // all event node list
         IScene*                                 mKeyboardScene;
         KeyboardListenerFunction                mKeyboardListener;
         

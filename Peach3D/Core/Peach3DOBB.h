@@ -25,9 +25,9 @@ namespace Peach3D
     class PEACH3D_DLL OBB
     {
     public:
-        OBB(const OBB& _obb) { mScaleMat = _obb.mScaleMat; mTranslateMat = _obb.mTranslateMat; }
+        OBB(const OBB& _obb) { mLocalMat = _obb.mLocalMat; }
         OBB(const Vector3& _min, const Vector3& _max) { calcCacheMatrix(_min, _max); }
-        OBB &operator=(const OBB& other) { mScaleMat = other.mScaleMat; mTranslateMat = other.mTranslateMat; return *this; }
+        OBB &operator=(const OBB& other) { mLocalMat = other.mLocalMat; return *this; }
         
         /** Check is Ray intersect. */
         bool isRayIntersect(const Ray& ray);
@@ -40,8 +40,7 @@ namespace Peach3D
         void calcCacheMatrix(const Vector3& min, const Vector3& max);
         
     private:
-        Matrix4 mScaleMat;      // OBB cache scale mat
-        Matrix4 mTranslateMat;  // OBB cache translate mat
+        Matrix4 mLocalMat;      // OBB cache scale and translate mat
         Matrix4 mModelMat;      // OBB translate same as Object
     };
 }

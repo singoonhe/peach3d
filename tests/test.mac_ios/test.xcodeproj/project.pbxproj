@@ -19,6 +19,12 @@
 		184107101B6CBB65005133E2 /* next_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1841070C1B6CBB65005133E2 /* next_normal.png */; };
 		184107131B6CBCAD005133E2 /* UIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184107111B6CBCAD005133E2 /* UIScene.cpp */; };
 		184107141B6CBCAD005133E2 /* UIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184107111B6CBCAD005133E2 /* UIScene.cpp */; };
+		184962CD1C4A42B100304991 /* peach.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 184962CA1C4A42B100304991 /* peach.mtl */; };
+		184962CE1C4A42B100304991 /* peach.obj in Resources */ = {isa = PBXBuildFile; fileRef = 184962CB1C4A42B100304991 /* peach.obj */; };
+		184962CF1C4A42B100304991 /* peach.png in Resources */ = {isa = PBXBuildFile; fileRef = 184962CC1C4A42B100304991 /* peach.png */; };
+		184962D21C4A8AD400304991 /* peach.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 184962CA1C4A42B100304991 /* peach.mtl */; };
+		184962D31C4A8AD800304991 /* peach.obj in Resources */ = {isa = PBXBuildFile; fileRef = 184962CB1C4A42B100304991 /* peach.obj */; };
+		184962D41C4A8ADC00304991 /* peach.png in Resources */ = {isa = PBXBuildFile; fileRef = 184962CC1C4A42B100304991 /* peach.png */; };
 		184C3BC01C3AB6E20073B598 /* MeshScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */; };
 		184C3BC11C3AB6E20073B598 /* MeshScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */; };
 		185959C01B440AF600FFB5F5 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185959BF1B440AF500FFB5F5 /* Carbon.framework */; };
@@ -113,6 +119,9 @@
 		1841070C1B6CBB65005133E2 /* next_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next_normal.png; sourceTree = "<group>"; };
 		184107111B6CBCAD005133E2 /* UIScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIScene.cpp; sourceTree = "<group>"; };
 		184107121B6CBCAD005133E2 /* UIScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIScene.h; sourceTree = "<group>"; };
+		184962CA1C4A42B100304991 /* peach.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.mtl; sourceTree = "<group>"; };
+		184962CB1C4A42B100304991 /* peach.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.obj; sourceTree = "<group>"; };
+		184962CC1C4A42B100304991 /* peach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peach.png; sourceTree = "<group>"; };
 		184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshScene.cpp; sourceTree = "<group>"; };
 		184C3BBF1C3AB6E20073B598 /* MeshScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshScene.h; sourceTree = "<group>"; };
 		185959BF1B440AF500FFB5F5 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -316,6 +325,9 @@
 				184107081B6CAE94005133E2 /* exit_normal.png */,
 				1841070B1B6CBB65005133E2 /* front_normal.png */,
 				1841070C1B6CBB65005133E2 /* next_normal.png */,
+				184962CA1C4A42B100304991 /* peach.mtl */,
+				184962CB1C4A42B100304991 /* peach.obj */,
+				184962CC1C4A42B100304991 /* peach.png */,
 				185ED1D01B70EE440012667B /* peach3d_icon.png */,
 				185ED1D11B70EE440012667B /* peach3d_leaf.png */,
 				185ED1C51B70E10A0012667B /* press_down.png */,
@@ -454,6 +466,7 @@
 				185ED1D41B70EE440012667B /* peach3d_leaf.png in Resources */,
 				18B2AB6419E7AD910041AC1E /* texcube.mtl in Resources */,
 				1841070D1B6CBB65005133E2 /* front_normal.png in Resources */,
+				184962CD1C4A42B100304991 /* peach.mtl in Resources */,
 				185ED1D21B70EE440012667B /* peach3d_icon.png in Resources */,
 				18A272DA19E5434500145FDB /* Cube.obj in Resources */,
 				187CF64919C72A7100C8094C /* Images.xcassets in Resources */,
@@ -461,6 +474,7 @@
 				1899802A19B9B7FB003FBA2D /* demoShader.vsh in Resources */,
 				18B2AB6E19E7BE770041AC1E /* texcubeShader.vsh in Resources */,
 				187CF64619C72A5900C8094C /* Credits.rtf in Resources */,
+				184962CF1C4A42B100304991 /* peach.png in Resources */,
 				189B0F5D19EE56C60080C7A6 /* widgetShader.fsh in Resources */,
 				18B2AB6619E7AD910041AC1E /* texcube.obj in Resources */,
 				185ED1CA1B70E10A0012667B /* press_highlight.png in Resources */,
@@ -471,6 +485,7 @@
 				1813BB741B78F23300023159 /* restart_normal.png in Resources */,
 				18D756001A5AA54E00635CD1 /* common_down.png in Resources */,
 				18D756021A5AA54E00635CD1 /* common_highlight.png in Resources */,
+				184962CE1C4A42B100304991 /* peach.obj in Resources */,
 				185ED1CC1B70E10A0012667B /* press_normal.png in Resources */,
 				184107091B6CAE94005133E2 /* exit_normal.png in Resources */,
 				1841070F1B6CBB65005133E2 /* next_normal.png in Resources */,
@@ -490,6 +505,7 @@
 				185ED1C91B70E10A0012667B /* press_down.png in Resources */,
 				18A272D919E5434500145FDB /* Cube.mtl in Resources */,
 				1841070E1B6CBB65005133E2 /* front_normal.png in Resources */,
+				184962D31C4A8AD800304991 /* peach.obj in Resources */,
 				18B2AB6519E7AD910041AC1E /* texcube.mtl in Resources */,
 				1813BB751B78F23300023159 /* restart_normal.png in Resources */,
 				18A272DB19E5434500145FDB /* Cube.obj in Resources */,
@@ -497,11 +513,13 @@
 				185ED1CD1B70E10A0012667B /* press_normal.png in Resources */,
 				18B2AB6D19E7BE770041AC1E /* texcubeShader.fsh in Resources */,
 				189B0F6019EE56C60080C7A6 /* widgetShader.vsh in Resources */,
+				184962D21C4A8AD400304991 /* peach.mtl in Resources */,
 				18B2AB6719E7AD910041AC1E /* texcube.obj in Resources */,
 				187CF60419C7019000C8094C /* InfoPlist.strings in Resources */,
 				185ED1D31B70EE440012667B /* peach3d_icon.png in Resources */,
 				187CF60C19C7019000C8094C /* Images.xcassets in Resources */,
 				1841070A1B6CAE94005133E2 /* exit_normal.png in Resources */,
+				184962D41C4A8ADC00304991 /* peach.png in Resources */,
 				18D756051A5AA54E00635CD1 /* common_normal.png in Resources */,
 				18B2AB6F19E7BE770041AC1E /* texcubeShader.vsh in Resources */,
 				185ED1D51B70EE440012667B /* peach3d_leaf.png in Resources */,

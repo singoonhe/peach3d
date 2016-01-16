@@ -26,13 +26,11 @@ namespace Peach3D
     
     EventDispatcher::~EventDispatcher()
     {
-        if (mHoldScheduler)
-        {
+        if (mHoldScheduler) {
             IPlatform::getSingleton().deleteScheduler(mHoldScheduler);
             mHoldScheduler = nullptr;
         }
-        if (mDClickScheduler)
-        {
+        if (mDClickScheduler) {
             IPlatform::getSingleton().deleteScheduler(mDClickScheduler);
             mDClickScheduler = nullptr;
         }
@@ -40,8 +38,7 @@ namespace Peach3D
     
     void EventDispatcher::addClickEventListener(Node* target, ClickListenerFunction func)
     {
-        if (target)
-        {
+        if (target) {
             if (mClickNodeMap.find(target)==mClickNodeMap.end()) {
                 mClickNodeMap[target] = func;
             }
@@ -53,11 +50,9 @@ namespace Peach3D
     
     void EventDispatcher::deleteClickEventListener(Node* target)
     {
-        if (target)
-        {
+        if (target) {
             auto clickIter = mClickNodeMap.find(target);
-            if (clickIter != mClickNodeMap.end())
-            {
+            if (clickIter != mClickNodeMap.end()) {
                 mClickNodeMap.erase(clickIter);
             }
             auto nodeIter = std::find(mNodeList.begin(), mNodeList.end(), target);
@@ -86,8 +81,7 @@ namespace Peach3D
     
     void EventDispatcher::deleteKeyboardListener(IScene* target)
     {
-        if (target == mKeyboardScene)
-        {
+        if (target == mKeyboardScene) {
             mKeyboardListener = nullptr;
             mKeyboardScene = nullptr;
         }
@@ -95,7 +89,9 @@ namespace Peach3D
     
     void EventDispatcher::triggerClickEvent(ClickEvent event, std::vector<uint> clickIds, const std::vector<Vector2>& poss)
     {
+        // sort all node first depend on zorder or type
         sortEventNodes();
+        
         Widget* const rootNode = SceneManager::getSingletonPtr()->getRootWidget();
         std::vector<uint>    rootNodeIds;
         std::vector<Vector2> rootNodePoss;
@@ -107,27 +103,36 @@ namespace Peach3D
             // sign is current click event dealed
             bool isClickDealed = false;
             bool isEventStrike = false;
+            
+            SceneNode*  sceneEventNode = nullptr;
+            bool        isCheckNode = false;
             for (auto node : mNodeList) {
-                if (rootNode != node && node->isPointInZone(poss[i])) {
+                SceneNode* csNode = dynamic_cast<SceneNode*>(node);
+                Widget* cwNode = dynamic_cast<Widget*>(node);
+                // calc the pos target SceneNode if need
+                if (csNode && !isCheckNode) {
+                    sceneEventNode = SceneManager::getSingleton().getWindowClickedNode(poss[i]);
+                    isCheckNode = true;
+                }
+                
+                // pos in widget or in SceneNode
+                if (rootNode != node && ((cwNode && cwNode->isPointInZone(poss[i])) || (csNode && node == sceneEventNode))) {
                     isClickDealed = true;
                     // get current focus clickId
                     if (!mFocusClickId) {
                         mFocusClickId = clickIds[i];
                     }
-                    if (mFocusClickId == clickIds[i])
-                    {
+                    
+                    if (mFocusClickId == clickIds[i]) {
                         // save last point
                         mLastPoint = poss[i];
                         std::vector<Vector2> eventPoss = {mLastPoint};
                         
                         // deal with mouse move event
-                        if (event == ClickEvent::eMoved)
-                        {
+                        if (event == ClickEvent::eMoved) {
                             mClickNodeMap[node](event, eventPoss);
-                            if (mMovedNode != node)
-                            {
-                                if (mMovedNode)
-                                {
+                            if (mMovedNode != node) {
+                                if (mMovedNode) {
                                     mClickNodeMap[mMovedNode](ClickEvent::eMoveOut, eventPoss);
                                 }
                                 mClickNodeMap[node](ClickEvent::eMoveIn, eventPoss);
@@ -138,8 +143,7 @@ namespace Peach3D
                             mCurHoldTime = 0.0f;
                         }
                         // deal with mouse down or touch down
-                        else if (event == ClickEvent::eDown)
-                        {
+                        else if (event == ClickEvent::eDown) {
                             // release move node if it exist
                             mMovedNode = nullptr;
                             mBeginPoint = mLastPoint;
@@ -151,22 +155,18 @@ namespace Peach3D
                             mHoldScheduler->start();
                             mCurHoldTime = 0.0f;
                         }
-                        else if (event == ClickEvent::eUp)
-                        {
+                        else if (event == ClickEvent::eUp) {
                             mClickNodeMap[node](event, eventPoss);
                             // trigger click event
-                            if (mFocusNode == node)
-                            {
+                            if (mFocusNode == node) {
                                 mClickNodeMap[node](ClickEvent::eClicked, eventPoss);
-                                if (mCurClickedTime < FLT_EPSILON || mCurClickedTime > mEventDClickTime)
-                                {
+                                if (mCurClickedTime < FLT_EPSILON || mCurClickedTime > mEventDClickTime) {
                                     lastClickedNode = node;
                                     // start click time for double clicked event
                                     mCurClickedTime = 0.0f;
                                     mDClickScheduler->start();
                                 }
-                                else if (mCurClickedTime < mEventDClickTime && mCurClickedTime > FLT_EPSILON && lastClickedNode == node)
-                                {
+                                else if (mCurClickedTime < mEventDClickTime && mCurClickedTime > FLT_EPSILON && lastClickedNode == node) {
                                     lastClickedNode = nullptr;
                                     mClickNodeMap[node](ClickEvent::eDClicked, eventPoss);
                                     // pause click time for double clicked event
@@ -174,24 +174,20 @@ namespace Peach3D
                                     mDClickScheduler->pause();
                                 }
                             }
-                            else if (mFocusNode)
-                            {
+                            else if (mFocusNode) {
                                 // send event when up in other node. There is no drag event if quickly on IOS.
                                 mClickNodeMap[mFocusNode](ClickEvent::eCancel, eventPoss);
                                 mFocusNode = nullptr;
                             }
                         }
-                        else if (event == ClickEvent::eDrag)
-                        {
+                        else if (event == ClickEvent::eDrag) {
                             // set scroll view to clicked node if button not swallow and drag a distance
                             if (isEventStrike) {
                                 mFocusNode = node;
                             }
                             // deal dragIn and dragOut event
-                            if (mDragNode != node)
-                            {
-                                if (mDragNode)
-                                {
+                            if (mDragNode != node) {
+                                if (mDragNode) {
                                     mClickNodeMap[mDragNode](ClickEvent::eDragOut, eventPoss);
                                 }
                                 mClickNodeMap[node](ClickEvent::eDragIn, eventPoss);
@@ -202,18 +198,15 @@ namespace Peach3D
                                 mClickNodeMap[mFocusNode](event, eventPoss);
                                 // node not swallow event, pass event to parent node if drag for a distence
                                 Vector2 dis = mLastPoint - mBeginPoint;
-                                if (dis.length() > 8)
-                                {
-                                    if (!mFocusNode->isSwallowEvents())
-                                    {
+                                if (dis.length() > 8) {
+                                    if (!mFocusNode->isSwallowEvents()) {
                                         // transmit event to next widget if node not swallowed
                                         mClickNodeMap[mFocusNode](ClickEvent::eCancel, eventPoss);
                                         isEventStrike = true;
                                         isClickDealed = false;
                                     }
                                     // start hold scheduler, hold event only valid when drag in clicked focus node
-                                    else if (mFocusNode == node)
-                                    {
+                                    else if (mFocusNode == node) {
                                         mBeginPoint = mLastPoint;
                                         mHoldScheduler->start();
                                         mCurHoldTime = 0.0f;
@@ -221,13 +214,11 @@ namespace Peach3D
                                 }
                             }
                         }
-                        else if (event == ClickEvent::eScrollWheel)
-                        {
+                        else if (event == ClickEvent::eScrollWheel) {
                             // just trigger scroll wheel event
                             mClickNodeMap[node](event, eventPoss);
                         }
-                        else if (event == ClickEvent::eCancel)
-                        {
+                        else if (event == ClickEvent::eCancel) {
                             mClickNodeMap[node](event, eventPoss);
                             // release focus node
                             mFocusNode = nullptr;
@@ -252,8 +243,7 @@ namespace Peach3D
                 }
             }
             
-            if (mFocusClickId == clickIds[i])
-            {
+            if (mFocusClickId == clickIds[i]) {
                 // release focus clickId if last click up
                 if ((event == ClickEvent::eUp || event == ClickEvent::eCancel)) {
                     // release focus node no matter where Up event trigger
@@ -263,8 +253,7 @@ namespace Peach3D
                 }
                 
                 std::vector<Vector2> eventPoss = {mLastPoint};
-                if (!isClickDealed && mMovedNode)
-                {
+                if (!isClickDealed && mMovedNode) {
                     // set node move out and release moved node
                     mClickNodeMap[mMovedNode](ClickEvent::eMoveOut, eventPoss);
                     mMovedNode = nullptr;
@@ -272,8 +261,7 @@ namespace Peach3D
                     mCurHoldTime = 0.0f;
                     mHoldScheduler->pause();
                 }
-                if (!isClickDealed && mDragNode)
-                {
+                if (!isClickDealed && mDragNode) {
                     mClickNodeMap[mDragNode](ClickEvent::eDragOut, eventPoss);
                     mDragNode = nullptr;
                     // not hold node pause sheduler
@@ -414,8 +402,7 @@ namespace Peach3D
     void EventDispatcher::setEventHoldTimeInterval(float interval)
     {
         Peach3DAssert(interval > 0.0f, "Hold time interval must bigger than 0.0");
-        if (interval > 0)
-        {
+        if (interval > 0) {
             mEventHoldTime = interval;
         }
     }
@@ -425,14 +412,11 @@ namespace Peach3D
         mCurHoldTime += interval;
         std::vector<Vector2> eventPoss = {mLastPoint};
         // send move hold event if time enough
-        if (mCurHoldTime >= mEventHoldTime)
-        {
-            if (mMovedNode)
-            {
+        if (mCurHoldTime >= mEventHoldTime) {
+            if (mMovedNode) {
                 mClickNodeMap[mMovedNode](ClickEvent::eMoveHold, eventPoss);
             }
-            else if (mDragNode)
-            {
+            else if (mDragNode) {
                 // only clicked focus node could get hold event
                 mClickNodeMap[mDragNode](ClickEvent::eDragHold, eventPoss);
             }
@@ -445,8 +429,7 @@ namespace Peach3D
     {
         mCurClickedTime += interval;
         // pause scheduler when have waited for enough time
-        if (mCurClickedTime > (mEventDClickTime))
-        {
+        if (mCurClickedTime > (mEventDClickTime)) {
             mCurClickedTime = 0.0f;
             mDClickScheduler->pause();
         }

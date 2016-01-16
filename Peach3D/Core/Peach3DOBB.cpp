@@ -12,15 +12,16 @@ namespace Peach3D
 {
     void OBB::setModelMatrix(const Matrix4& translate, const Matrix4& rotate, const Matrix4& scale)
     {
-        mModelMat = mTranslateMat * translate * rotate * scale * mScaleMat;
+        mModelMat = translate * rotate * scale * mLocalMat;
     }
     
     void OBB::calcCacheMatrix(const Vector3& min, const Vector3& max)
     {
         Vector3 size = Vector3(max.x - min.x, max.y - min.y, max.z - min.z);
         Vector3 center = Vector3((max.x + min.x) / 2.0f, (max.y + min.y) / 2.0f, (max.z + min.z) / 2.0f);
-        mTranslateMat = Matrix4::createTranslation(center.x, center.y, center.z);
-        mScaleMat = Matrix4::createScaling(size.x, size.y, size.z);
+        auto translateMat = Matrix4::createTranslation(center.x, center.y, center.z);
+        auto scaleMat = Matrix4::createScaling(size.x, size.y, size.z);
+        mLocalMat = translateMat * scaleMat;
     }
     
     bool OBB::isRayIntersect(const Ray& ray)

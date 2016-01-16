@@ -27,4 +27,12 @@ private:
     SceneNode*  mClickedNode;
 };
 
+class SNEventSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+    
+private:
+    SceneNode*  mClickedNode;
+};
+
 #endif /* TOUCH_SCENE_H */
