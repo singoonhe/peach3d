@@ -72,7 +72,6 @@ void SNEventSample::init(Widget* parentWidget)
         auto cubeNodex = rootNode->createChild(Vector3((i % 3) * 5.f - 5.f, int(i / 3) * 4.f - 4.f, 0.f));
         cubeNodex->attachMesh(cubeMesh);
         cubeNodex->setPickingEnabled(true);
-        cubeNodex->setScale(Vector3(0.1f, 0.1f, 0.1f));
         cubeNodex->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
         
         // register event to SceneNode
