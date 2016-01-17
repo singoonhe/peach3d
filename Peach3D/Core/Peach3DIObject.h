@@ -66,15 +66,15 @@ namespace Peach3D
         const Material& getMaterial()const { return mObjectMtl; }
         
         /**
-         * @brief Render widget list, only for GL3 and DX, called by SceneManager.
+         * @brief Render widget list, called by SceneManager.
          */
         virtual void render(const std::vector<Widget*>& renderList) = 0;
         /**
-         * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
+         * @brief Render scene node list, called by SceneManager.
          */
         virtual void render(const std::vector<RenderNode*>& renderList) = 0;
         /**
-         * @brief Render OBB list, only for GL3 and DX, called by SceneManager.
+         * @brief Render OBB list, called by SceneManager.
          */
         virtual void render(const std::vector<OBB*>& renderList) = 0;
         

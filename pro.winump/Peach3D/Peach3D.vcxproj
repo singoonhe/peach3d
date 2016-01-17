@@ -207,7 +207,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Peach3D\Core\Peach3DAABB.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DAction.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DActionImplement.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DCamera.h" />
@@ -228,6 +227,7 @@
     <ClInclude Include="..\..\Peach3D\Core\Peach3DMatrix4.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DMesh.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DNode.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DOBB.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DObjLoader.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DQuaternion.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DRect.h" />
@@ -261,7 +261,6 @@
     <ClInclude Include="..\..\Peach3D\Support\xxhash\xxhash.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Peach3D\Core\Peach3DAABB.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DAction.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DActionImplement.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DCamera.cpp" />
@@ -276,6 +275,7 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DMatrix4.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DMesh.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DNode.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DOBB.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DObjLoader.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DQuaternion.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DRenderNode.cpp" />

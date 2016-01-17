@@ -219,6 +219,7 @@
     <Image Include="..\..\resource\exit_normal.png" />
     <Image Include="..\..\resource\front_normal.png" />
     <Image Include="..\..\resource\next_normal.png" />
+    <Image Include="..\..\resource\peach.png" />
     <Image Include="..\..\resource\peach3d_icon.png" />
     <Image Include="..\..\resource\peach3d_leaf.png" />
     <Image Include="..\..\resource\press_down.png" />
@@ -241,6 +242,7 @@
     <ClInclude Include="..\..\source\MeshScene.h" />
     <ClInclude Include="..\..\source\PlatformDelegate.h" />
     <ClInclude Include="..\..\source\TestScene.h" />
+    <ClInclude Include="..\..\source\TouchScene.h" />
     <ClInclude Include="..\..\source\UIScene.h" />
     <ClInclude Include="App.h" />
   </ItemGroup>
@@ -250,6 +252,7 @@
     <ClCompile Include="..\..\source\MeshScene.cpp" />
     <ClCompile Include="..\..\source\PlatformDelegate.cpp" />
     <ClCompile Include="..\..\source\TestScene.cpp" />
+    <ClCompile Include="..\..\source\TouchScene.cpp" />
     <ClCompile Include="..\..\source\UIScene.cpp" />
     <ClCompile Include="App.cpp" />
   </ItemGroup>
@@ -258,6 +261,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="..\..\resource\Cube.mtl" />
+    <None Include="..\..\resource\peach.mtl" />
     <None Include="..\..\resource\texcube.mtl" />
     <None Include="test_TemporaryKey.pfx" />
   </ItemGroup>
@@ -271,6 +275,11 @@
       <FileType>Document</FileType>
     </None>
     <None Include="..\..\resource\texcube.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\resource\peach.obj">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

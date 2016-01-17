@@ -22,9 +22,6 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DWorldManager.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Peach3D\Core\Peach3DAABB.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Peach3D\Core\Peach3DAction.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -118,6 +115,9 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DRenderNode.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DOBB.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Peach3D\Core\Peach3DResourceManager.h">
@@ -157,9 +157,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\Core\Peach3DWorldManager.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Peach3D\Core\Peach3DAABB.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\Core\Peach3DAction.h">
@@ -272,6 +269,9 @@
       <Filter>RenderDX\shader</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\Core\Peach3DRenderNode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DOBB.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

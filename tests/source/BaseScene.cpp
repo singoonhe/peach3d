@@ -61,7 +61,7 @@ bool BaseScene::init()
     nextButton->setAnchorPoint(Vector2(0.5f, 0.0f));
     nextButton->setPosition(Vector2(screenSize.x / 2.0f + 100 * minScale, 0.0f));
     nextButton->setClickedAction([&](ClickEvent, const Vector2&){
-        uint index = (mSampleIndex + 1) >= mSampleList.size() ? 0 : mSampleIndex + 1;
+        int index = (mSampleIndex + 1) >= (int)mSampleList.size() ? 0 : mSampleIndex + 1;
         this->changeToSample(index);
     });
     rootWidget->addChild(nextButton);

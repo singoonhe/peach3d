@@ -282,6 +282,10 @@ namespace Peach3D
 	{
 	}
 
+    void ProgramDX::updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList)
+    {
+    }
+
     void ProgramDX::deleteGlobalUBO()
     {
         if (mGUniformBuffer)
@@ -299,7 +303,7 @@ namespace Peach3D
         {
             // set input layout
             mDeviceContext->IASetInputLayout(mInputLayout);
-            if (mVertexType & VertexTypePosition3)
+            if (mVertexType & VertexType::Point3)
             {
                 // set constant buffer
                 mDeviceContext->VSSetConstantBuffers(0, 1, &mGUniformBuffer);

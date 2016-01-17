@@ -28,6 +28,10 @@ namespace Peach3D
         * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
         */
         virtual void render(const std::vector<RenderNode*>& renderList);
+        /**
+        * @brief Render OBB list, called by SceneManager.
+        */
+        virtual void render(const std::vector<OBB*>& renderList);
 
     protected:
         ObjectDX(ComPtr<ID3D12Device> device, const char* name)

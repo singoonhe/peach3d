@@ -27,6 +27,8 @@ namespace Peach3D
         virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
         virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList);
+        /** Update instanced OBB unifroms depend on mProgramUniformList. */
+        virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList);
 
     protected:
         ProgramDX(ComPtr<ID3D12Device> device, uint pId);

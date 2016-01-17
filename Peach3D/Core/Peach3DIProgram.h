@@ -59,7 +59,7 @@ namespace Peach3D
         virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList) = 0;
         
         /** Update OBB unifroms for GL2. */
-        virtual void updateOBBUnifroms(OBB* obb) = 0;
+        virtual void updateOBBUnifroms(OBB* obb) {};
         /** Update instanced OBB unifroms depend on mProgramUniformList. */
         virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList) = 0;
         

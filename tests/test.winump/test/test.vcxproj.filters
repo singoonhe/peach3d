@@ -53,6 +53,9 @@
     <ClCompile Include="..\..\source\MeshScene.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\TouchScene.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -77,6 +80,9 @@
     <ClInclude Include="..\..\source\MeshScene.h">
       <Filter>source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\TouchScene.h">
+      <Filter>source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -93,6 +99,12 @@
       <Filter>resource</Filter>
     </None>
     <None Include="..\..\resource\texcube.obj">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\resource\peach.mtl">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="..\..\resource\peach.obj">
       <Filter>resource</Filter>
     </None>
   </ItemGroup>
@@ -134,6 +146,9 @@
       <Filter>resource</Filter>
     </Image>
     <Image Include="..\..\resource\test.ico">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="..\..\resource\peach.png">
       <Filter>resource</Filter>
     </Image>
   </ItemGroup>

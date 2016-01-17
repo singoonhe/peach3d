@@ -129,13 +129,17 @@ namespace Peach3D
         }
     }*/
 
-	void ObjectDX::render(const std::vector<Widget*>& renderList)
-	{
-	}
+    void ObjectDX::render(const std::vector<Widget*>& renderList)
+    {
+    }
 
-	void ObjectDX::render(const std::vector<RenderNode*>& renderList)
-	{
-	}
+    void ObjectDX::render(const std::vector<RenderNode*>& renderList)
+    {
+    }
+
+    void ObjectDX::render(const std::vector<OBB*>& renderList)
+    {
+    }
 
     void ObjectDX::generateAABBBuffers(ComPtr<ID3D12Device> device, ComPtr<ID3D11DeviceContext2> context)
     {/*

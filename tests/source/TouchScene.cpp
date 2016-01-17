@@ -33,7 +33,7 @@ void PickSample::init(Widget* parentWidget)
         auto cubeNodex = rootNode->createChild(Vector3((i % 3) * 5.f - 5.f, int(i / 3) * 4.f - 4.f, 0.f));
         cubeNodex->attachMesh(cubeMesh);
         cubeNodex->setPickingEnabled(true);
-        cubeNodex->runAction(Repeat::createListForever(MoveBy3D::create(Vector3(0.f, 1.f, 0.f), 0.25f), MoveBy3D::create(Vector3(0.f, -1.f, 0.f), 1.5f), nullptr));
+        cubeNodex->runAction(Repeat::createListForever(MoveBy3D::create(Vector3(0.f, 1.f, 0.f), 0.25f), MoveBy3D::create(Vector3(0.f, -1.f, 0.f), 1.5f), NULL));
     }
     
     // add touch listener
