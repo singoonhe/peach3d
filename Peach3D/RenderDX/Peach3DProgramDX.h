@@ -34,8 +34,8 @@ namespace Peach3D
         ProgramDX(ComPtr<ID3D12Device> device, uint pId);
         virtual ~ProgramDX();
 
-        //! compile shader and check result
-        ID3DBlob* compileShader(const char* data, int size, const char* entryName, const char* targetName);
+        /** Compile vertex shader or pixel shader. */
+        ID3DBlob* compileShader(const char* data, int size, const char* entryName, const char* targetName, bool isCompiled);
         //! Set vertex data stride.
         virtual void createInputLayout();
         //! Delete dx program.
@@ -48,6 +48,8 @@ namespace Peach3D
         static void deleteGlobalUBO();
 
     protected:
+        ID3DBlob*   mVertexBlob;    // vertex compiled shader
+        ID3DBlob*   mPixelBlob;     // pixel compiled shader
         ComPtr<ID3D12Device>          mD3DDevice;            // D3D11 device 
         ComPtr<ID3D11DeviceContext2>   mDeviceContext;        // D3D11 device context
         void*                          mVertexShaderData;     // vertex compiled shader data

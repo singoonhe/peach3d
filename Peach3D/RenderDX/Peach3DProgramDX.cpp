@@ -1,4 +1,5 @@
 
+#include <D3Dcompiler.h>
 #include "Peach3DProgramDX.h"
 #include "Peach3DLogPrinter.h"
 #include "Peach3DTextureDX.h"
@@ -11,9 +12,9 @@ namespace Peach3D
     ComPtr<ID3D11DeviceContext2> ProgramDX::mGlobalUpdateContext = NULL;
     uint ProgramDX::mGlobalUboSize = 0;
     std::map<std::string, int>   ProgramDX::mGUniformOffsetMap;
-
+    
     ProgramDX::ProgramDX(ComPtr<ID3D12Device> device, uint pId)
-        : IProgram(pId), mD3DDevice(device), mOUniformBuffer(nullptr),
+        : IProgram(pId), mVertexBlob(nullptr), mPixelBlob(nullptr), mD3DDevice(device), mOUniformBuffer(nullptr),
         mPixelShader(nullptr), mVertexShader(nullptr), mInputLayout(nullptr), mVertexShaderData(nullptr)
     {
         // set global uniform offset, only init once
@@ -28,92 +29,32 @@ namespace Peach3D
     }
 
     bool ProgramDX::setVertexShader(const char* data, int size, bool isCompiled)
-    {/*
-        if (mVertexShader)
-        {
+    {
+        if (mVertexBlob) {
             // delete vertex shader when it's exist
-            mVertexShader->Release();
-            mVertexShader = nullptr;
-            mProgramValid = false;
+            mVertexBlob->Release();
+            mVertexBlob = nullptr;
         }
-
-        HRESULT hr = S_OK;
-        if (isCompiled)
-        {
-            // direct create vertex shader from compiled data
-            hr = mD3DDevice->CreateVertexShader(data, size, NULL, &mVertexShader);
-            // save vertex compiled shader data
-            mVertexShaderData = malloc(size);
-            memcpy(mVertexShaderData, data, size);
-            mVertexShaderDataSize = size;
-        }
-        else
-        {
-            ID3DBlob* shaderBlob = compileShader(data, size, "main", "vs_4_0_level_9_3");
-            if (shaderBlob == nullptr)
-            {
-                return false;
-            }
-            // save vertex compiled shader data
-            mVertexShaderData = malloc(shaderBlob->GetBufferSize());
-            memcpy(mVertexShaderData, shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize());
-            mVertexShaderDataSize = (ulong)shaderBlob->GetBufferSize();
-            // create vertex shader if compile success
-            hr = mD3DDevice->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &mVertexShader);
-            shaderBlob->Release();
-        }
-        if (FAILED(hr))
-        {
+        mVertexBlob = compileShader(data, size, "VSMain", "vs_5_0", isCompiled);
+        if (!mVertexBlob) {
             Peach3DLog(LogLevel::eError, "Create vertex shader for program %u failed", mProgramId);
             return false;
         }
-
-        if (mPixelShader && mVertexType)
-        {
-            // pixel shader and mVertexType all are valid, create layout
-            createInputLayout();
-        }*/
         return true;
     }
 
     bool ProgramDX::setPixelShader(const char* data, int size, bool isCompiled)
-    {/*
-        if (mPixelShader)
-        {
+    {
+        if (mPixelBlob) {
             // delete pixel shader when it's exist
-            mPixelShader->Release();
-            mPixelShader = nullptr;
-            mProgramValid = false;
+            mPixelBlob->Release();
+            mPixelBlob = nullptr;
         }
-
-        HRESULT hr = S_OK;
-        if (isCompiled)
-        {
-            // direct create pixel shader from compiled data
-            hr = mD3DDevice->CreatePixelShader(data, size, NULL, &mPixelShader);
-        }
-        else
-        {
-            ID3DBlob* shaderBlob = compileShader(data, size, "main", "ps_4_0_level_9_3");
-            if (shaderBlob == nullptr)
-            {
-                return false;
-            }
-            // create pixel shader if compile success
-            hr = mD3DDevice->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &mPixelShader);
-            shaderBlob->Release();
-        }
-        if (FAILED(hr))
-        {
+        mPixelBlob = compileShader(data, size, "PSMain", "vs_5_0", isCompiled);
+        if (!mPixelBlob) {
             Peach3DLog(LogLevel::eError, "Create pixel shader for program %u failed", mProgramId);
             return false;
         }
-
-        if (mVertexShader && mVertexType)
-        {
-            // vertex shader and mVertexType all are valid, create layout
-            createInputLayout();
-        }*/
         return true;
     }
 
@@ -392,36 +333,36 @@ namespace Peach3D
         mVertexShaderDataSize = 0;*/
     }
 
-    ID3DBlob* ProgramDX::compileShader(const char* data, int size, const char* entryName, const char* targetName)
+    ID3DBlob* ProgramDX::compileShader(const char* data, int size, const char* entryName, const char* targetName, bool isCompiled)
     {
         Peach3DAssert(strlen(data) > 0 && size > 0, "Can't compile invalid shader source");
-        ID3DBlob* shaderBlob = nullptr;/*
-        do
-        {
-            if (strlen(data) == 0 || size == 0)
-            {
-                Peach3DLog(LogLevel::eError, "Can't compile null shader source for program %u", mProgramId);
-                break ;
-            }
+        if (strlen(data) == 0 || size == 0) {
+            Peach3DLog(LogLevel::eError, "Can't compile null shader source for program %u", mProgramId);
+            nullptr;
+        }
 
-            UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+        ID3DBlob* shaderBlob = nullptr;
+        if (isCompiled) {
+            // TODO: create Blob from memory
+        }
+        else {
+            UINT flags = 0;
 #if PEACH3D_DEBUG == 1
-            flags |= D3DCOMPILE_DEBUG;
+            // Enable better shader debugging with the graphics debugging tools.
+            flags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
             ID3DBlob* errorBlob = nullptr;
             HRESULT hr = D3DCompile(data, size, NULL, NULL, NULL, entryName, targetName, flags, NULL, &shaderBlob, &errorBlob);
             // check compile result
-            if (FAILED(hr))
-            {
+            if (FAILED(hr)) {
                 Peach3DLog(LogLevel::eError, "Compile shader for program %u error : %s", mProgramId, errorBlob->GetBufferPointer());
-                if (shaderBlob)
-                {
+                if (shaderBlob) {
                     shaderBlob->Release();
                     shaderBlob = nullptr;
                 }
                 errorBlob->Release();
             }
-        } while (0);*/
+        }
         return shaderBlob;
     }
 
