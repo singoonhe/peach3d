@@ -30,8 +30,7 @@ namespace Peach3D
     {
         mPresetShader = new ShaderCode();
         // init vertex attri list
-        if (mVertexAttrList.size() == 0)
-        {
+        if (mVertexAttrList.size() == 0) {
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Point2, 2 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Point3, 3 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Normal, 3 * sizeof(float), DefaultAttrLocation::eNormal, pdShaderNormalAttribName));
@@ -90,13 +89,11 @@ namespace Peach3D
         uchar* texBuffer = nullptr;
         static const unsigned char JPG_SOI[] = { 0xFF, 0xD8 };
         static const unsigned char PNG_SIGNATURE[] = { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a };
-        if (memcmp(orignData, JPG_SOI, 2) == 0)
-        {
+        if (memcmp(orignData, JPG_SOI, 2) == 0) {
             // add jpeg texture file
             texBuffer = jpegImageDataParse(orignData, (uint)orignSize, outSize, format, width, height);
         }
-        else if (memcmp(PNG_SIGNATURE, orignData, sizeof(PNG_SIGNATURE)) == 0)
-        {
+        else if (memcmp(PNG_SIGNATURE, orignData, sizeof(PNG_SIGNATURE)) == 0) {
             // add png texture file
             texBuffer = pngImageDataParse(orignData, (uint)orignSize, outSize, format, width, height);
         }
@@ -134,8 +131,7 @@ namespace Peach3D
         texBuffer = parseImageData(data, (uint)size, &texSize, &texFormat, &texWidth, &texHeight, &dataStatus);
         
         // create texture if parse data success
-        if (texBuffer && texSize > 0)
-        {
+        if (texBuffer && texSize > 0) {
             texture = IRender::getSingletonPtr()->createTexture(name);
             texture->setFormat(texFormat);
             texture->setWidth(texWidth);
@@ -219,8 +215,7 @@ namespace Peach3D
             }
         }
         // create texture if parse all data success
-        if (isAllValid)
-        {
+        if (isAllValid) {
             texture = IRender::getSingletonPtr()->createTexture(name);
             texture->setFormat(texFormat);
             texture->setWidth(texWidth);
@@ -283,8 +278,7 @@ namespace Peach3D
     
     Mesh* ResourceManager::addMesh(const char* file)
     {
-        if (mMeshMap.find(file) != mMeshMap.end())
-        {
+        if (mMeshMap.find(file) != mMeshMap.end()) {
             return mMeshMap[file];
         }
         else
@@ -293,30 +287,25 @@ namespace Peach3D
             ulong fileLength = 0;
             // get texture file data
             uchar *fileData = getFileData(file, &fileLength);
-            if (fileLength > 0 && fileData)
-            {
+            if (fileLength > 0 && fileData) {
                 // use file name to create mesh
                 fileMesh = createMesh(file);
                 // get file name suffix
                 std::string fileName = file;
                 std::string ext = fileName.substr(fileName.rfind('.') == std::string::npos ? fileName.length() : fileName.rfind('.') + 1);
-                for (size_t i=0; i<ext.size(); ++i)
-                {
+                for (size_t i=0; i<ext.size(); ++i) {
                     ext[i] = tolower(ext[i]);
                 }
                 // load obj file data, add to mesh
                 bool loadResult = false;
-                if (ext.compare("obj") == 0)
-                {
+                if (ext.compare("obj") == 0) {
                     std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
                     loadResult = ObjLoader::objMeshDataParse(fileData, fileLength, fileDir, fileMesh);
                 }
-                else
-                {
+                else {
                     Peach3DLog(LogLevel::eError, "Did't support the mesh format \"%s\"", ext.c_str());
                 }
-                if (loadResult)
-                {
+                if (loadResult) {
                     Peach3DLog(LogLevel::eInfo, "Load mesh from file \"%s\" success", file);
                 }
                 // release memory data
@@ -329,15 +318,12 @@ namespace Peach3D
     
     Mesh* ResourceManager::createMesh(const char* name)
     {
-        if (name && (mMeshMap.find(name) != mMeshMap.end()))
-        {
+        if (name && (mMeshMap.find(name) != mMeshMap.end())) {
             return mMeshMap[name];
         }
-        else
-        {
+        else {
             const char* meshName = name;
-            if (!meshName)
-            {
+            if (!meshName) {
                 // generate mesh name if name==nullptr
                 char pName[100] = { 0 };
                 static uint meshAutoCount = 0;
@@ -370,12 +356,10 @@ namespace Peach3D
         ulong vsLength = 0, psLength = 0;
         // get vs file data
         uchar *vsData = getFileData(vsFile, &vsLength);
-        if (vsLength > 0 && vsData)
-        {
+        if (vsLength > 0 && vsData) {
             // get ps file data
             uchar *psData = getFileData(psFile, &psLength);
-            if (psLength > 0 && psData)
-            {
+            if (psLength > 0 && psData) {
                 // return program
                 newPrograme = createProgram((const char*)vsData, (const char*)psData, vertexType, uniformList, vsLength, psLength, isCompiled);
                 // free pixel file data
@@ -407,8 +391,7 @@ namespace Peach3D
         // set object uniform
         program->setProgramUniformsDesc(uniformList);
         
-        if (program->isProgramValid())
-        {
+        if (program->isProgramValid()) {
             Peach3DLog(LogLevel::eInfo, "Create new user program %u success", hashPID);
         }
         mProgramMap[hashPID] = program;
@@ -430,9 +413,7 @@ namespace Peach3D
     IProgram* ResourceManager::getPresetProgram(uint verType, const std::string& verName, const std::string& fragName)
     {
         ShaderCodeData verData = mPresetShader->getShaderCode(verName);
-#if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
         ShaderCodeData fragData = mPresetShader->getShaderCode(fragName);
-#endif
         if (verData.size > 0) {
             std::string name = verName + fragName;
             uint hashPID = XXH32((void*)name.c_str(), (int)name.size(), 0);
@@ -445,9 +426,8 @@ namespace Peach3D
                 IProgram* program = IRender::getSingletonPtr()->createProgram(hashPID);
                 // add shader code to program
                 program->setVertexShader(verData.data, verData.size, false);
-#if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
                 program->setPixelShader(fragData.data, fragData.size, false);
-#endif
+
                 // set vertex type
                 program->setVertexType(verType);
                 // set object uniform
@@ -467,14 +447,11 @@ namespace Peach3D
     {
         std::string newPath = path;
         char last_char = newPath[newPath.length()-1];
-        if (last_char!='/' && last_char!='\\')
-        {
+        if (last_char!='/' && last_char!='\\') {
             newPath = newPath + "/";
         }
-        for (auto iter=mSearchDirs.begin(); iter!=mSearchDirs.end(); iter++)
-        {
-            if (iter->compare(newPath) == 0)
-            {
+        for (auto iter=mSearchDirs.begin(); iter!=mSearchDirs.end(); iter++) {
+            if (iter->compare(newPath) == 0) {
                 return ;
             }
         }
@@ -486,31 +463,25 @@ namespace Peach3D
     {
         uchar* fileBuffer = nullptr;
         std::string filePath = relativePath;
-        if (relativePath[0] == '/' || relativePath[2] == '\\')
-        {
+        if (relativePath[0] == '/' || relativePath[2] == '\\') {
             // read file direct
             fileBuffer = readFileData(relativePath, size);
         }
-        else
-        {
-            for (auto dir = mSearchDirs.begin(); dir != mSearchDirs.end(); dir++)
-            {
+        else {
+            for (auto dir = mSearchDirs.begin(); dir != mSearchDirs.end(); dir++) {
                 fileBuffer = readFileData((*dir+relativePath).c_str(), size);
-                if (fileBuffer)
-                {
+                if (fileBuffer) {
                     // read file success, return
                     break ;
                 }
-                else
-                {
+                else {
                     // can't read file, try from other dir
                     continue ;
                 }
             }
         }
         // is file readed ?
-        if (!fileBuffer)
-        {
+        if (!fileBuffer) {
             Peach3DLog(LogLevel::eError, "Can't find file \"%s\" in search dir list", relativePath);
         }
         return fileBuffer;
@@ -520,11 +491,9 @@ namespace Peach3D
     {
         uchar* fileBuffer = nullptr;
 #if PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_ANDROID
-        if (strncmp(fullPath, "assets/", strlen("assets/")) == 0)
-        {
+        if (strncmp(fullPath, "assets/", strlen("assets/")) == 0) {
             AAssetManager* assetManager = (AAssetManager*)mAssetsManager;
-            if (!mAssetsManager)
-            {
+            if (!mAssetsManager) {
                 // AsstsManager not inited, read file failed
                 Peach3DLog(LogLevel::eError, "Can't find android assets manager, it's need set when PlatformAndroid init");
                 return fileBuffer;
@@ -533,8 +502,7 @@ namespace Peach3D
             std::string relativePath = std::string(fullPath).substr(strlen("assets/"));
             // read file from andriod assets
             AAsset* asset = AAssetManager_open(assetManager, relativePath.c_str(), AASSET_MODE_BUFFER);
-            if (nullptr == asset)
-            {
+            if (nullptr == asset) {
                 return fileBuffer;
             }
             // get file length
@@ -552,8 +520,7 @@ namespace Peach3D
         }
 #endif
         FILE *file = fopen(fullPath, "rb");
-        if (file)
-        {
+        if (file) {
             // get file length
             fseek(file, 0, SEEK_END);
             ulong fileSize = ftell(file);

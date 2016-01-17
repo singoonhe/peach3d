@@ -65,15 +65,13 @@ namespace Peach3D
         //! delete mesh
         void deleteMesh(Mesh* mesh);
         
-        //! add program from file,windows need set isCompiled=true if use vs compiled.
-        //! vertex data type needed to bind attribute
-#if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_DX
-        IProgram* addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled = true);
-#else
+        /** Add program from file, windows need set isCompiled=true if use vs compiled.
+         * @params vertexType Used to bind attribute or create layout for DX.
+         * @params uniformList Use program needed uniforms info.
+         * @params isCompiled Is shader had compiled, *.cso file need set true.
+        */
         IProgram* addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled = false);
-#endif
-        //! create program
-        // vsSize and psSize mush set when isCompiled is true
+        /** Create program from memory, params see @addProgram. */
         IProgram* createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool isCompiled=false);
         //! delete program
         void deleteProgram(IProgram* program);

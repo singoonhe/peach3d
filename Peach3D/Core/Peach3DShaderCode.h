@@ -71,6 +71,9 @@ namespace Peach3D
         static uint getUniformFloatBits(UniformDataType type);
         /* Return shader uniform name by type */
         static UniformNameType getUniformNameType(const std::string& name);
+
+        /* Cocact two uncompiled shader code. */
+        static ShaderCodeData generateShaderCodeData(const char* code1, const char* code2 = "");
         
         /* Free all shader code, called in ResourceManager. */
         void freeShaderCodeData();

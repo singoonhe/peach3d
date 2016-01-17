@@ -53,4 +53,15 @@ namespace Peach3D
         }
         mShaderMap.clear();
     }
+
+    ShaderCodeData ShaderCode::generateShaderCodeData(const char* code1, const char* code2)
+    {
+        ulong code1Len = strlen(code1), code2Len = strlen(code2);
+        char* shaderData = (char*)malloc(code1Len + code2Len + 1);
+        memcpy(shaderData, code1, code1Len);
+        if (code2Len > 0) {
+            memcpy(shaderData + code1Len, code2, code2Len);
+        }
+        return ShaderCodeData(shaderData, int(code1Len + code2Len));
+    }
 }

@@ -20,17 +20,6 @@ namespace Peach3D
     const std::vector<ProgramUniform> gGlobalUniforms3D = {ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4),
         ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4)};
     
-    ShaderCodeData generateShaderCodeData(const char* code1, const char* code2 = "")
-    {
-        ulong code1Len = strlen(code1), code2Len = strlen(code2);
-        char* shaderData = (char*)malloc(code1Len + code2Len + 1);
-        memcpy(shaderData, code1, code1Len);
-        if (code2Len > 0) {
-            memcpy(shaderData + code1Len, code2, code2Len);
-        }
-        return ShaderCodeData(shaderData, int(code1Len + code2Len));
-    }
-    
     void mergeUniformsToFront(std::vector<ProgramUniform>& dst, const std::vector<ProgramUniform>& source)
     {
         for (auto uniform : source) {
@@ -42,14 +31,14 @@ namespace Peach3D
     {
         // add all shader code if list is empty
         if (mShaderMap.empty()) {
-            mShaderMap["PosColorVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, gPosColorVerShader2D);
-            mShaderMap["PosColorFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, gPosColorFragShader2D);
-            mShaderMap["PosColorUVVerShader2D"] = generateShaderCodeData(gCommonVertexFunc2D, gPosColorUVVerShader2D);
-            mShaderMap["PosColorUVFragShader2D"] = generateShaderCodeData(gCommonFragClipFunc2D, gPosColorUVFragShader2D);
-            mShaderMap["PosColorVerShader3D"] = generateShaderCodeData(gPosColorVerShader3D);
-            mShaderMap["PosColorFragShader3D"] = generateShaderCodeData(gPosColorFragShader3D);
-            mShaderMap["PosColorUVVerShader3D"] = generateShaderCodeData(gPosColorUVVerShader3D);
-            mShaderMap["PosColorUVFragShader3D"] = generateShaderCodeData(gPosColorUVFragShader3D);
+            mShaderMap["PosColorVerShader2D"] = ShaderCode::generateShaderCodeData(gCommonVertexFunc2D, gPosColorVerShader2D);
+            mShaderMap["PosColorFragShader2D"] = ShaderCode::generateShaderCodeData(gCommonFragClipFunc2D, gPosColorFragShader2D);
+            mShaderMap["PosColorUVVerShader2D"] = ShaderCode::generateShaderCodeData(gCommonVertexFunc2D, gPosColorUVVerShader2D);
+            mShaderMap["PosColorUVFragShader2D"] = ShaderCode::generateShaderCodeData(gCommonFragClipFunc2D, gPosColorUVFragShader2D);
+            mShaderMap["PosColorVerShader3D"] = ShaderCode::generateShaderCodeData(gPosColorVerShader3D);
+            mShaderMap["PosColorFragShader3D"] = ShaderCode::generateShaderCodeData(gPosColorFragShader3D);
+            mShaderMap["PosColorUVVerShader3D"] = ShaderCode::generateShaderCodeData(gPosColorUVVerShader3D);
+            mShaderMap["PosColorUVFragShader3D"] = ShaderCode::generateShaderCodeData(gPosColorUVFragShader3D);
         }
         return mShaderMap[name];
     }
