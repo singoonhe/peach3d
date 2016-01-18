@@ -20,19 +20,19 @@ namespace Peach3D
         NSUserDefaults* defs = [NSUserDefaults standardUserDefaults];
         NSArray* languages = [defs objectForKey:@"AppleLanguages"];
         NSString* preferredLang = [languages objectAtIndex:0];
-        if ([preferredLang isEqualToString:@"en"]) {
+        if ([preferredLang hasPrefix:@"en"]) {
             mLocalLanguage = LanguageType::eEnglish;
         }
-        else if ([preferredLang isEqualToString:@"zh-Hans"]) {
+        else if ([preferredLang hasPrefix:@"zh-Hans"]) {
             mLocalLanguage = LanguageType::eChineseHans;
         }
-        else if ([preferredLang isEqualToString:@"zh-Hant"]) {
+        else if ([preferredLang hasPrefix:@"zh-Hant"]) {
             mLocalLanguage = LanguageType::eChineseHant;
         }
-        else if ([preferredLang isEqualToString:@"fr"]) {
+        else if ([preferredLang hasPrefix:@"fr"]) {
             mLocalLanguage = LanguageType::eFrench;
         }
-        else if ([preferredLang isEqualToString:@"ru"]) {
+        else if ([preferredLang hasPrefix:@"ru"]) {
             mLocalLanguage = LanguageType::eRussian;
         }
         

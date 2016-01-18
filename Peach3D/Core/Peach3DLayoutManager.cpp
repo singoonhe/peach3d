@@ -14,6 +14,7 @@
 #include "Peach3DLogPrinter.h"
 #include "Peach3DButton.h"
 #include "Peach3DLabel.h"
+#include "Peach3DSprite.h"
 
 namespace Peach3D
 {
@@ -21,7 +22,7 @@ namespace Peach3D
     
     LayoutManager::LayoutManager() : mIsLandscape(false), mLocalizedFunc(nullptr)
     {
-        const char* attrStrList[] = {"Widget", "Label", "Button", "Layout", "NormalTexture", "DownTexture", "HighlightTexture",
+        const char* attrStrList[] = {"Widget", "Sprite", "Label", "Button", "Layout", "NormalTexture", "DownTexture", "HighlightTexture",
             "DisableTexture", "NormalCoord", "DownCoord", "HighlightCoord", "DisableCoord", "Anchor", "BindPosition", "AutoPosition",
             "Position", "AutoScale", "Scale", "Text", "FontSize", "AutoFontSize", "HAlignment", "VAlignment", "TitleOffset",
             "SwallowEvents", "FillColor", "Alpha", "Color", "Texture", "Coord", "Visible" };
@@ -88,6 +89,9 @@ namespace Peach3D
                 break;
             case LayoutAttrType::eWidget:
                 newNode = Widget::create();
+                break;
+            case LayoutAttrType::eSprite:
+                newNode = Sprite::create();
                 break;
             case LayoutAttrType::eLabel:
                 newNode = Label::create();

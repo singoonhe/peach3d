@@ -21,10 +21,15 @@ namespace Peach3D
     class PEACH3D_DLL Sprite : public Widget
     {
     public:
+        /** Create sprite with no texture. */
+        static Sprite* create();
         /** Create sprite, this will draw a texture, default size if texture rect size. */
         static Sprite* create(const char* texName, const Rect& coord=Rect(0.0f, 0.0f, 1.0f, 1.0f));
         /** Create sprite, this will draw a texture, default size if texture rect size. */
         static Sprite* create(ITexture* tex, const Rect& coord=Rect(0.0f, 0.0f, 1.0f, 1.0f));
+        
+        /** Get is need rendering, not show if texture is nullptr. */
+        virtual bool isNeedRender();
         
         /** Show grayscale, this will use special program. */
         void setGrayscaleEnabled(bool enabled) { mIsGrayscale = enabled; }

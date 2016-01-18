@@ -20,6 +20,7 @@ namespace Peach3D
     // define enum type to case attribute name
     enum class LayoutAttrType {
         eWidget,
+        eSprite,
         eLabel,
         eButton,
         eLayout,

@@ -13,6 +13,12 @@
 
 namespace Peach3D
 {
+    Sprite* Sprite::create()
+    {
+        Sprite* ns = new Sprite();
+        return ns;
+    }
+    
     Sprite* Sprite::create(const char* texName, const Rect& coord)
     {
         ITexture* texture = ResourceManager::getSingleton().addTexture(texName);
@@ -39,6 +45,12 @@ namespace Peach3D
         setAlpha(1.0f);
         // set default texture rect
         mTexRect = Rect(0.0f, 0.0f, 1.0f, 1.0f);
+    }
+    
+    bool Sprite::isNeedRender()
+    {
+        Peach3DAssert(mRenderTex, "Sprite can't render if texture is null!");
+        return Node::isNeedRender() && mRenderTex;
     }
     
     void Sprite::setTexture(ITexture* texture)
