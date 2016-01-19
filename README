@@ -1,19 +1,1 @@
 A game engine using c++ for multi platform. Using OpenGL for MAC, OpenGL ES for IOS and ANDROID, DX11 for WP8 and Windows. Engine don't include audio module.
-
-In Android, you need modify "process_input" function in android_native_app_glue.c to avoid system error like "Failed to receive dispatch signal status=-11" or "keyDispatchingTimedOut". It maybe a bug of NDK.
-static void process_input(struct android_app* app, struct android_poll_source* source) {
-    AInputEvent* event = NULL;
-    while ( AInputQueue_hasEvents( app->inputQueue ) )
-    {
-        if ( AInputQueue_getEvent( app->inputQueue, &event ) >= 0 )
-        {
-            int32_t handled = 0;
-            uint32_t devid = AInputEvent_getDeviceId( event );
-            uint32_t src   = AInputEvent_getSource( event );
-            //LOGV("New input event: type=%d devid=%x src=%x\n", AInputEvent_getType(event), devid, src);
-            int32_t predispatched = (AInputQueue_preDispatchEvent(app->inputQueue, event));
-            if (app->onInputEvent != NULL && !predispatched) handled = app->onInputEvent(app, event);
-            if (!predispatched) AInputQueue_finishEvent(app->inputQueue, event, handled);
-        }
-    }
-}
