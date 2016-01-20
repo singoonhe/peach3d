@@ -34,7 +34,7 @@ namespace Peach3D
         const Matrix4& getModelMatrix() { return mModelMatrix; }
         void setMaterial(const Material& mate) { mMaterial = mate; mIsRenderCodeDirty = true; }
         const Material& getMaterial() { return mMaterial; }
-        void setDrawMode(DrawMode mode) { mMode = mode; }
+        void setDrawMode(DrawMode mode) { mMode = mode; mIsRenderCodeDirty = true; }
         DrawMode getDrawMode() { return mMode; }
         
         void setOBBEnabled(bool enable);

@@ -14,7 +14,7 @@
 
 namespace Peach3D
 {
-    SceneNode::SceneNode(const Vector3& pos, const Vector3& rotation, const Vector3& scale) : Node(), mMode(DrawMode::eTriangle)
+    SceneNode::SceneNode(const Vector3& pos, const Vector3& rotation, const Vector3& scale) : Node()
     {
         init();
         mPosition = pos;
@@ -24,6 +24,7 @@ namespace Peach3D
     
     void SceneNode::init()
     {
+        mMode = DrawMode::eTriangle;
         mScale = Vector3(1.0f, 1.0f, 1.0f);
         mAttachedMesh = nullptr;
         mOBBEnable = false;
