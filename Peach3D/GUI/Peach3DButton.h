@@ -15,11 +15,15 @@
 
 namespace Peach3D
 {
-#define ButtonStatusNormal  0x01
-#define ButtonStatusHighlight  0x02 // high light satus, just for mouse event
-#define ButtonStatusDown    0x04    // touch down or mouse click down
-#define ButtonStatusDisable 0x08    // default is normal's grep effect
-#define ButtonStatusCount   4       // button status count
+    // define button state, use combined
+    namespace ButtonState
+    {
+        const uint Normal = 0x0001;
+        const uint Highlight = 0x0002;  // high light state, just for mouse event
+        const uint Down = 0x0004;       // touch down or mouse click down
+        const uint Disable  = 0x0008;   // default is normal's grep effect
+        const uint Count  = 4;          // button status count
+    }
     
     class PEACH3D_DLL Button : public Sprite
     {
@@ -75,8 +79,8 @@ namespace Peach3D
         Vector2     mTitleOffset;
         
         uint        mCurStatus;
-        ITexture*   mStatusTexs[ButtonStatusCount];
-        Rect        mStatusTexRects[ButtonStatusCount];
+        ITexture*   mStatusTexs[ButtonState::Count];
+        Rect        mStatusTexRects[ButtonState::Count];
         std::map<ClickEvent, ControlListenerFunction> mButtonFuncMap;
     };
 }

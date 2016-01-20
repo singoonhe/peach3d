@@ -16,13 +16,13 @@ namespace Peach3D
     {
         Button* newBtn = new Button();
         if (normal.size() > 0) {
-            newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(normal.c_str()), ButtonStatusNormal);
+            newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(normal.c_str()), ButtonState::Normal);
             if (down.size() > 0) {
-                newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(down.c_str()), ButtonStatusDown);
+                newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(down.c_str()), ButtonState::Down);
                 newBtn->setClickZoomed(false);
             }
             if (highlight.size() > 0) {
-                newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(highlight.c_str()), ButtonStatusHighlight);
+                newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(highlight.c_str()), ButtonState::Highlight);
             }
         }
         return newBtn;
@@ -38,7 +38,7 @@ namespace Peach3D
     {
         // init texture list
         memset(mStatusTexs, 0, sizeof(mStatusTexs));
-        for (auto i = 0; i < ButtonStatusCount; ++i) {
+        for (auto i = 0; i < ButtonState::Count; ++i) {
             mStatusTexs[i] = nullptr;
             mStatusTexRects[i].pos = Vector2Zero;
             mStatusTexRects[i].size = Vector2(1.0f, 1.0f);
@@ -50,7 +50,7 @@ namespace Peach3D
     
     void Button::setTextureForStatus(ITexture* tex, uint status)
     {
-        uint statusList[] = {ButtonStatusNormal, ButtonStatusHighlight, ButtonStatusDown, ButtonStatusDisable};
+        uint statusList[] = {ButtonState::Normal, ButtonState::Highlight, ButtonState::Down, ButtonState::Disable};
         for (uint perStatus : statusList) {
             uint index = getStatusIndex(perStatus);
             if (perStatus & status) {
@@ -59,22 +59,22 @@ namespace Peach3D
         }
         if (!mCurStatus) {
             // deafult show normal status
-            setButtonShowStatus(ButtonStatusNormal);
+            setButtonShowStatus(ButtonState::Normal);
         }
-        else {
+        else if (status == mCurStatus) {
             // update current texture
             setTexture(mStatusTexs[getStatusIndex(mCurStatus)]);
         }
         
         // disable zoomed when Down image set
-        if ((status & ButtonStatusDown) && tex) {
+        if ((status & ButtonState::Down) && tex) {
             setClickZoomed(false);
         }
     }
     
     void Button::setTextureRectForStatus(Rect rect, uint status)
     {
-        uint statusList[] = {ButtonStatusNormal, ButtonStatusHighlight, ButtonStatusDown, ButtonStatusDisable};
+        uint statusList[] = {ButtonState::Normal, ButtonState::Highlight, ButtonState::Down, ButtonState::Disable};
         for (uint perStatus : statusList) {
             uint index = getStatusIndex(perStatus);
             if (perStatus & status) {
@@ -93,13 +93,13 @@ namespace Peach3D
         if (status != mCurStatus) {
             mCurStatus = status;
             uint index = getStatusIndex(status);
-            if (mCurStatus == ButtonStatusDisable && !mStatusTexs[index]) {
+            if (mCurStatus == ButtonState::Disable && !mStatusTexs[index]) {
                 setGrayscaleEnabled(true);
             }
             else {
                 setGrayscaleEnabled(false);
                 // default use normal texture
-                index = (!mStatusTexs[index]) ? getStatusIndex(ButtonStatusNormal) : index;
+                index = (!mStatusTexs[index]) ? getStatusIndex(ButtonState::Normal) : index;
                 // reset show texture and rect
                 if (mStatusTexs[index]) {
                     setTexture(mStatusTexs[index]);
@@ -161,16 +161,16 @@ namespace Peach3D
     uint Button::getStatusIndex(uint status)
     {
         uint index = 0;
-        if (status & ButtonStatusNormal) {
+        if (status & ButtonState::Normal) {
             index = 0;
         }
-        else if (status & ButtonStatusHighlight) {
+        else if (status & ButtonState::Highlight) {
             index = 1;
         }
-        else if (status & ButtonStatusDown) {
+        else if (status & ButtonState::Down) {
             index = 2;
         }
-        else if (status & ButtonStatusDisable) {
+        else if (status & ButtonState::Disable) {
             index = 3;
         }
         return index;
@@ -179,48 +179,48 @@ namespace Peach3D
     void Button::setClickEnabled(bool enabled)
     {
         Sprite::setClickEnabled(enabled);
-        setButtonShowStatus(mIsEnabled ? ButtonStatusNormal : ButtonStatusDisable);
+        setButtonShowStatus(mIsEnabled ? ButtonState::Normal : ButtonState::Disable);
         
         // deal with button event
         if (mEventFuncMap.empty()) {
             mEventFuncMap[ClickEvent::eMoveIn] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusHighlight);
+                setButtonShowStatus(ButtonState::Highlight);
                 if (mButtonFuncMap.find(ClickEvent::eMoveIn) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eMoveIn](event, pos);
                 }
             };
             mEventFuncMap[ClickEvent::eUp] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusHighlight);
+                setButtonShowStatus(ButtonState::Highlight);
                 if (mButtonFuncMap.find(ClickEvent::eUp) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eUp](event, pos);
                 }
             };
             mEventFuncMap[ClickEvent::eDown] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusDown);
+                setButtonShowStatus(ButtonState::Down);
                 if (mButtonFuncMap.find(ClickEvent::eDown) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eDown](event, pos);
                 }
             };
             mEventFuncMap[ClickEvent::eDragIn] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusDown);
+                setButtonShowStatus(ButtonState::Down);
                 if (mButtonFuncMap.find(ClickEvent::eDragIn) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eDragIn](event, pos);
                 }
             };
             mEventFuncMap[ClickEvent::eMoveOut] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusNormal);
+                setButtonShowStatus(ButtonState::Normal);
                 if (mButtonFuncMap.find(ClickEvent::eMoveOut) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eMoveOut](event, pos);
                 }
             };
             mEventFuncMap[ClickEvent::eDragOut] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusNormal);
+                setButtonShowStatus(ButtonState::Normal);
                 if (mButtonFuncMap.find(ClickEvent::eDragOut) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eDragOut](event, pos);
                 }
             };
             mEventFuncMap[ClickEvent::eCancel] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonStatusNormal);
+                setButtonShowStatus(ButtonState::Normal);
                 if (mButtonFuncMap.find(ClickEvent::eCancel) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eCancel](event, pos);
                 }

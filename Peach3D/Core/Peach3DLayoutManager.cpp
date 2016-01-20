@@ -143,53 +143,53 @@ namespace Peach3D
                 case LayoutAttrType::eNormalTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonStatusNormal);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Normal);
                     }
                     break;
                 case LayoutAttrType::eDownTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonStatusDown);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Down);
                     }
                     break;
                 case LayoutAttrType::eHighlightTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonStatusHighlight);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Highlight);
                     }
                     break;
                 case LayoutAttrType::eDisableTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonStatusDisable);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Disable);
                     }
                     break;
                 case LayoutAttrType::eNormalCoord:
                     if (dynamic_cast<Button*>(newNode)) {
                         Rect attrRect;
                         sscanf(attrText, "%f,%f,%f,%f", &attrRect.pos.x, &attrRect.pos.y, &attrRect.size.x, &attrRect.size.y);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonStatusNormal);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonState::Normal);
                     }
                     break;
                 case LayoutAttrType::eDownCoord:
                     if (dynamic_cast<Button*>(newNode)) {
                         Rect attrRect;
                         sscanf(attrText, "%f,%f,%f,%f", &attrRect.pos.x, &attrRect.pos.y, &attrRect.size.x, &attrRect.size.y);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonStatusDown);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonState::Down);
                     }
                     break;
                 case LayoutAttrType::eHighlightCoord:
                     if (dynamic_cast<Button*>(newNode)) {
                         Rect attrRect;
                         sscanf(attrText, "%f,%f,%f,%f", &attrRect.pos.x, &attrRect.pos.y, &attrRect.size.x, &attrRect.size.y);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonStatusHighlight);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonState::Highlight);
                     }
                     break;
                 case LayoutAttrType::eDisableCoord:
                     if (dynamic_cast<Button*>(newNode)) {
                         Rect attrRect;
                         sscanf(attrText, "%f,%f,%f,%f", &attrRect.pos.x, &attrRect.pos.y, &attrRect.size.x, &attrRect.size.y);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonStatusDisable);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(attrRect, ButtonState::Disable);
                     }
                     break;
                 case LayoutAttrType::eAnchor: {
