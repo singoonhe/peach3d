@@ -306,12 +306,16 @@ namespace Peach3D
                                                                                   [&](ClickEvent event, const std::vector<Vector2>& poss) {});
                     }
                     break;
-                case LayoutAttrType::eFillColor:
+                case LayoutAttrType::eFillColor: {
+                    Color4 fillColor;
+                    sscanf(attrText, "%f,%f,%f,%f", &fillColor.r, &fillColor.g, &fillColor.b, &fillColor.a);
                     if (dynamic_cast<Label*>(newNode)) {
-                        Color4 fillColor;
-                        sscanf(attrText, "%f,%f,%f,%f", &fillColor.r, &fillColor.g, &fillColor.b, &fillColor.a);
                         dynamic_cast<Label*>(newNode)->setFillColor(fillColor);
                     }
+                    else if (dynamic_cast<Button*>(newNode)) {
+                        dynamic_cast<Button*>(newNode)->setTitleColor(fillColor);
+                    }
+                }
                     break;
                 case LayoutAttrType::eAlpha:{
                     float attrAlpha;
