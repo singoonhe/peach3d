@@ -108,7 +108,7 @@ namespace Peach3D
         [mGLView setWantsBestResolutionOpenGLSurface:YES];
         
         // auto set sync
-        GLint swapInt = 0;
+        GLint swapInt = 1;
         [[mGLView openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
         
         // set window

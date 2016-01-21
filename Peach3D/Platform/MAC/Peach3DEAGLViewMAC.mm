@@ -13,14 +13,12 @@
 using namespace Peach3D;
 @implementation EAGLViewMAC
 
-uint64_t            gLastTime = 0ULL;
-double              gFixedFrameTime = 0.0;
 // This is the renderer output callback function
 static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
 {
     // make opengl view update
-    [(__bridge EAGLViewMAC*)displayLinkContext setNeedsDisplay:TRUE];
-    return kCVReturnSuccess;
+    CVReturn result = [(__bridge EAGLViewMAC*)displayLinkContext getFrameForTime:outputTime];
+    return result;
 }
 
 - (id)initWithFrame:(NSRect)frameRect pixelFormat:(NSOpenGLPixelFormat *)format
@@ -55,8 +53,6 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
     CGLPixelFormatObj cglPixelFormat = [[self pixelFormat] CGLPixelFormatObj];
     CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat);
     
-    // calculate the fixed frame delay time
-    gFixedFrameTime = 1.0 / platform->getCreationParams().maxFPS;
     // start render loop
     [self resume];
 }
@@ -72,24 +68,55 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-    uint64_t nowTime = CVGetCurrentHostTime();
+    // Ignore if the display link is still running
+    if (!CVDisplayLinkIsRunning(mDisplayLink))
+        [self drawView:0.f];
+}
+
+- (void)drawView:(float)currentTime
+{
+    // This method will be called on both the main thread (through -drawRect:) and a secondary thread (through the display link rendering loop)
+    // Also, when resizing the view, -reshape is called on the main thread, but we may be drawing on a secondary thread
+    // Add a mutex around to avoid the threads accessing the context simultaneously
+    CGLLockContext([[self openGLContext] CGLContextObj]);
+    
+    // Make sure we draw to the right context
+    [[self openGLContext] makeCurrentContext];
+    // render one frame
+    IPlatform::getSingletonPtr()->renderOneFrame(currentTime);
+    [[self openGLContext] flushBuffer];
+    
+    CGLUnlockContext([[self openGLContext] CGLContextObj]);
+}
+
+- (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
+{
+    // calculate the fixed frame delay time
+    static CFAbsoluteTime fixedFrameTime = 1.0 / IPlatform::getSingleton().getCreationParams().maxFPS;
+    static CFAbsoluteTime twoFFT = 2.0 * fixedFrameTime;
+    
+    CFAbsoluteTime nowTime = CFAbsoluteTimeGetCurrent();
     // When window resume from miniaturize, drawRect will called by MAC.
     // But timer is not valid, ignore this drawRect.
-    if (gLastTime > 0ULL) {
+    if (mLastFrameTime > 0.0) {
         static double fpsTime = 0.0;
         // calculate the deltaTime
-        fpsTime += (nowTime - gLastTime)/1000000000.0;
+        fpsTime += (nowTime - mLastFrameTime);
         
-        if (fpsTime >= gFixedFrameTime) {
-            // render one frame
-            IPlatform::getSingletonPtr()->renderOneFrame((float)fpsTime);
-            // flush window
-            [[self openGLContext] flushBuffer];
-            
+        if (fpsTime >= fixedFrameTime) {
+            // render one frame with time
+            [self drawView:fixedFrameTime];
+            fpsTime -= fixedFrameTime;
+        }
+        else if (fpsTime >= twoFFT) {
+            // render one frame with time
+            [self drawView:fpsTime];
             fpsTime = 0.0;
         }
     }
-    gLastTime = nowTime;
+    mLastFrameTime = nowTime;
+    
+    return kCVReturnSuccess;
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -155,7 +182,7 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 - (void)resume
 {
     if (!CVDisplayLinkIsRunning(mDisplayLink)) {
-        gLastTime = 0ULL;
+        mLastFrameTime = 0.0;
         // Activate the display link
         CVDisplayLinkStart(mDisplayLink);
     }

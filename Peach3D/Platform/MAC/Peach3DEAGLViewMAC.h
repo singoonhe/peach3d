@@ -13,7 +13,7 @@
 
 @interface EAGLViewMAC : NSOpenGLView
 {
-    double              mLastFrameTime;
+    CFAbsoluteTime      mLastFrameTime;
     CVDisplayLinkRef    mDisplayLink;
 }
 
