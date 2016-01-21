@@ -68,8 +68,7 @@ namespace Peach3D
         
         mGLViewController = [[EAGLViewController alloc] init];
         float screenScale = [[UIScreen mainScreen] scale];
-        if (screenScale != 1.0f)
-        {
+        if (screenScale != 1.0f) {
             // enable retina
             mCreationParams.winSize.x  *= screenScale;
             mCreationParams.winSize.y *= screenScale;
@@ -85,8 +84,7 @@ namespace Peach3D
         bool success = mRender->initRender(mCreationParams.winSize);
         
         bool userSuccess = true;
-        if (success)
-        {
+        if (success) {
             // add default search file dir
             NSString * path = [[NSBundle mainBundle] resourcePath];
             ResourceManager::getSingleton().addSearchDirectory([path UTF8String]);
@@ -94,8 +92,7 @@ namespace Peach3D
             // notify IAppDelegate launch finished
             userSuccess = mCreationParams.delegate->appDidFinishLaunching();
             
-            if (userSuccess)
-            {
+            if (userSuccess) {
                 // start animating
                 mAnimating = true;
             }
@@ -105,8 +102,7 @@ namespace Peach3D
     
     void PlatformIOS::pauseAnimating()
     {
-        if (mAnimating)
-        {
+        if (mAnimating) {
             IPlatform::pauseAnimating();
             // eagl pause
             [mGLViewController pause];
@@ -115,8 +111,7 @@ namespace Peach3D
     
     void PlatformIOS::resumeAnimating()
     {
-        if (!mAnimating)
-        {
+        if (!mAnimating) {
             IPlatform::resumeAnimating();
             // eagl resume
             [mGLViewController resume];

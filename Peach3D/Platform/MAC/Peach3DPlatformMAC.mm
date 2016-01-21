@@ -150,8 +150,7 @@ namespace Peach3D
     
     void PlatformMAC::pauseAnimating()
     {
-        if (mAnimating)
-        {
+        if (mAnimating) {
             IPlatform::pauseAnimating();
             // eagl pause
             [mGLView pause];
@@ -160,8 +159,7 @@ namespace Peach3D
     
     void PlatformMAC::resumeAnimating()
     {
-        if (!mAnimating)
-        {
+        if (!mAnimating) {
             IPlatform::resumeAnimating();
             // eagl resume
             [mGLView resume];

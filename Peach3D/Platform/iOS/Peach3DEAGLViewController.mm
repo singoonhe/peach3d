@@ -17,24 +17,20 @@ using namespace Peach3D;
     self = [super init];
     mTouchList = [NSMutableDictionary dictionaryWithCapacity:10];
     
-    if ([[UIDevice currentDevice].systemVersion floatValue] < 7.0)
-    {
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 7.0) {
         // always use OpenGL ES 2.0 under 7.0
         self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         mEnabledVersion = RenderFeatureLevel::eGL2;
     }
-    else
-    {
+    else {
         // try to use OpenGl ES 3.0
         self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-        if (!self.context)
-        {
+        if (!self.context) {
             // ES 3.0 failed, use ES 2.0
             self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             mEnabledVersion = RenderFeatureLevel::eGL2;
         }
-        else
-        {
+        else {
             mEnabledVersion = RenderFeatureLevel::eGL3;
         }
     }
@@ -44,31 +40,25 @@ using namespace Peach3D;
     // set render params
     const PlatformCreationParams& params = IPlatform::getSingleton().getCreationParams();
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    if (params.zBits == 16)
-    {
+    if (params.zBits == 16) {
         view.drawableDepthFormat = GLKViewDrawableDepthFormat16;
     }
-    else if (params.zBits != 24)
-    {
+    else if (params.zBits != 24) {
         Peach3DLog(LogLevel::eWarn, "Depth format %d not support, use default bits 24", params.zBits);
     }
     view.drawableStencilFormat = GLKViewDrawableStencilFormat8;
-    if (params.sBits == 0)
-    {
+    if (params.sBits == 0) {
         view.drawableStencilFormat = GLKViewDrawableStencilFormatNone;
     }
-    else if (params.sBits != 8)
-    {
+    else if (params.sBits != 8) {
         Peach3DLog(LogLevel::eWarn, "Stencil format %d not support, use default bits 8", params.sBits);
     }
     // use msaa
     view.drawableMultisample = GLKViewDrawableMultisample4X;
-    if (params.MSAA == 0)
-    {
+    if (params.MSAA == 0) {
         view.drawableMultisample = GLKViewDrawableMultisampleNone;
     }
-    else
-    {
+    else {
         Peach3DLog(LogLevel::eWarn, "MSAA level %d not support, enable the default level 4", params.MSAA);
     }
     // enable multi touch
@@ -86,24 +76,19 @@ using namespace Peach3D;
 - (int)addTouchToList:(UITouch*)touch
 {
     uint index = 1;
-    while (1)
-    {
+    while (1) {
         BOOL isIndexExisted = NO;
-        for (NSNumber* key in [mTouchList allKeys])
-        {
-            if ([key unsignedIntValue] == index)
-            {
+        for (NSNumber* key in [mTouchList allKeys]) {
+            if ([key unsignedIntValue] == index) {
                 isIndexExisted = YES;
                 break;
             }
         }
         // find valid index
-        if (!isIndexExisted)
-        {
+        if (!isIndexExisted) {
             break;
         }
-        else
-        {
+        else {
             index ++;
         }
     }
@@ -116,10 +101,8 @@ using namespace Peach3D;
 - (int)getTouchIndex:(UITouch*)touch
 {
     uint index = 1;
-    for (NSNumber* key in [mTouchList allKeys])
-    {
-        if ([mTouchList objectForKey:key] == touch)
-        {
+    for (NSNumber* key in [mTouchList allKeys]) {
+        if ([mTouchList objectForKey:key] == touch) {
             index = [key unsignedIntValue];
             break;
         }
@@ -129,10 +112,8 @@ using namespace Peach3D;
 
 - (void)deleteTouch:(UITouch*)touch
 {
-    for (NSNumber* key in [mTouchList allKeys])
-    {
-        if ([mTouchList objectForKey:key] == touch)
-        {
+    for (NSNumber* key in [mTouchList allKeys]) {
+        if ([mTouchList objectForKey:key] == touch) {
             [mTouchList removeObjectForKey:key];
             break;
         }
@@ -204,8 +185,7 @@ using namespace Peach3D;
 
 - (void)update
 {
-    if (mLastTime > FLT_EPSILON)
-    {
+    if (mLastTime > FLT_EPSILON) {
         // render one frame
         IPlatform* platform = IPlatform::getSingletonPtr();
         platform->renderOneFrame(self.timeSinceLastUpdate);
@@ -234,7 +214,8 @@ using namespace Peach3D;
     }
 }
 
-- (BOOL) shouldAutorotate {
+- (BOOL) shouldAutorotate
+{
     return YES;
 }
 

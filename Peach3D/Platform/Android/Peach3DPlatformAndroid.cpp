@@ -313,26 +313,29 @@ namespace Peach3D
 
     void PlatformAndroid::renderOneFrame(float lastFrameTime)
     {
-        static const long initialFrameTime = 1000000000/mCreationParams.maxFPS;
-        static uint64_t totalFrameTime = 0;
+        // calculate the fixed frame delay time
+        static const long fixedFrameTime = 1000000000/mCreationParams.maxFPS;
+        static const long multiFFT = 10 * fixedFrameTime;
+        static uint64_t fpsTime = 0;
 
         if  (mAnimating && isRenderWindowValid()) {
             // get current time
             timespec now;
             clock_gettime(CLOCK_MONOTONIC, &now);
-            uint64_t nowNs = now.tv_sec*1000000000ull + now.tv_nsec;
+            uint64_t nowNs = now.tv_sec * 1000000000ull + now.tv_nsec;
             if (mLastTime > 0)  {
-                totalFrameTime += nowNs - mLastTime;
-                // render frame
-                if (totalFrameTime>=initialFrameTime) {
-                    IPlatform::renderOneFrame(totalFrameTime * 0.000000001f);
-                    // swap buffers
-                    eglSwapBuffers(mDisplay, mSurface);
-                    totalFrameTime = 0;
+                fpsTime += nowNs - mLastTime;
+
+                if (fpsTime >= multiFFT) {
+                    // render one frame with time
+                    IPlatform::renderOneFrame(fpsTime * 0.000000001f);
+                    fpsTime = 0;
                 }
-            }
-            else {
-                totalFrameTime = 0;
+                else if (fpsTime >= fixedFrameTime) {
+                    // render one frame with time
+                    IPlatform::renderOneFrame(fixedFrameTime * 0.000000001f);
+                    fpsTime -= fixedFrameTime;
+                }
             }
             // save current time
             mLastTime = nowNs;
