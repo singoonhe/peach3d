@@ -34,9 +34,18 @@ PlatformDelegate      gGameDelegate;
     gPlatform.initWithParams(params);
     [self.window setContentView:(__bridge NSOpenGLView*)gPlatform.getCreationParams().window];
     
+    // set window delegate, windowShouldClose will be called
+    [self.window setDelegate:self];
     // show window
     [self.window makeKeyAndOrderFront:self];
     [self.window center];
+}
+
+- (BOOL)windowShouldClose:(id)sender
+{
+    // Insert code here to tear down your application
+    Peach3D::EventDispatcher::getSingleton().triggerKeyboardEvent(Peach3D::KeyboardEvent::eKeyDown, Peach3D::KeyCode::eESC);
+    return NO;
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender

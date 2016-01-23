@@ -443,9 +443,9 @@ namespace Peach3D
         return nullptr;
     }
         
-    void ResourceManager::addSearchDirectory(const char* path)
+    void ResourceManager::addSearchDirectory(const char* dir, bool isBack)
     {
-        std::string newPath = path;
+        std::string newPath = dir;
         char last_char = newPath[newPath.length()-1];
         if (last_char!='/' && last_char!='\\') {
             newPath = newPath + "/";
@@ -455,7 +455,14 @@ namespace Peach3D
                 return ;
             }
         }
-        mSearchDirs.push_back(newPath);
+        
+        // add new dir to back or front
+        if (isBack) {
+            mSearchDirs.push_back(newPath);
+        }
+        else {
+            mSearchDirs.insert(mSearchDirs.begin(), newPath);
+        }
         Peach3DLog(LogLevel::eInfo, "Add search directory: %s", newPath.c_str());
     }
     

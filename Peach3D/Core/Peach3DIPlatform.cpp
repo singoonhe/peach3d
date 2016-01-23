@@ -107,6 +107,9 @@ namespace Peach3D
 
     void IPlatform::renderOneFrame(float lastFrameTime)
     {
+        if (!mAnimating) {
+            return;
+        }
         // update the FPS count, it will clear when return FPS.
         mCurrentFPS++;
         

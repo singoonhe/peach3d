@@ -81,8 +81,12 @@ namespace Peach3D
         
         //! set assert manager just for android
         void setAssetsManager(void* manager) { mAssetsManager=manager; }
-        //! add resource search directory
-        void addSearchDirectory(const char* path);
+        /** Add a directory for file search. 
+         * @params isBack Push new dir to back or front.
+         */
+        void addSearchDirectory(const char* dir, bool isBack = true);
+        /** Reture all search directorys. */
+        const std::vector<std::string>& getSearchDirectory() { return mSearchDirs; }
         //! get file data and length, nullptr will return if file not exist
         //! Notice: you should free buffer after using.
         uchar* getFileData(const char* relativePath, ulong* size);

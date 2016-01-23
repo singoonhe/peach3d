@@ -166,13 +166,15 @@ namespace Peach3D
         // save activity and vm, this will used for read file
         mActivity = activity;
         mJavaVM = activity->vm;
-        mActivityClazz = activity->clazz;
+        mEnv = activity->env;
+        mActivityObject = activity->clazz;
+
         // cache find class jni method
         callJniFunc([&](JNIEnv* env, jclass activityClazz) {
             auto classLoaderClass = env->FindClass("java/lang/ClassLoader");
             auto getClassLoaderMethod = env->GetMethodID(activityClazz, "getClassLoader",
                                                         "()Ljava/lang/ClassLoader;");
-            auto loader = env->CallObjectMethod(this->mActivityClazz, getClassLoaderMethod);
+            auto loader = env->CallObjectMethod(this->mActivityObject, getClassLoaderMethod);
             // class loader need global ref.
             this->mClassLoader = env->NewGlobalRef(loader);
             this->mFindClassMethod = env->GetMethodID(classLoaderClass, "findClass",
@@ -383,7 +385,7 @@ namespace Peach3D
                 env->DeleteLocalRef(classStr);
             }
             else {
-                findClazz = env->GetObjectClass(mActivityClazz);
+                findClazz = env->GetObjectClass(mActivityObject);
             }
             if (!findClazz) {
                 Peach3DErrorLog("Get class \"%s\" from jni failed!", className);

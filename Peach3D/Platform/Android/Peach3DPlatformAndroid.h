@@ -39,6 +39,9 @@ namespace Peach3D
         /** Terminate application, finish activity. */
         virtual void terminate();
 
+        /** Return JNIEnv. */
+        JNIEnv* getEnv() { return mEnv; }
+        jobject getActivityObject() { return mActivityObject; }
         /** Call jni func, activity class will use if className not set. */
         void callJniFunc(const std::function<void(JNIEnv*, jclass)>& callback, const char* className = nullptr);
         //! get label text texture
@@ -61,7 +64,8 @@ namespace Peach3D
         EGLConfig  mEGLConfig;
 
         JavaVM*             mJavaVM;
-        jobject             mActivityClazz;
+        JNIEnv*             mEnv;
+        jobject             mActivityObject;
         jobject             mClassLoader;
         jmethodID           mFindClassMethod;
         ANativeActivity*    mActivity;

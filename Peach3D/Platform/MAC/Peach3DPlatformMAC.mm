@@ -168,6 +168,8 @@ namespace Peach3D
     
     void PlatformMAC::terminate()
     {
+        IPlatform::terminate();
+        // notify system terminate
         [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];
     }
     
