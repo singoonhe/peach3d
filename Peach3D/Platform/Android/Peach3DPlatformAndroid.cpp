@@ -80,7 +80,9 @@ namespace Peach3D
     {
         // delete jobject
         if (mClassLoader) {
-            mEnv->DeleteGlobalRef(mClassLoader);
+            callJniFunc([&](JNIEnv*, jclass) {
+                mEnv->DeleteGlobalRef(mClassLoader);
+            });
         }
         // delete EGL
         if (mDisplay != EGL_NO_DISPLAY) {
