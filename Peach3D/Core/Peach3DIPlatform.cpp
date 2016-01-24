@@ -28,16 +28,6 @@ namespace Peach3D
     {
         // delete layout manager
         delete mLayoutManager;
-        // delete scene manager
-        delete mSceneManager;
-        mLogPrinter->print(LogLevel::eInfo, "Scene manager exit");
-        // delete resource manager
-        delete mResourceMgr;
-        // delete render
-        delete mRender;
-        mLogPrinter->print(LogLevel::eInfo, "IRender exit");
-        // delete render dependency
-        deleteRenderDependency();
         // deelte event dispatcher
         delete mEventDispatcher;
         mEventDispatcher = nullptr;
@@ -54,6 +44,23 @@ namespace Peach3D
         // delete log manager
         delete mLogPrinter;
         mLogPrinter = nullptr;
+    }
+    
+    void IPlatform::terminate()
+    {
+        mTerminating = true;
+        mAnimating = false;
+        
+        /** Delete render resource, ~IPlatform may EGL invalid. */
+        // delete scene manager
+        delete mSceneManager;
+        mLogPrinter->print(LogLevel::eInfo, "Scene manager exit");
+        // delete resource manager
+        delete mResourceMgr;
+        mLogPrinter->print(LogLevel::eInfo, "Resource manager exit");
+        // delete render
+        delete mRender;
+        mLogPrinter->print(LogLevel::eInfo, "IRender exit");
     }
 
     bool IPlatform::initWithParams(const PlatformCreationParams &params)

@@ -110,8 +110,8 @@ namespace Peach3D
         virtual void pauseAnimating() { mAnimating = false; }
         //! resume animating
         virtual void resumeAnimating() { mAnimating = true; }
-        /** Terminate application, it's needed to trigger exit in android and windesk. */
-        virtual void terminate() { mTerminating = true; mAnimating = false; }
+        /** Notify terminate application, also delete render resource. */
+        virtual void terminate();
 
         //! Get render window is renderable.
         virtual bool isRenderWindowValid() { return mRender->isRenderValid(); }
@@ -164,8 +164,6 @@ namespace Peach3D
     protected:
         // inherited platform save new window
         virtual void setWindow(void* window) { mCreationParams.window = window; }
-        /** Delete render dependency, delete EGL or something. */
-        virtual void deleteRenderDependency() {}
         
     protected:
         bool                mAnimating;             // application animate

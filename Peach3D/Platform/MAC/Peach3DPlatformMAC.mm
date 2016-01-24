@@ -168,6 +168,9 @@ namespace Peach3D
     
     void PlatformMAC::terminate()
     {
+        // stop render loop first
+        [mGLView pause];
+        // sign terminate and delete render
         IPlatform::terminate();
         // notify system terminate
         [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];

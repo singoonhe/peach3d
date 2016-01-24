@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/system_properties.h>
 #include "Peach3DUtils.h"
+#include "Peach3DEventDispatcher.h"
 #include "Peach3DPlatformAndroid.h"
 #include "Peach3DRenderGL.h"
 
@@ -77,11 +78,10 @@ namespace Peach3D
 {
     PlatformAndroid::~PlatformAndroid()
     {
-        // render will auto delete in IPlatform, so do nothing here
-    }
-
-    void PlatformAndroid::deleteRenderDependency()
-    {
+        // delete jobject
+        if (mClassLoader) {
+            mEnv->DeleteGlobalRef(mClassLoader);
+        }
         // delete EGL
         if (mDisplay != EGL_NO_DISPLAY) {
             eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -315,6 +315,9 @@ namespace Peach3D
 
     void PlatformAndroid::renderOneFrame(float lastFrameTime)
     {
+        if (!mAnimating) {
+            return;
+        }
         // calculate the fixed frame delay time
         static const long fixedFrameTime = 1000000000/mCreationParams.maxFPS;
         static const long multiFFT = 10 * fixedFrameTime;
@@ -348,6 +351,85 @@ namespace Peach3D
             // save current time
             mLastTime = nowNs;
         }
+    }
+
+    int32_t PlatformAndroid::onInputEvent(AInputEvent* event)
+    {
+        EventDispatcher* dispatcher = EventDispatcher::getSingletonPtr();
+        int32_t eventType = AInputEvent_getType(event);
+        if (eventType == AINPUT_EVENT_TYPE_MOTION) {
+            // deal with click event
+            size_t clickCount = AMotionEvent_getPointerCount(event);
+            int32_t clickAction = AMotionEvent_getAction(event);
+            int pointerIndex = -1;
+            // click event type
+            ClickEvent cEvent = ClickEvent::eScrollWheel;   // init with invalid event in andorid
+            switch( clickAction & AMOTION_EVENT_ACTION_MASK ) {
+                case AMOTION_EVENT_ACTION_POINTER_DOWN:
+                    pointerIndex = (clickAction & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+                case AMOTION_EVENT_ACTION_DOWN:
+                    cEvent = ClickEvent::eDown;
+                    break;
+                case AMOTION_EVENT_ACTION_MOVE:
+                    cEvent = ClickEvent::eDrag;
+                    break;
+                case AMOTION_EVENT_ACTION_POINTER_UP:
+                    pointerIndex = (clickAction & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+                case AMOTION_EVENT_ACTION_UP:
+                    cEvent = ClickEvent::eUp;
+                    break;
+                case AMOTION_EVENT_ACTION_CANCEL:
+                case AMOTION_EVENT_ACTION_OUTSIDE:
+                    cEvent = ClickEvent::eCancel;
+                    break;
+            }
+            std::vector<uint> clickIds;
+            std::vector<Vector2> poss;
+            const float screenHeight = mCreationParams.winSize.y;
+            if (pointerIndex >= 0 && (cEvent==ClickEvent::eDown || cEvent==ClickEvent::eUp)) {
+                int32_t clickId = AMotionEvent_getPointerId(event, pointerIndex);
+                float posx = AMotionEvent_getX(event, pointerIndex);
+                float posy = AMotionEvent_getY(event, pointerIndex);
+                clickIds.push_back(clickId+1);
+                poss.push_back(Vector2(posx, screenHeight - posy));
+                dispatcher->triggerClickEvent(cEvent, clickIds, poss);
+            }
+            else {
+                for (int i = 0; i < clickCount; ++i) {
+                    int32_t clickId = AMotionEvent_getPointerId(event, i);
+                    float posx = AMotionEvent_getX(event, i);
+                    float posy = AMotionEvent_getY(event, i);
+                    clickIds.push_back(clickId+1);
+                    poss.push_back(Vector2(posx, screenHeight - posy));
+                    dispatcher->triggerClickEvent(cEvent, clickIds, poss);
+                }
+            }
+            return 1;
+        }
+        else if (eventType == AINPUT_EVENT_TYPE_KEY)
+        {
+            // deal with key event
+            int32_t eventKey = AKeyEvent_getKeyCode(event);
+            // AKEY_STATE_UP or AKEY_STATE_DOWN
+            int32_t eventState = AKeyEvent_getAction(event);
+            KeyboardEvent keyEvent;
+            if (eventState == AKEY_EVENT_ACTION_DOWN) {
+                keyEvent = KeyboardEvent::eKeyDown;
+            }
+            else if (eventState == AKEY_EVENT_ACTION_UP) {
+                keyEvent = KeyboardEvent::eKeyUp;
+            }
+            KeyCode key;
+            if (eventKey == AKEYCODE_BACK) {
+                key = KeyCode::eBack;
+            }
+            else if (eventKey == AKEYCODE_MENU) {
+                key = KeyCode::eEnum;
+            }
+            dispatcher->triggerKeyboardEvent(keyEvent, key);
+            return 1;
+        }
+        return 0;
     }
 
     void PlatformAndroid::resumeAnimating()

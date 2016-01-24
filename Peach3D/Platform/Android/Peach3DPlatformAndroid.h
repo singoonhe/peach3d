@@ -30,6 +30,8 @@ namespace Peach3D
         //! calc delta time, reduce the times for render frame
         virtual void renderOneFrame(float lastFrameTime);
 
+        /** Deal with input event. */
+        int32_t onInputEvent(AInputEvent* event);
         //! is application terminate, it's needed to trigger exit in android
         virtual bool isTerminating() { return mTerminating; }
         //! is application animating, android render frame if animating
@@ -53,8 +55,6 @@ namespace Peach3D
     protected:
         /** Add extensions support, set render feature level */
         void addExtensionsSupport(IRender* render);
-        /** Delete EGL. */
-        void deleteRenderDependency();
 
     private:
         EGLDisplay mDisplay;

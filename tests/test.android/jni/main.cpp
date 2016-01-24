@@ -22,96 +22,21 @@
 #include <android_native_app_glue.h>
 #include "Android/Peach3DPlatformAndroid.h"
 #include "PlatformDelegate.h"
-#include "Peach3DEventDispatcher.h"
 
 using namespace Peach3D;
 /**
  * Process the next input event.
  */
-static int32_t system_handle_input(struct android_app* app, AInputEvent* event) 
+static int32_t system_handle_input(struct android_app* app, AInputEvent* event)
 {
     PlatformAndroid* platform = (struct PlatformAndroid*)app->userData;
-    EventDispatcher* dispatcher = EventDispatcher::getSingletonPtr();
-    int32_t eventType = AInputEvent_getType(event);
-    if (eventType == AINPUT_EVENT_TYPE_MOTION) {
-        // deal with click event
-        size_t clickCount = AMotionEvent_getPointerCount(event);
-        int32_t clickAction = AMotionEvent_getAction(event);
-        int pointerIndex = -1;
-        // click event type
-        ClickEvent cEvent = ClickEvent::eScrollWheel;   // init with invalid event in andorid
-        switch( clickAction & AMOTION_EVENT_ACTION_MASK ) {
-            case AMOTION_EVENT_ACTION_POINTER_DOWN:
-                pointerIndex = (clickAction & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-            case AMOTION_EVENT_ACTION_DOWN:
-                cEvent = ClickEvent::eDown;
-                break;
-            case AMOTION_EVENT_ACTION_MOVE:
-                cEvent = ClickEvent::eDrag;
-                break;
-            case AMOTION_EVENT_ACTION_POINTER_UP:
-                pointerIndex = (clickAction & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-            case AMOTION_EVENT_ACTION_UP:
-                cEvent = ClickEvent::eUp;
-                break;
-            case AMOTION_EVENT_ACTION_CANCEL:
-            case AMOTION_EVENT_ACTION_OUTSIDE:
-                cEvent = ClickEvent::eCancel;
-                break;
-        }
-        std::vector<uint> clickIds;
-        std::vector<Vector2> poss;
-        const float screenHeight = IPlatform::getSingleton().getCreationParams().winSize.y;
-        if (pointerIndex >= 0 && (cEvent==ClickEvent::eDown || cEvent==ClickEvent::eUp)) {
-            int32_t clickId = AMotionEvent_getPointerId(event, pointerIndex);
-            float posx = AMotionEvent_getX(event, pointerIndex);
-            float posy = AMotionEvent_getY(event, pointerIndex);
-            clickIds.push_back(clickId+1);
-            poss.push_back(Vector2(posx, screenHeight - posy));
-            dispatcher->triggerClickEvent(cEvent, clickIds, poss);
-        }
-        else {
-            for (int i = 0; i < clickCount; ++i) {
-                int32_t clickId = AMotionEvent_getPointerId(event, i);
-                float posx = AMotionEvent_getX(event, i);
-                float posy = AMotionEvent_getY(event, i);
-                clickIds.push_back(clickId+1);
-                poss.push_back(Vector2(posx, screenHeight - posy));
-                dispatcher->triggerClickEvent(cEvent, clickIds, poss);
-            }
-        }
-        return 1;
-    }
-    else if (eventType == AINPUT_EVENT_TYPE_KEY)
-    {
-        // deal with key event
-        int32_t eventKey = AKeyEvent_getKeyCode(event);
-        // AKEY_STATE_UP or AKEY_STATE_DOWN
-        int32_t eventState = AKeyEvent_getAction(event);
-        KeyboardEvent keyEvent;
-        if (eventState == AKEY_EVENT_ACTION_DOWN) {
-            keyEvent = KeyboardEvent::eKeyDown;
-        }
-        else if (eventState == AKEY_EVENT_ACTION_UP) {
-            keyEvent = KeyboardEvent::eKeyUp;
-        }
-        KeyCode key;
-        if (eventKey == AKEYCODE_BACK) {
-            key = KeyCode::eBack;
-        }
-        else if (eventKey == AKEYCODE_MENU) {
-            key = KeyCode::eEnum;
-        }
-        dispatcher->triggerKeyboardEvent(keyEvent, key);
-        return 1;
-    }
-    return 0;
+    return platform->onInputEvent(event);
 }
 
 /**
  * Process the next main command.
  */
-static void system_handle_cmd(struct android_app* app, int32_t cmd) 
+static void system_handle_cmd(struct android_app* app, int32_t cmd)
 {
     PlatformAndroid* platform = (struct PlatformAndroid*)app->userData;
     IAppDelegate* delegate = platform->getCreationParams().delegate;
@@ -145,7 +70,7 @@ static void system_handle_cmd(struct android_app* app, int32_t cmd)
  * android_native_app_glue.  It runs in its own thread, with its own
  * event loop for receiving input events and doing other things.
  */
-void android_main(struct android_app* state) 
+void android_main(struct android_app* state)
 {
     // Make sure glue isn't stripped.
     app_dummy();
@@ -155,7 +80,7 @@ void android_main(struct android_app* state)
     PlatformDelegate delegate;
     PlatformCreationParams params;
     // params.MSAA = 4;
-    // params.maxFramsePerSecond = 30.0f;
+    // params.maxFPS = 30.0f;
     params.delegate = &delegate;
     params.logPath = "pdtest.log";
     platform.initWithParams(params, state->activity, state->config);
