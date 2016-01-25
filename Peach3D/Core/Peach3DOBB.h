@@ -38,6 +38,8 @@ namespace Peach3D
     private:
         /** Calc cache scale matrix and translate matrix. */
         void calcCacheMatrix(const Vector3& min, const Vector3& max);
+        /** Check ray with min and max attributes. */
+        bool checkRayIntersect(const Vector3& pos, const Vector3& delta, const Vector3& min, const Vector3& max);
         
     private:
         Matrix4 mLocalMat;      // OBB cache scale and translate mat
