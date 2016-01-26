@@ -47,12 +47,6 @@ namespace Peach3D
         mTexRect = Rect(0.0f, 0.0f, 1.0f, 1.0f);
     }
     
-    bool Sprite::isNeedRender()
-    {
-        Peach3DAssert(mRenderTex, "Sprite can't render if texture is null!");
-        return Node::isNeedRender() && mRenderTex;
-    }
-    
     void Sprite::setTexture(ITexture* texture)
     {
         Peach3DAssert(texture, "Can't set null texture to sprite!");

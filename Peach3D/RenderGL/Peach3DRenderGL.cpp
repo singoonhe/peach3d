@@ -30,8 +30,8 @@ namespace Peach3D
         // renderer info
         std::string vendor = (const char*)glGetString(GL_VENDOR);
         Peach3DLog(LogLevel::eInfo, "Verdor: %s",vendor.c_str());
-        std::string renderer = (const char*)glGetString(GL_RENDERER);
-        Peach3DLog(LogLevel::eInfo, "Renderer: %s",renderer.c_str());
+        mVideoCard = (const char*)glGetString(GL_RENDERER);
+        Peach3DLog(LogLevel::eInfo, "Renderer: %s",mVideoCard.c_str());
         std::string version = (const char*)glGetString(GL_VERSION);
         Peach3DLog(LogLevel::eInfo, "Version: %s",version.c_str());
         // get support 

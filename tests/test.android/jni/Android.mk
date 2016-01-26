@@ -22,6 +22,7 @@ LOCAL_SRC_FILES := main.cpp \
 ../../source/TestScene.cpp \
 ../../source/TouchScene.cpp \
 ../../source/BaseScene.cpp \
+../../source/DeviceScene.cpp \
 ../../source/UIScene.cpp \
 ../../source/ActionScene.cpp \
 ../../source/MeshScene.cpp

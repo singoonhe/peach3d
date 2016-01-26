@@ -29,7 +29,7 @@ namespace Peach3D
         static Sprite* create(ITexture* tex, const Rect& coord=Rect(0.0f, 0.0f, 1.0f, 1.0f));
         
         /** Get is need rendering, not show if texture is nullptr. */
-        virtual bool isNeedRender();
+        virtual bool isNeedRender() { return Node::isNeedRender() && mRenderTex; }
         
         /** Show grayscale, this will use special program. */
         void setGrayscaleEnabled(bool enabled) { mIsGrayscale = enabled; }

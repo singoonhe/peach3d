@@ -149,6 +149,8 @@ namespace Peach3D
          * Notice: GL3 include OpenGL 3.x, OpenGL 4.x and OpenGL ES 3.0, GL2 define for OpenGL 2.x and OpenGL ES 2.0.
          */
         RenderFeatureLevel getRenderFeatureLevel() { return mFeatureLevel; }
+        /** Return current device model name. */
+        std::string getDeviceName() {return mDeviceModel;}
         /** Return current local language type, it's set in PlatformXXX. */
         LanguageType getLocalLanguage() {return mLocalLanguage;}
         /** Return current OS version string, it's set in PlatformXXX */

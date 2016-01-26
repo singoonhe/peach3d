@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1813BB741B78F23300023159 /* restart_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1813BB731B78F23300023159 /* restart_normal.png */; };
 		1813BB751B78F23300023159 /* restart_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1813BB731B78F23300023159 /* restart_normal.png */; };
+		182181851C579FBD00635EFE /* DeviceScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 182181831C579FBD00635EFE /* DeviceScene.cpp */; };
+		182181861C579FBD00635EFE /* DeviceScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 182181831C579FBD00635EFE /* DeviceScene.cpp */; };
 		184107061B6CAD4B005133E2 /* BaseScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184107041B6CAD4B005133E2 /* BaseScene.cpp */; };
 		184107071B6CAD4B005133E2 /* BaseScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 184107041B6CAD4B005133E2 /* BaseScene.cpp */; };
 		184107091B6CAE94005133E2 /* exit_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 184107081B6CAE94005133E2 /* exit_normal.png */; };
@@ -111,6 +113,8 @@
 
 /* Begin PBXFileReference section */
 		1813BB731B78F23300023159 /* restart_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = restart_normal.png; sourceTree = "<group>"; };
+		182181831C579FBD00635EFE /* DeviceScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceScene.cpp; sourceTree = "<group>"; };
+		182181841C579FBD00635EFE /* DeviceScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceScene.h; sourceTree = "<group>"; };
 		184106FC1B6B8E2D005133E2 /* BaseSample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSample.h; sourceTree = "<group>"; };
 		184107041B6CAD4B005133E2 /* BaseScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseScene.cpp; sourceTree = "<group>"; };
 		184107051B6CAD4B005133E2 /* BaseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseScene.h; sourceTree = "<group>"; };
@@ -353,6 +357,8 @@
 				184106FC1B6B8E2D005133E2 /* BaseSample.h */,
 				184107041B6CAD4B005133E2 /* BaseScene.cpp */,
 				184107051B6CAD4B005133E2 /* BaseScene.h */,
+				182181831C579FBD00635EFE /* DeviceScene.cpp */,
+				182181841C579FBD00635EFE /* DeviceScene.h */,
 				184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */,
 				184C3BBF1C3AB6E20073B598 /* MeshScene.h */,
 				18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */,
@@ -533,6 +539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				182181851C579FBD00635EFE /* DeviceScene.cpp in Sources */,
 				184107131B6CBCAD005133E2 /* UIScene.cpp in Sources */,
 				184C3BC01C3AB6E20073B598 /* MeshScene.cpp in Sources */,
 				188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */,
@@ -549,6 +556,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				182181861C579FBD00635EFE /* DeviceScene.cpp in Sources */,
 				184107141B6CBCAD005133E2 /* UIScene.cpp in Sources */,
 				184C3BC11C3AB6E20073B598 /* MeshScene.cpp in Sources */,
 				188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */,

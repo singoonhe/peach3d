@@ -11,13 +11,15 @@
 #include "ActionScene.h"
 #include "MeshScene.h"
 #include "TouchScene.h"
+#include "DeviceScene.h"
 
 struct SceneLinker {
     std::string title;
     std::function<IScene*()> callback;
 };
 
-std::vector<SceneLinker> gTestSceneList = {{"UI Test", []()->BaseScene* {return new UIScene();}},
+std::vector<SceneLinker> gTestSceneList = {{"Device Test", []()->BaseScene* {return new DeviceScene();}},
+    {"UI Test", []()->BaseScene* {return new UIScene();}},
     {"Actions Test", []()->BaseScene* {return new ActionScene();}},
     {"Mesh Test", []()->BaseScene* {return new MeshScene();}},
     {"Touch Test", []()->BaseScene* {return new TouchScene();}}};
@@ -30,7 +32,7 @@ bool TestScene::init()
     Widget* rootWidget = SceneManager::getSingleton().getRootWidget();
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     // create function title
-    float labelHeight = 35.0f * LayoutManager::getSingleton().getMinScale();
+    float labelHeight = 45.0f * LayoutManager::getSingleton().getMinScale();
     for (size_t i = 0; i < gTestSceneList.size(); ++i) {
         Label* testLabel = Label::create(gTestSceneList[i].title.c_str(), labelHeight);
         testLabel->setAnchorPoint(Vector2(0.5f, 1.0f));

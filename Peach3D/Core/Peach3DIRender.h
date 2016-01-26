@@ -25,8 +25,11 @@ namespace Peach3D
         virtual ~IRender() {}
         // init render, set view port
         virtual bool initRender(const Vector2& size);
-        //! return render state
+        /** Return render state. */
         bool isRenderValid() { return mIsRenderValid; }
+        /** Return render video card name. */
+        const std::string& getVideoCard() { return mVideoCard; }
+        
         // clear old frame before render
         virtual void prepareForRender() = 0;
         // open depth test...
@@ -66,10 +69,11 @@ namespace Peach3D
         virtual void deleteProgram(IProgram* program) { delete program; }
         
     protected:
-        bool      mIsRenderValid;       // render is init?
-        Color4    mRenderClearColor;    // default render clear color is Color4Gray
-        Color4    mOBBColor;            // OBB lines render color
-        float     mLineWidth;           // draw line width, include OBB
+        bool        mIsRenderValid;     // render is init?
+        Color4      mRenderClearColor;  // default render clear color is Color4Gray
+        Color4      mOBBColor;          // OBB lines render color
+        float       mLineWidth;         // draw line width, include OBB
+        std::string mVideoCard;         // current video card name, need assigned in RenderXX
         
         friend class        ResourceManager;
         friend class        SceneManager;
