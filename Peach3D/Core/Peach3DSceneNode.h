@@ -103,10 +103,6 @@ namespace Peach3D
         
         /* Update rendering attributes, about world rect/rotate/scale... */
         virtual void updateRenderingAttributes(float lastFrameTime);
-        /** Will be discard */
-        virtual std::string getRenderStateString() {return "";}
-        /** Will be discard */
-        virtual void setPresetProgram() {}
         
     private:
         Mesh*           mAttachedMesh;  // attached object

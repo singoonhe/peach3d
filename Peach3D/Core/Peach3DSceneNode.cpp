@@ -222,10 +222,7 @@ namespace Peach3D
     
     void SceneNode::updateRenderingAttributes(float lastFrameTime)
     {
-        if (mIsRenderDirty) {
-            // reset is need rendering
-            mNeedRender = mNeedRender && mAttachedMesh;
-            
+        if (mIsRenderDirty) {            
             // update world position and world scale
             mWorldPosition = mPosition;
             mWorldScale = mScale;

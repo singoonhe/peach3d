@@ -82,10 +82,6 @@ namespace Peach3D
         
         /* Update rendering attributes. */
         virtual void updateRenderingAttributes(float lastFrameTime) = 0;
-        /** Get render state calc hash string. */
-        virtual std::string getRenderStateString() = 0;
-        /** Get preset program when not set program. */
-        virtual void setPresetProgram() = 0;
         
         /** Sign node need deleted next frame. */
         void signNeedDeleted(bool needClean) { mSignDeleted = true; mSignClean = needClean; }

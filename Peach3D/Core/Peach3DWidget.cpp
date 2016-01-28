@@ -198,6 +198,7 @@ namespace Peach3D
         }
         
         // calc render hash code
+        // current program may not ready, so can't use isNeedRender()
         if (mIsRenderHashDirty && mNeedRender) {
             // set program first
             setPresetProgram();
