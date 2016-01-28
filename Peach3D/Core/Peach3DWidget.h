@@ -59,18 +59,16 @@ namespace Peach3D
         const Vector2& getAnchorPoint()const {return mAnchor;}
         
         /** get is need rendering */
-        virtual bool isNeedRender() {return mNeedRender && mRenderProgram;}
+        virtual bool isNeedRender() {return Node::isNeedRender() && mRenderProgram && (mDiffColor.a > FLT_EPSILON);}
         /** Get render hash. */
         uint getRenderStateHash()const {return mRenderStateHash;}
         
         void useProgramForRender(IProgram* program);
         IProgram* getProgramForRender() {return mRenderProgram;}
-        /** Set diffuse color. */
-        virtual void setColor(const Color4& color) {mDiffColor = color; Node::setAlpha(color.a);}
-        /** Get diffuse color. */
-        const Color4& getColor()const {return mDiffColor;}
-        /** Set alpha. */
-        virtual void setAlpha(float alpha) {Node::setAlpha(alpha); mDiffColor.a = alpha;}
+        virtual void setColor(const Color4& color) { mDiffColor = color; }
+        const Color4& getColor()const { return mDiffColor; }
+        void setAlpha(float alpha) { mDiffColor.a = alpha; }
+        float getAlpha() { return mDiffColor.a; }
         
         /** Set clip enabled by parent. */
         void setClipEnabled(bool enable) {mClipEnabled = enable;}

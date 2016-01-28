@@ -24,6 +24,8 @@ namespace Peach3D
         oneAction->setAdded();  \
     }
     
+    /************************************** Base Actions *************************************/
+    
     Spawn* Spawn::createList(IAction* oneAction, ...)
     {
         std::vector<IAction*> actionList;
@@ -145,8 +147,6 @@ namespace Peach3D
         }
     }
     
-    /************************************** Time Actions *************************************/
-    
     void Delay::update(ActionImplement* target, float lastFrameTime)
     {
         if (!mIsFinished && mTotleTime > 0.0f) {
@@ -157,9 +157,11 @@ namespace Peach3D
         }
     }
     
+    /************************************** 2D Actions ***************************************/
+    
     void FadeIn::update(ActionImplement* target, float lastFrameTime)
     {
-        Node* nNode = dynamic_cast<Node*>(target);
+        Widget* nNode = dynamic_cast<Widget*>(target);
         if (!mIsFinished && nNode && mTotleTime > 0.0f) {
             float curAlpha = nNode->getAlpha();
             float nomalDis = (mFinalAlpha - curAlpha) / (mTotleTime - mCurTime);
@@ -173,8 +175,6 @@ namespace Peach3D
             nNode->setAlpha(curAlpha);
         }
     }
-    
-    /************************************** 2D Actions ***************************************/
     
     void MoveBy2D::update(ActionImplement* target, float lastFrameTime)
     {

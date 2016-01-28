@@ -14,6 +14,7 @@ bool UIScene::init()
     mSampleList.push_back([]()->BaseSample* {return new WidgetSample();});
     mSampleList.push_back([]()->BaseSample* {return new LabelSample();});
     mSampleList.push_back([]()->BaseSample* {return new ButtonSample();});
+    mSampleList.push_back([]()->BaseSample* {return new LayoutSample();});
     
     // init base scene
     BaseScene::init();
@@ -132,4 +133,28 @@ void ButtonSample::init(Widget* parentWidget)
     scaleTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, screenSize.y / 4.0f));
     scaleTitleButton->setClickEnabled(false);
     parentWidget->addChild(scaleTitleButton);
+}
+
+void LayoutSample::init(Widget* parentWidget)
+{
+    mChangeButton = nullptr;
+    mNoticeLabel = nullptr;
+    mLogoSprite = nullptr;
+    // set title and desc
+    mTitle = "Layout Sample";
+    mDesc = "Layout loading and variables binding, check \"Peach3DLayoutManager.cpp\" for more";
+    // load layout file
+    LayoutManager::getSingleton().loadLayout("testlayout.xml", parentWidget, [&](const std::string& name, Widget* widget) {
+        LAYOUT_BIND_NAME_VARIATE("LogoSprite", mLogoSprite, name, widget)
+        LAYOUT_BIND_NAME_VARIATE("NoticeLabel", mNoticeLabel, name, widget)
+        LAYOUT_BIND_NAME_VARIATE("ChangeButton", mChangeButton, name, widget)
+    }, [&](const std::string& name) {
+        if (mChangeButton && mNoticeLabel && mLogoSprite) {
+            mChangeButton->setClickedAction([&](ClickEvent, const Vector2&){
+                bool curGray = !mLogoSprite->isGrayscaleEnabled();
+                mLogoSprite->setGrayscaleEnabled(curGray);
+                mNoticeLabel->setText(curGray ? "Logo show gray!" : "Logo show normal!");
+            });
+        }
+    });
 }

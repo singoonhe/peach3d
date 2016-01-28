@@ -110,7 +110,7 @@ namespace Peach3D
             isNeedVisible = pNode->getVisible();
             pNode = pNode->getParentNode();
         }
-        mNeedRender = isNeedVisible && (mAlpha > FLT_EPSILON);
+        mNeedRender = isNeedVisible;
         
         // update render attributes
         // Notice: function "updateRenderingAttributes" may change render state.

@@ -38,4 +38,13 @@ private:
     Widget* mParentWidget;
 };
 
+class LayoutSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+private:
+    Button* mChangeButton;
+    Label*  mNoticeLabel;
+    Sprite* mLogoSprite;
+};
+
 #endif /* defined(UI_SCENE_H) */

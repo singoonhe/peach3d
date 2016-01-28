@@ -89,6 +89,8 @@
 		18D756031A5AA54E00635CD1 /* common_highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D755FE1A5AA54E00635CD1 /* common_highlight.png */; };
 		18D756041A5AA54E00635CD1 /* common_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D755FF1A5AA54E00635CD1 /* common_normal.png */; };
 		18D756051A5AA54E00635CD1 /* common_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D755FF1A5AA54E00635CD1 /* common_normal.png */; };
+		18E94CDD1C5A360F00F448D8 /* testlayout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18E94CDC1C5A360F00F448D8 /* testlayout.xml */; };
+		18E94CDE1C5A360F00F448D8 /* testlayout.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18E94CDC1C5A360F00F448D8 /* testlayout.xml */; };
 		18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18F439EA1B72495E00D9B788 /* ActionScene.cpp */; };
 		18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18F439EA1B72495E00D9B788 /* ActionScene.cpp */; };
 		18F9F4D719C5E5640023C83B /* PlatformDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */; };
@@ -178,6 +180,7 @@
 		18D755FD1A5AA54E00635CD1 /* common_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_down.png; sourceTree = "<group>"; };
 		18D755FE1A5AA54E00635CD1 /* common_highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_highlight.png; sourceTree = "<group>"; };
 		18D755FF1A5AA54E00635CD1 /* common_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_normal.png; sourceTree = "<group>"; };
+		18E94CDC1C5A360F00F448D8 /* testlayout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = testlayout.xml; sourceTree = "<group>"; };
 		18F31C1F19B5D8B00089E78E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		18F439EA1B72495E00D9B788 /* ActionScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActionScene.cpp; sourceTree = "<group>"; };
 		18F439EB1B72495E00D9B788 /* ActionScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionScene.h; sourceTree = "<group>"; };
@@ -338,6 +341,7 @@
 				185ED1C61B70E10A0012667B /* press_highlight.png */,
 				185ED1C71B70E10A0012667B /* press_normal.png */,
 				1813BB731B78F23300023159 /* restart_normal.png */,
+				18E94CDC1C5A360F00F448D8 /* testlayout.xml */,
 				18B2AB6219E7AD910041AC1E /* texcube.mtl */,
 				18B2AB6319E7AD910041AC1E /* texcube.obj */,
 				18B2AB6A19E7BE770041AC1E /* texcubeShader.fsh */,
@@ -482,6 +486,7 @@
 				187CF64619C72A5900C8094C /* Credits.rtf in Resources */,
 				184962CF1C4A42B100304991 /* peach.png in Resources */,
 				189B0F5D19EE56C60080C7A6 /* widgetShader.fsh in Resources */,
+				18E94CDD1C5A360F00F448D8 /* testlayout.xml in Resources */,
 				18B2AB6619E7AD910041AC1E /* texcube.obj in Resources */,
 				185ED1CA1B70E10A0012667B /* press_highlight.png in Resources */,
 				189B0F5F19EE56C60080C7A6 /* widgetShader.vsh in Resources */,
@@ -525,6 +530,7 @@
 				185ED1D31B70EE440012667B /* peach3d_icon.png in Resources */,
 				187CF60C19C7019000C8094C /* Images.xcassets in Resources */,
 				1841070A1B6CAE94005133E2 /* exit_normal.png in Resources */,
+				18E94CDE1C5A360F00F448D8 /* testlayout.xml in Resources */,
 				184962D41C4A8ADC00304991 /* peach.png in Resources */,
 				18D756051A5AA54E00635CD1 /* common_normal.png in Resources */,
 				18B2AB6F19E7BE770041AC1E /* texcubeShader.vsh in Resources */,

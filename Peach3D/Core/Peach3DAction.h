@@ -34,6 +34,8 @@ namespace Peach3D
         bool mIsAdded;      // sign is added to ActionImplement, avoid a Action add twice
     };
     
+    /************************************** Base Actions ***************************************/
+    
     class PEACH3D_DLL Spawn : public IAction
     {
     public:
@@ -90,8 +92,6 @@ namespace Peach3D
         std::function<void()> mCallBackFunc;
     };
     
-    /************************************** Time Actions ***************************************/
-    
     class PEACH3D_DLL Delay : public IAction
     {
     public:
@@ -106,6 +106,8 @@ namespace Peach3D
         float   mTotleTime;
         float   mCurTime;
     };
+    
+    /************************************** 2D Actions ***************************************/
     
     class PEACH3D_DLL FadeIn : public Delay
     {
@@ -129,8 +131,6 @@ namespace Peach3D
     protected:
         FadeOut(float finalAlpha, float time) : FadeIn(finalAlpha, time) {}
     };
-    
-    /************************************** 2D Actions ***************************************/
     
     class PEACH3D_DLL MoveBy2D : public Delay
     {
