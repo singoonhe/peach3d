@@ -29,6 +29,8 @@ namespace Peach3D
         CursorManager();
         /** Return is cursor current enabled. */
         bool isCursorEnabled() { return mIsCursorEnabled; }
+        /** This need be called when device mouse plug-in or plug-out, user can't call it directly. */
+        void setCursorEnabled(bool enabled) { mIsCursorEnabled = enabled; }
         
         /** Set multi status texture use combination sign "|", default cursor will show before texture set. */
         void setTextureForStatus(ITexture* tex, uint status);
@@ -45,8 +47,6 @@ namespace Peach3D
         void updateCursorPosition(const Vector2& pos);
         
     private:
-        /** This need be called when device mouse plug-in or plug-out. */
-        void setCursorEnabled(bool enabled) { mIsCursorEnabled = enabled; }
         // set current button show status
         void setButtonShowStatus(uint status);
         /** Get texture and rect index for show status. */
@@ -59,8 +59,6 @@ namespace Peach3D
         uint        mCurStatus;
         ITexture*   mStatusTexs[CursorState::Count];
         Rect        mStatusTexRects[CursorState::Count];
-        
-        friend class        IPlatform;
     };
 }
 
