@@ -18,6 +18,9 @@
 
 namespace Peach3D
 {
+    // bigger than this zorder widget will not be clear when SceneManager::reset.
+#define NOT_CLEAR_WIDGET_ZORDER (std::numeric_limits<int>::max() - 100)
+    
     class PEACH3D_DLL Widget : public Node
     {
     public:

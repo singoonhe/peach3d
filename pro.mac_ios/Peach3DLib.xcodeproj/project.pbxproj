@@ -141,6 +141,9 @@
 		18BE16C41C451F4F000592A4 /* Peach3DOBB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16C21C451F4F000592A4 /* Peach3DOBB.cpp */; };
 		18BE16C51C451F4F000592A4 /* Peach3DOBB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16C21C451F4F000592A4 /* Peach3DOBB.cpp */; };
 		18BE16C61C451F4F000592A4 /* Peach3DOBB.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BE16C31C451F4F000592A4 /* Peach3DOBB.h */; };
+		18E94CED1C5B05FF00F448D8 /* Peach3DCursorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18E94CEB1C5B05FF00F448D8 /* Peach3DCursorManager.cpp */; };
+		18E94CEE1C5B05FF00F448D8 /* Peach3DCursorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18E94CEB1C5B05FF00F448D8 /* Peach3DCursorManager.cpp */; };
+		18E94CEF1C5B05FF00F448D8 /* Peach3DCursorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 18E94CEC1C5B05FF00F448D8 /* Peach3DCursorManager.h */; };
 		18EB6EDB1A636D8A00811B80 /* Peach3DLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18EB6ED91A636D8A00811B80 /* Peach3DLabel.cpp */; };
 		18EB6EDC1A636D8A00811B80 /* Peach3DLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18EB6ED91A636D8A00811B80 /* Peach3DLabel.cpp */; };
 		18EB6EDD1A636D8A00811B80 /* Peach3DLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 18EB6EDA1A636D8A00811B80 /* Peach3DLabel.h */; };
@@ -285,6 +288,8 @@
 		18BE16A91C3E9081000592A4 /* pdPosColorUVShader3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdPosColorUVShader3D.h; sourceTree = "<group>"; };
 		18BE16C21C451F4F000592A4 /* Peach3DOBB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DOBB.cpp; sourceTree = "<group>"; };
 		18BE16C31C451F4F000592A4 /* Peach3DOBB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DOBB.h; sourceTree = "<group>"; };
+		18E94CEB1C5B05FF00F448D8 /* Peach3DCursorManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DCursorManager.cpp; sourceTree = "<group>"; };
+		18E94CEC1C5B05FF00F448D8 /* Peach3DCursorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DCursorManager.h; sourceTree = "<group>"; };
 		18EB6ED91A636D8A00811B80 /* Peach3DLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DLabel.cpp; sourceTree = "<group>"; };
 		18EB6EDA1A636D8A00811B80 /* Peach3DLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DLabel.h; sourceTree = "<group>"; };
 		18EB6EE41A6415C700811B80 /* Peach3DTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peach3DTypes.h; sourceTree = "<group>"; };
@@ -416,6 +421,8 @@
 				18ACF49C19D543140020F943 /* Peach3DCamera.h */,
 				18ACF49D19D543140020F943 /* Peach3DColor4.h */,
 				18ACF49E19D543140020F943 /* Peach3DCompile.h */,
+				18E94CEB1C5B05FF00F448D8 /* Peach3DCursorManager.cpp */,
+				18E94CEC1C5B05FF00F448D8 /* Peach3DCursorManager.h */,
 				184CCB1C1A1759A50088CDEF /* Peach3DEventDispatcher.cpp */,
 				184CCB1D1A1759A50088CDEF /* Peach3DEventDispatcher.h */,
 				18ACF4A019D543140020F943 /* Peach3DIAppDelegate.h */,
@@ -638,6 +645,7 @@
 				18ACF50B19D543140020F943 /* Peach3DNode.h in Headers */,
 				18ACF53A19D543140020F943 /* Peach3DRenderGL.h in Headers */,
 				18ACF4F219D543140020F943 /* Peach3DIProgram.h in Headers */,
+				18E94CEF1C5B05FF00F448D8 /* Peach3DCursorManager.h in Headers */,
 				18B564611C3513E50043E3C9 /* Peach3DRenderNode.h in Headers */,
 				18ACF4F619D543140020F943 /* Peach3DIScene.h in Headers */,
 				18B4F6E219F3F63C009D3A64 /* Peach3DButton.h in Headers */,
@@ -769,6 +777,7 @@
 				18ACF4F319D543140020F943 /* Peach3DIRender.cpp in Sources */,
 				1895828D1AFB2DAC00936092 /* Peach3DActionImplement.cpp in Sources */,
 				18ACF51219D543140020F943 /* Peach3DSceneManager.cpp in Sources */,
+				18E94CED1C5B05FF00F448D8 /* Peach3DCursorManager.cpp in Sources */,
 				18B4F6E019F3F63C009D3A64 /* Peach3DButton.cpp in Sources */,
 				185D82511B0884C00034F25E /* Peach3DWorldManager.cpp in Sources */,
 				18ACF4EA19D543140020F943 /* Peach3DIObject.cpp in Sources */,
@@ -815,6 +824,7 @@
 				18ACF51319D543140020F943 /* Peach3DSceneManager.cpp in Sources */,
 				1895828E1AFB2DAC00936092 /* Peach3DActionImplement.cpp in Sources */,
 				18ACF52619D543140020F943 /* Peach3DPlatformIOS.mm in Sources */,
+				18E94CEE1C5B05FF00F448D8 /* Peach3DCursorManager.cpp in Sources */,
 				18B4F6E119F3F63C009D3A64 /* Peach3DButton.cpp in Sources */,
 				185D82521B0884C00034F25E /* Peach3DWorldManager.cpp in Sources */,
 				18ACF4EB19D543140020F943 /* Peach3DIObject.cpp in Sources */,

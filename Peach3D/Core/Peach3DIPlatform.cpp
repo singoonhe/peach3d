@@ -13,6 +13,7 @@
 #include "Peach3DIScene.h"
 #include "Peach3DEventDispatcher.h"
 #include "Peach3DLayoutManager.h"
+#include "Peach3DCursorManager.h"
 
 namespace Peach3D
 {
@@ -20,7 +21,7 @@ namespace Peach3D
     
     IPlatform::IPlatform() :mRender(nullptr), mCurrentFPS(0), mDrawCount(0), mTriangleCount(0), mAnimating(false), mTerminating(false),
     mResourceMgr(nullptr), mFeatureLevel(RenderFeatureLevel::eUnkonw), mSceneManager(nullptr), mEventDispatcher(nullptr),
-    mActiveScene(nullptr), mIsDrawStats(false), mLocalLanguage(LanguageType::eUnknow), mLayoutManager(nullptr)
+    mActiveScene(nullptr), mIsDrawStats(false), mLocalLanguage(LanguageType::eUnknow), mLayoutManager(nullptr), mCursorManager(nullptr)
     {
     }
 
@@ -52,6 +53,8 @@ namespace Peach3D
         mAnimating = false;
         
         /** Delete render resource, ~IPlatform may EGL invalid. */
+        // delete cursor manager before scene manager, it handle sprite.
+        delete mCursorManager;
         // delete scene manager
         delete mSceneManager;
         mLogPrinter->print(LogLevel::eInfo, "Scene manager exit");
@@ -87,6 +90,8 @@ namespace Peach3D
         mEventDispatcher = new EventDispatcher();
         // create layout manager
         mLayoutManager = new LayoutManager();
+        // create cursor manager
+        mCursorManager = new CursorManager();
 
         return true;
     }

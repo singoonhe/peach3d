@@ -9,6 +9,7 @@
 #include "Peach3DButton.h"
 #include "Peach3DIPlatform.h"
 #include "Peach3DResourceManager.h"
+#include "Peach3DCursorManager.h"
 
 namespace Peach3D
 {
@@ -190,7 +191,8 @@ namespace Peach3D
                 }
             };
             mEventFuncMap[ClickEvent::eUp] = [&](ClickEvent event, const Vector2& pos) {
-                setButtonShowStatus(ButtonState::Highlight);
+                uint upState = (CursorManager::getSingleton().isCursorEnabled() ? ButtonState::Highlight : ButtonState::Normal);
+                setButtonShowStatus(upState);
                 if (mButtonFuncMap.find(ClickEvent::eUp) != mButtonFuncMap.end()) {
                     mButtonFuncMap[ClickEvent::eUp](event, pos);
                 }

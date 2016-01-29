@@ -11,6 +11,7 @@
 #include "Peach3DPlatformMAC.h"
 #include "Peach3DRenderGL.h"
 #include "Peach3DResourceManager.h"
+#include "Peach3DCursorManager.h"
 
 namespace Peach3D
 {
@@ -137,6 +138,10 @@ namespace Peach3D
             // add default search file dir
             NSString * path = [[NSBundle mainBundle] resourcePath];
             ResourceManager::getSingleton().addSearchDirectory([path UTF8String]);
+            
+            // MAC enable cursor always
+            // cursor will not be created if no texture
+            CursorManager::getSingleton().setCursorEnabled(true);
             
             // notify IAppDelegate launch finished
             userSuccess = mCreationParams.delegate->appDidFinishLaunching();

@@ -92,7 +92,7 @@ namespace Peach3D
         mRootSceneNode->deleteAllChildren();
         // delete all widget except DebugWidget
         mRootWidget->tranverseChildNode([&](size_t, Node* child){
-            if (child != mDebugDrawNode) {
+            if (static_cast<Widget*>(child)->getLocalZOrder() < NOT_CLEAR_WIDGET_ZORDER) {
                 mRootWidget->deleteChild(child);
             }
         });
@@ -107,7 +107,7 @@ namespace Peach3D
             mDebugDrawNode = Label::create("FPS: 0\nDraw count: 0\nTriangle count: 0", 14);
             mDebugDrawNode->setAnchorPoint(Vector2Zero);
             mDebugDrawNode->setPosition(Vector2Zero);
-            mDebugDrawNode->setLocalZOrder(std::numeric_limits<int>::max());
+            mDebugDrawNode->setLocalZOrder(NOT_CLEAR_WIDGET_ZORDER);
             // add to root widget
             mRootWidget->addChild(mDebugDrawNode);
             

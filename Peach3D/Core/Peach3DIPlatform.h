@@ -80,6 +80,7 @@ namespace Peach3D
     class SceneManager;
     class ResourceManager;
     class LayoutManager;
+    class CursorManager;
     class PEACH3D_DLL IPlatform : public Singleton < IPlatform >
     {
     public:
@@ -182,6 +183,7 @@ namespace Peach3D
         ResourceManager*    mResourceMgr;           // resource manager, singleton variant
         EventDispatcher*    mEventDispatcher;       // event dispatcher, such as touch/keyboard/mouse. singleton variant
         LayoutManager*      mLayoutManager;         // layout manager, use to load UI xml. singleton variant
+        CursorManager*      mCursorManager;         // manage cursor state
         
         RenderFeatureLevel  mFeatureLevel;          // render feature level, OpenGL3 and OpenGL2 use diff GLSL
         LanguageType        mLocalLanguage;         // save local language type, set by PlatformXXX.
