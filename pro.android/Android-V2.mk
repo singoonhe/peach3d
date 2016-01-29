@@ -10,6 +10,7 @@ LOCAL_SRC_FILES := \
 Core/Peach3DAction.cpp \
 Core/Peach3DActionImplement.cpp \
 Core/Peach3DCamera.cpp \
+Core/Peach3DCursorManager.cpp \
 Core/Peach3DEventDispatcher.cpp \
 Core/Peach3DIObject.cpp \
 Core/Peach3DIPlatform.cpp \
