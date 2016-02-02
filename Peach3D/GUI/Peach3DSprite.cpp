@@ -119,22 +119,15 @@ namespace Peach3D
         setClickEnabled(true);
     }
     
-    std::string Sprite::getRenderStateString()
+    void Sprite::updateRenderingState(const std::string& extState)
     {
-        // add flip by scale and textures name to calc hash
-        // Notice: complete flip effect using shader
-        std::string wsStr = Widget::getRenderStateString();
-        if (mRenderTex) {
-            wsStr = wsStr + mRenderTex->getName();
-        }
-        return wsStr;
-    }
-    
-    void Sprite::setPresetProgram()
-    {
-        // set default program
-        if (!mRenderProgram) {
-            mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorUVVerShader2D", "PosColorUVFragShader2D");
+        if (mIsRenderHashDirty) {
+            // set default program, then Widget::updateRenderingState will not change it
+            if (!mRenderProgram) {
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorUVVerShader2D", "PosColorUVFragShader2D");
+            }
+            // sprite will not render if texture is null
+            Widget::updateRenderingState(mRenderTex ? mRenderTex->getName() : "");
         }
     }
 }

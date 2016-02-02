@@ -172,16 +172,19 @@ namespace Peach3D
         return inZoom;
     }
     
-    std::string Widget::getRenderStateString()
+    void Widget::updateRenderingState(const std::string& extState)
     {
-        return Utils::formatString("Program:%u", mRenderProgram->getProgramId());
-    }
-    
-    void Widget::setPresetProgram()
-    {
-        // set default program
-        if (!mRenderProgram) {
-            mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorVerShader2D", "PosColorFragShader2D");
+        // calc render hash code
+        // current program may not ready, so can't use isNeedRender()
+        if (mIsRenderHashDirty && mNeedRender) {
+            // set default program if user or subclass not set
+            if (!mRenderProgram) {
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorVerShader2D", "PosColorFragShader2D");
+            }
+            
+            std::string states = extState + Utils::formatString("Program:%u", mRenderProgram->getProgramId());
+            mRenderStateHash = XXH32((void*)states.c_str(), (int)states.size(), 0);
+            mIsRenderHashDirty = false;
         }
     }
     
@@ -195,17 +198,6 @@ namespace Peach3D
                 return wa->getLocalZOrder() < wb->getLocalZOrder();
             });
             mChildNeedSort = false;
-        }
-        
-        // calc render hash code
-        // current program may not ready, so can't use isNeedRender()
-        if (mIsRenderHashDirty && mNeedRender) {
-            // set program first
-            setPresetProgram();
-            
-            std::string states = getRenderStateString();
-            mRenderStateHash = XXH32((void*)states.c_str(), (int)states.size(), 0);
-            mIsRenderHashDirty = false;
         }
         
         if (mIsRenderDirty) {
@@ -239,5 +231,8 @@ namespace Peach3D
             
             mIsRenderDirty = false;
         }
+        
+        // update render state
+        updateRenderingState();
     }
 }

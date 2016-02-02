@@ -60,8 +60,8 @@ namespace Peach3D
         Label() : mIsTexDirty(true), mClickedFunc(nullptr), mVAlign(TextVAlignment::eBottom),mHAlign(TextHAlignment::eLeft),mFontSize(0.0f), mFillColor(1.0f, 1.0f, 1.0f, 1.0f), mIsDimUserAssigned(false), mImageVAlign(TextVAlignment::eCenter) { mIsAutoResize = false; }
         virtual ~Label();
         
-        /* Format text and update info. */
-        virtual void updateRenderingAttributes(float lastFrameTime);
+        /** Format text and update render state. */
+        virtual void updateRenderingState(const std::string& extState="");
         
         // deal label clicked event
         void addLabelClickedEventFunc();

@@ -57,10 +57,8 @@ namespace Peach3D
         Sprite();
         virtual ~Sprite() {}
         
-        /** Get render state calc hash content, it's decide will instancing render. */
-        virtual std::string getRenderStateString();
-        /** Get preset program when not set program. */
-        virtual void setPresetProgram();
+        /** Update rendering state, preset program and calculate hash code. */
+        virtual void updateRenderingState(const std::string& extState="");
         
     protected:
         bool        mIsUse9Scale;   // is need scale 9 type

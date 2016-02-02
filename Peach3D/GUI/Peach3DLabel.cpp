@@ -220,16 +220,19 @@ namespace Peach3D
             
             // need update render state and hash code (texture changed)
             mIsRenderDirty = true;
+            // render hash code also need recalc because texture changed
+            mIsRenderHashDirty = true;
             // set format over
             mIsTexDirty = false;
         }
     }
     
-    void Label::updateRenderingAttributes(float lastFrameTime)
+    void Label::updateRenderingState(const std::string& extState)
     {
-        Sprite::updateRenderingAttributes(lastFrameTime);
-        // create label texure after render status
+        // create label texure, mWorldScale is need here
         formatText();
+        // current texture is ready, then update render state
+        Sprite::updateRenderingState();
     }
     
     bool Label::convertStringToColor4(const std::string& colorString, Color4* outColor)
