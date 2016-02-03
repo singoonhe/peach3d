@@ -41,8 +41,10 @@ namespace Peach3D
         virtual void pauseAnimating();
         //! resume animating
         virtual void resumeAnimating();
-        /** Terminate application */
+        /** Notify system terminate, exit engine in PlatformMAC::exitEngine(). */
         virtual void terminate();
+        /** Real exit game engine. */
+        void exitEngine();
         
         //! is flag key down
         bool isFlagKeyDown(KeyCode flagKey);

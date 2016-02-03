@@ -19,6 +19,7 @@
 
 - (void)pause;
 - (void)resume;
+- (void)exit;
 
 @end
 

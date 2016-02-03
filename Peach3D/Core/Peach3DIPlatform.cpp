@@ -53,17 +53,29 @@ namespace Peach3D
         mAnimating = false;
         
         /** Delete render resource, ~IPlatform may EGL invalid. */
-        // delete cursor manager before scene manager, it handle sprite.
-        delete mCursorManager;
+        // Delete cursor manager before scene manager, it handle sprite.
+        if (mCursorManager) {
+            delete mCursorManager;
+            mCursorManager = nullptr;
+        }
         // delete scene manager
-        delete mSceneManager;
-        mLogPrinter->print(LogLevel::eInfo, "Scene manager exit");
+        if (mSceneManager) {
+            delete mSceneManager;
+            mSceneManager = nullptr;
+            mLogPrinter->print(LogLevel::eInfo, "Scene manager exit");
+        }
         // delete resource manager
-        delete mResourceMgr;
-        mLogPrinter->print(LogLevel::eInfo, "Resource manager exit");
+        if (mResourceMgr) {
+            delete mResourceMgr;
+            mResourceMgr = nullptr;
+            mLogPrinter->print(LogLevel::eInfo, "Resource manager exit");
+        }
         // delete render
-        delete mRender;
-        mLogPrinter->print(LogLevel::eInfo, "IRender exit");
+        if (mRender) {
+            delete mRender;
+            mRender = nullptr;
+            mLogPrinter->print(LogLevel::eInfo, "IRender exit");
+        }
     }
 
     bool IPlatform::initWithParams(const PlatformCreationParams &params)
