@@ -10,6 +10,7 @@
 #define PEACH3D_ITEXTURE_H
 
 #include "Peach3DCompile.h"
+#include "Peach3DRect.h"
 
 namespace Peach3D
 {
@@ -96,6 +97,15 @@ namespace Peach3D
         TextureType     mTexType;   // texture type
         
         friend class   IRender;
+    };
+    
+    // define texture frame, include texture and coord
+    struct PEACH3D_DLL TextureFrame
+    {
+        TextureFrame(ITexture* _tex) : tex(_tex) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
+        TextureFrame(ITexture* _tex, const Rect& _rc) : tex(_tex), rc(_rc) {}
+        ITexture*   tex;    // texture handler
+        Rect        rc;     // texture coord
     };
 }
 

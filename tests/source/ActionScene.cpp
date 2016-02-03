@@ -14,6 +14,7 @@ bool ActionScene::init()
     mSampleList.push_back([]()->BaseSample* {return new SingleSample();});
     mSampleList.push_back([]()->BaseSample* {return new SequenceSample();});
     mSampleList.push_back([]()->BaseSample* {return new CallFuncSample();});
+    mSampleList.push_back([]()->BaseSample* {return new FrameSample();});
     
     // init base scene
     BaseScene::init();
@@ -105,4 +106,28 @@ void CallFuncSample::init(Widget* parentWidget)
         parentWidget->addChild(noticeLabel);
     }), NULL);
     parentWidget->addChild(logo1Sprite);
+}
+
+void FrameSample::init(Widget* parentWidget)
+{
+    // set title and desc
+    mTitle = "Texture Frame Sample";
+    mDesc = "run repeat frame action and load split file";
+    // frame action param
+    const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    std::vector<TextureFrame> logoList;
+    std::vector<const char*> fileList = {"peach3d_1.png", "peach3d_2.png", "peach3d_3.png", "peach3d_4.png", "peach3d_5.png"};
+    for (auto file : fileList) {
+        logoList.push_back(TextureFrame(ResourceManager::getSingleton().addTexture(file)));
+    }
+    // repeat forever sprite
+    Sprite* frame1Sprite = Sprite::create(logoList[0].tex);
+    frame1Sprite->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 2.0f));
+    frame1Sprite->runAction(Repeat::createForever(Frame2D::create(logoList, 0.5f)));
+    parentWidget->addChild(frame1Sprite);
+    // not repeat sprite
+    Sprite* frame2Sprite = Sprite::create(logoList[0].tex);
+    frame2Sprite->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
+    frame2Sprite->runAction(Frame2D::create(logoList, 1.f));
+    parentWidget->addChild(frame2Sprite);
 }

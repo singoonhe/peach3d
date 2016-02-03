@@ -7,7 +7,7 @@
 //
 
 #include "Peach3DAction.h"
-#include "Peach3DWidget.h"
+#include "Peach3DSprite.h"
 #include "Peach3DSceneNode.h"
 #include "Peach3DCamera.h"
 #if (PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_DX)
@@ -302,6 +302,42 @@ namespace Peach3D
                 mIsFinished = true;
             }
             wNode->setRotation(curRotate);
+        }
+    }
+    
+    void Frame2D::update(ActionImplement* target, float lastFrameTime)
+    {
+        Sprite* sNode = dynamic_cast<Sprite*>(target);
+        if (!mIsFinished && sNode) {
+            mCurTime += lastFrameTime;
+            if (mCurTime >= mFrameInterval) {
+                if (mFrameIndex < (mFrameList.size() - 1)) {
+                    mFrameIndex ++;
+                    sNode->setTextureFrame(mFrameList[mFrameIndex]);
+                    mCurTime -= mFrameInterval;
+                }
+                else {
+                    mIsFinished = true;
+                }
+            }
+            
+            // save target node
+            if (!mTarget) {
+                mTarget = target;
+            }
+        }
+    }
+    
+    void Frame2D::rebirth()
+    {
+        IAction::rebirth();
+        mCurTime = 0.0f;
+        mFrameIndex = 0;
+        
+        // reset first texture frame
+        Sprite* sNode = dynamic_cast<Sprite*>(mTarget);
+        if (sNode) {
+            sNode->setTextureFrame(mFrameList[mFrameIndex]);
         }
     }
     

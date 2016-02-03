@@ -52,6 +52,8 @@ namespace Peach3D
         ITexture* getTexture() { return mRenderTex; }
         void setTextureRect(const Rect& texRect);
         const Rect& getTextureRect()const { return mTexRect; }
+        void setTextureFrame(const TextureFrame& frame) { setTexture(frame.tex); setTextureRect(frame.rc); }
+        TextureFrame getTextureFrame()const { return TextureFrame(mRenderTex, mTexRect); }
         
     protected:
         Sprite();

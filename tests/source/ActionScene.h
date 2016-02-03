@@ -34,4 +34,9 @@ class CallFuncSample : public BaseSample
     void init(Widget* parentWidget);
 };
 
+class FrameSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+};
+
 #endif /* defined(ACTION_SCENE_H) */

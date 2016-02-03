@@ -12,6 +12,7 @@
 #include "Peach3DVector3.h"
 #include "Peach3DQuaternion.h"
 #include "Peach3DActionImplement.h"
+#include "Peach3DITexture.h"
 
 namespace Peach3D
 {
@@ -218,6 +219,24 @@ namespace Peach3D
         RotateTo2D(float desRotate, float time) : Delay(time), mDesRotate(desRotate) {}
 
         float mDesRotate;
+    };
+    
+    class PEACH3D_DLL Frame2D : public IAction
+    {
+    public:
+        static Frame2D* create(const std::vector<TextureFrame>& fList, float interval) { return new Frame2D(fList, interval); }
+        void update(ActionImplement* target, float lastFrameTime);
+        void rebirth();
+        
+    protected:
+        Frame2D(const std::vector<TextureFrame>& fList, float interval) : mFrameInterval(interval), mCurTime(0.0f),
+            mFrameIndex(0), mTarget(nullptr), mFrameList(fList) {}
+        
+        float   mCurTime;
+        float   mFrameInterval;
+        size_t  mFrameIndex;
+        ActionImplement*            mTarget;
+        std::vector<TextureFrame>   mFrameList;
     };
     
     /************************************** 3D Actions ***************************************/
