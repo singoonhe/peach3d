@@ -41,6 +41,11 @@ PlatformDelegate      gGameDelegate;
     [self.window center];
 }
 
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
+    // exit game engine here
+    gPlatform.exitEngine();
+}
+
 - (BOOL)windowShouldClose:(id)sender
 {
     // Insert code here to tear down your application

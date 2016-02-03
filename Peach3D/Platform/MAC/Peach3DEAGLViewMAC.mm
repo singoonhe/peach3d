@@ -188,6 +188,17 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
     }
 }
 
+- (void)exit
+{
+    if (mDisplayLink) {
+        [self pause];
+        
+        // delete display link
+        CVDisplayLinkRelease(mDisplayLink);
+        mDisplayLink = NULL;
+    }
+}
+
 @end
 
 
