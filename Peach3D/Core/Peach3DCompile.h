@@ -129,10 +129,10 @@
 #define CLAMP(VALUE,MIN,MAX) { VALUE=(VALUE<(MIN))?(MIN):VALUE; VALUE=(VALUE>(MAX))?(MAX):VALUE; }
 
 /////////////////if break macros//////////////////
-#define IF_BREAK(condition, log) \
+#define IF_BREAK(condition, log, ...) \
     if (condition) { \
         if (log) { \
-            Peach3DErrorLog(log); \
+            Peach3DErrorLog(log, ##__VA_ARGS__); \
         } \
         break; \
     }

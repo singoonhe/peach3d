@@ -13,6 +13,7 @@
 #include "Peach3DObjLoader.h"
 #include "Peach3DShaderCode.h"
 #include "xxhash/xxhash.h"
+#include "tinyxml2/tinyxml2.h"
 #if (PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX)
 #include "Peach3DImageParse.h"
 #endif
@@ -81,6 +82,82 @@ namespace Peach3D
             }
         }
         return newTexture;
+    }
+    
+    bool ResourceManager::addTextureFrames(const char* file, std::vector<TextureFrame>& outList)
+    {
+        bool loadRes = false;
+        if (mTexFrameMap.find(file) != mTexFrameMap.end()) {
+            outList = mTexFrameMap[file];
+            loadRes = true;
+        }
+        else {
+            ulong len = 0;
+            // get texture file data
+            uchar *content = getFileData(file, &len);
+            if (content && len > 0) {
+                tinyxml2::XMLDocument readDoc;
+                if (readDoc.Parse((const char*)content, len) == tinyxml2::XML_SUCCESS) {
+                    do {
+                        std::vector<TextureFrame> frameList;
+                        tinyxml2::XMLElement* layoutEle = readDoc.FirstChildElement("TextureAtlas");
+                        IF_BREAK(!layoutEle, "Texture packer file \"%s\" format error", file);
+                        
+                        // check texture loading and size
+                        auto imageFile = layoutEle->Attribute("imagePath");
+                        auto tex = addTexture(imageFile);
+                        auto tw = atoi(layoutEle->Attribute("width"));
+                        auto th = atoi(layoutEle->Attribute("height"));
+                        IF_BREAK(!tex || tw!=tex->getWidth() || th!=tex->getHeight(), "Texture packer file \"%s\" data error", file);
+                        
+                        auto childElement = layoutEle->FirstChildElement();
+                        while (childElement) {
+                            auto name = childElement->Attribute("n");
+                            auto x = atoi(childElement->Attribute("x"));
+                            auto y = atoi(childElement->Attribute("y"));
+                            auto w = atoi(childElement->Attribute("w"));
+                            auto h = atoi(childElement->Attribute("h"));
+                            // save one frame
+                            frameList.push_back(TextureFrame(tex, Rect(x/(float)tw, y/(float)th, w/(float)tw, h/(float)th), name));
+                            childElement = childElement->NextSiblingElement();
+                        }
+                        
+                        mTexFrameMap[file] = frameList;
+                        outList = frameList;
+                        Peach3DLog(LogLevel::eInfo, "Load new texture packer %s success", file);
+                        loadRes = true;
+                    } while (0);
+                }
+                // release memory data
+                free(content);
+            }
+        }
+        return loadRes;
+    }
+    
+    bool ResourceManager::getTextureFrame(const char* name, TextureFrame& outFrame)
+    {
+        bool isFind = false;
+        if (strlen(name) > 0){
+            const char* frameName = name;
+            if (name[0] == '#') {
+                frameName = name + 1;
+            }
+            // find frame in cache
+            for (auto list : mTexFrameMap) {
+                for (auto frame : list.second) {
+                    if (frame.name == frameName) {
+                        outFrame = frame;
+                        isFind = true;
+                        break;
+                    }
+                }
+                if (isFind) {
+                    break;
+                }
+            }
+        }
+        return isFind;
     }
 
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX

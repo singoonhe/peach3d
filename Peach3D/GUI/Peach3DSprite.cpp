@@ -21,18 +21,27 @@ namespace Peach3D
     
     Sprite* Sprite::create(const char* texName, const Rect& coord)
     {
-        ITexture* texture = ResourceManager::getSingleton().addTexture(texName);
-        return Sprite::create(texture, coord);
+        if (texName && texName[0] == '#') {
+            TextureFrame outFrame;
+            if (ResourceManager::getSingleton().getTextureFrame(texName, outFrame)){
+                return Sprite::create(outFrame);
+            }
+        }
+        else {
+            ITexture* texture = ResourceManager::getSingleton().addTexture(texName);
+            return Sprite::create(TextureFrame(texture));
+        }
+        return nullptr;
     }
     
-    Sprite* Sprite::create(ITexture* tex, const Rect& coord)
+    Sprite* Sprite::create(const TextureFrame& frame)
     {
         Sprite* ns = nullptr;
-        if (tex) {
+        if (frame.tex) {
             ns = new Sprite();
             // add texture, content size also will be changed
-            ns->setTexture(tex);
-            ns->setTextureRect(coord);
+            ns->setTexture(frame.tex);
+            ns->setTextureRect(frame.rc);
             ns->resetCotentSizeWithTexture();
         }
         return ns;

@@ -47,6 +47,13 @@ namespace Peach3D
         /** Delete texture */
         void deleteTexture(ITexture* tex);
         
+        /** Create texture frames from file, return frame list in param.
+         * Current support TexturePacker general xml export format.
+         */
+        bool addTextureFrames(const char* file, std::vector<TextureFrame>& outList);
+        /** Get texture frame from cache by name, return frame in param. */
+        bool getTextureFrame(const char* name, TextureFrame& outFrame);
+        
         //! set default texture filter, this will effect textures load later.
         // anisotropic need ext in GL, linear will enabled if anisotropic not supported
         void setDefaultTextureFilter(TextureFilter filter) { mTexFilter = filter; }
@@ -111,9 +118,10 @@ namespace Peach3D
         bool            mTexMipMapEnabled;  // texture is mipmap enabled, default false
         
         std::vector<std::string>            mSearchDirs;    // resource search dir list
-        std::map<std::string, ITexture*>    mTextureMap;    // texture list
         std::map<std::string, Mesh*>        mMeshMap;       // mesh list
         std::map<uint, IProgram*>           mProgramMap;    // program list
+        std::map<std::string, ITexture*>    mTextureMap;    // texture list
+        std::map<std::string, std::vector<TextureFrame>> mTexFrameMap;  // texture frame cache list
         
         static std::vector<VertexAttrInfo> mVertexAttrList; // all vertex attr info, same in all objects
         void*   mAssetsManager; // save read android apk assert manager

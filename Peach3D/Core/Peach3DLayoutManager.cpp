@@ -50,9 +50,8 @@ namespace Peach3D
         if (readDoc.Parse((const char*)content, len) == XML_SUCCESS) {
             do {
                 XMLElement* layoutEle = readDoc.FirstChildElement("Layout");
-                if (!layoutEle) {
-                    break;
-                }
+                IF_BREAK(!layoutEle, "Layout file format error");
+
                 // read scene node element
                 XMLElement* nodeEle = layoutEle->FirstChildElement();
                 Widget* rootNode = parent ? parent : SceneManager::getSingleton().getRootWidget();

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:a9601ca4339cf45334884026a80375d6:15ce7e691b676d13d5c810d3fca0d624:7f40a1a5268eb5236eb0a1f389f74f14$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="peach3d_log.png" width="520" height="104">
+    <sprite n="peach3d_1.png" x="1" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_2.png" x="105" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_3.png" x="209" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_4.png" x="313" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_5.png" x="417" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
+</TextureAtlas>

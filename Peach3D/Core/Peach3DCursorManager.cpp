@@ -30,7 +30,7 @@ namespace Peach3D
             auto curIndex = getStatusIndex(mCurStatus);
             // create new cursor if not exist
             if (mStatusTexs[curIndex]) {
-                mCursorSprite = Sprite::create(mStatusTexs[curIndex], mStatusTexRects[curIndex]);
+                mCursorSprite = Sprite::create(TextureFrame(mStatusTexs[curIndex], mStatusTexRects[curIndex]));
                 mCursorSprite->setLocalZOrder(NOT_CLEAR_WIDGET_ZORDER + 1);
                 SceneManager::getSingleton().getRootWidget()->addChild(mCursorSprite);
             }

@@ -115,19 +115,33 @@ void FrameSample::init(Widget* parentWidget)
     mDesc = "run repeat frame action and load split file";
     // frame action param
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
-    std::vector<TextureFrame> logoList;
+    std::vector<TextureFrame> logoList, fileLogoList;
     std::vector<const char*> fileList = {"peach3d_1.png", "peach3d_2.png", "peach3d_3.png", "peach3d_4.png", "peach3d_5.png"};
     for (auto file : fileList) {
         logoList.push_back(TextureFrame(ResourceManager::getSingleton().addTexture(file)));
     }
+    // read frame action from file
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", fileLogoList), "Load file failed");
+
     // repeat forever sprite
     Sprite* frame1Sprite = Sprite::create(logoList[0].tex);
     frame1Sprite->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 2.0f));
     frame1Sprite->runAction(Repeat::createForever(Frame2D::create(logoList, 0.5f)));
     parentWidget->addChild(frame1Sprite);
-    // not repeat sprite
-    Sprite* frame2Sprite = Sprite::create(logoList[0].tex);
+    // not repeat sprite, create from frame
+    Sprite* frame2Sprite = Sprite::create(fileLogoList[0]);
     frame2Sprite->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     frame2Sprite->runAction(Frame2D::create(logoList, 1.f));
     parentWidget->addChild(frame2Sprite);
+    
+    // create once frame action and call back
+    Sprite* frame3Sprite = Sprite::create(fileLogoList[0]);
+    frame3Sprite->setPosition(Vector2(screenSize.x * 3.f / 4.0f, screenSize.y / 2.0f));
+    frame3Sprite->runActionList(Frame2D::create(fileLogoList, 1.f), CallFunc::create([=](){
+        Label* noticeLabel = Label::create("Frame action finished!", 30 * LayoutManager::getSingleton().getMinScale());
+        noticeLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 4.0f));
+        noticeLabel->setColor(Color4Yellow);
+        parentWidget->addChild(noticeLabel);
+    }), NULL);
+    parentWidget->addChild(frame3Sprite);
 }

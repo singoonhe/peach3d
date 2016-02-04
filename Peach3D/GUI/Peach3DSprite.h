@@ -25,8 +25,8 @@ namespace Peach3D
         static Sprite* create();
         /** Create sprite, this will draw a texture, default size if texture rect size. */
         static Sprite* create(const char* texName, const Rect& coord=Rect(0.0f, 0.0f, 1.0f, 1.0f));
-        /** Create sprite, this will draw a texture, default size if texture rect size. */
-        static Sprite* create(ITexture* tex, const Rect& coord=Rect(0.0f, 0.0f, 1.0f, 1.0f));
+        /** Create sprite with texture and rect. */
+        static Sprite* create(const TextureFrame& frame);
         
         /** Get is need rendering, not show if texture is nullptr. */
         virtual bool isNeedRender() { return Node::isNeedRender() && mRenderTex; }
