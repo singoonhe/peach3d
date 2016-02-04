@@ -112,7 +112,7 @@ void FrameSample::init(Widget* parentWidget)
 {
     // set title and desc
     mTitle = "Texture Frame Sample";
-    mDesc = "run repeat frame action and load split file";
+    mDesc = "run repeat frame action and load TexturePacker generial xml file";
     // frame action param
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     std::vector<TextureFrame> logoList, fileLogoList;

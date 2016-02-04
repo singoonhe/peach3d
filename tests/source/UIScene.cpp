@@ -12,6 +12,7 @@ bool UIScene::init()
 {
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new WidgetSample();});
+    mSampleList.push_back([]()->BaseSample* {return new SpriteSample();});
     mSampleList.push_back([]()->BaseSample* {return new LabelSample();});
     mSampleList.push_back([]()->BaseSample* {return new ButtonSample();});
     mSampleList.push_back([]()->BaseSample* {return new LayoutSample();});
@@ -54,6 +55,42 @@ void WidgetSample::init(Widget* parentWidget)
     color4Widget->setAnchorPoint(Vector2(0, 0));
     color4Widget->setAlpha(0.5f);
     parentWidget->addChild(color4Widget);
+}
+
+void SpriteSample::init(Widget* parentWidget)
+{
+    // set title and desc
+    mTitle = "Sprite Sample";
+    mDesc = "create sprite with file/frame/#xxx";
+    
+    const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    // create sprite with texture file
+    Label* label1 = Label::create("texture file name", 20 * LayoutManager::getSingleton().getMinScale());
+    label1->setPosition(Vector2(screenSize.x * 0.7f / 4.0f, screenSize.y * 2.f / 3.f));
+    parentWidget->addChild(label1);
+    Sprite* sprite1 = Sprite::create("peach3d_1.png");
+    sprite1->setPosition(Vector2(screenSize.x * 0.7f / 4.0f, screenSize.y / 2.0f));
+    parentWidget->addChild(sprite1);
+    
+    // read frame action from file
+    std::vector<TextureFrame> fileLogoList;
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", fileLogoList), "Load file failed");
+    
+    // create sprite with texture frame
+    Label* label2 = Label::create("texture second frame", 20 * LayoutManager::getSingleton().getMinScale());
+    label2->setPosition(Vector2(screenSize.x / 2.f, screenSize.y * 2.f / 3.f));
+    parentWidget->addChild(label2);
+    Sprite* sprite2 = Sprite::create(fileLogoList[1]);
+    sprite2->setPosition(Vector2(screenSize.x / 2.f, screenSize.y / 2.0f));
+    parentWidget->addChild(sprite2);
+    
+    // create sprite with "#xxx" format name
+    Label* label3 = Label::create("using \"#peach3d_3.png\"", 20 * LayoutManager::getSingleton().getMinScale());
+    label3->setPosition(Vector2(screenSize.x * 3.3f / 4.0f, screenSize.y * 2.f / 3.f));
+    parentWidget->addChild(label3);
+    Sprite* sprite3 = Sprite::create("#peach3d_3.png");
+    sprite3->setPosition(Vector2(screenSize.x * 3.3f / 4.0f, screenSize.y / 2.0f));
+    parentWidget->addChild(sprite3);
 }
 
 void LabelSample::init(Widget* parentWidget)

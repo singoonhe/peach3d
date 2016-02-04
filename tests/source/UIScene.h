@@ -24,6 +24,11 @@ class WidgetSample : public BaseSample
     void init(Widget* parentWidget);
 };
 
+class SpriteSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+};
+
 class LabelSample : public BaseSample
 {
     void init(Widget* parentWidget);
