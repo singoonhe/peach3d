@@ -29,8 +29,8 @@ namespace Peach3D
     {
     public:
         /** Create button, static method. */
-        static Button* create(const std::string& normal, const std::string& down="", const std::string& highlight="",
-                              const std::string& disable="");
+        static Button* create(const char* normal, const char* down="", const char* highlight="",
+                              const char* disable="");
         static Button* create();
         
         /** Set multi status texture use combination sign "|". */

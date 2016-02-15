@@ -51,7 +51,9 @@ namespace Peach3D
          * Current support TexturePacker general xml export format.
          */
         bool addTextureFrames(const char* file, std::vector<TextureFrame>& outList);
-        /** Get texture frame from cache by name, return frame in param. */
+        /** Get texture frame from cache by name, return frame in param. 
+         * @params name Name must begin with '#', or return 'addTexture' result.
+         */
         bool getTextureFrame(const char* name, TextureFrame& outFrame);
         
         //! set default texture filter, this will effect textures load later.

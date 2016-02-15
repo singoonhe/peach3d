@@ -21,15 +21,10 @@ namespace Peach3D
     
     Sprite* Sprite::create(const char* texName, const Rect& coord)
     {
-        if (texName && texName[0] == '#') {
-            TextureFrame outFrame;
-            if (ResourceManager::getSingleton().getTextureFrame(texName, outFrame)){
-                return Sprite::create(outFrame);
-            }
-        }
-        else {
-            ITexture* texture = ResourceManager::getSingleton().addTexture(texName);
-            return Sprite::create(TextureFrame(texture));
+        TextureFrame outFrame;
+        bool retSuccess = ResourceManager::getSingleton().getTextureFrame(texName, outFrame);
+        if (retSuccess) {
+            return Sprite::create(outFrame);
         }
         return nullptr;
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:a9601ca4339cf45334884026a80375d6:15ce7e691b676d13d5c810d3fca0d624:7f40a1a5268eb5236eb0a1f389f74f14$ -->
+<!-- $TexturePacker:SmartUpdate:63f1f06edd9f24171e5345d3527ac607:4267502c9b593ba5978236a11e2ca84e:7f40a1a5268eb5236eb0a1f389f74f14$ -->
 <!--Format:
 n  => name of the sprite
 x  => sprite x pos in texture
@@ -19,10 +19,14 @@ vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
 verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
 triangles  => sprite triangulation, 3 vertex indices per triangle
 -->
-<TextureAtlas imagePath="peach3d_log.png" width="520" height="104">
-    <sprite n="peach3d_1.png" x="1" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
-    <sprite n="peach3d_2.png" x="105" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
-    <sprite n="peach3d_3.png" x="209" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
-    <sprite n="peach3d_4.png" x="313" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
-    <sprite n="peach3d_5.png" x="417" y="1" w="102" h="102" pX="0.5" pY="0.5"/>
+<TextureAtlas imagePath="peach3d_log.png" width="510" height="218">
+    <sprite n="peach3d_4.png" x="0" y="0" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_3.png" x="102" y="0" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_2.png" x="204" y="0" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_1.png" x="306" y="0" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="peach3d_5.png" x="408" y="0" w="102" h="102" pX="0.5" pY="0.5"/>
+    <sprite n="common_normal.png" x="0" y="102" w="156" h="58" pX="0.5" pY="0.5"/>
+    <sprite n="common_down.png" x="156" y="102" w="156" h="58" pX="0.5" pY="0.5"/>
+    <sprite n="common_disable.png" x="312" y="102" w="156" h="58" pX="0.5" pY="0.5"/>
+    <sprite n="common_highlight.png" x="0" y="160" w="156" h="58" pX="0.5" pY="0.5"/>
 </TextureAtlas>

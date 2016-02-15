@@ -13,17 +13,33 @@
 
 namespace Peach3D
 {
-    Button* Button::create(const std::string& normal, const std::string& down, const std::string& highlight, const std::string& disable)
+    Button* Button::create(const char* normal, const char* down, const char* highlight, const char* disable)
     {
         Button* newBtn = new Button();
-        if (normal.size() > 0) {
-            newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(normal.c_str()), ButtonState::Normal);
-            if (down.size() > 0) {
-                newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(down.c_str()), ButtonState::Down);
+        TextureFrame outFrame;
+        bool isSuccess = ResourceManager::getSingleton().getTextureFrame(normal, outFrame);
+        if (isSuccess) {
+            newBtn->setTextureForStatus(outFrame.tex, ButtonState::Normal);
+            newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Normal);
+            
+            // load down frame
+            isSuccess = ResourceManager::getSingleton().getTextureFrame(down, outFrame);
+            if (isSuccess) {
+                newBtn->setTextureForStatus(outFrame.tex, ButtonState::Down);
+                newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Down);
                 newBtn->setClickZoomed(false);
             }
-            if (highlight.size() > 0) {
-                newBtn->setTextureForStatus(ResourceManager::getSingleton().addTexture(highlight.c_str()), ButtonState::Highlight);
+            // load highlight frame
+            isSuccess = ResourceManager::getSingleton().getTextureFrame(highlight, outFrame);
+            if (isSuccess) {
+                newBtn->setTextureForStatus(outFrame.tex, ButtonState::Highlight);
+                newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Highlight);
+            }
+            // load disable frame
+            isSuccess = ResourceManager::getSingleton().getTextureFrame(disable, outFrame);
+            if (isSuccess) {
+                newBtn->setTextureForStatus(outFrame.tex, ButtonState::Disable);
+                newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Disable);
             }
         }
         return newBtn;

@@ -118,7 +118,7 @@ namespace Peach3D
                             auto w = atoi(childElement->Attribute("w"));
                             auto h = atoi(childElement->Attribute("h"));
                             // save one frame
-                            frameList.push_back(TextureFrame(tex, Rect(x/(float)tw, y/(float)th, w/(float)tw, h/(float)th), name));
+                            frameList.push_back(TextureFrame(tex, Rect(x/(float)tw, (th - y - h)/(float)th, w/(float)tw, h/(float)th), name));
                             childElement = childElement->NextSiblingElement();
                         }
                         
@@ -142,18 +142,25 @@ namespace Peach3D
             const char* frameName = name;
             if (name[0] == '#') {
                 frameName = name + 1;
-            }
-            // find frame in cache
-            for (auto list : mTexFrameMap) {
-                for (auto frame : list.second) {
-                    if (frame.name == frameName) {
-                        outFrame = frame;
-                        isFind = true;
+                // find frame in cache
+                for (auto list : mTexFrameMap) {
+                    for (auto frame : list.second) {
+                        if (frame.name == frameName) {
+                            outFrame = frame;
+                            isFind = true;
+                            break;
+                        }
+                    }
+                    if (isFind) {
                         break;
                     }
                 }
-                if (isFind) {
-                    break;
+            }
+            else {
+                ITexture* loadTex = addTexture(name);
+                if (loadTex) {
+                    isFind = true;
+                    outFrame = TextureFrame(loadTex);
                 }
             }
         }

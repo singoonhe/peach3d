@@ -74,7 +74,7 @@ void SpriteSample::init(Widget* parentWidget)
     
     // read frame action from file
     std::vector<TextureFrame> fileLogoList;
-    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", fileLogoList), "Load file failed");
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", fileLogoList), "Load frame file failed");
     
     // create sprite with texture frame
     Label* label2 = Label::create("texture second frame", 20 * LayoutManager::getSingleton().getMinScale());
@@ -139,10 +139,18 @@ void ButtonSample::init(Widget* parentWidget)
     Button* wholeButton = Button::create("press_normal.png", "press_down.png", "press_highlight.png");
     wholeButton->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 2.0f));
     parentWidget->addChild(wholeButton);
+    
+    // disable button
     Button* grayButton = Button::create("press_normal.png");
     grayButton->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
-    grayButton->setClickEnabled(false);
+    grayButton->setTitleText("change disable");
+    grayButton->setClickedAction([grayButton](ClickEvent, const Vector2&){
+        grayButton->setClickEnabled(false);
+        grayButton->setTitleText("disable now");
+    });
     parentWidget->addChild(grayButton);
+    
+    // title button action
     mTitleButton = Button::create("press_normal.png");
     mTitleButton->setTitleText("show label");
     mTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, screenSize.y / 2.0f));
@@ -163,10 +171,21 @@ void ButtonSample::init(Widget* parentWidget)
     });
     parentWidget->addChild(mTitleButton);
     
+    // create button from frame
+    std::vector<TextureFrame> frameList;
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", frameList), "Load frame file failed");
+    Button* frameButton = Button::create("#common_normal.png", "#common_highlight.png", "#common_down.png", "#common_disable.png");
+    frameButton->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 4.0f));
+    frameButton->setTitleText("frame button");
+    frameButton->setClickedAction([frameButton](ClickEvent, const Vector2&){
+        frameButton->setClickEnabled(false);
+    });
+    parentWidget->addChild(frameButton);
+    
     // button title auto scale
     Button* scaleTitleButton = Button::create("press_normal.png");
     scaleTitleButton->setScale(2.0f);
-    scaleTitleButton->setTitleText("scale button");
+    scaleTitleButton->setTitleText("scale twice");
     scaleTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, screenSize.y / 4.0f));
     scaleTitleButton->setClickEnabled(false);
     parentWidget->addChild(scaleTitleButton);
