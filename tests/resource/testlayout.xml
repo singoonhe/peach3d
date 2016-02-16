@@ -27,7 +27,7 @@
             <!-- Using screen center as orign position. -->
             <BindPosition>Center</BindPosition>
         </Label>
-        <Button name="ChangeButton" frame="peach3d_log.xml">
+        <Button name="ChangeButton" frame="peach3d_ui.xml">
             <NormalTexture>#common_normal.png</NormalTexture>
             <Text>Gray</Text>
             <FontSize>26</FontSize>
