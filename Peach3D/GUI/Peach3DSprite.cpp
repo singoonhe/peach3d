@@ -35,27 +35,24 @@ namespace Peach3D
         if (frame.tex) {
             ns = new Sprite();
             // add texture, content size also will be changed
-            ns->setTexture(frame.tex);
-            ns->setTextureRect(frame.rc);
+            ns->setTextureFrame(frame);
             ns->resetCotentSizeWithTexture();
         }
         return ns;
     }
     
-    Sprite::Sprite() : mIsUse9Scale(false), mIsGrayscale(false), mRenderTex(nullptr), mIsAutoResize(true),
+    Sprite::Sprite() : mIsUse9Scale(false), mIsGrayscale(false), mIsAutoResize(true),
         mIsEnabled(false), mIsClickZoomed(true), mCurrentZoomed(false)
     {
         // default to set alpha 1.0f for texture UI
         setAlpha(1.0f);
-        // set default texture rect
-        mTexRect = Rect(0.0f, 0.0f, 1.0f, 1.0f);
     }
     
-    void Sprite::setTexture(ITexture* texture)
+    void Sprite::setTextureFrame(const TextureFrame& frame)
     {
-        Peach3DAssert(texture, "Can't set null texture to sprite!");
-        if (texture) {
-            mRenderTex = texture;
+        Peach3DAssert(frame.tex, "Can't set null texture to sprite!");
+        if (frame.tex) {
+            mRenderFrame = frame;
             mIsRenderHashDirty = true;
             // reset content size, scale 9 or label not need set to texture size
             if (mIsAutoResize) {
@@ -64,19 +61,10 @@ namespace Peach3D
         }
     }
     
-    void Sprite::setTextureRect(const Rect& texRect)
-    {
-        mTexRect = texRect;
-        // reset content size, scale 9 or label not need set to texture size
-        if (mIsAutoResize && mRenderTex) {
-            resetCotentSizeWithTexture();
-        }
-    }
-    
     void Sprite::resetCotentSizeWithTexture()
     {
-        Vector2 texSize((float)mRenderTex->getWidth(), (float)mRenderTex->getHeight());
-        Widget::setContentSize(texSize * mTexRect.size);
+        Vector2 texSize((float)mRenderFrame.tex->getWidth(), (float)mRenderFrame.tex->getHeight());
+        Widget::setContentSize(texSize * mRenderFrame.rc.size);
     }
     
     void Sprite::setClickEnabled(bool enabled)
@@ -131,7 +119,7 @@ namespace Peach3D
                 mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorUVVerShader2D", "PosColorUVFragShader2D");
             }
             // sprite will not render if texture is null
-            Widget::updateRenderingState(mRenderTex ? mRenderTex->getName() : "");
+            Widget::updateRenderingState(mRenderFrame.tex ? mRenderFrame.tex->getName() : "");
         }
     }
 }

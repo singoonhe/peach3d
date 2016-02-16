@@ -33,14 +33,12 @@ namespace Peach3D
                               const char* disable="");
         static Button* create();
         
-        /** Set multi status texture use combination sign "|". */
-        void setTextureForStatus(ITexture* tex, uint status);
-        /** Return status's texture. */
-        ITexture* getTextureForStatus(uint status) { return mStatusTexs[getStatusIndex(status)]; }
-        /** Set multi status rect use combination sign "|". */
-        void setTextureRectForStatus(Rect rect, uint status);
-        /** Return status's texture rect. */
-        Rect getTextureRectForStatus(uint status) { return mStatusTexRects[getStatusIndex(status)]; }
+        /** Set multi status texture frame use combination sign "|". */
+        void setTextureFrameForStatus(const TextureFrame& frame, uint status);
+        /** Set multi status texture rect use combination sign "|". */
+        void setTextureRectForStatus(const Rect& rc, uint status);
+        /** Return status's texture frame. */
+        const TextureFrame& getTextureFrameForStatus(uint status) { return mStatusFrames[getStatusIndex(status)]; }
         
         /** Auto reset title label position. */
         virtual void setContentSize(const Vector2& size);
@@ -78,9 +76,8 @@ namespace Peach3D
         Label*      mTitleLabel;
         Vector2     mTitleOffset;
         
-        uint        mCurStatus;
-        ITexture*   mStatusTexs[ButtonState::Count];
-        Rect        mStatusTexRects[ButtonState::Count];
+        uint            mCurStatus;
+        TextureFrame    mStatusFrames[ButtonState::Count];
         std::map<ClickEvent, ControlListenerFunction> mButtonFuncMap;
     };
 }

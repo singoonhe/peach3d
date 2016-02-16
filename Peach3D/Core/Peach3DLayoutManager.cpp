@@ -148,32 +148,28 @@ namespace Peach3D
                     if (dynamic_cast<Button*>(newNode)) {
                         TextureFrame outFrame;
                         ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Normal);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Normal);
+                        dynamic_cast<Button*>(newNode)->setTextureFrameForStatus(outFrame, ButtonState::Normal);
                     }
                     break;
                 case LayoutAttrType::eDownTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         TextureFrame outFrame;
                         ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Down);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Down);
+                        dynamic_cast<Button*>(newNode)->setTextureFrameForStatus(outFrame, ButtonState::Down);
                     }
                     break;
                 case LayoutAttrType::eHighlightTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         TextureFrame outFrame;
                         ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Highlight);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Highlight);
+                        dynamic_cast<Button*>(newNode)->setTextureFrameForStatus(outFrame, ButtonState::Highlight);
                     }
                     break;
                 case LayoutAttrType::eDisableTexture:
                     if (dynamic_cast<Button*>(newNode)) {
                         TextureFrame outFrame;
                         ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Disable);
-                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Disable);
+                        dynamic_cast<Button*>(newNode)->setTextureFrameForStatus(outFrame, ButtonState::Disable);
                     }
                     break;
                 case LayoutAttrType::eNormalCoord:

@@ -19,27 +19,22 @@ namespace Peach3D
         TextureFrame outFrame;
         bool isSuccess = ResourceManager::getSingleton().getTextureFrame(normal, &outFrame);
         if (isSuccess) {
-            newBtn->setTextureForStatus(outFrame.tex, ButtonState::Normal);
-            newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Normal);
-            
+            newBtn->setTextureFrameForStatus(outFrame, ButtonState::Normal);
             // load down frame
             isSuccess = ResourceManager::getSingleton().getTextureFrame(down, &outFrame);
             if (isSuccess) {
-                newBtn->setTextureForStatus(outFrame.tex, ButtonState::Down);
-                newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Down);
+                newBtn->setTextureFrameForStatus(outFrame, ButtonState::Down);
                 newBtn->setClickZoomed(false);
             }
             // load highlight frame
             isSuccess = ResourceManager::getSingleton().getTextureFrame(highlight, &outFrame);
             if (isSuccess) {
-                newBtn->setTextureForStatus(outFrame.tex, ButtonState::Highlight);
-                newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Highlight);
+                newBtn->setTextureFrameForStatus(outFrame, ButtonState::Highlight);
             }
             // load disable frame
             isSuccess = ResourceManager::getSingleton().getTextureFrame(disable, &outFrame);
             if (isSuccess) {
-                newBtn->setTextureForStatus(outFrame.tex, ButtonState::Disable);
-                newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Disable);
+                newBtn->setTextureFrameForStatus(outFrame, ButtonState::Disable);
             }
         }
         return newBtn;
@@ -53,25 +48,17 @@ namespace Peach3D
     
     Button::Button() : mCurStatus(0), mTitleLabel(nullptr), mTitleOffset(0.5f, 0.5f)
     {
-        // init texture list
-        memset(mStatusTexs, 0, sizeof(mStatusTexs));
-        for (auto i = 0; i < ButtonState::Count; ++i) {
-            mStatusTexs[i] = nullptr;
-            mStatusTexRects[i].pos = Vector2Zero;
-            mStatusTexRects[i].size = Vector2(1.0f, 1.0f);
-        }
-        
         // default to enable button
         setClickEnabled(true);
     }
     
-    void Button::setTextureForStatus(ITexture* tex, uint status)
+    void Button::setTextureFrameForStatus(const TextureFrame& frame, uint status)
     {
         uint statusList[] = {ButtonState::Normal, ButtonState::Highlight, ButtonState::Down, ButtonState::Disable};
         for (uint perStatus : statusList) {
             uint index = getStatusIndex(perStatus);
             if (perStatus & status) {
-                mStatusTexs[index] = tex;
+                mStatusFrames[index] = frame;
             }
         }
         if (!mCurStatus) {
@@ -80,29 +67,19 @@ namespace Peach3D
         }
         else if (status == mCurStatus) {
             // update current texture
-            setTexture(mStatusTexs[getStatusIndex(mCurStatus)]);
+            setTextureFrame(mStatusFrames[getStatusIndex(mCurStatus)]);
         }
         
         // disable zoomed when Down image set
-        if ((status & ButtonState::Down) && tex) {
+        if ((status & ButtonState::Down) && frame.tex) {
             setClickZoomed(false);
         }
     }
     
-    void Button::setTextureRectForStatus(Rect rect, uint status)
+    void Button::setTextureRectForStatus(const Rect& rc, uint status)
     {
-        uint statusList[] = {ButtonState::Normal, ButtonState::Highlight, ButtonState::Down, ButtonState::Disable};
-        for (uint perStatus : statusList) {
-            uint index = getStatusIndex(perStatus);
-            if (perStatus & status) {
-                mStatusTexRects[index] = rect;
-            }
-        }
-        
-        if (mCurStatus) {
-            // update current texture rect
-            setTextureRect(mStatusTexRects[getStatusIndex(mCurStatus)]);
-        }
+        const TextureFrame& statusFrame = mStatusFrames[getStatusIndex(status)];
+        setTextureFrameForStatus(TextureFrame(statusFrame.tex, rc), status);
     }
     
     void Button::setButtonShowStatus(uint status)
@@ -110,18 +87,17 @@ namespace Peach3D
         if (status != mCurStatus) {
             mCurStatus = status;
             uint index = getStatusIndex(status);
-            if (mCurStatus == ButtonState::Disable && !mStatusTexs[index]) {
+            if (mCurStatus == ButtonState::Disable && !mStatusFrames[index].tex) {
                 setGrayscaleEnabled(true);
             }
             else {
                 setGrayscaleEnabled(false);
                 // default use normal texture
-                index = (!mStatusTexs[index]) ? getStatusIndex(ButtonState::Normal) : index;
+                index = (!mStatusFrames[index].tex) ? getStatusIndex(ButtonState::Normal) : index;
                 // reset show texture and rect
-                if (mStatusTexs[index]) {
-                    setTexture(mStatusTexs[index]);
+                if (mStatusFrames[index].tex) {
+                    setTextureFrame(mStatusFrames[index]);
                 }
-                setTextureRect(mStatusTexRects[index]);
             }
         }
     }

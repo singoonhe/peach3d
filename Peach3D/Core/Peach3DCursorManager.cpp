@@ -86,7 +86,7 @@ namespace Peach3D
         
         if (mCurStatus && mCursorSprite) {
             // update current texture rect
-            mCursorSprite->setTextureRect(mStatusTexRects[getStatusIndex(mCurStatus)]);
+            //mCursorSprite->setTextureRect(mStatusTexRects[getStatusIndex(mCurStatus)]);
         }
     }
     

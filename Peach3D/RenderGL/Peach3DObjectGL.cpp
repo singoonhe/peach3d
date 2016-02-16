@@ -212,9 +212,12 @@ namespace Peach3D
             
             // enable render state, flip using shader
             Sprite* texSprite = dynamic_cast<Sprite*>(firstNode);
-            if (texSprite && texSprite->getTexture()) {
-                GLuint glTextureId = static_cast<TextureGL*>(texSprite->getTexture())->getGLTextureId();
-                static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, 0);
+            if (texSprite) {
+                auto stex = texSprite->getTextureFrame().tex;
+                if (stex) {
+                    GLuint glTextureId = static_cast<TextureGL*>(stex)->getGLTextureId();
+                    static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, 0);
+                }
             }
             
             // rendering
@@ -235,7 +238,7 @@ namespace Peach3D
                 }
             }
             // disable render state
-            if (texSprite && texSprite->getTexture()) {
+            if (texSprite && texSprite->getTextureFrame().tex) {
                 glBindTexture(GL_TEXTURE_2D, 0);
             }
             

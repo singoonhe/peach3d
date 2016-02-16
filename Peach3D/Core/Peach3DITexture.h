@@ -102,7 +102,7 @@ namespace Peach3D
     // define texture frame, include texture and coord
     struct PEACH3D_DLL TextureFrame
     {
-        TextureFrame() : tex(nullptr) {}
+        TextureFrame() : tex(nullptr) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
         TextureFrame(ITexture* _tex) : tex(_tex) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
         TextureFrame(ITexture* _tex, const Rect& _rc, const std::string& _name="") : tex(_tex), rc(_rc), name(_name) {}
         std::string name;   // texture name, used for Sprite::create "#xxxx.png"

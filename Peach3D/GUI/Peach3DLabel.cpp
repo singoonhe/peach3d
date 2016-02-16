@@ -32,8 +32,8 @@ namespace Peach3D
     Label::~Label()
     {
         // delete texture, it is almost impossible to reuse
-        if (mRenderTex) {
-            ResourceManager::getSingleton().deleteTexture(mRenderTex);
+        if (mRenderFrame.tex) {
+            ResourceManager::getSingleton().deleteTexture(mRenderFrame.tex);
         }
     }
     
@@ -200,10 +200,10 @@ namespace Peach3D
             mClickRectMap.clear();
             ITexture* labelTex = IPlatform::getSingleton().getTextTexture(stageList, defined, mClickRectMap);
             if (labelTex) {
-                if (mRenderTex) {
-                    ResourceManager::getSingleton().deleteTexture(mRenderTex);
+                if (mRenderFrame.tex) {
+                    ResourceManager::getSingleton().deleteTexture(mRenderFrame.tex);
                 }
-                setTexture(labelTex);
+                setTextureFrame(TextureFrame(labelTex));
                 // also reset content size if system calc size
                 if (!mIsDimUserAssigned) {
                     Sprite::setContentSize(Vector2((float)labelTex->getWidth() / minScale, (float)labelTex->getHeight() / minScale));

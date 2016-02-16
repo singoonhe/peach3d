@@ -29,7 +29,7 @@ namespace Peach3D
         static Sprite* create(const TextureFrame& frame);
         
         /** Get is need rendering, not show if texture is nullptr. */
-        virtual bool isNeedRender() { return Node::isNeedRender() && mRenderTex; }
+        virtual bool isNeedRender() { return Node::isNeedRender() && mRenderFrame.tex; }
         
         /** Show grayscale, this will use special program. */
         void setGrayscaleEnabled(bool enabled) { mIsGrayscale = enabled; }
@@ -48,12 +48,10 @@ namespace Peach3D
         /** Set clicked event call func. */
         virtual void setClickedAction(ControlListenerFunction func, ClickEvent type = ClickEvent::eClicked);
         
-        void setTexture(ITexture* texture);
-        ITexture* getTexture() { return mRenderTex; }
-        void setTextureRect(const Rect& texRect);
-        const Rect& getTextureRect()const { return mTexRect; }
-        void setTextureFrame(const TextureFrame& frame) { setTexture(frame.tex); setTextureRect(frame.rc); }
-        TextureFrame getTextureFrame()const { return TextureFrame(mRenderTex, mTexRect); }
+        /** Reset texture and uv coord. */
+        void setTextureFrame(const TextureFrame& frame);
+        void setTextureRect(const Rect& rc) { setTextureFrame(TextureFrame(mRenderFrame.tex, rc)); }
+        const TextureFrame& getTextureFrame()const { return mRenderFrame; }
         
     protected:
         Sprite();
@@ -67,8 +65,7 @@ namespace Peach3D
         bool        mIsGrayscale;   // is need show grayscale
         bool        mIsAutoResize;  // is auto resize to texture size
         
-        Rect        mTexRect;       // texture rect
-        ITexture*   mRenderTex;     // redering texture
+        TextureFrame    mRenderFrame;   // render frame, include texture and coord
         
         bool        mIsEnabled;     // is event enabled
         bool        mIsClickZoomed; // is auto zoom when clicked down

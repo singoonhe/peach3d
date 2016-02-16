@@ -617,7 +617,7 @@ namespace Peach3D
                     break;
                 case UniformNameType::eUVRect:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        const Rect& texCoord = static_cast<Sprite*>(widget)->getTextureRect();
+                        const Rect& texCoord = static_cast<Sprite*>(widget)->getTextureFrame().rc;
                         float coord[] = {texCoord.pos.x, texCoord.pos.y, texCoord.size.x, texCoord.size.y};
                         glUniform4fv(location, 1, coord);
                     });
@@ -698,7 +698,7 @@ namespace Peach3D
                         }
                             break;
                         case UniformNameType::eUVRect: {
-                            const Rect& texCoord = static_cast<Sprite*>(renderList[i])->getTextureRect();
+                            const Rect& texCoord = static_cast<Sprite*>(renderList[i])->getTextureFrame().rc;
                             float coord[] = {texCoord.pos.x, texCoord.pos.y, texCoord.size.x, texCoord.size.y};
                             memcpy(data + uniformOffset + startOffset, coord, 4 * sizeof(float));
                             startOffset += 4;
