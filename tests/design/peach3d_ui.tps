@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.0.2</string>
         <key>fileName</key>
-        <string>/Users/apple/Downloads/shaders/peach3d_ui.tps</string>
+        <string>/Users/apple/Documents/workspace/Peach3D/tests/design/peach3d_ui.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -192,10 +192,10 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/common_disable.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/common_down.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/common_highlight.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/common_normal.png</filename>
+            <filename>../resource/common_disable.png</filename>
+            <filename>../resource/common_down.png</filename>
+            <filename>../resource/common_highlight.png</filename>
+            <filename>../resource/common_normal.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

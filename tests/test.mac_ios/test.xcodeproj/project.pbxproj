@@ -82,6 +82,8 @@
 		187CF64919C72A7100C8094C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187CF64819C72A7100C8094C /* Images.xcassets */; };
 		188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188637F519D02BED00BD6FE3 /* TestScene.cpp */; };
 		188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188637F519D02BED00BD6FE3 /* TestScene.cpp */; };
+		1891F4F41C73777D00DDA79D /* texcube.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 1891F4F31C73777D00DDA79D /* texcube.pmt */; };
+		1891F4F51C73777D00DDA79D /* texcube.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 1891F4F31C73777D00DDA79D /* texcube.pmt */; };
 		1899802919B9B7FB003FBA2D /* demoShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1899802519B9B7FB003FBA2D /* demoShader.fsh */; };
 		1899802A19B9B7FB003FBA2D /* demoShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1899802619B9B7FB003FBA2D /* demoShader.vsh */; };
 		189B0F5D19EE56C60080C7A6 /* widgetShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 189B0F5B19EE56C60080C7A6 /* widgetShader.fsh */; };
@@ -195,6 +197,7 @@
 		187CF64819C72A7100C8094C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = test_mac/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		188637F519D02BED00BD6FE3 /* TestScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestScene.cpp; sourceTree = "<group>"; };
 		188637F619D02BED00BD6FE3 /* TestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScene.h; sourceTree = "<group>"; };
+		1891F4F31C73777D00DDA79D /* texcube.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = texcube.pmt; sourceTree = "<group>"; };
 		1899802519B9B7FB003FBA2D /* demoShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = demoShader.fsh; sourceTree = "<group>"; };
 		1899802619B9B7FB003FBA2D /* demoShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = demoShader.vsh; sourceTree = "<group>"; };
 		189B0F5B19EE56C60080C7A6 /* widgetShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = widgetShader.fsh; sourceTree = "<group>"; };
@@ -384,6 +387,7 @@
 				18E94CDC1C5A360F00F448D8 /* testlayout.xml */,
 				18B2AB6219E7AD910041AC1E /* texcube.mtl */,
 				18B2AB6319E7AD910041AC1E /* texcube.obj */,
+				1891F4F31C73777D00DDA79D /* texcube.pmt */,
 				18B2AB6A19E7BE770041AC1E /* texcubeShader.fsh */,
 				18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */,
 				189B0F5B19EE56C60080C7A6 /* widgetShader.fsh */,
@@ -529,6 +533,7 @@
 				184962CF1C4A42B100304991 /* peach.png in Resources */,
 				189B0F5D19EE56C60080C7A6 /* widgetShader.fsh in Resources */,
 				18E94CDD1C5A360F00F448D8 /* testlayout.xml in Resources */,
+				1891F4F41C73777D00DDA79D /* texcube.pmt in Resources */,
 				18432DF51C6251C5007B36EC /* peach3d_1.png in Resources */,
 				184FED1B1C6302650014B2E0 /* peach3d_log.png in Resources */,
 				184532A21C71C939000B8F66 /* common_disable.png in Resources */,
@@ -577,6 +582,7 @@
 				187CF63C19C7185400C8094C /* demoShader.vsh in Resources */,
 				185ED1CD1B70E10A0012667B /* press_normal.png in Resources */,
 				18B2AB6D19E7BE770041AC1E /* texcubeShader.fsh in Resources */,
+				1891F4F51C73777D00DDA79D /* texcube.pmt in Resources */,
 				184532AB1C72D8A1000B8F66 /* peach3d_ui.xml in Resources */,
 				189B0F6019EE56C60080C7A6 /* widgetShader.vsh in Resources */,
 				184962D21C4A8AD400304991 /* peach.mtl in Resources */,

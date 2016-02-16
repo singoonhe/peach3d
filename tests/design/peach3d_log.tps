@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.0.2</string>
         <key>fileName</key>
-        <string>/Users/apple/Downloads/shaders/peach3d_log.tps</string>
+        <string>/Users/apple/Documents/workspace/Peach3D/tests/design/peach3d_log.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -192,11 +192,11 @@
         </struct>
         <key>fileList</key>
         <array>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/peach3d_1.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/peach3d_2.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/peach3d_3.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/peach3d_4.png</filename>
-            <filename>../../Documents/workspace/Peach3D/tests/resource/peach3d_5.png</filename>
+            <filename>../resource/peach3d_1.png</filename>
+            <filename>../resource/peach3d_2.png</filename>
+            <filename>../resource/peach3d_3.png</filename>
+            <filename>../resource/peach3d_4.png</filename>
+            <filename>../resource/peach3d_5.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

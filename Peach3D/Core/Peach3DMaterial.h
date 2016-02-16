@@ -79,6 +79,7 @@ namespace Peach3D
         Color4  diffuse;
         Color4  specular;
         float   shininess;
+        Color4  emissive;
         
         Vector2 UVScrollSpeed;     // texture uv scroll speed
         Vector2 CurUVOffset;       // current uv scroll offset

@@ -11,6 +11,8 @@
 #include "Peach3DLogPrinter.h"
 #include "Peach3DIPlatform.h"
 #include "Peach3DObjLoader.h"
+#include "Peach3DPmtLoader.h"
+#include "Peach3DPmbLoader.h"
 #include "Peach3DShaderCode.h"
 #include "xxhash/xxhash.h"
 #include "tinyxml2/tinyxml2.h"
@@ -390,9 +392,15 @@ namespace Peach3D
                 }
                 // load obj file data, add to mesh
                 bool loadResult = false;
+                std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
                 if (ext.compare("obj") == 0) {
-                    std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
                     loadResult = ObjLoader::objMeshDataParse(fileData, fileLength, fileDir, fileMesh);
+                }
+                else if (ext.compare("pmt") == 0) {
+                    loadResult = PmtLoader::pmtMeshDataParse(fileData, fileLength, fileDir, fileMesh);
+                }
+                else if (ext.compare("pmb") == 0) {
+                    loadResult = PmbLoader::pmbMeshDataParse(fileData, fileLength, fileDir, fileMesh);
                 }
                 else {
                     Peach3DLog(LogLevel::eError, "Did't support the mesh format \"%s\"", ext.c_str());
