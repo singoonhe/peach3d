@@ -17,26 +17,26 @@ namespace Peach3D
     {
         Button* newBtn = new Button();
         TextureFrame outFrame;
-        bool isSuccess = ResourceManager::getSingleton().getTextureFrame(normal, outFrame);
+        bool isSuccess = ResourceManager::getSingleton().getTextureFrame(normal, &outFrame);
         if (isSuccess) {
             newBtn->setTextureForStatus(outFrame.tex, ButtonState::Normal);
             newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Normal);
             
             // load down frame
-            isSuccess = ResourceManager::getSingleton().getTextureFrame(down, outFrame);
+            isSuccess = ResourceManager::getSingleton().getTextureFrame(down, &outFrame);
             if (isSuccess) {
                 newBtn->setTextureForStatus(outFrame.tex, ButtonState::Down);
                 newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Down);
                 newBtn->setClickZoomed(false);
             }
             // load highlight frame
-            isSuccess = ResourceManager::getSingleton().getTextureFrame(highlight, outFrame);
+            isSuccess = ResourceManager::getSingleton().getTextureFrame(highlight, &outFrame);
             if (isSuccess) {
                 newBtn->setTextureForStatus(outFrame.tex, ButtonState::Highlight);
                 newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Highlight);
             }
             // load disable frame
-            isSuccess = ResourceManager::getSingleton().getTextureFrame(disable, outFrame);
+            isSuccess = ResourceManager::getSingleton().getTextureFrame(disable, &outFrame);
             if (isSuccess) {
                 newBtn->setTextureForStatus(outFrame.tex, ButtonState::Disable);
                 newBtn->setTextureRectForStatus(outFrame.rc, ButtonState::Disable);

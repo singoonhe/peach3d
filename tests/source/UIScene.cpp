@@ -74,7 +74,7 @@ void SpriteSample::init(Widget* parentWidget)
     
     // read frame action from file
     std::vector<TextureFrame> fileLogoList;
-    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", fileLogoList), "Load frame file failed");
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", &fileLogoList), "Load frame file failed");
     
     // create sprite with texture frame
     Label* label2 = Label::create("texture second frame", 20 * LayoutManager::getSingleton().getMinScale());
@@ -173,7 +173,7 @@ void ButtonSample::init(Widget* parentWidget)
     
     // create button from frame
     std::vector<TextureFrame> frameList;
-    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", frameList), "Load frame file failed");
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", &frameList), "Load frame file failed");
     Button* frameButton = Button::create("#common_normal.png", "#common_highlight.png", "#common_down.png", "#common_disable.png");
     frameButton->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 4.0f));
     frameButton->setTitleText("frame button");

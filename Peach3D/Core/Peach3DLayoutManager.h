@@ -24,7 +24,7 @@ namespace Peach3D
         eLabel,
         eButton,
         eLayout,
-        eNormalTexture,     // <NormalTexture>xxx.png</NormalTexture>       button normal texture file name
+        eNormalTexture,     // <NormalTexture>xxx.png</NormalTexture>       button normal texture file name, coord not need if texture begin with '#'
         eDownTexture,       // <DownTexture>xxx.png</DownTexture>           ...
         eHighlightTexture,  // <HighlightTexture>xxx.png</HighlightTexture> ...
         eDisableTexture,    // <DisableTexture>xxx.png</DisableTexture>     ...
@@ -48,8 +48,8 @@ namespace Peach3D
         eFillColor,         // <FillColor>1, 1, 1, 1</FillColor>            label fill color
         eAlpha,             // <Alpha>1.0</Alpha>
         eColor,             // <Color>1, 1, 1, 1</Color>                    widget color
-        eTexture,           // <Texture>xxx.png</Texture>                   widget texture 0
-        eCoord,             // <Coord>0, 0, 1, 1</Coord>                    widget sprite 0
+        eTexture,           // <Texture>xxx.png</Texture>                   widget texture name, coord not need if texture begin with '#'
+        eCoord,             // <Coord>0, 0, 1, 1</Coord>                    widget texture rect, default is "0, 0, 1, 1"
         eVisible,           // <Visible>true</Visible>
         eCount,
     };

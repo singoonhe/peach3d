@@ -121,7 +121,7 @@ void FrameSample::init(Widget* parentWidget)
         logoList.push_back(TextureFrame(ResourceManager::getSingleton().addTexture(file)));
     }
     // read frame action from file
-    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", fileLogoList), "Load file failed");
+    Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", &fileLogoList), "Load file failed");
 
     // repeat forever sprite
     Sprite* frame1Sprite = Sprite::create(logoList[0].tex);

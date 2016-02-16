@@ -22,7 +22,7 @@ namespace Peach3D
     Sprite* Sprite::create(const char* texName, const Rect& coord)
     {
         TextureFrame outFrame;
-        bool retSuccess = ResourceManager::getSingleton().getTextureFrame(texName, outFrame);
+        bool retSuccess = ResourceManager::getSingleton().getTextureFrame(texName, &outFrame);
         if (retSuccess) {
             return Sprite::create(outFrame);
         }

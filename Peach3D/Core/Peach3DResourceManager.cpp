@@ -84,11 +84,13 @@ namespace Peach3D
         return newTexture;
     }
     
-    bool ResourceManager::addTextureFrames(const char* file, std::vector<TextureFrame>& outList)
+    bool ResourceManager::addTextureFrames(const char* file, std::vector<TextureFrame>* outList)
     {
         bool loadRes = false;
         if (mTexFrameMap.find(file) != mTexFrameMap.end()) {
-            outList = mTexFrameMap[file];
+            if (outList) {
+                *outList = mTexFrameMap[file];
+            }
             loadRes = true;
         }
         else {
@@ -123,7 +125,9 @@ namespace Peach3D
                         }
                         
                         mTexFrameMap[file] = frameList;
-                        outList = frameList;
+                        if (outList) {
+                            *outList = frameList;
+                        }
                         Peach3DLog(LogLevel::eInfo, "Load new texture packer %s success", file);
                         loadRes = true;
                     } while (0);
@@ -135,7 +139,7 @@ namespace Peach3D
         return loadRes;
     }
     
-    bool ResourceManager::getTextureFrame(const char* name, TextureFrame& outFrame)
+    bool ResourceManager::getTextureFrame(const char* name, TextureFrame* outFrame)
     {
         bool isFind = false;
         if (strlen(name) > 0){
@@ -146,7 +150,9 @@ namespace Peach3D
                 for (auto list : mTexFrameMap) {
                     for (auto frame : list.second) {
                         if (frame.name == frameName) {
-                            outFrame = frame;
+                            if (outFrame) {
+                                *outFrame = frame;
+                            }
                             isFind = true;
                             break;
                         }
@@ -160,7 +166,9 @@ namespace Peach3D
                 ITexture* loadTex = addTexture(name);
                 if (loadTex) {
                     isFind = true;
-                    outFrame = TextureFrame(loadTex);
+                    if (outFrame) {
+                        *outFrame = TextureFrame(loadTex);
+                    }
                 }
             }
         }

@@ -27,8 +27,8 @@
             <!-- Using screen center as orign position. -->
             <BindPosition>Center</BindPosition>
         </Label>
-        <Button name="ChangeButton">
-            <NormalTexture>common_normal.png</NormalTexture>
+        <Button name="ChangeButton" frame="peach3d_log.xml">
+            <NormalTexture>#common_normal.png</NormalTexture>
             <Text>Gray</Text>
             <FontSize>26</FontSize>
             <!-- FillColor just used for text color, Color for mix with texture. -->

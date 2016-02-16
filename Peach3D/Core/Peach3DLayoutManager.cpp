@@ -109,6 +109,11 @@ namespace Peach3D
     void LayoutManager::loadWidgetData(Widget* newNode, const XMLElement* nodeEle, Widget* parentNode, const LayoutVarBindFunction& bindFunc)
     {
         const char* nodeName = nodeEle->Attribute("name");
+        // cache frame file if needed
+        const char* frameName = nodeEle->Attribute("frame");
+        if (frameName) {
+            ResourceManager::getSingleton().addTextureFrames(frameName, nullptr);
+        }
         // define const type and names
         const static std::vector<std::string> bindPosNameV = {"LeftBottom", "LeftCenter", "LeftTop", "CenterBottom", "Center", "CenterTop", "RightBottom", "RightCenter", "RightTop"};
         const static std::vector<std::string> bindScaleNameV = {"Min", "Width", "Height", "Fixed"};
@@ -141,26 +146,34 @@ namespace Peach3D
             switch (attrType) {
                 case LayoutAttrType::eNormalTexture:
                     if (dynamic_cast<Button*>(newNode)) {
-                        ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Normal);
+                        TextureFrame outFrame;
+                        ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Normal);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Normal);
                     }
                     break;
                 case LayoutAttrType::eDownTexture:
                     if (dynamic_cast<Button*>(newNode)) {
-                        ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Down);
+                        TextureFrame outFrame;
+                        ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Down);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Down);
                     }
                     break;
                 case LayoutAttrType::eHighlightTexture:
                     if (dynamic_cast<Button*>(newNode)) {
-                        ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Highlight);
+                        TextureFrame outFrame;
+                        ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Highlight);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Highlight);
                     }
                     break;
                 case LayoutAttrType::eDisableTexture:
                     if (dynamic_cast<Button*>(newNode)) {
-                        ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Button*>(newNode)->setTextureForStatus(attrTex, ButtonState::Disable);
+                        TextureFrame outFrame;
+                        ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
+                        dynamic_cast<Button*>(newNode)->setTextureForStatus(outFrame.tex, ButtonState::Disable);
+                        dynamic_cast<Button*>(newNode)->setTextureRectForStatus(outFrame.rc, ButtonState::Disable);
                     }
                     break;
                 case LayoutAttrType::eNormalCoord:
@@ -330,8 +343,9 @@ namespace Peach3D
                     break;
                 case LayoutAttrType::eTexture:
                     if (dynamic_cast<Sprite*>(newNode)) {
-                        ITexture* attrTex = ResourceManager::getSingleton().addTexture(attrText);
-                        dynamic_cast<Sprite*>(newNode)->setTexture(attrTex);
+                        TextureFrame outFrame;
+                        ResourceManager::getSingleton().getTextureFrame(attrText, &outFrame);
+                        dynamic_cast<Sprite*>(newNode)->setTextureFrame(outFrame.tex);
                     }
                     break;
                 case LayoutAttrType::eCoord:

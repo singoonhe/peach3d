@@ -50,11 +50,11 @@ namespace Peach3D
         /** Create texture frames from file, return frame list in param.
          * Current support TexturePacker general xml export format.
          */
-        bool addTextureFrames(const char* file, std::vector<TextureFrame>& outList);
+        bool addTextureFrames(const char* file, std::vector<TextureFrame>* outList);
         /** Get texture frame from cache by name, return frame in param. 
          * @params name Name must begin with '#', or return 'addTexture' result.
          */
-        bool getTextureFrame(const char* name, TextureFrame& outFrame);
+        bool getTextureFrame(const char* name, TextureFrame* outFrame);
         
         //! set default texture filter, this will effect textures load later.
         // anisotropic need ext in GL, linear will enabled if anisotropic not supported
