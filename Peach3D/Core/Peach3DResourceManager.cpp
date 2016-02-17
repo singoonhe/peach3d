@@ -130,7 +130,7 @@ namespace Peach3D
                         if (outList) {
                             *outList = frameList;
                         }
-                        Peach3DLog(LogLevel::eInfo, "Load new texture packer %s success", file);
+                        Peach3DLog(LogLevel::eInfo, "Load texture packer file %s success", file);
                         loadRes = true;
                     } while (0);
                 }

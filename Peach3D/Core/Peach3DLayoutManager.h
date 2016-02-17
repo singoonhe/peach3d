@@ -70,14 +70,14 @@ namespace Peach3D
     {
     public:
         /** 
-         * Load layout from xml file. 
+         * Load layout from plt(Peach3D Layout Text) file.
          * @params parent Which widget layout will add to, nullptr for root widget.
          * @params bindFunc Use LAYOUT_BIND_NAME_VARIATE to bind var, it will called much times.
          * @params overFunc Called when layout widgets create over.
          */
-        bool loadLayout(const std::string& file, Widget* parent = nullptr, const LayoutVarBindFunction& bindFunc = nullptr,
+        bool loadLayout(const char* file, Widget* parent = nullptr, const LayoutVarBindFunction& bindFunc = nullptr,
                         const LayoutLoadOverFunction& overFunc = nullptr);
-        /** Load layout from xml file data, see above loadLayout for more. */
+        /** Load layout from plt file data, see above loadLayout for more. */
         bool loadLayout(const uchar* content, ulong len, Widget* parent = nullptr, const LayoutVarBindFunction& bindFunc = nullptr,
                         const LayoutLoadOverFunction& overFunc = nullptr);
         /** Set design size, it will calc scale, auto landscape. */

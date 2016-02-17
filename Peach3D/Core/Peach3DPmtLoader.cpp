@@ -24,7 +24,7 @@ namespace Peach3D
                 // read scene node element
                 XMLElement* nodeEle = meshEle->FirstChildElement();
                 while (nodeEle) {
-                    PmtLoader::objVertexDataParse(nodeEle, dMesh);
+                    PmtLoader::objDataParse(nodeEle, dMesh);
                     nodeEle = nodeEle->NextSiblingElement();
                 }
                 loadRes = true;
@@ -33,7 +33,7 @@ namespace Peach3D
         return loadRes;
     }
     
-    void PmtLoader::objVertexDataParse(const XMLElement* objEle, Mesh* dMesh)
+    void PmtLoader::objDataParse(const XMLElement* objEle, Mesh* dMesh)
     {
         auto objName = objEle->Attribute("name");
         // read vertex type element
@@ -44,90 +44,104 @@ namespace Peach3D
         if (objName && (verType & VertexType::Point3)) {
             // create IObject
             IObject* obj = dMesh->createObject(objName);
-            do {
-                // read vertexes count
-                auto countEle = vTypeEle->NextSiblingElement();
-                auto verCount = atoi(countEle->GetText());
-                // calc float count per vertex
-                uint floatCount = 3;
-                if (verType & VertexType::Normal) {
-                    floatCount += 3;
-                }
-                if (verType & VertexType::UV) {
-                    floatCount += 2;
-                }
-                // malloc vertex data
-                uint verDataSize = verCount * sizeof(float) * floatCount;
-                float* verData = (float*)malloc(verDataSize);
-                float* verOrignData = verData;
-                // read vertexes data string
-                auto verDataEle = countEle->NextSiblingElement();
-                std::stringstream verDataText(verDataEle->GetText());
-                std::string line;
-                while (std::getline(verDataText, line, '\n')) {
-                    // delete the first '\r'
-                    if (line.find('\r')!=std::string::npos) {
-                        line = line.substr(0, line.size() - 1);
-                    }
-                    if (line.size() > 4) {
-                        if ((verType & VertexType::UV) && (verType & VertexType::Normal)) {
-                            sscanf(line.c_str(), "%f,%f,%f,%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4, verOrignData + 5, verOrignData + 6, verOrignData + 7);
-                        }
-                        else if (verType & VertexType::UV) {
-                            sscanf(line.c_str(), "%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4);
-                        }
-                        else if (verType & VertexType::Normal) {
-                            sscanf(line.c_str(), "%f,%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4, verOrignData + 5);
-                        }
-                        else {
-                            sscanf(line.c_str(), "%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2);
-                        }
-                        verOrignData = verOrignData + floatCount;
-                    }
-                }
-                obj->setVertexBuffer(verData, verDataSize, verType);
-                free(verData);
-                
-                // read indexes count
-                auto indexCountEle = verDataEle->NextSiblingElement();
-                auto indexCount = atol(indexCountEle->GetText());
-                IndexType inxType = IndexType::eUShort;
-                auto inxDataSize = indexCount * sizeof(ushort);
-                if (indexCount > 65535) {
-                    inxType = IndexType::eUInt;
-                    inxDataSize = indexCount * sizeof(uint);
-                }
-                // malloc vertex data
-                void* inxData = malloc(inxDataSize);
-                // read indexes data string
-                auto inxDataEle = indexCountEle->NextSiblingElement();
-                std::stringstream inxDataText(inxDataEle->GetText());
-                auto curIndex = 0;
-                while (std::getline(inxDataText, line, ',')) {
-                    // delete the first '\r'
-                    if (line.find('\r')!=std::string::npos) {
-                        line = line.substr(0, line.size() - 1);
-                    }
-                    if (line.size() > 1) {
-                        if (inxType == IndexType::eUShort) {
-                            sscanf(line.c_str(), "%hd", (ushort*)(inxData) + curIndex);
-                        }
-                        else if (inxType == IndexType::eUInt) {
-                            sscanf(line.c_str(), "%u", (uint*)(inxData) + curIndex);
-                        }
-                        curIndex ++;
-                    }
-                }
-                obj->setIndexBuffer(inxData, (uint)inxDataSize, inxType);
-                free(inxData);
-                
-                // read material data
-                PmtLoader::objMaterialDataParse(inxDataEle, obj);
-            } while (0);
+            // read vertex data
+            auto nextEle = PmtLoader::objVertexDataParse(vTypeEle, verType, obj);
+            // read index data
+            nextEle = PmtLoader::objIndexDataParse(nextEle, obj);
+            // read material data
+            nextEle = PmtLoader::objMaterialDataParse(nextEle, obj);
         }
     }
     
-    void PmtLoader::objMaterialDataParse(const XMLElement* parentEle, IObject* obj)
+    const XMLElement* PmtLoader::objVertexDataParse(const XMLElement* prevEle, uint verType, IObject* obj)
     {
+        // read vertexes count
+        auto countEle = prevEle->NextSiblingElement();
+        auto verCount = atoi(countEle->GetText());
+        // calc float count per vertex
+        uint floatCount = 3;
+        if (verType & VertexType::Normal) {
+            floatCount += 3;
+        }
+        if (verType & VertexType::UV) {
+            floatCount += 2;
+        }
+        // malloc vertex data
+        uint verDataSize = verCount * sizeof(float) * floatCount;
+        float* verData = (float*)malloc(verDataSize);
+        float* verOrignData = verData;
+        // read vertexes data string
+        auto verDataEle = countEle->NextSiblingElement();
+        std::stringstream verDataText(verDataEle->GetText());
+        std::string line;
+        while (std::getline(verDataText, line, '\n')) {
+            // delete the first '\r'
+            if (line.find('\r')!=std::string::npos) {
+                line = line.substr(0, line.size() - 1);
+            }
+            if (line.size() > 4) {
+                if ((verType & VertexType::UV) && (verType & VertexType::Normal)) {
+                    sscanf(line.c_str(), "%f,%f,%f,%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4, verOrignData + 5, verOrignData + 6, verOrignData + 7);
+                }
+                else if (verType & VertexType::UV) {
+                    sscanf(line.c_str(), "%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4);
+                }
+                else if (verType & VertexType::Normal) {
+                    sscanf(line.c_str(), "%f,%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4, verOrignData + 5);
+                }
+                else {
+                    sscanf(line.c_str(), "%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2);
+                }
+                verOrignData = verOrignData + floatCount;
+            }
+        }
+        obj->setVertexBuffer(verData, verDataSize, verType);
+        free(verData);
+        
+        return verDataEle;
+    }
+    
+    const XMLElement* PmtLoader::objIndexDataParse(const XMLElement* prevEle, IObject* obj)
+    {
+        // read indexes count
+        auto indexCountEle = prevEle->NextSiblingElement();
+        auto indexCount = atol(indexCountEle->GetText());
+        IndexType inxType = IndexType::eUShort;
+        auto inxDataSize = indexCount * sizeof(ushort);
+        if (indexCount > 65535) {
+            inxType = IndexType::eUInt;
+            inxDataSize = indexCount * sizeof(uint);
+        }
+        // malloc vertex data
+        void* inxData = malloc(inxDataSize);
+        // read indexes data string
+        auto inxDataEle = indexCountEle->NextSiblingElement();
+        std::stringstream inxDataText(inxDataEle->GetText());
+        std::string line;
+        auto curIndex = 0;
+        while (std::getline(inxDataText, line, ',')) {
+            // delete the first '\r'
+            if (line.find('\r')!=std::string::npos) {
+                line = line.substr(0, line.size() - 1);
+            }
+            if (line.size() > 1) {
+                if (inxType == IndexType::eUShort) {
+                    sscanf(line.c_str(), "%hd", (ushort*)(inxData) + curIndex);
+                }
+                else if (inxType == IndexType::eUInt) {
+                    sscanf(line.c_str(), "%u", (uint*)(inxData) + curIndex);
+                }
+                curIndex ++;
+            }
+        }
+        obj->setIndexBuffer(inxData, (uint)inxDataSize, inxType);
+        free(inxData);
+        
+        return inxDataEle;
+    }
+    
+    const XMLElement* PmtLoader::objMaterialDataParse(const XMLElement* prevEle, IObject* obj)
+    {
+        return nullptr;
     }
 }

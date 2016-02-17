@@ -31,14 +31,25 @@ namespace Peach3D
         }
     }
 
-    bool LayoutManager::loadLayout(const std::string& file, Widget* parent, const LayoutVarBindFunction& bindFunc, const LayoutLoadOverFunction& overFunc)
+    bool LayoutManager::loadLayout(const char* file, Widget* parent, const LayoutVarBindFunction& bindFunc, const LayoutLoadOverFunction& overFunc)
     {
+        std::string fileName = file;
+        std::string ext = fileName.substr(fileName.rfind('.') == std::string::npos ? fileName.length() : fileName.rfind('.') + 1);
+        Peach3DAssert(ext.compare("plt") == 0, "Not supported layout format file");
+        
         bool loadRes = false;
-        ulong fileLength = 0;
-        uchar* fileData = ResourceManager::getSingleton().getFileData(file.c_str(), &fileLength);
-        if (fileData && fileLength > 0) {
-            loadRes = loadLayout(fileData, fileLength, parent, bindFunc, overFunc);
-            free(fileData);
+        // layout filename extension must be 'plt'
+        if (ext.compare("plt") == 0) {
+            ulong fileLength = 0;
+            uchar* fileData = ResourceManager::getSingleton().getFileData(file, &fileLength);
+            if (fileData && fileLength > 0) {
+                loadRes = loadLayout(fileData, fileLength, parent, bindFunc, overFunc);
+                free(fileData);
+            }
+            
+            if (loadRes) {
+                Peach3DLog(LogLevel::eInfo, "Load layout file \"%s\" success", file);
+            }
         }
         return loadRes;
     }

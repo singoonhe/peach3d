@@ -199,8 +199,8 @@ void LayoutSample::init(Widget* parentWidget)
     // set title and desc
     mTitle = "Layout Sample";
     mDesc = "Layout loading and variables binding, check \"Peach3DLayoutManager.cpp\" for more";
-    // load layout file
-    LayoutManager::getSingleton().loadLayout("testlayout.xml", parentWidget, [&](const std::string& name, Widget* widget) {
+    // load *.plt(Peach3D Layout Text) file
+    LayoutManager::getSingleton().loadLayout("testlayout.plt", parentWidget, [&](const std::string& name, Widget* widget) {
         LAYOUT_BIND_NAME_VARIATE("LogoSprite", mLogoSprite, name, widget)
         LAYOUT_BIND_NAME_VARIATE("NoticeLabel", mNoticeLabel, name, widget)
         LAYOUT_BIND_NAME_VARIATE("ChangeButton", mChangeButton, name, widget)

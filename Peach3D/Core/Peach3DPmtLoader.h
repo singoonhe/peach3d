@@ -25,10 +25,14 @@ namespace Peach3D
         static bool pmtMeshDataParse(uchar* orignData, ulong length, const std::string& dir, Mesh* dMesh);
         
     private:
-        /* Read object vertex and index data. */
-        static void objVertexDataParse(const XMLElement* objEle, Mesh* dMesh);
+        /* Read object data, include vertex/index/material. */
+        static void objDataParse(const XMLElement* objEle, Mesh* dMesh);
+        /* Read object vertex data. */
+        static const XMLElement* objVertexDataParse(const XMLElement* prevEle, uint verType, IObject* obj);
+        /* Read object index data. */
+        static const XMLElement* objIndexDataParse(const XMLElement* prevEle, IObject* obj);
         /* Read object material data. */
-        static void objMaterialDataParse(const XMLElement* parentEle, IObject* obj);
+        static const XMLElement* objMaterialDataParse(const XMLElement* prevEle, IObject* obj);
     };
 }
 
