@@ -12,7 +12,7 @@ bool MeshScene::init()
 {
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new ObjSample();});
-    mSampleList.push_back([]()->BaseSample* {return new ObjTexSample();});
+    mSampleList.push_back([]()->BaseSample* {return new EngineMeshSample();});
     mSampleList.push_back([]()->BaseSample* {return new DrawModeSample();});
     mSampleList.push_back([]()->BaseSample* {return new OBBSample();});
     
@@ -25,15 +25,15 @@ void ObjSample::init(Widget* parentWidget)
 {
     // set title and desc
     mTitle = "Obj format file Sample";
-    mDesc = "load .obj format file without texture, auto draw batch";
+    mDesc = "load .obj format file , auto draw batch";
     // load mesh
     auto cubeMesh = ResourceManager::getSingleton().addMesh("Cube.obj");
-    auto cubeNode = SceneManager::getSingleton().getRootSceneNode()->createChild();
+    auto cubeNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, 3.f, 0.f));
     cubeNode->attachMesh(cubeMesh);
     // rotate repeat
     cubeNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
     
-    auto cubeNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, 0.f, 0.f));
+    auto cubeNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, 3.f, 0.f));
     cubeNode1->attachMesh(cubeMesh);
     // modify material color
     Material node1Mat = cubeNode1->getRenderNode("Cube")->getMaterial();
@@ -42,42 +42,49 @@ void ObjSample::init(Widget* parentWidget)
     // rotate repeat
     cubeNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
     
-    auto cubeNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(6.f, 0.f, 0.f));
+    auto cubeNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(6.f, 3.f, 0.f));
     cubeNode2->attachMesh(cubeMesh);
     // scale node can't affect others
     cubeNode2->setScale(Vector3(2.f, 2.f, 2.f));
     // rotate repeat
     cubeNode2->runAction(Repeat::createForever(RotateBy3D::create(Vector3(DEGREE_TO_RADIANS(360.0f), 0.0f, 0.0f), 5.0f)));
+    
+    /******************************** mesh with texture **************************************/
+    // load mesh
+    auto texMesh = ResourceManager::getSingleton().addMesh("texcube.obj");
+    auto texNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -3.f, 0.f));
+    texNode->attachMesh(texMesh);
+    // rotate repeat
+    texNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
+    
+    auto texNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, -3.f, 0.f));
+    texNode1->attachMesh(texMesh);
+    // modify material color
+    Material texNode1Mat = texNode1->getRenderNode("Cube")->getMaterial();
+    texNode1Mat.diffuse = Color4(1.f, 0.f, 0.f, 1.f);
+    texNode1->getRenderNode("Cube")->setMaterial(texNode1Mat);
+    texNode1->setScale(Vector3(1.5f, 1.5f, 1.5f));
+    // rotate repeat
+    texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
+    
+    auto texNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(6.f, -3.f, 0.f));
+    texNode2->attachMesh(texMesh);
+    // modify material texture
+    texNode2->getRenderNode("Cube")->resetTextureByIndex(0, ResourceManager::getSingleton().addTexture("peach3d_leaf.png"));
+    // rotate repeat
+    texNode2->runAction(Repeat::createForever(RotateBy3D::create(Vector3(DEGREE_TO_RADIANS(360.0f), 0.0f, 0.0f), 5.0f)));
 }
 
-void ObjTexSample::init(Widget* parentWidget)
+void EngineMeshSample::init(Widget* parentWidget)
 {
     // set title and desc
-    mTitle = "Obj format file with texture Sample";
-    mDesc = "load .obj format file with one texture, same texture node will draw batch";
-    // load mesh
-    auto cubeMesh = ResourceManager::getSingleton().addMesh("texcube.obj");
-    auto cubeNode = SceneManager::getSingleton().getRootSceneNode()->createChild();
-    cubeNode->attachMesh(cubeMesh);
+    mTitle = "Peach3D Mesh File Sample";
+    mDesc = "load *.pmt(Peach3D Mesh Text) and *.pmb(Peach3D Mesh Binary) file";
+    auto texMesh = ResourceManager::getSingleton().addMesh("texcube.pmt");
+    auto texNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, 3.f, 0.f));
+    texNode->attachMesh(texMesh);
     // rotate repeat
-    cubeNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
-    
-    auto cubeNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, 0.f, 0.f));
-    cubeNode1->attachMesh(cubeMesh);
-    // modify material color
-    Material node1Mat = cubeNode1->getRenderNode("Cube")->getMaterial();
-    node1Mat.diffuse = Color4(1.f, 0.f, 0.f, 1.f);
-    cubeNode1->getRenderNode("Cube")->setMaterial(node1Mat);
-    cubeNode1->setScale(Vector3(1.5f, 1.5f, 1.5f));
-    // rotate repeat
-    cubeNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
-
-    auto cubeNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(6.f, 0.f, 0.f));
-    cubeNode2->attachMesh(cubeMesh);
-    // modify material texture
-    cubeNode2->getRenderNode("Cube")->resetTextureByIndex(0, ResourceManager::getSingleton().addTexture("peach3d_leaf.png"));
-    // rotate repeat
-    cubeNode2->runAction(Repeat::createForever(RotateBy3D::create(Vector3(DEGREE_TO_RADIANS(360.0f), 0.0f, 0.0f), 5.0f)));
+    texNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
 }
 
 void DrawModeSample::init(Widget* parentWidget)

@@ -24,7 +24,7 @@ class ObjSample : public BaseSample
     void init(Widget* parentWidget);
 };
 
-class ObjTexSample : public BaseSample
+class EngineMeshSample : public BaseSample
 {
     void init(Widget* parentWidget);
 };

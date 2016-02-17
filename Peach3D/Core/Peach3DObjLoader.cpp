@@ -244,7 +244,7 @@ namespace Peach3D
         }
     }
     
-    bool ObjLoader::objMeshDataParse(uchar* orignData, ulong length, const std::string& dir, Mesh* dMesh)
+    bool ObjLoader::objMeshDataParse(uchar* orignData, ulong length, const char* dir, Mesh* dMesh)
     {
         std::string mtlFileName;
         uint meshPosCount = 0, meshNormalCount = 0, meshUVCount = 0;
@@ -433,11 +433,13 @@ namespace Peach3D
                             std::string relativePath = mtlList[1].substr(mtlList[1].rfind('/') == std::string::npos ? 0 : mtlList[1].rfind('/') + 1);
                             ITexture* tex = ResourceManager::getSingleton().addTexture(relativePath.c_str());
                             if (!tex && dir.size() > 0){
-                                // read mtl from absolute path
+                                // read texture from absolute path
                                 tex = ResourceManager::getSingleton().addTexture((dir + relativePath).c_str());
                             }
-                            // add texture to material
-                            currentMtl->textureList.push_back(tex);
+                            if (tex) {
+                                // add texture to material
+                                currentMtl->textureList.push_back(tex);
+                            }
                         }
                     }
                         break;

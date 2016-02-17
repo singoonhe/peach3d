@@ -45,8 +45,7 @@
 			<Texture>
 				<File>peach3d_icon.png</File>
 				<!--TextureWrap::eRepeat-->
-				<WrapU>1</WrapU>
-				<WrapV>1</WrapV>
+				<WrapUV>1</WrapUV>
 			</Texture>
 		</Material>
 	</Object>

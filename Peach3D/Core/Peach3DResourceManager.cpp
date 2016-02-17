@@ -394,13 +394,13 @@ namespace Peach3D
                 bool loadResult = false;
                 std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
                 if (ext.compare("obj") == 0) {
-                    loadResult = ObjLoader::objMeshDataParse(fileData, fileLength, fileDir, fileMesh);
+                    loadResult = ObjLoader::objMeshDataParse(fileData, fileLength, fileDir.c_str(), fileMesh);
                 }
                 else if (ext.compare("pmt") == 0) {
-                    loadResult = PmtLoader::pmtMeshDataParse(fileData, fileLength, fileDir, fileMesh);
+                    loadResult = PmtLoader::pmtMeshDataParse(fileData, fileLength, fileDir.c_str(), fileMesh);
                 }
                 else if (ext.compare("pmb") == 0) {
-                    loadResult = PmbLoader::pmbMeshDataParse(fileData, fileLength, fileDir, fileMesh);
+                    loadResult = PmbLoader::pmbMeshDataParse(fileData, fileLength, fileDir.c_str(), fileMesh);
                 }
                 else {
                     Peach3DLog(LogLevel::eError, "Did't support the mesh format \"%s\"", ext.c_str());

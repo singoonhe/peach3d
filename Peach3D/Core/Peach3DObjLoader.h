@@ -47,6 +47,10 @@ namespace Peach3D
         };
         
     public:
+        // parse .obj mesh data
+        static bool objMeshDataParse(uchar* orignData, ulong length, const char* dir, Mesh* dMesh);
+        
+    private:
         // parse .obj vertex count, objInfoMap need be modified
         static void objMeshVertexCountParse(uchar* orignData, std::map<std::string, ObjDataInfo*>& objInfoMap, std::string& mtlFileName,
                                             uint& meshPosCount, uint& meshNormalCount, uint& meshUVCount);
@@ -54,15 +58,10 @@ namespace Peach3D
         static void objMeshVertexDataParse(uchar* orignData, std::map<std::string, ObjDataInfo*>& objInfoMap,
                                            uint meshPosCount, uint meshNormalCount, uint meshUVCount,
                                            float** meshPosCache, float** meshNormalCache, float** meshUVCache);
-        // parse .obj mesh data
-        static bool objMeshDataParse(uchar* orignData, ulong length, const std::string& dir, Mesh* dMesh);
-        
-        /** Set material to Mesh Object. */
-        static void setMaterialToObject(Material* mat, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap);
-        
-    private:
         // load obj mtl file
         static void readMtlFile(const std::string& mtlFile, const std::string& dir, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap);
+        /** Set material to Mesh Object. */
+        static void setMaterialToObject(Material* mat, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap);
     };
 }
 
