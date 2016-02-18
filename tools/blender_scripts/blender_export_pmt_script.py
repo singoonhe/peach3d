@@ -105,14 +105,20 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
 		ET.SubElement(objElem, "VertexType").text="22"
 		ET.SubElement(objElem, "VertexCount").text=str(len(mesh.uv_textures.active.data))
 	else:
-		ET.SubElement(objElem, "VertexType").text="6"
+		if props.export_normal:
+			ET.SubElement(objElem, "VertexType").text="6"
+		else:
+			ET.SubElement(objElem, "VertexType").text="2"
 		# write vertex count
 		vertex_total_count = len(mesh.vertices)
 		ET.SubElement(objElem, "VertexCount").text=str(vertex_total_count)
 		# write vertex data
 		vertex_current_count = 0
 		for vert in mesh.vertices:
-			vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z)
+			if props.export_normal:
+				vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z)
+			else:
+				vertex_source += '%.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z)
 			vertex_current_count += 1
 			if vertex_current_count < vertex_total_count:
 				vertex_source += "\n" + 3 * "    "
