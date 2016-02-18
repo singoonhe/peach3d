@@ -30,6 +30,15 @@ import shutil
 import bpy
 import mathutils
 import xml.etree.cElementTree as ET
+from xml.etree import ElementTree
+from xml.dom import minidom
+
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    rough_string = ElementTree.tostring(elem, encoding='UTF-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="    ", encoding='UTF-8')
 
 # make object triangles if need
 def triangulateNMesh(object):
@@ -71,10 +80,6 @@ def triangulateNMesh(object):
 		me_ob = object
 	return me_ob
 
-def add_tail_xml_element(elem, count):
-	if not elem.tail or not elem.tail.strip():
-		elem.tail = "\n" + count*"    "
-
 # export one object
 def do_export_object(context, props, me_ob, xmlRoot, isLast):
 	# add object
@@ -92,6 +97,43 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
 	if props.rot_x90:
 		mat_x90 = mathutils.Matrix.Rotation(-math.pi/2, 4, 'X')
 		mesh.transform(mat_x90)
+
+	vertex_source = "\n" + 3 * "    "
+	index_source = "\n" + 3 * "    "
+	# write vertex type
+	if len(mesh.uv_textures) > 0:
+		ET.SubElement(objElem, "VertexType").text="22"
+		ET.SubElement(objElem, "VertexCount").text=str(len(mesh.uv_textures.active.data))
+	else:
+		ET.SubElement(objElem, "VertexType").text="6"
+		# write vertex count
+		vertex_total_count = len(mesh.vertices)
+		ET.SubElement(objElem, "VertexCount").text=str(vertex_total_count)
+		# write vertex data
+		vertex_current_count = 0
+		for vert in mesh.vertices:
+			vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z)
+			vertex_current_count += 1
+			if vertex_current_count < vertex_total_count:
+				vertex_source += "\n" + 3 * "    "
+		ET.SubElement(objElem, "Vertexes").text=vertex_source + "\n" + 2 * "    "
+		# write index count
+		index_total_count = 0
+		for face in mesh.tessfaces:
+			if len(face.vertices) == 3:
+				index_total_count += 3
+		ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
+		# write index data
+		index_current_count = 0
+		for face in mesh.tessfaces:
+			if len(face.vertices) == 3:
+				for index in face.vertices:
+					index_source = index_source + str(index) + ", "
+					index_current_count += 1
+					# auto newline if string too long
+				if (index_current_count % 12 == 0) and (index_current_count < index_total_count):
+					index_source += "\n" + 3 * "    "
+		ET.SubElement(objElem, "Indexes").text=index_source + "\n" + 2 * "    "
 
 	# if len(mesh.uv_textures) > 0:
 	# 	writeString(file, 'struct vertexDataTextured\n\
@@ -137,7 +179,6 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
 def do_export_mesh(context, props, filepath):
 	# write file head
 	xmlRoot = ET.Element("Mesh", version="0.1")
-	add_tail_xml_element(xmlRoot, 1)
 
 	# write all selected objects
 	ob_list = context.selected_objects
@@ -149,8 +190,9 @@ def do_export_mesh(context, props, filepath):
 		do_export_object(context, props, me_ob, xmlRoot, obj_index==obj_count)
 		obj_index = obj_index + 1
 	# save to file
-	tree = ET.ElementTree(xmlRoot)
-	tree.write(filepath, "UTF-8")
+	file = open(filepath, "wb")
+	file.write(prettify(xmlRoot))
+	file.close()
 
 
 ###### EXPORT OPERATOR #######

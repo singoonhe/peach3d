@@ -163,20 +163,22 @@ namespace Peach3D
         
         // read texture attribute
         auto textureEle = emissiveEle->NextSiblingElement();
-        auto texFileEle = textureEle->FirstChildElement();
-        std::string fileName = texFileEle->GetText();
-        ITexture* tex = ResourceManager::getSingleton().addTexture(fileName.c_str());
-        if (!tex && strlen(dir) > 0){
-            // read texture from absolute path
-            tex = ResourceManager::getSingleton().addTexture((dir + fileName).c_str());
-        }
-        if (tex) {
-            // add texture to material
-            objMat.textureList.push_back(tex);
-            
-            // read texture warp
-            auto warpUVEle = texFileEle->NextSiblingElement();
-            tex->setWrap((TextureWrap)atoi(warpUVEle->GetText()));
+        if (textureEle) {
+            auto texFileEle = textureEle->FirstChildElement();
+            std::string fileName = texFileEle->GetText();
+            ITexture* tex = ResourceManager::getSingleton().addTexture(fileName.c_str());
+            if (!tex && strlen(dir) > 0){
+                // read texture from absolute path
+                tex = ResourceManager::getSingleton().addTexture((dir + fileName).c_str());
+            }
+            if (tex) {
+                // add texture to material
+                objMat.textureList.push_back(tex);
+                
+                // read texture warp
+                auto warpUVEle = texFileEle->NextSiblingElement();
+                tex->setWrap((TextureWrap)atoi(warpUVEle->GetText()));
+            }
         }
         obj->setMaterial(objMat);
         return matEle;
