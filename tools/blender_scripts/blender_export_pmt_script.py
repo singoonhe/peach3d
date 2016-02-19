@@ -134,9 +134,9 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
                         # record one vertex data
                         vert = mesh.vertices[index]
                         if props.export_normal:
-                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z, uv[0], uv[1])
+                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z, uv[0], 1.0 - uv[1])
                         else:
-                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], uv[1])
+                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], 1.0 - uv[1])
                         vertex_source += tail_str
                         # vertex data increase once
                         vert_unique_count += 1
