@@ -102,12 +102,19 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
     index_source = "\n" + 3 * "    "
     # write vertex type
     if len(mesh.uv_textures) > 0:
-        ET.SubElement(objElem, "VertexType").text="22"
+        if props.export_normal:
+        	# VertexType::Point3|VertexType::Normal|VertexType::UV
+        	ET.SubElement(objElem, "VertexType").text="22"
+        else:
+        	# VertexType::Point3|VertexType::UV
+            ET.SubElement(objElem, "VertexType").text="18"
         ET.SubElement(objElem, "VertexCount").text=str(len(mesh.uv_textures.active.data))
     else:
         if props.export_normal:
+        	# VertexType::Point3|VertexType::Normal
             ET.SubElement(objElem, "VertexType").text="6"
         else:
+        	# VertexType::Point3
             ET.SubElement(objElem, "VertexType").text="2"
         # write vertex count
         vertex_total_count = len(mesh.vertices)
@@ -123,22 +130,20 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
             if vertex_current_count < vertex_total_count:
                 vertex_source += "\n" + 3 * "    "
         ET.SubElement(objElem, "Vertexes").text=vertex_source + "\n" + 2 * "    "
-        # write index count
+        # write index count and data
         index_total_count = 0
-        for face in mesh.tessfaces:
-            if len(face.vertices) == 3:
-                index_total_count += 3
-        ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
-        # write index data
         index_current_count = 0
         for face in mesh.tessfaces:
             if len(face.vertices) == 3:
+                index_total_count += 3
+                # record index data
                 for index in face.vertices:
                     index_source = index_source + str(index) + ", "
                     index_current_count += 1
                     # auto newline if string too long
                 if (index_current_count % 12 == 0) and (index_current_count < index_total_count):
                     index_source += "\n" + 3 * "    "
+        ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
         ET.SubElement(objElem, "Indexes").text=index_source + "\n" + 2 * "    "
 
     # write material info，(take the first one)
