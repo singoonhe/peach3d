@@ -45,11 +45,11 @@ namespace Peach3D
         if (objName && (verType & VertexType::Point3)) {
             // create IObject
             IObject* obj = dMesh->createObject(objName);
-            // read vertex data
+            // read vertex data, vertex data must be valid
             auto nextEle = PmtLoader::objVertexDataParse(vTypeEle, verType, obj);
-            // read index data
+            // read index data, index data must be valid
             nextEle = PmtLoader::objIndexDataParse(nextEle, obj);
-            // read material data
+            // read material data, could be empty
             nextEle = PmtLoader::objMaterialDataParse(nextEle, dir, obj);
         }
     }
@@ -105,7 +105,11 @@ namespace Peach3D
     const XMLElement* PmtLoader::objIndexDataParse(const XMLElement* prevEle, IObject* obj)
     {
         // read indexes count
-        auto indexCountEle = prevEle->NextSiblingElement();
+        auto indexCountEle = prevEle->NextSiblingElement("IndexCount");
+        if (!indexCountEle) {
+            Peach3DErrorLog("Pmt file parse indexes data error");
+            return prevEle;
+        }
         auto indexCount = atol(indexCountEle->GetText());
         IndexType inxType = IndexType::eUShort;
         auto inxDataSize = indexCount * sizeof(ushort);
@@ -144,41 +148,54 @@ namespace Peach3D
     const XMLElement* PmtLoader::objMaterialDataParse(const XMLElement* prevEle, const char* dir, IObject* obj)
     {
         Material objMat;
-        auto matEle = prevEle->NextSiblingElement();
+        auto matEle = prevEle->NextSiblingElement("Material");
+        // material may be empty
+        if (!matEle) {
+            return prevEle;
+        }
         // read ambient attribute
-        auto ambientEle = matEle->FirstChildElement();
-        sscanf(ambientEle->GetText(), "%f,%f,%f", &objMat.ambient.r, &objMat.ambient.g, &objMat.ambient.b);
-        // read diffuse attribute
-        auto diffuseEle = ambientEle->NextSiblingElement();
-        sscanf(diffuseEle->GetText(), "%f,%f,%f", &objMat.diffuse.r, &objMat.diffuse.g, &objMat.diffuse.b);
-        // read specular attribute
-        auto specularEle = diffuseEle->NextSiblingElement();
-        sscanf(specularEle->GetText(), "%f,%f,%f", &objMat.specular.r, &objMat.specular.g, &objMat.specular.b);
-        // read shininess attribute
-        auto shininessEle = specularEle->NextSiblingElement();
-        sscanf(shininessEle->GetText(), "%f", &objMat.shininess);
-        // read emissive attribute
-        auto emissiveEle = shininessEle->NextSiblingElement();
-        sscanf(emissiveEle->GetText(), "%f,%f,%f", &objMat.emissive.r, &objMat.emissive.g, &objMat.emissive.b);
-        
-        // read texture attribute
-        auto textureEle = emissiveEle->NextSiblingElement();
-        if (textureEle) {
-            auto texFileEle = textureEle->FirstChildElement();
-            std::string fileName = texFileEle->GetText();
-            ITexture* tex = ResourceManager::getSingleton().addTexture(fileName.c_str());
-            if (!tex && strlen(dir) > 0){
-                // read texture from absolute path
-                tex = ResourceManager::getSingleton().addTexture((dir + fileName).c_str());
+        auto attrEle = matEle->FirstChildElement();
+        while (attrEle && attrEle->Name()) {
+            const char* eleName = attrEle->Name();
+            if (strcmp(eleName, "Ambient") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &objMat.ambient.r, &objMat.ambient.g, &objMat.ambient.b);
             }
-            if (tex) {
-                // add texture to material
-                objMat.textureList.push_back(tex);
-                
-                // read texture warp
-                auto warpUVEle = texFileEle->NextSiblingElement();
-                tex->setWrap((TextureWrap)atoi(warpUVEle->GetText()));
+            else if (strcmp(eleName, "Diffuse") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &objMat.diffuse.r, &objMat.diffuse.g, &objMat.diffuse.b);
             }
+            else if (strcmp(eleName, "Specular") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &objMat.specular.r, &objMat.specular.g, &objMat.specular.b);
+            }
+            else if (strcmp(eleName, "Shininess") == 0) {
+                sscanf(attrEle->GetText(), "%f", &objMat.shininess);
+            }
+            else if (strcmp(eleName, "Emissive") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &objMat.emissive.r, &objMat.emissive.g, &objMat.emissive.b);
+            }
+            else if (strcmp(eleName, "Alpha") == 0) {
+                sscanf(attrEle->GetText(), "%f", &objMat.alpha);
+            }
+            else if (strcmp(eleName, "Texture") == 0) {
+                auto texFileEle = attrEle->FirstChildElement();
+                std::string fileName = texFileEle->GetText();
+                ITexture* tex = ResourceManager::getSingleton().addTexture(fileName.c_str());
+                if (!tex && strlen(dir) > 0){
+                    // read texture from absolute path
+                    tex = ResourceManager::getSingleton().addTexture((dir + fileName).c_str());
+                }
+                if (tex) {
+                    // add texture to material
+                    objMat.textureList.push_back(tex);
+                    
+                    // read texture warp
+                    auto warpUVEle = texFileEle->NextSiblingElement();
+                    if (texFileEle) {
+                        tex->setWrap((TextureWrap)atoi(warpUVEle->GetText()));
+                    }
+                }
+            }
+            
+            attrEle = attrEle->NextSiblingElement();
         }
         obj->setMaterial(objMat);
         return matEle;

@@ -443,6 +443,13 @@ namespace Peach3D
                         }
                     }
                         break;
+                    case 'd':
+                    {
+                        // read alpha attribute
+                        std::string vecStr = (*iter).substr(2).c_str();
+                        currentMtl->alpha = (float)atof(vecStr.c_str());
+                    }
+                        break;
                 }
             }
             // release material

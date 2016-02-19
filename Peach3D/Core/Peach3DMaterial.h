@@ -18,7 +18,7 @@ namespace Peach3D
 {
     struct PEACH3D_DLL Material
     {
-        Material():shininess(0.0f),UVScrollTexIndex(PD_UINT_MAX) {}
+        Material():shininess(0.0f),UVScrollTexIndex(PD_UINT_MAX), alpha(1.f) {}
         //! Operators
         Material &operator=(const Material& other)
         {
@@ -27,6 +27,8 @@ namespace Peach3D
             diffuse = other.diffuse;
             specular = other.specular;
             shininess = other.shininess;
+            emissive = other.emissive;
+            alpha = other.alpha;
             UVScrollSpeed = other.UVScrollSpeed;
             UVScrollTexIndex = other.UVScrollTexIndex;
             return *this;
@@ -80,6 +82,7 @@ namespace Peach3D
         Color4  specular;
         float   shininess;
         Color4  emissive;
+        float   alpha;
         
         Vector2 UVScrollSpeed;     // texture uv scroll speed
         Vector2 CurUVOffset;       // current uv scroll offset
