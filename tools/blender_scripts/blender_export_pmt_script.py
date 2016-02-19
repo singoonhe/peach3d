@@ -42,7 +42,7 @@ def prettify(elem):
 
 # convert vindex and uv to key
 def gen_vertexuv_key(vindex, uv):
-    return ('%d, %f, %f') % (vindex, round(uv[0], 4), round(uv[1], 4))
+    return '%d, %f, %f' % (vindex, round(uv[0], 4), round(uv[1], 4))
 
 # make object triangles if need
 def triangulateNMesh(object):
@@ -102,8 +102,9 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
         mat_x90 = mathutils.Matrix.Rotation(-math.pi/2, 4, 'X')
         mesh.transform(mat_x90)
 
-    vertex_source = "\n" + 3 * "    "
-    index_source = "\n" + 3 * "    "
+    tail_str = "\n" + 3 * "    "
+    vertex_source = tail_str
+    index_source = tail_str
     # write vertex type
     if len(mesh.uv_textures) > 0:
         if props.export_normal:
@@ -112,30 +113,20 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
         else:
             # VertexType::Point3|VertexType::UV
             ET.SubElement(objElem, "VertexType").text="18"
-        # record index count, below will used total count
-        index_total_count = 0
-        for face in mesh.tessfaces:
-            if len(face.vertices) == 3:
-                index_total_count += 3
         # record vertex and index data
-        uv_layer = mesh.uv_textures.active
+        uv_layer = mesh.uv_layers.active.data
         index_current_count = 0
         vert_unique_count = 0
         vert_unique_dict = {}
         for face in mesh.tessfaces:
-            faceUV = uv_layer.data[face.index]
-            # sign each uv in face
-            vertex_index=0
             if len(face.vertices) == 3:
+                vertex_index = face.index * 3
                 for index in face.vertices:
                     # calc unique key, charge is vertex existed
-                    uv = faceUV.uv[vertex_index]
-                    vertex_index += 1
+                    uv = uv_layer[vertex_index].uv
                     vkey = gen_vertexuv_key(index, uv)
-                    if vert_unique_dict.has_key(vkey):
-                        # record one exist index
-                        index_source += str(vert_unique_dict.get(vkey)) + ", "
-                    else:
+                    vvalue = vert_unique_dict.get(vkey)
+                    if vvalue is None:
                         # save current key
                         vert_unique_dict[vkey] = vert_unique_count
                         # record one index data
@@ -146,18 +137,28 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
                             vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z, uv[0], uv[1])
                         else:
                             vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], uv[1])
+                        vertex_source += tail_str
                         # vertex data increase once
                         vert_unique_count += 1
+                    else:
+                        # record one exist index
+                        index_source += str(vvalue) + ", "
 
+                    vertex_index += 1
                     # auto newline if string too long
                     index_current_count += 1
-                    if (index_current_count % 12 == 0) and (index_current_count < index_total_count):
-                        index_source += "\n" + 3 * "    "
+                    if (index_current_count % 12 == 0):
+                        index_source += tail_str
         # write vertex data and index data
         ET.SubElement(objElem, "VertexCount").text=str(vert_unique_count)
-        ET.SubElement(objElem, "Vertexes").text=vertex_source + "\n" + 2 * "    "
-        ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
-        ET.SubElement(objElem, "Indexes").text=index_source + "\n" + 2 * "    "
+        vertex_source = vertex_source[:-4]
+        ET.SubElement(objElem, "Vertexes").text=vertex_source
+        ET.SubElement(objElem, "IndexCount").text=str(index_current_count)
+        if index_current_count % 12 == 0:
+            index_source = index_source[:-4]
+        else:
+            index_source += tail_str[:-4]
+        ET.SubElement(objElem, "Indexes").text=index_source
     else:
         if props.export_normal:
             # VertexType::Point3|VertexType::Normal
@@ -169,22 +170,14 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
         vertex_total_count = len(mesh.vertices)
         ET.SubElement(objElem, "VertexCount").text=str(vertex_total_count)
         # write vertex data
-        vertex_current_count = 0
         for vert in mesh.vertices:
             if props.export_normal:
                 vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z)
             else:
                 vertex_source += '%.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z)
-            vertex_current_count += 1
-            if vertex_current_count < vertex_total_count:
-                vertex_source += "\n" + 3 * "    "
-        ET.SubElement(objElem, "Vertexes").text=vertex_source + "\n" + 2 * "    "
-        # write index count
-        index_total_count = 0
-        for face in mesh.tessfaces:
-            if len(face.vertices) == 3:
-                index_total_count += 3
-        ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
+            vertex_source += tail_str
+        vertex_source = vertex_source[:-4]
+        ET.SubElement(objElem, "Vertexes").text=vertex_source
         # write index data
         index_current_count = 0
         for face in mesh.tessfaces:
@@ -194,9 +187,14 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
                     index_source += str(index) + ", "
                     index_current_count += 1
                     # auto newline if string too long
-                if (index_current_count % 12 == 0) and (index_current_count < index_total_count):
-                    index_source += "\n" + 3 * "    "
-        ET.SubElement(objElem, "Indexes").text=index_source + "\n" + 2 * "    "
+                if (index_current_count % 12 == 0):
+                    index_source += tail_str
+        ET.SubElement(objElem, "IndexCount").text=str(index_current_count)
+        if index_current_count % 12 == 0:
+            index_source = index_source[:-4]
+        else:
+            index_source += tail_str[:-4]
+        ET.SubElement(objElem, "Indexes").text=index_source
 
     # write material info，(take the first one)
     mat_list = mesh.materials
@@ -230,7 +228,7 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
         if len(mesh.uv_textures) > 0:
             texEle = ET.SubElement(matEle, "Texture")
             # write texture file name
-            uv_texture = me.uv_textures.active.data
+            uv_texture = mesh.uv_textures.active.data
             tex_file_path = uv_texture[0].image.filepath
             ET.SubElement(texEle, "File").text=os.path.basename(tex_file_path)
             # default warp uv to TextureWrap::eClampToEdge
