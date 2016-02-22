@@ -234,6 +234,7 @@
 		18A272E719E6707E00145FDB /* Peach3DObjLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DObjLoader.cpp; sourceTree = "<group>"; };
 		18A272E819E6707E00145FDB /* Peach3DObjLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DObjLoader.h; sourceTree = "<group>"; };
 		18A892471C7AA837006EB1A6 /* Peach3DColor3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DColor3.h; sourceTree = "<group>"; };
+		18A8924D1C7AF7D8006EB1A6 /* Peach3DLight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peach3DLight.h; sourceTree = "<group>"; };
 		18ACF49B19D543140020F943 /* Peach3DCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DCamera.cpp; sourceTree = "<group>"; };
 		18ACF49C19D543140020F943 /* Peach3DCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DCamera.h; sourceTree = "<group>"; };
 		18ACF49D19D543140020F943 /* Peach3DColor4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DColor4.h; sourceTree = "<group>"; };
@@ -453,6 +454,7 @@
 				183070A61A24B71F00B4ECB4 /* Peach3DKeyCode.h */,
 				185D824A1B08849C0034F25E /* Peach3DLayoutManager.cpp */,
 				185D824B1B08849C0034F25E /* Peach3DLayoutManager.h */,
+				18A8924D1C7AF7D8006EB1A6 /* Peach3DLight.h */,
 				18ACF4AE19D543140020F943 /* Peach3DLogPrinter.cpp */,
 				18ACF4AF19D543140020F943 /* Peach3DLogPrinter.h */,
 				1855EE5F19D7F97100BECCD0 /* Peach3DMaterial.h */,

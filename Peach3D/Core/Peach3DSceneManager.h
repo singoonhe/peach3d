@@ -16,6 +16,7 @@
 #include "Peach3DMesh.h"
 #include "Peach3DSingleton.h"
 #include "Peach3DScheduler.h"
+#include "Peach3DLight.h"
 
 namespace Peach3D
 {
@@ -85,8 +86,9 @@ namespace Peach3D
         IObject*                mWidgetObject;      // object for rendering widget
         IObject*                mOBBObject;         // object for rendering OBB
         
-        std::vector<Camera*>    mCameraList;        // scene camera list
         Camera*                 mActiveCamera;      // current active camera
+        std::vector<Camera*>    mCameraList;        // scene camera list
+        std::vector<Light>      mLightList;         // scene light list
         
         std::vector<Widget*>                mRenderWidgetList;  // cache widget list
         std::vector<OBB*>                   mRenderOBBList;     // cache OBB render node list
