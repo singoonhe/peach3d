@@ -47,6 +47,7 @@ namespace Peach3D
         setDrawMode(mMode);
         setOBBEnabled(mOBBEnable);
         setPickingEnabled(mPickEnabled, mPickAlways);
+        setAlpha(mAlpha);
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)
@@ -88,6 +89,16 @@ namespace Peach3D
         }
         mPickEnabled = enable;
         mPickAlways = always;
+    }
+    
+    void SceneNode::setAlpha(float alpha)
+    {
+        Peach3DAssert(alpha >= 0.f && alpha <= 1.f, "Alpha must clamp in (0, 1)");
+        Node::setAlpha(alpha);
+        // set all RenderNode alpha
+        for (auto node : mRenderNodeMap) {
+            node.second->setAlpha(alpha);
+        }
     }
     
     SceneNode* SceneNode::createChild(const Vector3& pos, const Vector3& rotation, const Vector3& scale)

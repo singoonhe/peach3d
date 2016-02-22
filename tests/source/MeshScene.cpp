@@ -36,9 +36,10 @@ void ObjSample::init(Widget* parentWidget)
     auto cubeNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, 3.f, 0.f));
     cubeNode1->attachMesh(cubeMesh);
     // modify material color
-    Material node1Mat = cubeNode1->getRenderNode("Cube")->getMaterial();
-    node1Mat.diffuse = Color3(1.f, 0.f, 0.f);
-    cubeNode1->getRenderNode("Cube")->setMaterial(node1Mat);
+    auto cubeObj = cubeNode1->getRenderNode("Cube");
+    if (cubeObj) {
+        cubeObj->setDiffuse(Color3(1.f, 0.f, 0.f));
+    }
     // rotate repeat
     cubeNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
     
@@ -60,9 +61,11 @@ void ObjSample::init(Widget* parentWidget)
     auto texNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, -3.f, 0.f));
     texNode1->attachMesh(texMesh);
     // modify material color
-    Material texNode1Mat = texNode1->getRenderNode("Cube")->getMaterial();
-    texNode1Mat.diffuse = Color3(1.f, 0.f, 0.f);
-    texNode1->getRenderNode("Cube")->setMaterial(texNode1Mat);
+    auto texCubeObj = texNode1->getRenderNode("Cube");
+    if (texCubeObj) {
+        texCubeObj->setDiffuse(Color3(1.f, 0.f, 0.f));
+    }
+    texNode1->runAction(Repeat::createListForever(FadeOut::create(0.f, 3.0f), FadeIn::create(1.f, 3.0f), NULL));
     texNode1->setScale(Vector3(1.5f, 1.5f, 1.5f));
     // rotate repeat
     texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));

@@ -55,6 +55,9 @@ namespace Peach3D
         void setName(const std::string& name) { mName = name; }
         std::string getName() { return mName; }
         
+        virtual void setAlpha(float alpha) { mAlpha = alpha; }
+        float getAlpha() { return mAlpha; }
+        
         void setSwallowEvents(bool swallow) {mSwallowEvents = swallow;}
         bool isSwallowEvents() { return mSwallowEvents; }
         
@@ -72,7 +75,7 @@ namespace Peach3D
         void prepareForRender(float lastFrameTime);
     protected:
         //! user can't call constructor function.
-        Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true) {}
+        Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mAlpha(1.f), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true) {}
         //! clean node and all child node, user can't call destructor function.
         virtual ~Node();
         /** Set Node rendering attribute need update (pos, size, rotate...). */
@@ -96,6 +99,7 @@ namespace Peach3D
         std::string        mName;           // node target name
         bool               mSwallowEvents;  // is swallow events
         bool               mVisible;        // is Node visible
+        float              mAlpha;          // node alpha
         
         bool               mIsRenderDirty;  // is render attribute need update
         bool               mNeedRender;     // is node need render. (alpha==0, visible==false, will cause didn't render)

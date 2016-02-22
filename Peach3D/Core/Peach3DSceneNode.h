@@ -79,6 +79,8 @@ namespace Peach3D
         void setScale(const Vector3& scale);
         /** Get scene node scale, default pos relative to parent. */
         const Vector3& getScale(TranslateRelative type = TranslateRelative::eLocal);
+        /** Set attach mesh alpha. */
+        virtual void setAlpha(float alpha);
         
         /**
          * Default DepthBias not enabled, enabled it when depthBias not equal 0.0f.

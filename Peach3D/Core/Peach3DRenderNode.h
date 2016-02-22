@@ -49,6 +49,7 @@ namespace Peach3D
         void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }
         void setSpecular(const Color3& specular) { mMaterial.specular = specular; }
         void setShininess(float shininess) { mMaterial.shininess = shininess; }
+        void setAlpha(float alpha) { mMaterial.alpha = alpha; }
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
         void resetTextureByIndex(int index, ITexture* texture);
         /** Set render program, preset program will be set default. */

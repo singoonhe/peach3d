@@ -62,16 +62,14 @@ namespace Peach3D
         const Vector2& getAnchorPoint()const {return mAnchor;}
         
         /** get is need rendering */
-        virtual bool isNeedRender() {return Node::isNeedRender() && mRenderProgram && (mDiffColor.a > FLT_EPSILON);}
+        virtual bool isNeedRender() {return Node::isNeedRender() && mRenderProgram;}
         /** Get render hash. */
         uint getRenderStateHash()const {return mRenderStateHash;}
         
         void useProgramForRender(IProgram* program);
         IProgram* getProgramForRender() {return mRenderProgram;}
-        virtual void setColor(const Color3& color) { mDiffColor.r = color.r; mDiffColor.g = color.g; mDiffColor.b = color.b; }
-        Color3 getColor()const { return Color3(mDiffColor.r, mDiffColor.g, mDiffColor.b); }
-        void setAlpha(float alpha) { mDiffColor.a = alpha; }
-        float getAlpha() { return mDiffColor.a; }
+        virtual void setColor(const Color3& color) { mDiffColor = color; }
+        const Color3& getColor()const { return mDiffColor; }
         
         /** Set clip enabled by parent. */
         void setClipEnabled(bool enable) {mClipEnabled = enable;}
@@ -105,7 +103,7 @@ namespace Peach3D
         float       mRotate;    // rotation value, z axis
         Rect        mRect;      // pos and size
         Vector2     mAnchor;    // anchor point, it will effect position/rotation/scaling
-        Color4      mDiffColor; // widget diffuse color, default white color and alpha 1.0f
+        Color3      mDiffColor; // widget diffuse color, Node have alpha attribute
         bool        mClipEnabled;       // is widget will auto be cliped by parent
         
         Vector2     mWorldScale;        // cache world scaling

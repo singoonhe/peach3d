@@ -108,8 +108,6 @@ namespace Peach3D
         float   mCurTime;
     };
     
-    /************************************** 2D Actions ***************************************/
-    
     class PEACH3D_DLL FadeIn : public Delay
     {
     public:
@@ -132,6 +130,8 @@ namespace Peach3D
     protected:
         FadeOut(float finalAlpha, float time) : FadeIn(finalAlpha, time) {}
     };
+    
+    /************************************** 2D Actions ***************************************/
     
     class PEACH3D_DLL MoveBy2D : public Delay
     {

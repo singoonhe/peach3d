@@ -157,11 +157,9 @@ namespace Peach3D
         }
     }
     
-    /************************************** 2D Actions ***************************************/
-    
     void FadeIn::update(ActionImplement* target, float lastFrameTime)
     {
-        Widget* nNode = dynamic_cast<Widget*>(target);
+        Node* nNode = dynamic_cast<Node*>(target);
         if (!mIsFinished && nNode && mTotleTime > 0.0f) {
             float curAlpha = nNode->getAlpha();
             float nomalDis = (mFinalAlpha - curAlpha) / (mTotleTime - mCurTime);
@@ -175,6 +173,8 @@ namespace Peach3D
             nNode->setAlpha(curAlpha);
         }
     }
+    
+    /************************************** 2D Actions ***************************************/
     
     void MoveBy2D::update(ActionImplement* target, float lastFrameTime)
     {

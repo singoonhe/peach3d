@@ -31,7 +31,8 @@ namespace Peach3D
     Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true)
     {
         // set default diffuse color, not show widget
-        mDiffColor = Color4(1.0f, 1.0f, 1.0f, 0.0f);
+        mDiffColor.r = mDiffColor.g = mDiffColor.b = 1.f;
+        mAlpha = 0.f;
     }
     
     void Widget::setPosition(const Vector2& pos)
