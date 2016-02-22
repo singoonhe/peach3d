@@ -413,15 +413,15 @@ namespace Peach3D
                         switch ((*iter)[1]) {
                             case 'a':
                                 // set material ambient
-                                currentMtl->ambient = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
+                                currentMtl->ambient = Color3((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
                                 break;
                             case 'd':
                                 // set material diffuse
-                                currentMtl->diffuse = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
+                                currentMtl->diffuse = Color3((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
                                 break;
                             case 's':
                                 // set material specular
-                                currentMtl->specular = Color4((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
+                                currentMtl->specular = Color3((float)atof(colorList[0].c_str()), (float)atof(colorList[1].c_str()), (float)atof(colorList[2].c_str()));
                                 break;
                         }
                     }

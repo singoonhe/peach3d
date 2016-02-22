@@ -136,7 +136,7 @@ namespace Peach3D
         }
     }
     
-    void Button::setTitleColor(const Color4& color)
+    void Button::setTitleColor(const Color3& color)
     {
         if (mTitleLabel) {
             mTitleLabel->setFillColor(color);

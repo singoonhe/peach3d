@@ -326,8 +326,8 @@ namespace Peach3D
                     }
                     break;
                 case LayoutAttrType::eFillColor: {
-                    Color4 fillColor;
-                    sscanf(attrText, "%f,%f,%f,%f", &fillColor.r, &fillColor.g, &fillColor.b, &fillColor.a);
+                    Color3 fillColor;
+                    sscanf(attrText, "%f,%f,%f", &fillColor.r, &fillColor.g, &fillColor.b);
                     if (dynamic_cast<Label*>(newNode)) {
                         dynamic_cast<Label*>(newNode)->setFillColor(fillColor);
                     }
@@ -343,8 +343,8 @@ namespace Peach3D
                 }
                     break;
                 case LayoutAttrType::eColor: {
-                    Color4 attrColor;
-                    sscanf(attrText, "%f,%f,%f,%f", &attrColor.r, &attrColor.g, &attrColor.b, &attrColor.a);
+                    Color3 attrColor;
+                    sscanf(attrText, "%f,%f,%f", &attrColor.r, &attrColor.g, &attrColor.b);
                     newNode->setColor(attrColor);
                 }
                     break;

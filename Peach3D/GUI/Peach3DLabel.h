@@ -44,9 +44,9 @@ namespace Peach3D
         TextHAlignment getHAlignment() {return mHAlign;}
         
         /** Set text fill color. This will effect start text color, Widget::setColor is also valid. */
-        void setFillColor(const Color4& color);
+        void setFillColor(const Color3& color);
         /** Get text fill color. */
-        const Color4& getFillColor()const {return mFillColor;}
+        const Color3& getFillColor()const {return mFillColor;}
         /** Set label image vertical alignment, deafult is Center. */
         void setImageVAlignment(TextVAlignment align);
         /** Get label image vertical alignment. */
@@ -57,7 +57,7 @@ namespace Peach3D
         void formatText();
         
     protected:
-        Label() : mIsTexDirty(true), mClickedFunc(nullptr), mVAlign(TextVAlignment::eBottom),mHAlign(TextHAlignment::eLeft),mFontSize(0.0f), mFillColor(1.0f, 1.0f, 1.0f, 1.0f), mIsDimUserAssigned(false), mImageVAlign(TextVAlignment::eCenter) { mIsAutoResize = false; }
+        Label() : mIsTexDirty(true), mClickedFunc(nullptr), mVAlign(TextVAlignment::eBottom),mHAlign(TextHAlignment::eLeft),mFontSize(0.0f), mFillColor(1.0f, 1.0f, 1.0f), mIsDimUserAssigned(false), mImageVAlign(TextVAlignment::eCenter) { mIsAutoResize = false; }
         virtual ~Label();
         
         /** Format text and update render state. */
@@ -77,7 +77,7 @@ namespace Peach3D
         std::string     mRealText;
         std::string     mFontName;
         float           mFontSize;
-        Color4          mFillColor;
+        Color3          mFillColor;
         TextVAlignment  mImageVAlign;
         bool            mIsDimUserAssigned; // is label's dim assigned by user
         bool            mIsTexDirty;        // is label texture need update

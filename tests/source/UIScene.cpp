@@ -31,26 +31,26 @@ void WidgetSample::init(Widget* parentWidget)
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     Widget* color1Widget = Widget::create(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     color1Widget->setContentSize(Vector2(200, 200));
-    color1Widget->setColor(Color4Red);
+    color1Widget->setColor(Color3Red);
     color1Widget->setAnchorPoint(Vector2(1, 0));
     color1Widget->setAlpha(0.5f);
     parentWidget->addChild(color1Widget);
     Widget* color2Widget = Widget::create(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     color2Widget->setContentSize(Vector2(100, 100));
-    color2Widget->setColor(Color4Green);
+    color2Widget->setColor(Color3Green);
     color2Widget->setScale(1.5f);
     color2Widget->setAnchorPoint(Vector2(1, 1));
     color2Widget->setAlpha(0.5f);
     parentWidget->addChild(color2Widget);
     Widget* color3Widget = Widget::create(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     color3Widget->setContentSize(Vector2(200, 200));
-    color3Widget->setColor(Color4Blue);
+    color3Widget->setColor(Color3Blue);
     color3Widget->setAnchorPoint(Vector2(0, 1));
     color3Widget->setAlpha(0.5f);
     parentWidget->addChild(color3Widget);
     Widget* color4Widget = Widget::create(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     color4Widget->setContentSize(Vector2(100, 100));
-    color4Widget->setColor(Color4White);
+    color4Widget->setColor(Color3White);
     color4Widget->setScale(1.5f);
     color4Widget->setAnchorPoint(Vector2(0, 0));
     color4Widget->setAlpha(0.5f);
@@ -107,7 +107,7 @@ void LabelSample::init(Widget* parentWidget)
     auto labelDim = Vector2(500, 100);
     Widget* labelBg = Widget::create(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     labelBg->setContentSize(labelDim);
-    labelBg->setColor(Color4Green);
+    labelBg->setColor(Color3Green);
     labelBg->setAlpha(0.5f);
     parentWidget->addChild(labelBg);
     Label* alignLabel = Label::create("Default HAlignment is left, VAlignment is bottom", 20 * LayoutManager::getSingleton().getMinScale());
@@ -123,7 +123,7 @@ void LabelSample::init(Widget* parentWidget)
     // create multi-language label
     Label* chineseLabel = Label::create("这里显示黄色中文字符", 30 * LayoutManager::getSingleton().getMinScale());
     chineseLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 4.0f));
-    chineseLabel->setColor(Color4Yellow);
+    chineseLabel->setColor(Color3Yellow);
     parentWidget->addChild(chineseLabel);
 }
 
@@ -159,7 +159,7 @@ void ButtonSample::init(Widget* parentWidget)
         if (!mEventLabel) {
             mEventLabel = Label::create("Button click event!!!", 30 * LayoutManager::getSingleton().getMinScale());
             mEventLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 4.0f));
-            mEventLabel->setColor(Color4Yellow);
+            mEventLabel->setColor(Color3Yellow);
             mParentWidget->addChild(mEventLabel);
             mTitleButton->setTitleText("hide label");
         }

@@ -37,7 +37,7 @@ void ObjSample::init(Widget* parentWidget)
     cubeNode1->attachMesh(cubeMesh);
     // modify material color
     Material node1Mat = cubeNode1->getRenderNode("Cube")->getMaterial();
-    node1Mat.diffuse = Color4(1.f, 0.f, 0.f, 1.f);
+    node1Mat.diffuse = Color3(1.f, 0.f, 0.f);
     cubeNode1->getRenderNode("Cube")->setMaterial(node1Mat);
     // rotate repeat
     cubeNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
@@ -61,7 +61,7 @@ void ObjSample::init(Widget* parentWidget)
     texNode1->attachMesh(texMesh);
     // modify material color
     Material texNode1Mat = texNode1->getRenderNode("Cube")->getMaterial();
-    texNode1Mat.diffuse = Color4(1.f, 0.f, 0.f, 1.f);
+    texNode1Mat.diffuse = Color3(1.f, 0.f, 0.f);
     texNode1->getRenderNode("Cube")->setMaterial(texNode1Mat);
     texNode1->setScale(Vector3(1.5f, 1.5f, 1.5f));
     // rotate repeat

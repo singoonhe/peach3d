@@ -68,8 +68,8 @@ namespace Peach3D
         
         void useProgramForRender(IProgram* program);
         IProgram* getProgramForRender() {return mRenderProgram;}
-        virtual void setColor(const Color4& color) { mDiffColor = color; }
-        const Color4& getColor()const { return mDiffColor; }
+        virtual void setColor(const Color3& color) { mDiffColor.r = color.r; mDiffColor.g = color.g; mDiffColor.b = color.b; }
+        Color3 getColor()const { return Color3(mDiffColor.r, mDiffColor.g, mDiffColor.b); }
         void setAlpha(float alpha) { mDiffColor.a = alpha; }
         float getAlpha() { return mDiffColor.a; }
         

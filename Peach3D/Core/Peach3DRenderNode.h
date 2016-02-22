@@ -45,9 +45,9 @@ namespace Peach3D
         /** Check is ray intersect to current node. */
         bool isRayIntersect(const Ray& ray) { generateOBB(); return mRenderOBB->isRayIntersect(ray); }
         
-        void setAmbient(const Color4& ambient) { mMaterial.ambient = ambient; }
-        void setDiffuse(const Color4& diffuse) { mMaterial.diffuse = diffuse; }
-        void setSpecular(const Color4& specular) { mMaterial.specular = specular; }
+        void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }
+        void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }
+        void setSpecular(const Color3& specular) { mMaterial.specular = specular; }
         void setShininess(float shininess) { mMaterial.shininess = shininess; }
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
         void resetTextureByIndex(int index, ITexture* texture);

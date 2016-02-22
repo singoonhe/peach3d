@@ -102,7 +102,7 @@ void CallFuncSample::init(Widget* parentWidget)
                                CallFunc::create([=](){
         Label* noticeLabel = Label::create("Logo arrived center position!", 30 * LayoutManager::getSingleton().getMinScale());
         noticeLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 4.0f));
-        noticeLabel->setColor(Color4Yellow);
+        noticeLabel->setColor(Color3Yellow);
         parentWidget->addChild(noticeLabel);
     }), NULL);
     parentWidget->addChild(logo1Sprite);
@@ -140,7 +140,7 @@ void FrameSample::init(Widget* parentWidget)
     frame3Sprite->runActionList(Frame2D::create(fileLogoList, 1.f), CallFunc::create([=](){
         Label* noticeLabel = Label::create("Frame action finished!", 30 * LayoutManager::getSingleton().getMinScale());
         noticeLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 4.0f));
-        noticeLabel->setColor(Color4Yellow);
+        noticeLabel->setColor(Color3Yellow);
         parentWidget->addChild(noticeLabel);
     }), NULL);
     parentWidget->addChild(frame3Sprite);

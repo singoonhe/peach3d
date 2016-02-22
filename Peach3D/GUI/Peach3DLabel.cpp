@@ -79,7 +79,7 @@ namespace Peach3D
         }
     }
     
-    void Label::setFillColor(const Color4& color)
+    void Label::setFillColor(const Color3& color)
     {
         if (!FLOAT_EQUAL(mFillColor.r, color.r) || !FLOAT_EQUAL(mFillColor.g, color.g) || !FLOAT_EQUAL(mFillColor.b, color.b)) {
             mFillColor = color;

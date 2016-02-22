@@ -50,8 +50,8 @@ namespace Peach3D
         const char* getTitleFontName()const {return mTitleLabel ? mTitleLabel->getFontName().c_str() : nullptr;}
         void setTitleFontSize(float size);
         float getTitleFontSize(){return mTitleLabel ? mTitleLabel->getFontSize() : 0.0f;}
-        void setTitleColor(const Color4& color);
-        Color4 getTitleColor() {return mTitleLabel ? mTitleLabel->getFillColor() : Color4();}
+        void setTitleColor(const Color3& color);
+        Color3 getTitleColor() {return mTitleLabel ? mTitleLabel->getFillColor() : Color3();}
         /** Set title position relative to button size, (0.5, 0.5) is center of button. */
         void setTitleOffset(const Vector2& offset);
         /** Get title position relative to button size. */

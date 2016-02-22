@@ -9,6 +9,8 @@
 #ifndef PEACH3D_COLOR4_H
 #define PEACH3D_COLOR4_H
 
+#include "Peach3DColor3.h"
+
 namespace Peach3D
 {
     class PEACH3D_DLL Color4
@@ -16,6 +18,8 @@ namespace Peach3D
     public:
         //! Constructor with four float params.
         Color4(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f, float _a = 1.0f) : r(_r), g(_g), b(_b), a(_a) {}
+        //! Constructor with Color3 params.
+        Color4(const Color3& c) { r = c.r; g = c.g; b = c.b; a = 1.f; }
 
         //! Operators
         Color4 operator=(const Color4& other) { r = other.r; g = other.g; b = other.b; a = other.a; return *this; }
@@ -34,9 +38,9 @@ namespace Peach3D
             return !FLOAT_EQUAL(r, other.r) || !FLOAT_EQUAL(g, other.g) || !FLOAT_EQUAL(b, other.b) || !FLOAT_EQUAL(a, other.a);
         }
 
-        //! Get 1-Color4.
+        /** Get 1-Color4. */
         void Invert(bool alpha = false) { r = 1.0f - r; g = 1.0f - g; b = 1.0f - b; if (alpha) { a = 1.0f - a; } }
-        //! Make Color4 standard.
+        /** Make Color4 standard. */
         void standard() { CLAMP(r, 0.0f, 1.0f); CLAMP(g, 0.0f, 1.0f); CLAMP(b, 0.0f, 1.0f); CLAMP(a, 0.0f, 1.0f); }
 
     public:

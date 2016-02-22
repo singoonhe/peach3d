@@ -74,7 +74,7 @@ void TestScene::showMessageBox(const std::string& text, const ControlListenerFun
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     mMsgNode = Widget::create(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
     mMsgNode->setContentSize(nodeSize);
-    mMsgNode->setColor(Color4Black);
+    mMsgNode->setColor(Color3Black);
     mMsgNode->setAnchorPoint(Vector2(0.5, 0.5));
     mMsgNode->setAlpha(0.5f);
     rootWidget->addChild(mMsgNode);

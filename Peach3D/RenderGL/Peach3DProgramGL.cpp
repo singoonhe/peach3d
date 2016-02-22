@@ -436,7 +436,7 @@ namespace Peach3D
                     break;
                 case UniformNameType::eDiffuse:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.diffuse.a};
+                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
                         glUniform4fv(location, 1, color);
                     });
                     break;
@@ -466,7 +466,7 @@ namespace Peach3D
                         }
                             break;
                         case UniformNameType::eDiffuse: {
-                            float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.diffuse.a};
+                            float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
                             memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
                             startOffset += 4;
                         }
@@ -610,7 +610,7 @@ namespace Peach3D
                     break;
                 case UniformNameType::eDiffuse:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        const Color4& color = widget->getColor();
+                        Color3 color = widget->getColor();
                         float colour[] = {color.r, color.g, color.b, widget->getAlpha()};
                         glUniform4fv(location, 1, colour);
                     });
@@ -691,7 +691,7 @@ namespace Peach3D
                         }
                             break;
                         case UniformNameType::eDiffuse: {
-                            const Color4& color = renderList[i]->getColor();
+                            Color3 color = renderList[i]->getColor();
                             float colour[] = {color.r, color.g, color.b, renderList[i]->getAlpha()};
                             memcpy(data + uniformOffset + startOffset, colour, 4 * sizeof(float));
                             startOffset += 4;

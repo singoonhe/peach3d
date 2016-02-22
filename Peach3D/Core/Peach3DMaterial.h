@@ -77,11 +77,11 @@ namespace Peach3D
         }
         
     public:
-        Color4  ambient;
-        Color4  diffuse;
-        Color4  specular;
+        Color3  ambient;
+        Color3  diffuse;
+        Color3  specular;
         float   shininess;
-        Color4  emissive;
+        Color3  emissive;
         float   alpha;
         
         Vector2 UVScrollSpeed;     // texture uv scroll speed

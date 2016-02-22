@@ -4,9 +4,9 @@
     <!-- If you want bind widget, just give it a name. -->
     <Widget>
         <Anchor>0, 0</Anchor>
-        <!-- Set display color and alpha. -->
-        <Color>0, 0, 1, 1</Color>
-        <!-- Put after Color, will change alpha. -->
+        <!-- Set widget display color. -->
+        <Color>0, 0, 1</Color>
+        <!-- Set widget alpha. -->
         <Alpha>0.2</Alpha>
         <!-- SwallowEvents is used for shield events with below UI. -->
         <SwallowEvents>true</SwallowEvents>
@@ -32,7 +32,7 @@
             <Text>Gray</Text>
             <FontSize>26</FontSize>
             <!-- FillColor just used for text color, Color for mix with texture. -->
-            <FillColor>0, 1, 0, 1</FillColor>
+            <FillColor>0, 1, 0</FillColor>
             <!-- Using screen center as orign position. -->
             <BindPosition>Center</BindPosition>
             <!-- Using min scale to zoom "Position". -->

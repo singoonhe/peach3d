@@ -57,6 +57,7 @@
 		18A272E919E6707E00145FDB /* Peach3DObjLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18A272E719E6707E00145FDB /* Peach3DObjLoader.cpp */; };
 		18A272EA19E6707E00145FDB /* Peach3DObjLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18A272E719E6707E00145FDB /* Peach3DObjLoader.cpp */; };
 		18A272EB19E6707E00145FDB /* Peach3DObjLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 18A272E819E6707E00145FDB /* Peach3DObjLoader.h */; };
+		18A8924A1C7AA837006EB1A6 /* Peach3DColor3.h in Headers */ = {isa = PBXBuildFile; fileRef = 18A892471C7AA837006EB1A6 /* Peach3DColor3.h */; };
 		18ACF4E319D543140020F943 /* Peach3DCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18ACF49B19D543140020F943 /* Peach3DCamera.cpp */; };
 		18ACF4E419D543140020F943 /* Peach3DCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18ACF49B19D543140020F943 /* Peach3DCamera.cpp */; };
 		18ACF4E519D543140020F943 /* Peach3DCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 18ACF49C19D543140020F943 /* Peach3DCamera.h */; };
@@ -232,6 +233,7 @@
 		1895828C1AFB2DAC00936092 /* Peach3DActionImplement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DActionImplement.h; sourceTree = "<group>"; };
 		18A272E719E6707E00145FDB /* Peach3DObjLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DObjLoader.cpp; sourceTree = "<group>"; };
 		18A272E819E6707E00145FDB /* Peach3DObjLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DObjLoader.h; sourceTree = "<group>"; };
+		18A892471C7AA837006EB1A6 /* Peach3DColor3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DColor3.h; sourceTree = "<group>"; };
 		18ACF49B19D543140020F943 /* Peach3DCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DCamera.cpp; sourceTree = "<group>"; };
 		18ACF49C19D543140020F943 /* Peach3DCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DCamera.h; sourceTree = "<group>"; };
 		18ACF49D19D543140020F943 /* Peach3DColor4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DColor4.h; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 				1895828C1AFB2DAC00936092 /* Peach3DActionImplement.h */,
 				18ACF49B19D543140020F943 /* Peach3DCamera.cpp */,
 				18ACF49C19D543140020F943 /* Peach3DCamera.h */,
+				18A892471C7AA837006EB1A6 /* Peach3DColor3.h */,
 				18ACF49D19D543140020F943 /* Peach3DColor4.h */,
 				18ACF49E19D543140020F943 /* Peach3DCompile.h */,
 				18E94CEB1C5B05FF00F448D8 /* Peach3DCursorManager.cpp */,
@@ -668,6 +671,7 @@
 				18ACF51119D543140020F943 /* Peach3DResourceManager.h in Headers */,
 				18ACF4EF19D543140020F943 /* Peach3DIPlatform.h in Headers */,
 				18ACF51719D543140020F943 /* Peach3DSceneNode.h in Headers */,
+				18A8924A1C7AA837006EB1A6 /* Peach3DColor3.h in Headers */,
 				185D82531B0884C00034F25E /* Peach3DWorldManager.h in Headers */,
 				1889B1281BE0DA610025AA2E /* pdPosColorUVShader2D.h in Headers */,
 				18ACF4E819D543140020F943 /* Peach3DRect.h in Headers */,
