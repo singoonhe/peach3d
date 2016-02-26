@@ -19,7 +19,7 @@ namespace Peach3D
     {
         eUnknow,    // used for initialize light
         eDirection, // direction light
-        ePoint,     // point light
+        eDot,       // dot light
         eSpot,      // spot light
     };
     
@@ -27,13 +27,20 @@ namespace Peach3D
     {
         Light() : type(LightType::eUnknow) {}
         // constructor for direction light
-        Light(const Vector3& _dir) : type(LightType::eDirection), dir(_dir) {}
-        
+        Light(const Vector3& _dir, const Color3& _color = Color3(1.f, 1.f, 1.f), const Color3& _ambient = Color3(0.1f, 0.1f, 0.1f)) : type(LightType::eDirection), dir(_dir), color(_color), ambient(_ambient) {}
+        // constructor for dot light
+        Light(const Vector3& _pos, const Vector3& _attenuate = Vector3(2.f, 10.f, 5.f), const Color3& _color = Color3(1.f, 1.f, 1.f), const Color3& _ambient = Color3(0.1f, 0.1f, 0.1f)) : type(LightType::eDot), pos(_pos), attenuate(_attenuate), color(_color), ambient(_ambient) {}
+        // constructor for spot light
+        Light(const Vector3& _pos, const Vector3& _dir, const Vector2& _ext = Vector2(0.7f, 5.f), const Vector3& _attenuate = Vector3(2.f, 10.f, 5.f), const Color3& _color = Color3(1.f, 1.f, 1.f), const Color3& _ambient = Color3(0.1f, 0.1f, 0.1f)) : type(LightType::eSpot), pos(_pos), dir(_dir), spotExt(_ext), attenuate(_attenuate), color(_color), ambient(_ambient) {}
+                
     public:
         LightType   type;   // light type
-        Vector3     pos;    // light position
-        Vector3     dir;    // light direction
+        Vector3     pos;    // light position, for Dot and Spot
+        Vector3     dir;    // light direction, for Direction and Spot
+        Color3      ambient;// light ambient
         Color3      color;  // light color
+        Vector3     attenuate;  // light const/line/quadratic attenuate, for Dot and Spot
+        Vector2     spotExt;//  extent spot and cut cos attenuate, for Spot
     };
 }
 
