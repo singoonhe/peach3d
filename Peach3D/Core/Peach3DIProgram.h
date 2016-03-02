@@ -39,14 +39,16 @@ namespace Peach3D
     class PEACH3D_DLL IProgram
     {
     public:
-        // set vertex shader, program will valid when vs and ps all is set
+        /** Set vertex shader, program will valid when vs and ps all is set. */
         virtual bool setVertexShader(const char* data, int size, bool isCompiled=false) = 0;
-        // set pixel shader, program will valid when vs and ps all is set
+        /** Set pixel shader, program will valid when vs and ps all is set. */
         virtual bool setPixelShader(const char* data, int size, bool isCompiled=false) = 0;
-        // set vertex data type, used to bind attr or layout
+        /** Set vertex data type, used to bind attr or layout. */
         virtual void setVertexType(uint type) { mVertexType = type; }
-        //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
+        /** Set user uniforms info, GL3 could get offset, DX need fcount to calc offset. */
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList) {mProgramUniformList = uniformList;}
+        /** Set program lights count, auto enable lighting. */
+        virtual void setLightsCount(uint cout) = 0;
         
         /** Update RenderNode unifroms for 3d GL2 object material. */
 		virtual void updateRenderNodeUnifroms(RenderNode* node) {}

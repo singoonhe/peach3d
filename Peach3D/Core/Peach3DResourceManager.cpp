@@ -56,8 +56,7 @@ namespace Peach3D
         for (auto iter=mProgramMap.begin(); iter!=mProgramMap.end(); iter++) {
             render->deleteProgram(iter->second);
         }
-        // free shader code data
-        mPresetShader->freeShaderCodeData();
+        delete mPresetShader;
     }
     
     ITexture* ResourceManager::addTexture(const char* file)
@@ -510,12 +509,12 @@ namespace Peach3D
         }
     }
     
-    IProgram* ResourceManager::getPresetProgram(uint verType, const std::string& verName, const std::string& fragName)
+    IProgram* ResourceManager::getPresetProgram(const PresetProgramFeatures& feature)
     {
-        ShaderCodeData verData = mPresetShader->getShaderCode(verName);
-        ShaderCodeData fragData = mPresetShader->getShaderCode(fragName);
-        if (verData.size > 0) {
-            std::string name = verName + fragName;
+        auto verData = mPresetShader->getShaderCode(true, feature);
+        auto fragData = mPresetShader->getShaderCode(false, feature);
+        if (verData.size() > 0 && fragData.size() > 0) {
+            std::string name = mPresetShader->getNameOfProgramFeature(true, feature);
             uint hashPID = XXH32((void*)name.c_str(), (int)name.size(), 0);
             
             if (mProgramMap.find(hashPID) != mProgramMap.end()) {
@@ -525,13 +524,13 @@ namespace Peach3D
                 // create a new preset program
                 IProgram* program = IRender::getSingletonPtr()->createProgram(hashPID);
                 // add shader code to program
-                program->setVertexShader(verData.data, verData.size, false);
-                program->setPixelShader(fragData.data, fragData.size, false);
+                program->setVertexShader(verData.c_str(), (int)verData.size(), false);
+                program->setPixelShader(fragData.c_str(), (int)fragData.size(), false);
 
                 // set vertex type
-                program->setVertexType(verType);
+                program->setVertexType(mPresetShader->getVerTypeOfProgramFeature(feature));
                 // set object uniform
-                program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(verName));
+                program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(feature));
                 
                 if (program->isProgramValid()) {
                     Peach3DLog(LogLevel::eInfo, "Create new preset program \"%s\" success", name.c_str());

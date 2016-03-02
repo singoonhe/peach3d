@@ -7,6 +7,8 @@
 //
 
 #include "Peach3DShaderCode.h"
+#include "Peach3DUtils.h"
+#include "Peach3DIObject.h"
 
 namespace Peach3D
 {
@@ -43,25 +45,27 @@ namespace Peach3D
         }
         return mUniformsNamesMap[name];
     }
-    
-    void ShaderCode::freeShaderCodeData()
+        
+    std::string ShaderCode::getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature)
     {
-        for (auto iter = mShaderMap.begin(); iter != mShaderMap.end(); ++iter) {
-            if (iter->second.size > 0) {
-                free(iter->second.data);
-            }
-        }
-        mShaderMap.clear();
+        return Utils::formatString("V%d|PT%d|TUV%d|LC%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount);
     }
-
-    ShaderCodeData ShaderCode::generateShaderCodeData(const char* code1, const char* code2)
+    
+    uint ShaderCode::getVerTypeOfProgramFeature(const PresetProgramFeatures& feature)
     {
-        ulong code1Len = strlen(code1), code2Len = strlen(code2);
-        char* shaderData = (char*)malloc(code1Len + code2Len + 1);
-        memcpy(shaderData, code1, code1Len);
-        if (code2Len > 0) {
-            memcpy(shaderData + code1Len, code2, code2Len);
+        uint verType = 0;
+        if (feature.isPoint3) {
+            verType = VertexType::Point3;
         }
-        return ShaderCodeData(shaderData, int(code1Len + code2Len));
+        else {
+            verType = VertexType::Point2;
+        }
+        if (feature.isTexUV) {
+            verType = verType | VertexType::UV;
+        }
+        if (feature.lightsCount > 0) {
+            verType = verType | VertexType::Normal;
+        }
+        return verType;
     }
 }

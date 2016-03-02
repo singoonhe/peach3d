@@ -27,6 +27,8 @@ namespace Peach3D
         virtual void setVertexType(uint type);
         //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList);
+        /** Set program lights count, auto enable lighting. */
+        virtual void setLightsCount(uint cout);
         
         /** Bind instance vertex attrib, used for GL3. */
         void bindProgramVertexAttrib();

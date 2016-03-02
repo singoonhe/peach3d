@@ -180,7 +180,7 @@ namespace Peach3D
         if (mIsRenderHashDirty && mNeedRender) {
             // set default program if user or subclass not set
             if (!mRenderProgram) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point2, "PosColorVerShader2D", "PosColorFragShader2D");
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(false, false));
             }
             
             std::string states = extState + Utils::formatString("Program:%u", mRenderProgram->getProgramId());

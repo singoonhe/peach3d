@@ -41,7 +41,7 @@ namespace Peach3D
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
         if (!mOBBProgram) {
-            mOBBProgram = ResourceManager::getSingleton().getPresetProgram(VertexType::Point3, "PosColorVerShader3D", "PosColorFragShader3D");
+            mOBBProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
         }
     }
     

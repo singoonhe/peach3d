@@ -86,7 +86,7 @@ namespace Peach3D
         void deleteProgram(IProgram* program);
         
         //! get preset object program in Peach3D system, program will create if not find
-        IProgram* getPresetProgram(uint verType, const std::string& verName, const std::string& fragName = "");
+        IProgram* getPresetProgram(const PresetProgramFeatures& feature);
         
         //! set assert manager just for android
         void setAssetsManager(void* manager) { mAssetsManager=manager; }

@@ -8,6 +8,7 @@
 
 #include "Peach3DShaderCode.h"
 #include "Peach3DIPlatform.h"
+#include "Peach3DUtils.h"
 #include "shader/pdCommonFuncShader2D.h"
 #include "shader/pdPosColorShader2D.h"
 #include "shader/pdPosColorShader3D.h"
@@ -16,49 +17,60 @@
 
 namespace Peach3D
 {
-    const std::vector<ProgramUniform> gGlobalUniforms2D = {ProgramUniform("pd_viewRect", UniformDataType::eVector4),};
-    const std::vector<ProgramUniform> gGlobalUniforms3D = {ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4),
-        ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4)};
-    
-    void mergeUniformsToFront(std::vector<ProgramUniform>& dst, const std::vector<ProgramUniform>& source)
+    const std::string& ShaderCode::getShaderCode(bool isVertex, const PresetProgramFeatures& feature)
     {
-        for (auto uniform : source) {
-            dst.insert(dst.begin(), uniform);
-        }
-    }
-    
-    const ShaderCodeData& ShaderCode::getShaderCode(const std::string& name)
-    {
-        // add all shader code if list is empty
-        if (mShaderMap.empty()) {
-            mShaderMap["PosColorVerShader2D"] = ShaderCode::generateShaderCodeData(gCommonVertexFunc2D, gPosColorVerShader2D);
-            mShaderMap["PosColorFragShader2D"] = ShaderCode::generateShaderCodeData(gCommonFragClipFunc2D, gPosColorFragShader2D);
-            mShaderMap["PosColorUVVerShader2D"] = ShaderCode::generateShaderCodeData(gCommonVertexFunc2D, gPosColorUVVerShader2D);
-            mShaderMap["PosColorUVFragShader2D"] = ShaderCode::generateShaderCodeData(gCommonFragClipFunc2D, gPosColorUVFragShader2D);
-            mShaderMap["PosColorVerShader3D"] = ShaderCode::generateShaderCodeData(gPosColorVerShader3D);
-            mShaderMap["PosColorFragShader3D"] = ShaderCode::generateShaderCodeData(gPosColorFragShader3D);
-            mShaderMap["PosColorUVVerShader3D"] = ShaderCode::generateShaderCodeData(gPosColorUVVerShader3D);
-            mShaderMap["PosColorUVFragShader3D"] = ShaderCode::generateShaderCodeData(gPosColorUVFragShader3D);
-        }
-        return mShaderMap[name];
-    }
-    
-    const std::vector<ProgramUniform>& ShaderCode::getProgramUniforms(const std::string& name)
-    {
-        // add all shader uniforms if list is empty
-        if (mUniformsMap.empty()) {
-            if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
-                // gl2 need add global uniforms
-                mergeUniformsToFront(gPosColorUniforms2D, gGlobalUniforms2D);
-                mergeUniformsToFront(gPosColorUVUniforms2D, gGlobalUniforms2D);
-                mergeUniformsToFront(gPosColorUniforms3D, gGlobalUniforms3D);
-                mergeUniformsToFront(gPosColorUVUniforms3D, gGlobalUniforms3D);
+        auto featureStr = ShaderCode::getNameOfProgramFeature(isVertex, feature);
+        if (mShaderMap.find(featureStr) == mShaderMap.end()) {
+            std::string shaderPreStr;
+            if (feature.isTexUV) {
+                shaderPreStr += "#define PD_ENABLE_TEXUV\n";
             }
-            mUniformsMap["PosColorVerShader2D"] =  gPosColorUniforms2D;
-            mUniformsMap["PosColorUVVerShader2D"] = gPosColorUVUniforms2D;
-            mUniformsMap["PosColorVerShader3D"] = gPosColorUniforms3D;
-            mUniformsMap["PosColorUVVerShader3D"] = gPosColorUVUniforms3D;
+            if (feature.lightsCount > 0) {
+                shaderPreStr += "#define PD_ENABLE_LIGHT\n";
+                shaderPreStr += Utils::formatString("#define PD_LIGHT_COUNT %d\n", feature.lightsCount);
+            }
+            if (feature.isPoint3) {
+                shaderPreStr += isVertex ? gPosColorUVVerShader3D : gPosColorUVFragShader3D;
+            }
+            else {
+                shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
+                shaderPreStr += isVertex ? gPosColorUVVerShader2D : gPosColorUVFragShader2D;
+            }
+            mShaderMap[featureStr] = shaderPreStr;
+            printf("shader code:\n%s\n", mShaderMap[featureStr].c_str());
         }
-        return mUniformsMap[name];
+        return mShaderMap[featureStr];
+    }
+    
+    const std::vector<ProgramUniform>& ShaderCode::getProgramUniforms(const PresetProgramFeatures& feature)
+    {
+        auto featureStr = ShaderCode::getNameOfProgramFeature(true, feature);
+        if (mUniformsMap.find(featureStr) == mUniformsMap.end()) {
+            std::vector<ProgramUniform> uniforms;
+            if (feature.isPoint3) {
+                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
+                    uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
+                    uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
+                }
+                uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));
+                uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
+            }
+            else {
+                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
+                    uniforms.push_back(ProgramUniform("pd_viewRect", UniformDataType::eVector4));
+                }
+                uniforms.push_back(ProgramUniform("pd_showRect", UniformDataType::eVector4));
+                uniforms.push_back(ProgramUniform("pd_anRot", UniformDataType::eVector3));
+                uniforms.push_back(ProgramUniform("pd_patShowRect", UniformDataType::eVector4));
+                uniforms.push_back(ProgramUniform("pd_patAnRot", UniformDataType::eVector3));
+                uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
+                if (feature.isTexUV) {
+                    uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
+                    uniforms.push_back(ProgramUniform("pd_texEffect", UniformDataType::eVector3));
+                }
+            }
+            mUniformsMap[featureStr] = uniforms;
+        }
+        return mUniformsMap[featureStr];
     }
 }

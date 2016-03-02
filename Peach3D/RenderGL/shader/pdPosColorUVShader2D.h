@@ -25,13 +25,17 @@ namespace Peach3D
     in vec4 pd_patShowRect; /* Widget parent position under anchor and size.*/
     in vec3 pd_patAnRot;    /* Widget parent anchor/rotate.*/
     in vec4 pd_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
     in vec4 pd_uvRect;
     in vec3 pd_texEffect;   /* Sprite scale negative and gray effect. */
+    \n#endif\n
     out vec4 f_patShowRect;
     out vec3 f_patAnRot;
     out vec4 f_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
     out vec2 f_uv;
     out float f_gray;
+    \n#endif
     \n#else\n
     attribute vec2 pd_vertex;
     uniform vec4 pd_viewRect;
@@ -40,25 +44,31 @@ namespace Peach3D
     uniform vec4 pd_patShowRect;/* Widget parent position under anchor and size.*/
     uniform vec3 pd_patAnRot;   /* Widget parent anchor/rotate.*/
     uniform vec4 pd_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
     uniform vec4 pd_uvRect;
     uniform vec3 pd_texEffect;  /* Sprite scale negative and gray effect. */
+    \n#endif\n
     varying vec4 f_patShowRect;
     varying vec3 f_patAnRot;
     varying vec4 f_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
     varying vec2 f_uv;
     varying float f_gray;
+    \n#endif
     \n#endif\n
 
     void main(void)
     {
-       gl_Position = convertPosition2(pd_viewRect, pd_vertex, pd_showRect, pd_anRot);
-       f_patShowRect = pd_patShowRect;
-       f_patAnRot = pd_patAnRot;
-       f_diffuse = pd_diffuse;
-       float uvX = (pd_vertex.x * pd_texEffect.x + 1.0) * pd_uvRect.z / 2.0 + pd_uvRect.x;
-       float uvY = (pd_vertex.y * pd_texEffect.y + 1.0) * pd_uvRect.w / 2.0 + pd_uvRect.y;
-       f_uv = vec2(uvX, 1.0 -uvY);
-       f_gray = pd_texEffect.z;
+        gl_Position = convertPosition2(pd_viewRect, pd_vertex, pd_showRect, pd_anRot);
+        f_patShowRect = pd_patShowRect;
+        f_patAnRot = pd_patAnRot;
+        f_diffuse = pd_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+        float uvX = (pd_vertex.x * pd_texEffect.x + 1.0) * pd_uvRect.z / 2.0 + pd_uvRect.x;
+        float uvY = (pd_vertex.y * pd_texEffect.y + 1.0) * pd_uvRect.w / 2.0 + pd_uvRect.y;
+        f_uv = vec2(uvX, 1.0 -uvY);
+        f_gray = pd_texEffect.z;
+        \n#endif\n
     });
 
     // fragment shader
@@ -67,23 +77,28 @@ namespace Peach3D
     in vec4 f_patShowRect;
     in vec3 f_patAnRot;
     in vec4 f_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
     in vec2 f_uv;
     in float f_gray;
     uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+    \n#endif\n
     out vec4 out_FragColor;
     \n#else\n
     varying vec4 f_patShowRect;
     varying vec3 f_patAnRot;
     varying vec4 f_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
     varying vec2 f_uv;
     varying float f_gray;
     uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+    \n#endif
     \n#endif\n
 
     void main(void)
     {
         clipFragment(f_patShowRect, f_patAnRot);
         \n#ifdef PD_LEVEL_GL3\n
+        \n#ifdef PD_ENABLE_TEXUV\n
         vec4 tecColor = texture(pd_texture0, f_uv) * f_diffuse;
         if (f_gray > 0.0001) {
             float grey = dot(tecColor.rgb, vec3(0.299, 0.587, 0.114));
@@ -93,6 +108,10 @@ namespace Peach3D
             out_FragColor = tecColor;
         }
         \n#else\n
+        out_FragColor = f_diffuse;
+        \n#endif\n
+        \n#else\n
+        \n#ifdef PD_ENABLE_TEXUV\n
         vec4 tecColor = texture2D(pd_texture0, f_uv) * f_diffuse;
         if (f_gray > 0.0001) {
             float grey = tecColor.r*0.299 + tecColor.g*0.587 + tecColor.b*0.114;
@@ -101,16 +120,11 @@ namespace Peach3D
         else {
             gl_FragColor = tecColor;
         }
+        \n#else\n
+        gl_FragColor = f_diffuse;
+        \n#endif
         \n#endif\n
     });
-
-    std::vector<ProgramUniform> gPosColorUVUniforms2D = {ProgramUniform("pd_showRect", UniformDataType::eVector4),
-        ProgramUniform("pd_anRot", UniformDataType::eVector3),
-        ProgramUniform("pd_patShowRect", UniformDataType::eVector4),
-        ProgramUniform("pd_patAnRot", UniformDataType::eVector3),
-        ProgramUniform("pd_diffuse", UniformDataType::eVector4),
-        ProgramUniform("pd_uvRect", UniformDataType::eVector4),
-        ProgramUniform("pd_texEffect", UniformDataType::eVector3)};
 }
 
 #endif // PD_POSCOLORUV_SHADER_2D_H

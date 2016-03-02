@@ -71,12 +71,6 @@ namespace Peach3D
         gl_FragColor = f_diffuse;
         \n#endif\n
     });
-    
-    std::vector<ProgramUniform> gPosColorUniforms2D = {ProgramUniform("pd_showRect", UniformDataType::eVector4),
-        ProgramUniform("pd_anRot", UniformDataType::eVector3),
-        ProgramUniform("pd_patShowRect", UniformDataType::eVector4),
-        ProgramUniform("pd_patAnRot", UniformDataType::eVector3),
-        ProgramUniform("pd_diffuse", UniformDataType::eVector4)};
 }
 
 #endif // PD_POSCOLOR_SHADER_2D_H

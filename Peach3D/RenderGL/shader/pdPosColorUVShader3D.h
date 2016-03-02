@@ -13,77 +13,82 @@
 
 namespace Peach3D
 {
-    const char* gPosColorUVVerShader3D = STRINGIFY(
-        \n#ifdef PD_ENABLE_LIGHT
-        \n#define PD_LIGHT_DIRECTION    1
-        \n#define PD_LIGHT_DOT          2
-        \n#define PD_LIGHT_SPOT         3
-        \nstruct LightVertex
-        {
-            int type;
-            vec3 position;
-            vec3 direction;
-            vec3 attenuate;
-            vec2 spotExtend;
-        };
-        \n#endif\n
-        uniform GlobalUnifroms {
-            mat4 pd_projMatrix;
-            mat4 pd_viewMatrix;
-            vec3 pd_eyeDir;
-        };\n
-        in vec3 pd_vertex;
-        in vec2 pd_uv;
-        in mat4 pd_modelMatrix;
-        in vec4 pd_diffuse;
-        \n#ifdef PD_ENABLE_LIGHT\n
-        in vec3 pd_normal;
-        in mat4 pd_normalMatrix;
-        LightVertex lights[PD_LIGHT_COUNT];
-        out vec3 f_normal;
-        out vec3 f_lightDir[PD_LIGHT_COUNT];
-        out vec3 f_halfVec[PD_LIGHT_COUNT];
-        out float f_attenuate[PD_LIGHT_COUNT];
-        \n#endif\n
-        out vec4 f_diffuse;
-        out vec2 f_uv;
-
-        void main(void)
-        {
-            mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix;
-            gl_Position = mvpMatrix * vec4(pd_vertex, 1.0);
-            f_diffuse = pd_diffuse;
-            f_uv = pd_uv;
-            \n#ifdef PD_ENABLE_LIGHT\n
-            f_normal = normalize(pd_normalMatrix * pd_normal);  /* Convert normal to world space. */
-            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-                int lightType = lights[i].type;                 /* Out light type. */
-
-                /* Out attenuate for dot and spot light. */
-                if (lightType!= PD_LIGHT_DIRECTION) {
-                    f_lightDir[i] = lights[i].position - pd_vertex;
-                    float lightDis = length(f_lightDir[i]);         /* Light to vertex distance. */
-                    f_lightDir[i] = f_lightDir[i] / lightDis;       /* Normalize light direction. */
-                    
-                    f_attenuate[i] = 1.0 / (lights[i].attenuate.x + lights[i].attenuate.y * lightDis + lights[i].attenuate.z * lightDis * lightDis);
-                    f_halfVec[i] = normalize(f_lightDir[i] + pd_eyeDir);
-
-                    if (lightType == PD_LIGHT_SPOT) {
-                        float spotCos = dot(f_lightDir[i], -lights[i].direction);
-                        if (spotCos < lights[i].spotExtend.x)
-                            f_attenuate[i] = 0.0;
-                        else
-                            f_attenuate[i]*= pow(spotCos, lights[i].spotExtend.y);
-                    }
-                }
-                else {
-                    f_attenuate[i] = 1.0;
-                    f_lightDir[i] = lights[i].direction;
-                    f_halfVec[i] = normalize(lights[i].direction + pd_eyeDir);
-                }
-            }
-            \n#endif\n
-        });
+    const char* gPosColorUVVerShader3D = \
+    STRINGIFY(
+              \n#ifdef PD_ENABLE_LIGHT
+              \n#define PD_LIGHT_DIRECTION    1
+              \n#define PD_LIGHT_DOT          2
+              \n#define PD_LIGHT_SPOT         3
+              \nstruct LightVertex
+              {
+                  int type;
+                  vec3 position;
+                  vec3 direction;
+                  vec3 attenuate;
+                  vec2 spotExtend;
+              };
+              \n#endif\n
+              uniform GlobalUnifroms {
+                  mat4 pd_projMatrix;
+                  mat4 pd_viewMatrix;
+                  vec3 pd_eyeDir;
+              };\n
+              in vec3 pd_vertex;
+              \n#ifdef PD_ENABLE_TEXUV\n
+              in vec2 pd_uv;
+              \n#endif\n
+              in mat4 pd_modelMatrix;
+              in vec4 pd_diffuse;
+              \n#ifdef PD_ENABLE_LIGHT\n
+              in vec3 pd_normal;
+              in mat4 pd_normalMatrix;
+              LightVertex lights[PD_LIGHT_COUNT];
+              out vec3 f_normal;
+              out vec3 f_lightDir[PD_LIGHT_COUNT];
+              out vec3 f_halfVec[PD_LIGHT_COUNT];
+              out float f_attenuate[PD_LIGHT_COUNT];
+              \n#endif\n
+              out vec4 f_diffuse;
+              \n#ifdef PD_ENABLE_TEXUV\n
+              out vec2 f_uv;
+              \n#endif\n
+              
+              void main(void)
+              {
+                  mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix;
+                  gl_Position = mvpMatrix * vec4(pd_vertex, 1.0);
+                  f_diffuse = pd_diffuse;
+                  f_uv = pd_uv;
+                  \n#ifdef PD_ENABLE_LIGHT\n
+                  f_normal = normalize(pd_normalMatrix * pd_normal);  /* Convert normal to world space. */
+                  for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
+                      int lightType = lights[i].type;                 /* Out light type. */
+                      
+                      /* Out attenuate for dot and spot light. */
+                      if (lightType!= PD_LIGHT_DIRECTION) {
+                          f_lightDir[i] = lights[i].position - pd_vertex;
+                          float lightDis = length(f_lightDir[i]);         /* Light to vertex distance. */
+                          f_lightDir[i] = f_lightDir[i] / lightDis;       /* Normalize light direction. */
+                          
+                          f_attenuate[i] = 1.0 / (lights[i].attenuate.x + lights[i].attenuate.y * lightDis + lights[i].attenuate.z * lightDis * lightDis);
+                          f_halfVec[i] = normalize(f_lightDir[i] + pd_eyeDir);
+                          
+                          if (lightType == PD_LIGHT_SPOT) {
+                              float spotCos = dot(f_lightDir[i], -lights[i].direction);
+                              if (spotCos < lights[i].spotExtend.x)
+                                  f_attenuate[i] = 0.0;
+                              else
+                                  f_attenuate[i]*= pow(spotCos, lights[i].spotExtend.y);
+                          }
+                      }
+                      else {
+                          f_attenuate[i] = 1.0;
+                          f_lightDir[i] = lights[i].direction;
+                          f_halfVec[i] = normalize(lights[i].direction + pd_eyeDir);
+                      }
+                  }
+                  \n#endif\n
+              });
 
     const char* gPosColorUVFragShader3D = STRINGIFY(
         \n#ifdef PD_ENABLE_LIGHT
@@ -194,7 +199,7 @@ namespace Peach3D
     }); */
 
     std::vector<ProgramUniform> gPosColorUVUniforms3D = {ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4),
-        ProgramUniform("pd_diffuse", UniformDataType::eVector4)};
+        ProgramUniform("pd_diffuse", UniformDataType::eVector4)}; 
 }
 
 #endif // PD_POSCOLORUV_SHADER_3D_H

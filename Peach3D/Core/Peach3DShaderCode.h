@@ -50,35 +50,34 @@ namespace Peach3D
         uint            offset; // current uniform offset, uniforms may not closely packed
     };
     
-    // defined shader code data
-    struct PEACH3D_DLL ShaderCodeData
+    // preset program params
+    struct PEACH3D_DLL PresetProgramFeatures
     {
-        ShaderCodeData() {data=nullptr; size=0;}
-        ShaderCodeData(char* _data, int _size) : data(_data), size(_size) {}
-        char*   data;   // shader code data pointer
-        int     size;   // shader code data size
+        PresetProgramFeatures(bool _point3, bool _texUV=false, int _lcount=0) :isPoint3(_point3), isTexUV(_texUV), lightsCount(_lcount) {}
+        bool    isPoint3;       // 3D node or widget
+        bool    isTexUV;        // is contain texture for UV
+        int     lightsCount;    // lights count for 3D node
     };
     
     class ShaderCode
     {
     public:
         /* Return shader code by name */
-        const ShaderCodeData& getShaderCode(const std::string& name);
+        const std::string& getShaderCode(bool isVertex, const PresetProgramFeatures& feature);
         /* Return shader uniforms by name */
-        const std::vector<ProgramUniform>& getProgramUniforms(const std::string& name);
+        const std::vector<ProgramUniform>& getProgramUniforms(const PresetProgramFeatures& feature);
+        /* Calc cache name from program feature.*/
+        std::string getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature);
+        /* Calc vertex type from program feature.*/
+        uint getVerTypeOfProgramFeature(const PresetProgramFeatures& feature);
         
         /* Return shader uniforms by name */
         static uint getUniformFloatBits(UniformDataType type);
         /* Return shader uniform name by type */
         static UniformNameType getUniformNameType(const std::string& name);
-
-        /* Cocact two uncompiled shader code. */
-        static ShaderCodeData generateShaderCodeData(const char* code1, const char* code2 = "");
         
-        /* Free all shader code, called in ResourceManager. */
-        void freeShaderCodeData();
     public:
-        std::map<std::string, ShaderCodeData> mShaderMap;
+        std::map<std::string, std::string> mShaderMap;
         std::map<std::string, std::vector<ProgramUniform>> mUniformsMap;
         static std::map<UniformDataType, uint> mUniformsBitsMap;
         static std::map<std::string, UniformNameType> mUniformsNamesMap;

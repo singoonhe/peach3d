@@ -198,6 +198,23 @@ namespace Peach3D
         glDetachShader(mProgram, mPSShader);
     }
     
+    void ProgramGL::setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList)
+    {
+        IProgram::setProgramUniformsDesc(uniformList);
+        
+        if (PD_RENDERLEVEL_GL3() && uniformList.size() > 0) {
+            // save one instanced uniform buffer size
+            mUniformsSize = 0;
+            for (auto uniform : uniformList) {
+                mUniformsSize += ShaderCode::getUniformFloatBits(uniform.dType) * sizeof(float);
+            }
+        }
+    }
+    
+    void ProgramGL::setLightsCount(uint cout)
+    {
+    }
+    
     void ProgramGL::bindGlobalUniforms()
     {
         // get global uniform from program, so every program must include GlobalUniforms
@@ -362,19 +379,6 @@ namespace Peach3D
         // unmap instanced attribute buffer
         glUnmapBuffer(GL_ARRAY_BUFFER);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-    
-    void ProgramGL::setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList)
-    {
-        IProgram::setProgramUniformsDesc(uniformList);
-        
-        if (PD_RENDERLEVEL_GL3() && uniformList.size() > 0) {
-            // save one instanced uniform buffer size
-            mUniformsSize = 0;
-            for (auto uniform : uniformList) {
-                mUniformsSize += ShaderCode::getUniformFloatBits(uniform.dType) * sizeof(float);
-            }
-        }
     }
     
     void ProgramGL::activeTextures(GLuint texId, uint index)
