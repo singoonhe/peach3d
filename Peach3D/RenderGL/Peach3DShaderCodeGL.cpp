@@ -9,10 +9,8 @@
 #include "Peach3DShaderCode.h"
 #include "Peach3DIPlatform.h"
 #include "Peach3DUtils.h"
-#include "shader/pdCommonFuncShader2D.h"
-#include "shader/pdPosColorShader2D.h"
+#include "shader/pdShaderCode2D.h"
 #include "shader/pdPosColorShader3D.h"
-#include "shader/pdPosColorUVShader2D.h"
 #include "shader/pdPosColorUVShader3D.h"
 
 namespace Peach3D
@@ -34,7 +32,7 @@ namespace Peach3D
             }
             else {
                 shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
-                shaderPreStr += isVertex ? gPosColorUVVerShader2D : gPosColorUVFragShader2D;
+                shaderPreStr += isVertex ? gVerShaderCode2D : gFragShaderCode2D;
             }
             mShaderMap[featureStr] = shaderPreStr;
             printf("shader code:\n%s\n", mShaderMap[featureStr].c_str());
