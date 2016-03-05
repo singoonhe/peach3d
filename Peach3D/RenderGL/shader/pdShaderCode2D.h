@@ -32,7 +32,7 @@ namespace Peach3D
     "       return vec4(posX, posY, 0.0, 1.0); \n"
     "   } \n"
     "} \n";
-    
+
     const char* gCommonFragClipFunc2D = "void clipFragment(vec4 patShowRect, vec3 patAnRot) { \n"
     "   vec2 anchorSize = vec2(patAnRot.x * patShowRect.z, patAnRot.y * patShowRect.w); \n"
     "   if (patAnRot.z > 0.0001) { \n"
@@ -47,49 +47,49 @@ namespace Peach3D
     "       if (gl_FragCoord.x < startPos.x || gl_FragCoord.y < startPos.y || gl_FragCoord.x > (startPos.x + patShowRect.z) || gl_FragCoord.y > (startPos.y + patShowRect.w)) discard; \n"
     "   } \n"
     "} \n";
-    
+
     // vertex shader
     const char* gVerShaderCode2D = STRINGIFY(\
     #ifdef PD_LEVEL_GL3\n
-    uniform GlobalUnifroms {
-        vec4 pd_viewRect;
-    };
-    in vec2 pd_vertex;
-    in vec4 pd_showRect;    /* Widget position under anchor and size.*/
-    in vec3 pd_anRot;       /* Widget anchor/rotate.*/
-    in vec4 pd_patShowRect; /* Widget parent position under anchor and size.*/
-    in vec3 pd_patAnRot;    /* Widget parent anchor/rotate.*/
-    in vec4 pd_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-    in vec4 pd_uvRect;
-    in vec3 pd_texEffect;   /* Sprite scale negative and gray effect. */
-    \n#endif\n
-    out vec4 f_patShowRect;
-    out vec3 f_patAnRot;
-    out vec4 f_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-    out vec2 f_uv;
-    out float f_gray;
-    \n#endif
+        uniform GlobalUnifroms {
+            vec4 pd_viewRect;
+        };
+        in vec2 pd_vertex;
+        in vec4 pd_showRect;    /* Widget position under anchor and size.*/
+        in vec3 pd_anRot;       /* Widget anchor/rotate.*/
+        in vec4 pd_patShowRect; /* Widget parent position under anchor and size.*/
+        in vec3 pd_patAnRot;    /* Widget parent anchor/rotate.*/
+        in vec4 pd_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            in vec4 pd_uvRect;
+            in vec3 pd_texEffect;   /* Sprite scale negative and gray effect. */
+        \n#endif\n
+        out vec4 f_patShowRect;
+        out vec3 f_patAnRot;
+        out vec4 f_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            out vec2 f_uv;
+            out float f_gray;
+        \n#endif
     \n#else\n
-    attribute vec2 pd_vertex;
-    uniform vec4 pd_viewRect;
-    uniform vec4 pd_showRect;   /* Widget position under anchor and size.*/
-    uniform vec3 pd_anRot;      /* Widget anchor/rotate.*/
-    uniform vec4 pd_patShowRect;/* Widget parent position under anchor and size.*/
-    uniform vec3 pd_patAnRot;   /* Widget parent anchor/rotate.*/
-    uniform vec4 pd_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-    uniform vec4 pd_uvRect;
-    uniform vec3 pd_texEffect;  /* Sprite scale negative and gray effect. */
-    \n#endif\n
-    varying vec4 f_patShowRect;
-    varying vec3 f_patAnRot;
-    varying vec4 f_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-    varying vec2 f_uv;
-    varying float f_gray;
-    \n#endif
+        attribute vec2 pd_vertex;
+        uniform vec4 pd_viewRect;
+        uniform vec4 pd_showRect;   /* Widget position under anchor and size.*/
+        uniform vec3 pd_anRot;      /* Widget anchor/rotate.*/
+        uniform vec4 pd_patShowRect;/* Widget parent position under anchor and size.*/
+        uniform vec3 pd_patAnRot;   /* Widget parent anchor/rotate.*/
+        uniform vec4 pd_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            uniform vec4 pd_uvRect;
+            uniform vec3 pd_texEffect;  /* Sprite scale negative and gray effect. */
+        \n#endif\n
+        varying vec4 f_patShowRect;
+        varying vec3 f_patAnRot;
+        varying vec4 f_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            varying vec2 f_uv;
+            varying float f_gray;
+        \n#endif
     \n#endif\n
 
     void main(void)
@@ -99,65 +99,65 @@ namespace Peach3D
         f_patAnRot = pd_patAnRot;
         f_diffuse = pd_diffuse;
         \n#ifdef PD_ENABLE_TEXUV\n
-        float uvX = (pd_vertex.x * pd_texEffect.x + 1.0) * pd_uvRect.z / 2.0 + pd_uvRect.x;
-        float uvY = (pd_vertex.y * pd_texEffect.y + 1.0) * pd_uvRect.w / 2.0 + pd_uvRect.y;
-        f_uv = vec2(uvX, 1.0 -uvY);
-        f_gray = pd_texEffect.z;
+            float uvX = (pd_vertex.x * pd_texEffect.x + 1.0) * pd_uvRect.z / 2.0 + pd_uvRect.x;
+            float uvY = (pd_vertex.y * pd_texEffect.y + 1.0) * pd_uvRect.w / 2.0 + pd_uvRect.y;
+            f_uv = vec2(uvX, 1.0 -uvY);
+            f_gray = pd_texEffect.z;
         \n#endif\n
     });
 
     // fragment shader
     const char* gFragShaderCode2D = STRINGIFY(\
     #ifdef PD_LEVEL_GL3\n
-    in vec4 f_patShowRect;
-    in vec3 f_patAnRot;
-    in vec4 f_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-    in vec2 f_uv;
-    in float f_gray;
-    uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
-    \n#endif\n
-    out vec4 out_FragColor;
+        in vec4 f_patShowRect;
+        in vec3 f_patAnRot;
+        in vec4 f_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            in vec2 f_uv;
+            in float f_gray;
+            uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+        \n#endif\n
+        out vec4 out_FragColor;
     \n#else\n
-    varying vec4 f_patShowRect;
-    varying vec3 f_patAnRot;
-    varying vec4 f_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-    varying vec2 f_uv;
-    varying float f_gray;
-    uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
-    \n#endif
+        varying vec4 f_patShowRect;
+        varying vec3 f_patAnRot;
+        varying vec4 f_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            varying vec2 f_uv;
+            varying float f_gray;
+            uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+        \n#endif
     \n#endif\n
 
     void main(void)
     {\n
         clipFragment(f_patShowRect, f_patAnRot);
         \n#ifdef PD_LEVEL_GL3
-        \n#ifdef PD_ENABLE_TEXUV\n
-        vec4 tecColor = texture(pd_texture0, f_uv) * f_diffuse;
-        if (f_gray > 0.0001) {
-            float grey = dot(tecColor.rgb, vec3(0.299, 0.587, 0.114));
-            out_FragColor = vec4(grey, grey, grey, tecColor.a);
-        }
-        else {
-            out_FragColor = tecColor;
-        }
-        \n#else\n
-        out_FragColor = f_diffuse;
-        \n#endif
+            \n#ifdef PD_ENABLE_TEXUV\n
+                vec4 tecColor = texture(pd_texture0, f_uv) * f_diffuse;
+                if (f_gray > 0.0001) {
+                    float grey = dot(tecColor.rgb, vec3(0.299, 0.587, 0.114));
+                    out_FragColor = vec4(grey, grey, grey, tecColor.a);
+                }
+                else {
+                    out_FragColor = tecColor;
+                }
+            \n#else\n
+                out_FragColor = f_diffuse;
+            \n#endif
         \n#else
-        \n#ifdef PD_ENABLE_TEXUV\n
-        vec4 tecColor = texture2D(pd_texture0, f_uv) * f_diffuse;
-        if (f_gray > 0.0001) {
-            float grey = tecColor.r*0.299 + tecColor.g*0.587 + tecColor.b*0.114;
-            gl_FragColor = vec4(grey, grey, grey, tecColor.a);
-        }
-        else {
-            gl_FragColor = tecColor;
-        }
-        \n#else\n
-        gl_FragColor = f_diffuse;
-        \n#endif
+            \n#ifdef PD_ENABLE_TEXUV\n
+                vec4 tecColor = texture2D(pd_texture0, f_uv) * f_diffuse;
+                if (f_gray > 0.0001) {
+                    float grey = tecColor.r*0.299 + tecColor.g*0.587 + tecColor.b*0.114;
+                    gl_FragColor = vec4(grey, grey, grey, tecColor.a);
+                }
+                else {
+                    gl_FragColor = tecColor;
+                }
+            \n#else\n
+                gl_FragColor = f_diffuse;
+            \n#endif
         \n#endif\n
     });
 }

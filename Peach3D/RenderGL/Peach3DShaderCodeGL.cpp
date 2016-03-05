@@ -10,8 +10,7 @@
 #include "Peach3DIPlatform.h"
 #include "Peach3DUtils.h"
 #include "shader/pdShaderCode2D.h"
-#include "shader/pdPosColorShader3D.h"
-#include "shader/pdPosColorUVShader3D.h"
+#include "shader/pdShaderCode3D.h"
 
 namespace Peach3D
 {
@@ -28,7 +27,7 @@ namespace Peach3D
                 shaderPreStr += Utils::formatString("#define PD_LIGHT_COUNT %d\n", feature.lightsCount);
             }
             if (feature.isPoint3) {
-                shaderPreStr += isVertex ? gPosColorUVVerShader3D : gPosColorUVFragShader3D;
+                shaderPreStr += isVertex ? gVerShaderCode3D : gFragShaderCode3D;
             }
             else {
                 shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
