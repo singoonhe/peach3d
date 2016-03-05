@@ -15,14 +15,14 @@ namespace Peach3D
 {
     const char* gVerShaderCode3D = STRINGIFY(\
     #ifdef PD_ENABLE_LIGHT
-        \n#define PD_LIGHT_DIRECTION    1
-        \n#define PD_LIGHT_DOT          2
-        \n#define PD_LIGHT_SPOT         3
+        \n#define PD_LIGHT_DIRECTION    1.5
+        \n#define PD_LIGHT_DOT          2.5
+        \n#define PD_LIGHT_SPOT         3.5
     \n#endif
     \n#ifdef PD_LEVEL_GL3
         \n#ifdef PD_ENABLE_LIGHT
             \nuniform LightsUnifroms {
-                int pd_lType[PD_LIGHT_COUNT];
+                float pd_lType[PD_LIGHT_COUNT];
                 vec3 pd_lPosition[PD_LIGHT_COUNT];
                 vec3 pd_lDirection[PD_LIGHT_COUNT];
                 vec3 pd_lAttenuate[PD_LIGHT_COUNT];
@@ -66,14 +66,14 @@ namespace Peach3D
         uniform mat4 pd_modelMatrix;
         uniform vec4 pd_diffuse;
         \n#ifdef PD_ENABLE_LIGHT\n
-            uniform pd_lType[PD_LIGHT_COUNT];
-            uniform pd_lPosition[PD_LIGHT_COUNT];
-            uniform pd_lDirection[PD_LIGHT_COUNT];
-            uniform pd_lAttenuate[PD_LIGHT_COUNT];
-            uniform pd_lSpotExtend[PD_LIGHT_COUNT];
-            uniform pd_lAmbient[PD_LIGHT_COUNT];
-            uniform pd_lColor[PD_LIGHT_COUNT];
-            uniform pd_viewDir;
+            uniform float pd_lType[PD_LIGHT_COUNT];
+            uniform vec3 pd_lPosition[PD_LIGHT_COUNT];
+            uniform vec3 pd_lDirection[PD_LIGHT_COUNT];
+            uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT];
+            uniform vec2 pd_lSpotExtend[PD_LIGHT_COUNT];
+            uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];
+            uniform vec3 pd_lColor[PD_LIGHT_COUNT];
+            uniform vec3 pd_viewDir;
             uniform vec3 pd_normal;
             uniform mat4 pd_normalMatrix;
             varying vec3 f_normal;
@@ -100,12 +100,12 @@ namespace Peach3D
         \n#ifdef PD_ENABLE_LIGHT\n
             f_normal = normalize(pd_normalMatrix * pd_normal);  /* Convert normal to world space. */
             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-                int lightType = pd_lType;                 /* Out light type. */
+                float lightType = pd_lType;                 /* Out light type. */
                 f_lAmbient = pd_lAmbient[i];
                 f_lColor = pd_lColor[i];
 
                 /* Out attenuate for dot and spot light. */
-                if (lightType!= PD_LIGHT_DIRECTION) {
+                if (lightType > PD_LIGHT_DIRECTION) {
                     f_lightDir[i] = pd_lPosition.position - pd_vertex;
                     float lightDis = length(f_lightDir[i]);         /* Light to vertex distance. */
                     f_lightDir[i] = f_lightDir[i] / lightDis;       /* Normalize light direction. */
@@ -113,7 +113,7 @@ namespace Peach3D
                     f_attenuate[i] = 1.0 / (pd_lAttenuate.x + pd_lAttenuate.y * lightDis + pd_lAttenuate.z * lightDis * lightDis);
                     f_halfVec[i] = normalize(f_lightDir[i] + pd_eyeDir);
 
-                    if (lightType == PD_LIGHT_SPOT) {
+                    if (lightType > PD_LIGHT_DOT) {
                         float spotCos = dot(f_lightDir[i], -pd_lDirection);
                         if (spotCos < pd_lSpotExtend.x)
                             f_attenuate[i] = 0.0;

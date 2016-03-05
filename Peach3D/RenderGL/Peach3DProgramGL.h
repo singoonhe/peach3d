@@ -28,7 +28,7 @@ namespace Peach3D
         //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList);
         /** Set program lights count, auto enable lighting. */
-        virtual void setLightsCount(uint cout);
+        virtual void setLightsCount(uint count);
         
         /** Bind instance vertex attrib, used for GL3. */
         void bindProgramVertexAttrib();
@@ -64,8 +64,8 @@ namespace Peach3D
         float* beginMapInstanceUniformBuffer(uint count);
         /** End map instance buffer for GL3. */
         void endMapInstanceUniformBuffer();
-        /** Bind global uniforms, used for GL3. */
-        void bindGlobalUniforms();
+        /** Bind uniforms buffer, used for GL3. */
+        void bindUniformsBuffer(const char* uName, GLuint* UBOId, GLint* UBOSize, std::vector<ProgramUniform>* uniforms, GLint index);
         
         /** Update object global uniform buffer, only RenderGL call it for GL3. */
         static void updateGlobalObjectUnifroms();
@@ -78,7 +78,8 @@ namespace Peach3D
         void setUnifromLocationValue(const std::string& name, std::function<void(GLint)> valueFunc);
         
     private:
-        ProgramGL(uint pId):IProgram(pId),mVSShader(0),mPSShader(0),mProgram(0), mAttriBuffer(0), mInstancedCount(0), mUniformsSize(0) {}
+        ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0), mLightsCount(0),
+            mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0) {}
         virtual ~ProgramGL();
         
     protected:
@@ -91,6 +92,12 @@ namespace Peach3D
         GLuint  mAttriBuffer;           // object render attributes buffer for GL3
         uint    mInstancedCount;        // current instance draw count for GL3
         uint    mUniformsSize;          // once instanced uniforms buffer size for GL3
+        
+        int     mLightsCount;           // lights count
+        GLuint  mLightsUBOId;           // object lights uniform buffer id for GL3
+        GLint   mLightsUBOSize;         // object lights uniform buffer size for GL3
+        std::vector<ProgramUniform>     mLightsUBOUniforms;
+
         
         static GLuint   mWidgetUBOId;   // widget global uniform buffer id for GL3
         static GLint    mWidgetUBOSize; // widget global uniform buffer size for GL3

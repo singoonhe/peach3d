@@ -51,6 +51,9 @@ namespace Peach3D
                 }
                 uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));
                 uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
+                if (feature.lightsCount > 0) {
+                    uniforms.push_back(ProgramUniform("pd_normalMatrix", UniformDataType::eMatrix4));
+                }
             }
             else {
                 if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {

@@ -531,6 +531,8 @@ namespace Peach3D
                 program->setVertexType(mPresetShader->getVerTypeOfProgramFeature(feature));
                 // set object uniform
                 program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(feature));
+                // enable light and generate lights uniforms for GL3
+                program->setLightsCount(feature.lightsCount);
                 
                 if (program->isProgramValid()) {
                     Peach3DLog(LogLevel::eInfo, "Create new preset program \"%s\" success", name.c_str());

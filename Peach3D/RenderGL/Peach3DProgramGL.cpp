@@ -25,6 +25,8 @@ namespace Peach3D
     #define INSTANCED_COUNT_INCREASE_STEP   50
     // define global UBO binding point
     #define GLOBAL_UBO_BINDING_POINT        0
+    // define lights UBO binding point
+    #define LIGHTS_UBO_BINDING_POINT        0
     
     // defined widget global UBO info
     GLuint ProgramGL::mWidgetUBOId = GL_INVALID_INDEX;
@@ -34,7 +36,7 @@ namespace Peach3D
     GLuint ProgramGL::mObjectUBOId = GL_INVALID_INDEX;
     GLint ProgramGL::mObjectUBOSize = 0;
     std::vector<ProgramUniform>  ProgramGL::mObjectUBOUniforms = {ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4),
-                                                                  ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4)};
+        ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4)};
     
     bool ProgramGL::setVertexShader(const char* data, int size, bool isCompiled)
     {
@@ -189,7 +191,10 @@ namespace Peach3D
             
             // bind gobal uniforms when GL3 support
             if (PD_RENDERLEVEL_GL3()) {
-                bindGlobalUniforms();
+                bindUniformsBuffer("GlobalUnifroms", (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId,
+                                   (mVertexType & VertexType::Point3) ? &mObjectUBOSize : &mWidgetUBOSize,
+                                   (mVertexType & VertexType::Point3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms,
+                                   GLOBAL_UBO_BINDING_POINT);
             }
         }
         
@@ -211,56 +216,60 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::setLightsCount(uint cout)
+    void ProgramGL::setLightsCount(uint count)
     {
+        if (count > 0 && PD_RENDERLEVEL_GL3() && (mVertexType & VertexType::Point3)) {
+            mLightsCount = count;
+            // set object lights UBO uniforms
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lType", UniformDataType::eFloat));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
+            mLightsUBOUniforms.push_back(ProgramUniform("pd_viewDir", UniformDataType::eVector3));
+            // bind lights UBO
+            bindUniformsBuffer("LightsUnifroms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
+        }
     }
     
-    void ProgramGL::bindGlobalUniforms()
+    void ProgramGL::bindUniformsBuffer(const char* uName, GLuint* UBOId, GLint* UBOSize, std::vector<ProgramUniform>* uniforms, GLint index)
     {
-        // get global uniform from program, so every program must include GlobalUniforms
-        GLuint globalIndex = glGetUniformBlockIndex(mProgram, "GlobalUnifroms");
+        // get global uniform from program, so every program must include uName
+        GLuint globalIndex = glGetUniformBlockIndex(mProgram, uName);
         Peach3DAssert(globalIndex != GL_INVALID_INDEX, "block GlobalUnifroms must include in vertex shader");
         
         if (globalIndex != GL_INVALID_INDEX) {
-            GLuint* globalUBOId = (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId;
-            GLint* globalUBOSize = (mVertexType & VertexType::Point3) ? &mObjectUBOSize : &mWidgetUBOSize;
-            auto uniformList = (mVertexType & VertexType::Point3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms;
             // create global UBO if it not exist
-            if ((*globalUBOId) == GL_INVALID_INDEX) {
+            if ((*UBOId) == GL_INVALID_INDEX) {
                 // get global unifrom size, may different on platforms
-                glGetActiveUniformBlockiv(mProgram, globalIndex, GL_UNIFORM_BLOCK_DATA_SIZE, globalUBOSize);
+                glGetActiveUniformBlockiv(mProgram, globalIndex, GL_UNIFORM_BLOCK_DATA_SIZE, UBOSize);
                 
-                glGenBuffers(1, globalUBOId);
-                glBindBuffer(GL_UNIFORM_BUFFER, *globalUBOId);
+                glGenBuffers(1, UBOId);
+                glBindBuffer(GL_UNIFORM_BUFFER, *UBOId);
                 // for standard, buffer size = sizeof(projMatrix) + sizeof(viewMatrix) + sizeof(ambient)
-                glBufferData(GL_UNIFORM_BUFFER, *globalUBOSize, NULL, GL_DYNAMIC_DRAW);
+                glBufferData(GL_UNIFORM_BUFFER, *UBOSize, NULL, GL_DYNAMIC_DRAW);
                 
                 // get offsets
-                auto uniformCount = uniformList->size();
+                auto uniformCount = uniforms->size();
                 const GLchar **names = (const GLchar **)malloc(sizeof(const GLchar *) * uniformCount);
                 for (auto i=0; i<uniformCount; ++i) {
-                    names[i] = (*uniformList)[i].name.c_str();
+                    names[i] = (*uniforms)[i].name.c_str();
                 }
                 GLuint indices[uniformCount];
                 glGetUniformIndices(mProgram, (GLsizei)uniformCount, names, indices);
                 GLint offset[uniformCount];
                 glGetActiveUniformsiv(mProgram, (GLsizei)uniformCount, indices, GL_UNIFORM_OFFSET, offset);
                 for (auto i=0; i<uniformCount; ++i) {
-                    (*uniformList)[i].offset = offset[i];
+                    (*uniforms)[i].offset = offset[i];
                 }
                 glBindBuffer(GL_UNIFORM_BUFFER, 0);
                 free(names);
-                
-                if (mVertexType & VertexType::Point3) {
-                    Peach3DLog(LogLevel::eInfo, "Create global object UBO success for GL3");
-                }
-                else {
-                    Peach3DLog(LogLevel::eInfo, "Create global widget UBO success for GL3");
-                }
             }
             // bind global buffer to global uniform, provide global info
-            glBindBufferBase(GL_UNIFORM_BUFFER, GLOBAL_UBO_BINDING_POINT, *globalUBOId);
-            glUniformBlockBinding(mProgram, globalIndex, GLOBAL_UBO_BINDING_POINT);
+            glBindBufferBase(GL_UNIFORM_BUFFER, index, *UBOId);
+            glUniformBlockBinding(mProgram, globalIndex, index);
         }
     }
     
@@ -737,6 +746,9 @@ namespace Peach3D
             if (PD_RENDERLEVEL_GL3()) {
                 glBindBufferBase(GL_UNIFORM_BUFFER, GLOBAL_UBO_BINDING_POINT,
                                  (mVertexType & VertexType::Point3) ? mObjectUBOId: mWidgetUBOId);
+                if (mLightsCount > 0) {
+                    glBindBufferBase(GL_UNIFORM_BUFFER, LIGHTS_UBO_BINDING_POINT, mLightsUBOId);
+                }
             }
             return true;
         }

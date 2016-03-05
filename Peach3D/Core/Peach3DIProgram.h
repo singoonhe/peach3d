@@ -48,7 +48,7 @@ namespace Peach3D
         /** Set user uniforms info, GL3 could get offset, DX need fcount to calc offset. */
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList) {mProgramUniformList = uniformList;}
         /** Set program lights count, auto enable lighting. */
-        virtual void setLightsCount(uint cout) = 0;
+        virtual void setLightsCount(uint count) = 0;
         
         /** Update RenderNode unifroms for 3d GL2 object material. */
 		virtual void updateRenderNodeUnifroms(RenderNode* node) {}
