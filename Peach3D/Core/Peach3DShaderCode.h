@@ -38,6 +38,15 @@ namespace Peach3D
         eProjMatrix,    // SceneNode projective matrix
         eViewMatrix,    // SceneNode view matrix
         eModelMatrix,   // SceneNode model matrix
+        
+        eLightType,     // light type
+        eLightPos,      // light position
+        eLightDir,      // light direction
+        eLightAtten,    // light attenute
+        eLightSpotExt,  // light spot extend
+        eLightAmbient,  // light ambient
+        eLightColor,    // light color
+        eViewDir,       // camera direction
     };
     
     // defined object render uniform desc

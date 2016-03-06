@@ -38,8 +38,8 @@ namespace Peach3D
         Camera* getActiveCamera() { return mActiveCamera; }
         SceneNode* getRootSceneNode() { return mRootSceneNode; }
         Widget* getRootWidget() { return mRootWidget; }
-        void setGlobalAmbient(const Color4& newColor) { mAmbientColor = newColor; }
-        const Color4& getGlobalAmbient() {return mAmbientColor;}
+        void setLightMax(int count) { if (count > 0) mLightMax = count; }
+        int getLightMax() { return mLightMax; }
         
         /** Set perspective projection. */
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
@@ -58,7 +58,7 @@ namespace Peach3D
 
     protected:
         //! create object by IPlatform, user can't call constructor function.
-        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mWidgetObject(nullptr), mOBBObject(nullptr)  {}
+        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mWidgetObject(nullptr), mOBBObject(nullptr), mLightMax(10)  {}
         //! delete object by IPlatform, user can't call destructor function.
         virtual ~SceneManager();
         //! init
@@ -76,10 +76,10 @@ namespace Peach3D
         void addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime);
 
     protected:
-        SceneNode*              mRootSceneNode;    // root scene node
-        Widget*                 mRootWidget;       // root Widget
-        Matrix4                 mProjectionMatrix; // used projective matrix for object
-        Color4                  mAmbientColor;     // global ambient color
+        SceneNode*              mRootSceneNode;     // root scene node
+        Widget*                 mRootWidget;        // root Widget
+        Matrix4                 mProjectionMatrix;  // used projective matrix for object
+        int                     mLightMax;          // lighting  max supported count
         
         Scheduler*              mDrawUpdateSchedule;// draw stats update schedule
         Widget*                 mDebugDrawNode;     // draw stats widget

@@ -48,6 +48,16 @@ namespace Peach3D
                 if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
                     uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
                     uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
+                    if (feature.lightsCount > 0) {
+                        uniforms.push_back(ProgramUniform("pd_lType", UniformDataType::eFloat));
+                        uniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
+                        uniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
+                        uniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
+                        uniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
+                        uniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
+                        uniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
+                        uniforms.push_back(ProgramUniform("pd_viewDir", UniformDataType::eVector3));
+                    }
                 }
                 uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));
                 uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));

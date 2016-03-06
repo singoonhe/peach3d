@@ -36,6 +36,8 @@ namespace Peach3D
         const Material& getMaterial() { return mMaterial; }
         void setDrawMode(DrawMode mode) { mMode = mode; mIsRenderCodeDirty = true; }
         DrawMode getDrawMode() { return mMode; }
+        bool isLightingEnabled() { return mLightEnable; }
+        void setLightingEnabled(bool enable) { mLightEnable = enable; }
         
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
@@ -73,6 +75,7 @@ namespace Peach3D
         IProgram*       mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         bool            mOBBEnable;     // is OBB display enable
+        bool            mLightEnable;   // is lighting enabled
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         std::string     mObjSpliceName; // (mesh name + object name), keep unique

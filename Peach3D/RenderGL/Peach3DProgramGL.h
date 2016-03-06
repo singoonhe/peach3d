@@ -11,6 +11,7 @@
 
 #include "Peach3DCommonGL.h"
 #include "Peach3DIProgram.h"
+#include "Peach3DLight.h"
 
 namespace Peach3D
 {
@@ -39,6 +40,8 @@ namespace Peach3D
         
         /** Update RenderNode unifroms for 3d object material. */
         virtual void updateRenderNodeUnifroms(RenderNode* node);
+        /** Update lights uniform buffer for 3d object. */
+        void updateObjectLightsUniforms(const std::vector<Light>& lights);
         /** Update instanced RenderNode unifroms depend on mProgramUniformList. */
         virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
         

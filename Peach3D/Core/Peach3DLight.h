@@ -11,6 +11,7 @@
 
 #include "Peach3DCompile.h"
 #include "Peach3DVector2.h"
+#include "Peach3DVector3.h"
 #include "Peach3DColor4.h"
 
 namespace Peach3D

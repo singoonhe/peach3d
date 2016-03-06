@@ -36,8 +36,6 @@ namespace Peach3D
         const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
         // init object render projection
         setPerspectiveProjection(90.0f, winSize.x/winSize.y);
-        // init global ambient color
-        setGlobalAmbient(Color4(0.5f, 0.5f, 0.5f, 1.0f));
         
         // create root widget and set to center
         mRootWidget = Widget::create();

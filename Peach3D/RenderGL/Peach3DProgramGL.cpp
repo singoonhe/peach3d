@@ -218,19 +218,21 @@ namespace Peach3D
     
     void ProgramGL::setLightsCount(uint count)
     {
-        if (count > 0 && PD_RENDERLEVEL_GL3() && (mVertexType & VertexType::Point3)) {
+        if (count > 0 && (mVertexType & VertexType::Point3)) {
             mLightsCount = count;
-            // set object lights UBO uniforms
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lType", UniformDataType::eFloat));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
-            mLightsUBOUniforms.push_back(ProgramUniform("pd_viewDir", UniformDataType::eVector3));
-            // bind lights UBO
-            bindUniformsBuffer("LightsUnifroms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
+            if (PD_RENDERLEVEL_GL3()) {
+                // set object lights UBO uniforms
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lType", UniformDataType::eFloat));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_viewDir", UniformDataType::eVector3));
+                // bind lights UBO
+                bindUniformsBuffer("LightsUnifroms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
+            }
         }
     }
     
@@ -270,6 +272,90 @@ namespace Peach3D
             // bind global buffer to global uniform, provide global info
             glBindBufferBase(GL_UNIFORM_BUFFER, index, *UBOId);
             glUniformBlockBinding(mProgram, globalIndex, index);
+        }
+    }
+    
+    void ProgramGL::updateObjectLightsUniforms(const std::vector<Light>& lights)
+    {
+        if (mLightsUBOId != GL_INVALID_INDEX && mLightsCount > 0) {
+            float lData[3 * SceneManager::getSingleton().getLightMax()];
+            glBindBuffer(GL_UNIFORM_BUFFER, mLightsUBOId);
+            // map lights buffer and copy memory on GL3
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mLightsUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            for (auto uniform : mLightsUBOUniforms) {
+                switch (ShaderCode::getUniformNameType(uniform.name)) {
+                    case UniformNameType::eLightType: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i] = (float)lights[i].type;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eLightPos: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i * 3] = lights[i].pos.x;
+                            lData[i * 3 + 1] = lights[i].pos.y;
+                            lData[i * 3 + 2] = lights[i].pos.z;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eLightDir: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i * 3] = lights[i].dir.x;
+                            lData[i * 3 + 1] = lights[i].dir.y;
+                            lData[i * 3 + 2] = lights[i].dir.z;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eLightAtten: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i * 3] = lights[i].attenuate.x;
+                            lData[i * 3 + 1] = lights[i].attenuate.y;
+                            lData[i * 3 + 2] = lights[i].attenuate.z;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eLightSpotExt: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i * 2] = lights[i].spotExt.x;
+                            lData[i * 2 + 1] = lights[i].spotExt.y;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 2 * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eLightAmbient: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i * 3] = lights[i].ambient.r;
+                            lData[i * 3 + 1] = lights[i].ambient.g;
+                            lData[i * 3 + 2] = lights[i].ambient.b;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eLightColor: {
+                        for (auto i=0; i<lights.size(); ++i) {
+                            lData[i * 3] = lights[i].color.r;
+                            lData[i * 3 + 1] = lights[i].color.g;
+                            lData[i * 3 + 2] = lights[i].color.b;
+                        }
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                    }
+                        break;
+                    case UniformNameType::eViewDir: {
+                        auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
+                        lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3);
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            glUnmapBuffer(GL_UNIFORM_BUFFER);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
         }
     }
     

@@ -132,6 +132,11 @@ namespace Peach3D
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
+                // set lighting unfo
+                if (firstNode->isLightingEnabled()) {
+                    std::vector<Light> usedLs = {Light()};
+                    ((ProgramGL*)usedProgram)->updateObjectLightsUniforms(usedLs);
+                }
             }
             
             // bind vertex and index
