@@ -35,6 +35,20 @@ namespace Peach3D
         }
     }
     
+    void RenderNode::setLightingEnabled(bool enable)
+    {
+        mLightEnable = enable;
+        if (mLightEnable) {
+            // save lights name
+            SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light& l){
+                mValidLights.push_back(name);
+            });
+            // make name list unique
+            std::sort(mValidLights.begin(), mValidLights.end());
+            mIsRenderCodeDirty = true;
+        }
+    }
+    
     void RenderNode::setOBBEnabled(bool enable)
     {
         if (enable) {
@@ -72,17 +86,15 @@ namespace Peach3D
         if (mIsRenderCodeDirty) {
             // set preset program first if needed
             if (!mRenderProgram) {
-                if (mMaterial.getTextureCount() > 0) {
-                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, true));
-                }
-                else {
-                    mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
-                }
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, (int)mValidLights.size()));
             }
             // calc render unique hash code
             std::string renderState = Utils::formatString("Name:%sProgram:%uDrawMode:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mMode);
             for (auto tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();
+            }
+            for (auto l : mValidLights) {
+                renderState = renderState + l;
             }
             mRenderHash = XXH32((void*)renderState.c_str(), (int)renderState.size(), 0);
             

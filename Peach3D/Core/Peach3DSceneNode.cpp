@@ -20,6 +20,8 @@ namespace Peach3D
         mPosition = pos;
         mRotation = rotation;
         mScale = scale;
+        // default enable lighting
+        setLightingEnabled(true);
     }
     
     void SceneNode::init()
@@ -76,6 +78,15 @@ namespace Peach3D
         // set all RenderNode draw mode
         for (auto node : mRenderNodeMap) {
             node.second->setOBBEnabled(enable);
+        }
+    }
+    
+    void SceneNode::setLightingEnabled(bool enable)
+    {
+        mLightEnable = enable;
+        // set all RenderNode lighting enable
+        for (auto node : mRenderNodeMap) {
+            node.second->setLightingEnabled(enable);
         }
     }
     

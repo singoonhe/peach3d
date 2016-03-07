@@ -42,6 +42,9 @@ namespace Peach3D
         /** Auto set child RenderNode OBB enable. */
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable; }
+        /** Auto set child RenderNode lighting enable. */
+        void setLightingEnabled(bool enable);
+        bool isLightingEnabled() { return mLightEnable; }
         
         /**
          * Set node picking enabled, auto generate OBB for all RenderNode.
@@ -119,6 +122,7 @@ namespace Peach3D
         Vector3         mWorldRotation; // cache scene node world rotation
         float           mDepthBias;     // rendering depth bias, valid if bigger than 0.0f
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
+        bool            mLightEnable;   // is lighting enabled, default is true
         
         bool            mOBBEnable;     // is OBB display enable
         bool            mPickEnabled;   // is object picking eanbled

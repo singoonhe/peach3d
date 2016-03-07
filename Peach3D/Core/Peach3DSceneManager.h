@@ -38,8 +38,14 @@ namespace Peach3D
         Camera* getActiveCamera() { return mActiveCamera; }
         SceneNode* getRootSceneNode() { return mRootSceneNode; }
         Widget* getRootWidget() { return mRootWidget; }
+        
         void setLightMax(int count) { if (count > 0) mLightMax = count; }
         int getLightMax() { return mLightMax; }
+        /** Add new light, auto new name if not exsited. */
+        void addNewLight(const Light& l);
+        bool getLight(const char* name, Light* outL);
+        void deleteLight(const char* name);
+        void tranverseLights(std::function<void(const std::string& name, const Light& l)> callFunc);
         
         /** Set perspective projection. */
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
@@ -88,8 +94,8 @@ namespace Peach3D
         
         Camera*                 mActiveCamera;      // current active camera
         std::vector<Camera*>    mCameraList;        // scene camera list
-        std::vector<Light>      mLightList;         // scene light list
         
+        std::map<std::string, Light>        mLightList;         // scene light list
         std::vector<Widget*>                mRenderWidgetList;  // cache widget list
         std::vector<OBB*>                   mRenderOBBList;     // cache OBB render node list
         std::multimap<uint, RenderNode*>    mRenderNodeMap;     // cache 3d render node map, using "multimap" to reduce sort

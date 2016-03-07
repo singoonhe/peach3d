@@ -195,6 +195,47 @@ namespace Peach3D
         mProjectionMatrix = Matrix4::createOrthoProjection(left, right, bottom, top, nearVal, farVal);
     }
     
+    void SceneManager::addNewLight(const Light& l)
+    {
+        if (l.type != LightType::eUnknow) {
+            if (l.name.size() > 0) {
+                if (mLightList.find(l.name) == mLightList.end()) {
+                    mLightList[l.name] = l;
+                }
+            }
+            else {
+                static uint lightAutoIndex = 0; // lighting auto increase index
+                auto lName = Utils::formatString("pd_Light%d", lightAutoIndex);
+                mLightList[lName] = l;
+                mLightList[lName].name = lName;
+            }
+        }
+    }
+
+    bool SceneManager::getLight(const char* name, Light* outL)
+    {
+        if (mLightList.find(name) != mLightList.end()) {
+            *outL = mLightList[name];
+            return true;
+        }
+        return false;
+    }
+    
+    void SceneManager::deleteLight(const char* name)
+    {
+        auto findIter = mLightList.find(name);
+        if (findIter != mLightList.end()) {
+            mLightList.erase(findIter);
+        }
+    }
+    
+    void SceneManager::tranverseLights(std::function<void(const std::string& name, const Light& l)> callFunc)
+    {
+        for (auto iter : mLightList) {
+            callFunc(iter.first, iter.second);
+        }
+    }
+
     /*
 #include "Peach3DCommonGL.h"
     Ray globalRay;

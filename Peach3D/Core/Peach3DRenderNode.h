@@ -37,7 +37,7 @@ namespace Peach3D
         void setDrawMode(DrawMode mode) { mMode = mode; mIsRenderCodeDirty = true; }
         DrawMode getDrawMode() { return mMode; }
         bool isLightingEnabled() { return mLightEnable; }
-        void setLightingEnabled(bool enable) { mLightEnable = enable; }
+        void setLightingEnabled(bool enable);
         
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
@@ -77,6 +77,7 @@ namespace Peach3D
         bool            mOBBEnable;     // is OBB display enable
         bool            mLightEnable;   // is lighting enabled
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
+        std::vector<std::string>    mValidLights;
         
         std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering
