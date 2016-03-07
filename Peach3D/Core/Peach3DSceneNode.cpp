@@ -20,8 +20,6 @@ namespace Peach3D
         mPosition = pos;
         mRotation = rotation;
         mScale = scale;
-        // default enable lighting
-        setLightingEnabled(true);
     }
     
     void SceneNode::init()
@@ -50,6 +48,8 @@ namespace Peach3D
         setOBBEnabled(mOBBEnable);
         setPickingEnabled(mPickEnabled, mPickAlways);
         setAlpha(mAlpha);
+        // default enable lighting
+        setLightingEnabled(mLightEnable);
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)
@@ -87,6 +87,14 @@ namespace Peach3D
         // set all RenderNode lighting enable
         for (auto node : mRenderNodeMap) {
             node.second->setLightingEnabled(enable);
+        }
+    }
+    
+    void SceneNode::updateLightingState()
+    {
+        // update all RenderNode state
+        for (auto node : mRenderNodeMap) {
+            node.second->updateLightingState();
         }
     }
     

@@ -17,6 +17,7 @@
 #include "Peach3DMatrix4.h"
 #include "Peach3DAction.h"
 #include "Peach3DIPlatform.h"
+#include "Peach3dLight.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DSceneManager.h"
 #include "Peach3DLayoutManager.h"

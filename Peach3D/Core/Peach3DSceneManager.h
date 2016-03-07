@@ -76,6 +76,8 @@ namespace Peach3D
         void createDrawStatsNode();
         /** Create preset widget object and OBB object. */
         void createPresetObjects();
+        /** Update SceneNode and children. */
+        void updateSceneNodeLighting(Node* sNode);
         /** Add render and picking scene node to cache list, also prepare for render. */
         void addSceneNodeToCacheList(Node* node, float lastFrameTime);
         /** Add render widget to cache list, also prepare for render. */

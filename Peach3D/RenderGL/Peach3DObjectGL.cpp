@@ -14,6 +14,7 @@
 #include "Peach3DTextureGL.h"
 #include "Peach3DSprite.h"
 #include "Peach3DRenderNode.h"
+#include "Peach3DSceneManager.h"
 #include "Peach3DResourceManager.h"
 
 namespace Peach3D
@@ -134,8 +135,14 @@ namespace Peach3D
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
                 // set lighting unfo
                 if (firstNode->isLightingEnabled()) {
-                    std::vector<Light> usedLs = {Light()};
-                    ((ProgramGL*)usedProgram)->updateObjectLightsUniforms(usedLs);
+                    std::vector<Light> validLights;
+                    firstNode->tranverseLighting([&validLights](const std::string& name){
+                        Light outL;
+                        if (SceneManager::getSingleton().getLight(name.c_str(), &outL)) {
+                            validLights.push_back(outL);
+                        }
+                    });
+                    ((ProgramGL*)usedProgram)->updateObjectLightsUniforms(validLights);
                 }
             }
             

@@ -38,6 +38,8 @@ namespace Peach3D
         DrawMode getDrawMode() { return mMode; }
         bool isLightingEnabled() { return mLightEnable; }
         void setLightingEnabled(bool enable);
+        void tranverseLighting(std::function<void(const std::string& name)> callFunc);
+        void updateLightingState();
         
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }

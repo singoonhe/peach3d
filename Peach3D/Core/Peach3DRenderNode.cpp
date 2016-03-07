@@ -38,7 +38,20 @@ namespace Peach3D
     void RenderNode::setLightingEnabled(bool enable)
     {
         mLightEnable = enable;
+        updateLightingState();
+    }
+    
+    void RenderNode::tranverseLighting(std::function<void(const std::string& name)> callFunc)
+    {
+        for (auto iter : mValidLights) {
+            callFunc(iter);
+        }
+    }
+    
+    void RenderNode::updateLightingState()
+    {
         if (mLightEnable) {
+            mValidLights.clear();
             // save lights name
             SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light& l){
                 mValidLights.push_back(name);

@@ -45,6 +45,7 @@ namespace Peach3D
         /** Auto set child RenderNode lighting enable. */
         void setLightingEnabled(bool enable);
         bool isLightingEnabled() { return mLightEnable; }
+        void updateLightingState();
         
         /**
          * Set node picking enabled, auto generate OBB for all RenderNode.

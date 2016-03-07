@@ -34,7 +34,9 @@ namespace Peach3D
                 shaderPreStr += isVertex ? gVerShaderCode2D : gFragShaderCode2D;
             }
             mShaderMap[featureStr] = shaderPreStr;
-            printf("shader code:\n%s\n", mShaderMap[featureStr].c_str());
+//            if (feature.lightsCount > 0) {
+                printf("shader code:\n%s\n\n\n", mShaderMap[featureStr].c_str());
+//            }
         }
         return mShaderMap[featureStr];
     }
@@ -56,7 +58,7 @@ namespace Peach3D
                         uniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
                         uniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
                         uniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
-                        uniforms.push_back(ProgramUniform("pd_viewDir", UniformDataType::eVector3));
+                        uniforms.push_back(ProgramUniform("pd_eyeDir", UniformDataType::eVector3));
                     }
                 }
                 uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));

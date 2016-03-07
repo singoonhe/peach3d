@@ -149,6 +149,15 @@ namespace Peach3D
         }
     }
     
+    void SceneManager::updateSceneNodeLighting(Node* sNode)
+    {
+        ((SceneNode*)sNode)->updateLightingState();
+        // auto update children
+        sNode->tranverseChildNode([&](size_t, Node* cNode){
+            this->updateSceneNodeLighting(cNode);
+        });
+    }
+    
     Camera* SceneManager::createFreeCamera(const Vector3& pos, const Vector3& rotate)
     {
         Camera* newCamera = new Camera(pos, rotate);
@@ -197,10 +206,13 @@ namespace Peach3D
     
     void SceneManager::addNewLight(const Light& l)
     {
+        Peach3DAssert(l.type != LightType::eUnknow, "Can't add unknow type light");
         if (l.type != LightType::eUnknow) {
+            bool isAddLight = false;
             if (l.name.size() > 0) {
                 if (mLightList.find(l.name) == mLightList.end()) {
                     mLightList[l.name] = l;
+                    isAddLight = true;
                 }
             }
             else {
@@ -208,6 +220,12 @@ namespace Peach3D
                 auto lName = Utils::formatString("pd_Light%d", lightAutoIndex);
                 mLightList[lName] = l;
                 mLightList[lName].name = lName;
+                isAddLight = true;
+            }
+            if (isAddLight) {
+                mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
+                    this->updateSceneNodeLighting(cNode);
+                });
             }
         }
     }

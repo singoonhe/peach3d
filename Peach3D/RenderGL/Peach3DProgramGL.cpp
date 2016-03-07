@@ -229,7 +229,7 @@ namespace Peach3D
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_viewDir", UniformDataType::eVector3));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_eyeDir", UniformDataType::eVector3));
                 // bind lights UBO
                 bindUniformsBuffer("LightsUnifroms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
             }
@@ -344,7 +344,7 @@ namespace Peach3D
                         memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
                     }
                         break;
-                    case UniformNameType::eViewDir: {
+                    case UniformNameType::eEyeDir: {
                         auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
                         lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
                         memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3);
