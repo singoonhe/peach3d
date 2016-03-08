@@ -512,6 +512,18 @@ namespace Peach3D
     {
         SceneManager* sgr = SceneManager::getSingletonPtr();
         const Material& objMat = node->getMaterial();
+        // lights attribute
+        float lData[3 * SceneManager::getSingleton().getLightMax()];
+        // set lighting unfo
+        std::vector<Light> validLights;
+        if (node->isLightingEnabled()) {
+            node->tranverseLighting([&validLights](const std::string& name){
+                Light outL;
+                if (SceneManager::getSingleton().getLight(name.c_str(), &outL)) {
+                    validLights.push_back(outL);
+                }
+            });
+        }
         // update object uniforms in list
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
@@ -537,6 +549,113 @@ namespace Peach3D
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
                         glUniform4fv(location, 1, color);
+                    });
+                    break;
+                    // material uniforms
+                case UniformNameType::eNormalMatrix:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        Matrix4 modelMat = node->getModelMatrix();
+                        Matrix4 invmat;
+                        modelMat.getInverse(&invmat);
+                        glUniformMatrix4fv(location, 1, false, invmat.getTranspose().mat);
+                    });
+                    break;
+                case UniformNameType::eMatAmbient:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
+                        glUniform3fv(location, 1, color);
+                    });
+                    break;
+                case UniformNameType::eMatSpecular:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b};
+                        glUniform3fv(location, 1, color);
+                    });
+                    break;
+                case UniformNameType::eMatShininess:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        glUniform1f(location, objMat.shininess);
+                    });
+                    break;
+                case UniformNameType::eMatEmissive:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
+                        glUniform3fv(location, 1, color);
+                    });
+                    break;
+                    // lights uniforms
+                case UniformNameType::eLightType:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i] = (float)validLights[i].type;
+                        }
+                        glUniform1fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eLightPos:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i * 3] = validLights[i].pos.x;
+                            lData[i * 3 + 1] = validLights[i].pos.y;
+                            lData[i * 3 + 2] = validLights[i].pos.z;
+                        }
+                        glUniform3fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eLightDir:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i * 3] = validLights[i].dir.x;
+                            lData[i * 3 + 1] = validLights[i].dir.y;
+                            lData[i * 3 + 2] = validLights[i].dir.z;
+                        }
+                        glUniform3fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eLightAtten:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i * 3] = validLights[i].attenuate.x;
+                            lData[i * 3 + 1] = validLights[i].attenuate.y;
+                            lData[i * 3 + 2] = validLights[i].attenuate.z;
+                        }
+                        glUniform3fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eLightSpotExt:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i * 2] = validLights[i].spotExt.x;
+                            lData[i * 2 + 1] = validLights[i].spotExt.y;
+                        }
+                        glUniform3fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eLightAmbient:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i * 3] = validLights[i].ambient.r;
+                            lData[i * 3 + 1] = validLights[i].ambient.g;
+                            lData[i * 3 + 2] = validLights[i].ambient.b;
+                        }
+                        glUniform3fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eLightColor:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<validLights.size(); ++i) {
+                            lData[i * 3] = validLights[i].color.r;
+                            lData[i * 3 + 1] = validLights[i].color.g;
+                            lData[i * 3 + 2] = validLights[i].color.b;
+                        }
+                        glUniform3fv(location, validLights.size(), lData);
+                    });
+                    break;
+                case UniformNameType::eEyeDir:
+                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                        auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
+                        lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
+                        glUniform3fv(location, 1, lData);
                     });
                     break;
                 default:
@@ -571,8 +690,10 @@ namespace Peach3D
                         }
                             break;
                         case UniformNameType::eNormalMatrix: {
-                            const Matrix4& modelMat = renderList[i]->getModelMatrix();
-                            memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
+                            Matrix4 modelMat = renderList[i]->getModelMatrix();
+                            Matrix4 invmat;
+                            modelMat.getInverse(&invmat);
+                            memcpy(data + uniformOffset + startOffset, invmat.getTranspose().mat, 16 * sizeof(float));
                             startOffset += 16;
                         }
                             break;

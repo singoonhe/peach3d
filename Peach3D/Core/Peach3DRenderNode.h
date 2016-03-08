@@ -36,9 +36,11 @@ namespace Peach3D
         const Material& getMaterial() { return mMaterial; }
         void setDrawMode(DrawMode mode) { mMode = mode; mIsRenderCodeDirty = true; }
         DrawMode getDrawMode() { return mMode; }
-        bool isLightingEnabled() { return mLightEnable; }
+        bool isLightingEnabled() { return mLightEnable && mValidLights.size() > 0; }
         void setLightingEnabled(bool enable);
+        /** Tranverse all valid light for this Node. */
         void tranverseLighting(std::function<void(const std::string& name)> callFunc);
+        /** Calc Node need lighting name, no light if VertexType not contain Normal. */
         void updateLightingState();
         
         void setOBBEnabled(bool enable);
@@ -53,6 +55,7 @@ namespace Peach3D
         void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }
         void setSpecular(const Color3& specular) { mMaterial.specular = specular; }
         void setShininess(float shininess) { mMaterial.shininess = shininess; }
+        void setEmissive(const Color3& emissive) { mMaterial.emissive = emissive; }
         void setAlpha(float alpha) { mMaterial.alpha = alpha; }
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
         void resetTextureByIndex(int index, ITexture* texture);

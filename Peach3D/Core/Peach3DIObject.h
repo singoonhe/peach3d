@@ -81,6 +81,7 @@ namespace Peach3D
         const std::string& getName() { return mObjectName; }
         const Vector3& getBorderMax() { return mBorderMax; }
         const Vector3& getBorderMin() { return mBorderMin; }
+        uint getVertexType() { return mVertexDataType; }
 
     protected:
         //! create object by IRender, user can't call constructor function.

@@ -32,6 +32,8 @@ namespace Peach3D
         mPickAlways = false;
         mDepthBias = 0.0f;
         mRotateUseVec = false;
+        // set default lighting enabled
+        mLightEnable = true;
     }
     
     void SceneNode::attachMesh(Mesh* mesh)

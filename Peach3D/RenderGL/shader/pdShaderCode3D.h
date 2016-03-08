@@ -82,7 +82,7 @@ namespace Peach3D
             uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];
             uniform vec3 pd_lColor[PD_LIGHT_COUNT];
             uniform vec3 pd_eyeDir;
-            uniform vec3 pd_normal;
+            attribute vec3 pd_normal;
             uniform mat4 pd_normalMatrix;
             uniform vec3 pd_ambient;
             uniform vec3 pd_specular;
@@ -201,7 +201,7 @@ namespace Peach3D
             \n#endif\n
             vec4 fragColor = tex_color0;
         \n#else\n
-            vec4 fragColor = vec4(1.0);
+            vec4 fragColor = vec4(vec3(1.0), f_diffuse.a);
         \n#endif
         /* Calc lighting effect. */
         \n#ifdef PD_ENABLE_LIGHT\n

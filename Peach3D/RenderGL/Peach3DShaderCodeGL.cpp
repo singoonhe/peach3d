@@ -34,9 +34,9 @@ namespace Peach3D
                 shaderPreStr += isVertex ? gVerShaderCode2D : gFragShaderCode2D;
             }
             mShaderMap[featureStr] = shaderPreStr;
-//            if (feature.lightsCount > 0) {
+            if (feature.lightsCount > 0) {
                 printf("shader code:\n%s\n\n\n", mShaderMap[featureStr].c_str());
-//            }
+            }
         }
         return mShaderMap[featureStr];
     }
