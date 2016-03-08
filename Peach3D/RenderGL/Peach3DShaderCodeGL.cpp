@@ -65,6 +65,10 @@ namespace Peach3D
                 uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
                 if (feature.lightsCount > 0) {
                     uniforms.push_back(ProgramUniform("pd_normalMatrix", UniformDataType::eMatrix4));
+                    uniforms.push_back(ProgramUniform("pd_ambient", UniformDataType::eVector3));
+                    uniforms.push_back(ProgramUniform("pd_specular", UniformDataType::eVector3));
+                    uniforms.push_back(ProgramUniform("pd_shininess", UniformDataType::eFloat));
+                    uniforms.push_back(ProgramUniform("pd_emissive", UniformDataType::eVector3));
                 }
             }
             else {

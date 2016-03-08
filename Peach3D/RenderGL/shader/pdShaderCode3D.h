@@ -45,7 +45,15 @@ namespace Peach3D
         \n#ifdef PD_ENABLE_LIGHT\n
             in vec3 pd_normal;
             in mat4 pd_normalMatrix;
+            in vec3 pd_ambient;
+            in vec3 pd_specular;
+            in float pd_shininess;
+            in vec3 pd_emissive;
             out vec3 f_normal;
+            out vec3 f_matAmbient;
+            out vec3 f_matSpecular;
+            out float f_matShininess;
+            out vec3 f_matEmissive;
             out vec3 f_lightDir[PD_LIGHT_COUNT];
             out vec3 f_halfVec[PD_LIGHT_COUNT];
             out float f_attenuate[PD_LIGHT_COUNT];
@@ -73,10 +81,18 @@ namespace Peach3D
             uniform vec2 pd_lSpotExtend[PD_LIGHT_COUNT];
             uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];
             uniform vec3 pd_lColor[PD_LIGHT_COUNT];
-            uniform vec3 pd_eyeDir  ;
+            uniform vec3 pd_eyeDir;
             uniform vec3 pd_normal;
             uniform mat4 pd_normalMatrix;
+            uniform vec3 pd_ambient;
+            uniform vec3 pd_specular;
+            uniform float pd_shininess;
+            uniform vec3 pd_emissive;
             varying vec3 f_normal;
+            varying vec3 f_matAmbient;
+            varying vec3 f_matSpecular;
+            varying float f_matShininess;
+            varying vec3 f_matEmissive;
             varying vec3 f_lightDir[PD_LIGHT_COUNT];
             varying vec3 f_halfVec[PD_LIGHT_COUNT];
             varying float f_attenuate[PD_LIGHT_COUNT];
@@ -128,6 +144,10 @@ namespace Peach3D
                     f_halfVec[i] = normalize(pd_lDirection[i] + pd_eyeDir);\n
                 }
             }
+            f_matAmbient = pd_ambient;
+            f_matSpecular = pd_specular;
+            f_matShininess = pd_shininess;
+            f_matEmissive = pd_emissive;
         \n#endif\n
     });
 
@@ -139,11 +159,11 @@ namespace Peach3D
             uniform sampler2D pd_texture0;
         \n#endif
         \n#ifdef PD_ENABLE_LIGHT\n
-            in vec3 pd_ambient;
-            in vec3 pd_specular;
-            in float pd_shininess;
-            in vec3 pd_emissive;
             in vec3 f_normal;
+            in vec3 f_matAmbient;
+            in vec3 f_matSpecular;
+            in float f_matShininess;
+            in vec3 f_matEmissive;
             in vec3 f_lightDir[PD_LIGHT_COUNT];
             in vec3 f_halfVec[PD_LIGHT_COUNT];
             in float f_attenuate[PD_LIGHT_COUNT];
@@ -158,11 +178,11 @@ namespace Peach3D
             uniform sampler2D pd_texture0;
         \n#endif
         \n#ifdef PD_ENABLE_LIGHT\n
-            uniform vec3 pd_ambient;
-            uniform vec3 pd_specular;
-            uniform float pd_shininess;
-            uniform vec3 pd_emissive;
             varying vec3 f_normal;
+            varying vec3 f_matAmbient;
+            varying vec3 f_matSpecular;
+            varying float f_matShininess;
+            varying vec3 f_matEmissive;
             varying vec3 f_lightDir[PD_LIGHT_COUNT];
             varying vec3 f_halfVec[PD_LIGHT_COUNT];
             varying float f_attenuate[PD_LIGHT_COUNT];
@@ -190,10 +210,14 @@ namespace Peach3D
             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {\n
                 float diffuse = max(0.0, dot(f_normal, f_lightDir[i]));\n
                 float specular = max(0.0, dot(f_normal, f_halfVec[i]));\n
-                scatteredLight += f_lAmbient[i] * pd_ambient * f_attenuate[i] + f_lColor[i] * f_diffuse.rgb * diffuse * f_attenuate[i];\n
-                reflectedLight += f_lColor[i] * pd_specular * specular * f_attenuate[i];\n
+                if (diffuse == 0.0)
+                    specular = 0.0;
+                else
+                    specular = pow(specular, f_matShininess);
+                scatteredLight += f_lAmbient[i] * f_matAmbient * f_attenuate[i] + f_lColor[i] * f_diffuse.rgb * diffuse * f_attenuate[i];\n
+                reflectedLight += f_lColor[i] * f_matSpecular * specular * f_attenuate[i];\n
             }\n
-            vec3 rgb = min(pd_emissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));\n
+            vec3 rgb = min(f_matEmissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));\n
             fragColor = vec4(rgb, fragColor.a);\n
         \n#else
             \n#ifdef PD_ENABLE_TEXUV\n

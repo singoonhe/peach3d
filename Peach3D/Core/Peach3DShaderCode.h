@@ -31,16 +31,18 @@ namespace Peach3D
         eAnRot,         // widget anchor and rotate
         ePatShowRect,   // widget parent render pos under anchor and size
         ePatAnRot,      // widget parent anchor and rotate
-        eDiffuse,       // widget diffuse color or SceneNode diffuse
+        eDiffuse,       // widget diffuse color or material diffuse
         eUVRect,        // sprite texture rect
         eTexEffect,     // sprite scale negative and gray effect
         
-        eProjMatrix,    // SceneNode projective matrix
-        eViewMatrix,    // SceneNode view matrix
-        eModelMatrix,   // SceneNode model matrix
-        eMatEmissive,
-        eMatSpecular,
-        eMatAmbient,
+        eProjMatrix,    // projective matrix
+        eViewMatrix,    // view matrix
+        eModelMatrix,   // model matrix
+        eNormalMatrix,  // normal matrix
+        eMatEmissive,   // material emissive
+        eMatSpecular,   // material specular
+        eMatShininess,  // material shininess
+        eMatAmbient,    // material ambient
         
         eLightType,     // light type
         eLightPos,      // light position

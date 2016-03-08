@@ -42,6 +42,20 @@ namespace Peach3D
             mUniformsNamesMap["pd_projMatrix"] = UniformNameType::eProjMatrix;
             mUniformsNamesMap["pd_viewMatrix"] = UniformNameType::eViewMatrix;
             mUniformsNamesMap["pd_modelMatrix"] = UniformNameType::eModelMatrix;
+            mUniformsNamesMap["pd_normalMatrix"] = UniformNameType::eNormalMatrix;
+            mUniformsNamesMap["pd_emissive"] = UniformNameType::eMatEmissive;
+            mUniformsNamesMap["pd_specular"] = UniformNameType::eMatSpecular;
+            mUniformsNamesMap["pd_shininess"] = UniformNameType::eMatShininess;
+            mUniformsNamesMap["pd_ambient"] = UniformNameType::eMatAmbient;
+            
+            mUniformsNamesMap["pd_lType"] = UniformNameType::eLightType;
+            mUniformsNamesMap["pd_lPosition"] = UniformNameType::eLightPos;
+            mUniformsNamesMap["pd_lDirection"] = UniformNameType::eLightDir;
+            mUniformsNamesMap["pd_lAttenuate"] = UniformNameType::eLightAtten;
+            mUniformsNamesMap["pd_lSpotExtend"] = UniformNameType::eLightSpotExt;
+            mUniformsNamesMap["pd_lAmbient"] = UniformNameType::eLightAmbient;
+            mUniformsNamesMap["pd_lColor"] = UniformNameType::eLightColor;
+            mUniformsNamesMap["pd_eyeDir"] = UniformNameType::eEyeDir;
         }
         return mUniformsNamesMap[name];
     }

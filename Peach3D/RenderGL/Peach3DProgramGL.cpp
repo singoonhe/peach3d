@@ -570,6 +570,35 @@ namespace Peach3D
                             startOffset += 4;
                         }
                             break;
+                        case UniformNameType::eNormalMatrix: {
+                            const Matrix4& modelMat = renderList[i]->getModelMatrix();
+                            memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
+                            startOffset += 16;
+                        }
+                            break;
+                        case UniformNameType::eMatAmbient: {
+                            float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
+                            memcpy(data + uniformOffset + startOffset, color, 3 * sizeof(float));
+                            startOffset += 3;
+                        }
+                            break;
+                        case UniformNameType::eMatSpecular: {
+                            float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b};
+                            memcpy(data + uniformOffset + startOffset, color, 3 * sizeof(float));
+                            startOffset += 3;
+                        }
+                            break;
+                        case UniformNameType::eMatShininess: {
+                            *(data + uniformOffset + startOffset) = objMat.shininess;
+                            startOffset += 1;
+                        }
+                            break;
+                        case UniformNameType::eMatEmissive: {
+                            float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
+                            memcpy(data + uniformOffset + startOffset, color, 3 * sizeof(float));
+                            startOffset += 3;
+                        }
+                            break;
                         default:
                             break;
                     }
