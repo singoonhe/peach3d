@@ -140,8 +140,8 @@ namespace Peach3D
                 }\n
                 else {\n
                     f_attenuate[i] = 1.0;\n
-                    f_lightDir[i] = pd_lDirection[i];\n
-                    f_halfVec[i] = normalize(pd_lDirection[i] + pd_eyeDir);\n
+                    f_lightDir[i] = -pd_lDirection[i];\n
+                    f_halfVec[i] = normalize(f_lightDir[i] + pd_eyeDir);\n
                 }
             }
             f_matAmbient = pd_ambient;

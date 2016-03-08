@@ -82,6 +82,8 @@
 		187CF64919C72A7100C8094C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187CF64819C72A7100C8094C /* Images.xcassets */; };
 		187D771C1C8ECF9300F5D161 /* LightScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187D771A1C8ECF9300F5D161 /* LightScene.cpp */; };
 		187D771D1C8ECF9300F5D161 /* LightScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187D771A1C8ECF9300F5D161 /* LightScene.cpp */; };
+		187D77231C8F0B7E00F5D161 /* sphere.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 187D77221C8F0B7E00F5D161 /* sphere.pmt */; };
+		187D77261C8F0B8900F5D161 /* sphere.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 187D77221C8F0B7E00F5D161 /* sphere.pmt */; };
 		188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188637F519D02BED00BD6FE3 /* TestScene.cpp */; };
 		188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188637F519D02BED00BD6FE3 /* TestScene.cpp */; };
 		1891F4F41C73777D00DDA79D /* texcube.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 1891F4F31C73777D00DDA79D /* texcube.pmt */; };
@@ -199,6 +201,7 @@
 		187CF64819C72A7100C8094C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = test_mac/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		187D771A1C8ECF9300F5D161 /* LightScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LightScene.cpp; sourceTree = "<group>"; };
 		187D771B1C8ECF9300F5D161 /* LightScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightScene.h; sourceTree = "<group>"; };
+		187D77221C8F0B7E00F5D161 /* sphere.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sphere.pmt; sourceTree = "<group>"; };
 		188637F519D02BED00BD6FE3 /* TestScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestScene.cpp; sourceTree = "<group>"; };
 		188637F619D02BED00BD6FE3 /* TestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScene.h; sourceTree = "<group>"; };
 		1891F4F31C73777D00DDA79D /* texcube.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = texcube.pmt; sourceTree = "<group>"; };
@@ -388,6 +391,7 @@
 				185ED1C61B70E10A0012667B /* press_highlight.png */,
 				185ED1C71B70E10A0012667B /* press_normal.png */,
 				1813BB731B78F23300023159 /* restart_normal.png */,
+				187D77221C8F0B7E00F5D161 /* sphere.pmt */,
 				18E94CDC1C5A360F00F448D8 /* testlayout.plt */,
 				18B2AB6219E7AD910041AC1E /* texcube.mtl */,
 				18B2AB6319E7AD910041AC1E /* texcube.obj */,
@@ -473,6 +477,11 @@
 			attributes = {
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = singoon.he;
+				TargetAttributes = {
+					187CF5F719C7019000C8094C = {
+						DevelopmentTeam = H45T2CHAYG;
+					};
+				};
 			};
 			buildConfigurationList = 185ECFFA19B4773F00801CA0 /* Build configuration list for PBXProject "test" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -528,6 +537,7 @@
 				18B2AB6419E7AD910041AC1E /* texcube.mtl in Resources */,
 				1841070D1B6CBB65005133E2 /* front_normal.png in Resources */,
 				184962CD1C4A42B100304991 /* peach.mtl in Resources */,
+				187D77231C8F0B7E00F5D161 /* sphere.pmt in Resources */,
 				185ED1D21B70EE440012667B /* peach3d_icon.png in Resources */,
 				18A272DA19E5434500145FDB /* Cube.obj in Resources */,
 				187CF64919C72A7100C8094C /* Images.xcassets in Resources */,
@@ -592,6 +602,7 @@
 				184532AB1C72D8A1000B8F66 /* peach3d_ui.xml in Resources */,
 				189B0F6019EE56C60080C7A6 /* widgetShader.vsh in Resources */,
 				184962D21C4A8AD400304991 /* peach.mtl in Resources */,
+				187D77261C8F0B8900F5D161 /* sphere.pmt in Resources */,
 				18432DF81C6251C5007B36EC /* peach3d_2.png in Resources */,
 				18B2AB6719E7AD910041AC1E /* texcube.obj in Resources */,
 				18432DFE1C6251C5007B36EC /* peach3d_5.png in Resources */,
@@ -805,7 +816,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: GuangHui He (365G444DDM)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -830,6 +842,7 @@
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.supermotion.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -841,6 +854,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -862,6 +876,7 @@
 				OTHER_LDFLAGS = "-lz";
 				PRODUCT_BUNDLE_IDENTIFIER = "info.supermotion.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

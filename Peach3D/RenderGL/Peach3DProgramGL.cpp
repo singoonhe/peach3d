@@ -26,7 +26,7 @@ namespace Peach3D
     // define global UBO binding point
     #define GLOBAL_UBO_BINDING_POINT        0
     // define lights UBO binding point
-    #define LIGHTS_UBO_BINDING_POINT        0
+    #define LIGHTS_UBO_BINDING_POINT        1
     
     // defined widget global UBO info
     GLuint ProgramGL::mWidgetUBOId = GL_INVALID_INDEX;
@@ -589,7 +589,7 @@ namespace Peach3D
                         for (auto i=0; i<validLights.size(); ++i) {
                             lData[i] = (float)validLights[i].type;
                         }
-                        glUniform1fv(location, validLights.size(), lData);
+                        glUniform1fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightPos:
@@ -599,7 +599,7 @@ namespace Peach3D
                             lData[i * 3 + 1] = validLights[i].pos.y;
                             lData[i * 3 + 2] = validLights[i].pos.z;
                         }
-                        glUniform3fv(location, validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightDir:
@@ -609,7 +609,7 @@ namespace Peach3D
                             lData[i * 3 + 1] = validLights[i].dir.y;
                             lData[i * 3 + 2] = validLights[i].dir.z;
                         }
-                        glUniform3fv(location, validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightAtten:
@@ -619,7 +619,7 @@ namespace Peach3D
                             lData[i * 3 + 1] = validLights[i].attenuate.y;
                             lData[i * 3 + 2] = validLights[i].attenuate.z;
                         }
-                        glUniform3fv(location, validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightSpotExt:
@@ -628,7 +628,7 @@ namespace Peach3D
                             lData[i * 2] = validLights[i].spotExt.x;
                             lData[i * 2 + 1] = validLights[i].spotExt.y;
                         }
-                        glUniform3fv(location, validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightAmbient:
@@ -638,7 +638,7 @@ namespace Peach3D
                             lData[i * 3 + 1] = validLights[i].ambient.g;
                             lData[i * 3 + 2] = validLights[i].ambient.b;
                         }
-                        glUniform3fv(location, validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightColor:
@@ -648,7 +648,7 @@ namespace Peach3D
                             lData[i * 3 + 1] = validLights[i].color.g;
                             lData[i * 3 + 2] = validLights[i].color.b;
                         }
-                        glUniform3fv(location, validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eEyeDir:
@@ -689,6 +689,7 @@ namespace Peach3D
                             startOffset += 4;
                         }
                             break;
+                            // material uniforms
                         case UniformNameType::eNormalMatrix: {
                             Matrix4 modelMat = renderList[i]->getModelMatrix();
                             Matrix4 invmat;

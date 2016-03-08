@@ -21,12 +21,15 @@ bool LightScene::init()
 void LightSample::init(Widget* parentWidget)
 {
     // add a direction light
-    Light dirL(Vector3(1.f, -1.f, 0.f), Color3White);
+    Light dirL(Vector3(-1.f, 1.f, 0.f), Color3White);
     SceneManager::getSingleton().addNewLight(dirL);
     // only set title here
     mTitle = "Lighting effect";
     
-    // create some balls
+    // create some spheres
+    auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");
+    auto sphereNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, 0.f, 0.f));
+    sphereNode->attachMesh(sphereMesh);
 }
 
 LightSample::~LightSample()
