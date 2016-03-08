@@ -80,6 +80,8 @@
 		187CF64619C72A5900C8094C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 187CF64219C72A5900C8094C /* Credits.rtf */; };
 		187CF64719C72A5900C8094C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 187CF64419C72A5900C8094C /* InfoPlist.strings */; };
 		187CF64919C72A7100C8094C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187CF64819C72A7100C8094C /* Images.xcassets */; };
+		187D771C1C8ECF9300F5D161 /* LightScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187D771A1C8ECF9300F5D161 /* LightScene.cpp */; };
+		187D771D1C8ECF9300F5D161 /* LightScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 187D771A1C8ECF9300F5D161 /* LightScene.cpp */; };
 		188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188637F519D02BED00BD6FE3 /* TestScene.cpp */; };
 		188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 188637F519D02BED00BD6FE3 /* TestScene.cpp */; };
 		1891F4F41C73777D00DDA79D /* texcube.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 1891F4F31C73777D00DDA79D /* texcube.pmt */; };
@@ -195,6 +197,8 @@
 		187CF64319C72A5900C8094C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = test_mac/en.lproj/Credits.rtf; sourceTree = SOURCE_ROOT; };
 		187CF64519C72A5900C8094C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = test_mac/en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		187CF64819C72A7100C8094C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = test_mac/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		187D771A1C8ECF9300F5D161 /* LightScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LightScene.cpp; sourceTree = "<group>"; };
+		187D771B1C8ECF9300F5D161 /* LightScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightScene.h; sourceTree = "<group>"; };
 		188637F519D02BED00BD6FE3 /* TestScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestScene.cpp; sourceTree = "<group>"; };
 		188637F619D02BED00BD6FE3 /* TestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScene.h; sourceTree = "<group>"; };
 		1891F4F31C73777D00DDA79D /* texcube.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = texcube.pmt; sourceTree = "<group>"; };
@@ -407,6 +411,8 @@
 				184107051B6CAD4B005133E2 /* BaseScene.h */,
 				182181831C579FBD00635EFE /* DeviceScene.cpp */,
 				182181841C579FBD00635EFE /* DeviceScene.h */,
+				187D771A1C8ECF9300F5D161 /* LightScene.cpp */,
+				187D771B1C8ECF9300F5D161 /* LightScene.h */,
 				184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */,
 				184C3BBF1C3AB6E20073B598 /* MeshScene.h */,
 				18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */,
@@ -612,6 +618,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				182181851C579FBD00635EFE /* DeviceScene.cpp in Sources */,
+				187D771C1C8ECF9300F5D161 /* LightScene.cpp in Sources */,
 				184107131B6CBCAD005133E2 /* UIScene.cpp in Sources */,
 				184C3BC01C3AB6E20073B598 /* MeshScene.cpp in Sources */,
 				188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */,
@@ -629,6 +636,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				182181861C579FBD00635EFE /* DeviceScene.cpp in Sources */,
+				187D771D1C8ECF9300F5D161 /* LightScene.cpp in Sources */,
 				184107141B6CBCAD005133E2 /* UIScene.cpp in Sources */,
 				184C3BC11C3AB6E20073B598 /* MeshScene.cpp in Sources */,
 				188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */,

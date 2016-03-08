@@ -45,6 +45,7 @@ namespace Peach3D
         void addNewLight(const Light& l);
         bool getLight(const char* name, Light* outL);
         void deleteLight(const char* name);
+        void deleteAllLights() { mLightList.clear(); }
         void tranverseLights(std::function<void(const std::string& name, const Light& l)> callFunc);
         
         /** Set perspective projection. */

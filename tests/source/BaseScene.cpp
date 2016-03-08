@@ -113,3 +113,12 @@ void BaseScene::update(float lastFrameTime)
         mCurSample->update(lastFrameTime);
     }
 }
+
+void BaseScene::exit()
+{
+    // delete current sample
+    if (mCurSample) {
+        delete mCurSample;
+        mCurSample = nullptr;
+    }
+}

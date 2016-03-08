@@ -16,10 +16,9 @@ class BaseScene : public Peach3D::IScene
 {
 public:
     BaseScene() : mSampleIndex(0), mCurSample(nullptr) {}
-    //! add a cube scene node for test
     virtual bool init();
-    //! update cube rotation
     virtual void update(float lastFrameTime);
+    virtual void exit();
     
 protected:
     /** Change to next index sample. */
