@@ -84,7 +84,15 @@ def triangulateNMesh(object):
         me_ob = object
     return me_ob
 
-# export one object
+def do_calc_rotate_normal(isRot, normal):
+    if isRot:
+        # if using Y - up, rotate X to reset
+        mat_x90 = mathutils.Matrix.Rotation(math.pi/2, 4, 'X')
+        return mathutils.Vector(normal) * mat_x90
+    else:
+        return normal
+
+# export one object, using vertex normal, rendering more smooth.
 def do_export_object(context, props, me_ob, xmlRoot, isLast):
     # add object
     objElem = ET.SubElement(xmlRoot, "Object", name=me_ob.name)
@@ -134,7 +142,8 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
                         # record one vertex data
                         vert = mesh.vertices[index]
                         if props.export_normal:
-                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z, uv[0], 1.0 - uv[1])
+                            cal_normal = do_calc_rotate_normal(props.rot_x90, vert.normal)
+                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z, uv[0], 1.0 - uv[1])
                         else:
                             vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], 1.0 - uv[1])
                         vertex_source += tail_str
@@ -172,7 +181,8 @@ def do_export_object(context, props, me_ob, xmlRoot, isLast):
         # write vertex data
         for vert in mesh.vertices:
             if props.export_normal:
-                vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, vert.normal.x, vert.normal.y, vert.normal.z)
+                cal_normal = do_calc_rotate_normal(props.rot_x90, vert.normal)
+                vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z)
             else:
                 vertex_source += '%.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z)
             vertex_source += tail_str

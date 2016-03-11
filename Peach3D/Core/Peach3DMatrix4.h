@@ -77,10 +77,8 @@ namespace Peach3D
         Matrix4 getTranspose() const
         {
             Matrix4 mm;
-            for (auto i = 0; i < 4; ++i)
-            {
-                for (auto j = 0; j < 4; ++j)
-                {
+            for (auto i = 0; i < 4; ++i) {
+                for (auto j = 0; j < 4; ++j) {
                     mm.mat[(i * 4) + j] = mat[(j * 4) + i];
                 }
             }

@@ -106,6 +106,10 @@
 		18B2AB6D19E7BE770041AC1E /* texcubeShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 18B2AB6A19E7BE770041AC1E /* texcubeShader.fsh */; };
 		18B2AB6E19E7BE770041AC1E /* texcubeShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */; };
 		18B2AB6F19E7BE770041AC1E /* texcubeShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */; };
+		18B4F4791C925FC10075ED58 /* sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 18B4F4771C925FC10075ED58 /* sphere.mtl */; };
+		18B4F47A1C925FC10075ED58 /* sphere.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 18B4F4771C925FC10075ED58 /* sphere.mtl */; };
+		18B4F47B1C925FC10075ED58 /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 18B4F4781C925FC10075ED58 /* sphere.obj */; };
+		18B4F47C1C925FC10075ED58 /* sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = 18B4F4781C925FC10075ED58 /* sphere.obj */; };
 		18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16E01C4933F5000592A4 /* TouchScene.cpp */; };
 		18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16E01C4933F5000592A4 /* TouchScene.cpp */; };
 		18BF2DBA19B6BBF60006872A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F31C1F19B5D8B00089E78E /* OpenGL.framework */; };
@@ -215,6 +219,8 @@
 		18B2AB6319E7AD910041AC1E /* texcube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = texcube.obj; sourceTree = "<group>"; };
 		18B2AB6A19E7BE770041AC1E /* texcubeShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = texcubeShader.fsh; sourceTree = "<group>"; };
 		18B2AB6B19E7BE770041AC1E /* texcubeShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = texcubeShader.vsh; sourceTree = "<group>"; };
+		18B4F4771C925FC10075ED58 /* sphere.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sphere.mtl; sourceTree = "<group>"; };
+		18B4F4781C925FC10075ED58 /* sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sphere.obj; sourceTree = "<group>"; };
 		18BE16E01C4933F5000592A4 /* TouchScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchScene.cpp; sourceTree = "<group>"; };
 		18BE16E11C4933F5000592A4 /* TouchScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchScene.h; sourceTree = "<group>"; };
 		18D755FD1A5AA54E00635CD1 /* common_down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_down.png; sourceTree = "<group>"; };
@@ -392,6 +398,8 @@
 				185ED1C71B70E10A0012667B /* press_normal.png */,
 				1813BB731B78F23300023159 /* restart_normal.png */,
 				187D77221C8F0B7E00F5D161 /* sphere.pmt */,
+				18B4F4771C925FC10075ED58 /* sphere.mtl */,
+				18B4F4781C925FC10075ED58 /* sphere.obj */,
 				18E94CDC1C5A360F00F448D8 /* testlayout.plt */,
 				18B2AB6219E7AD910041AC1E /* texcube.mtl */,
 				18B2AB6319E7AD910041AC1E /* texcube.obj */,
@@ -544,6 +552,7 @@
 				18B2AB6C19E7BE770041AC1E /* texcubeShader.fsh in Resources */,
 				18432DF91C6251C5007B36EC /* peach3d_3.png in Resources */,
 				1899802A19B9B7FB003FBA2D /* demoShader.vsh in Resources */,
+				18B4F47B1C925FC10075ED58 /* sphere.obj in Resources */,
 				18B2AB6E19E7BE770041AC1E /* texcubeShader.vsh in Resources */,
 				187CF64619C72A5900C8094C /* Credits.rtf in Resources */,
 				184962CF1C4A42B100304991 /* peach.png in Resources */,
@@ -558,6 +567,7 @@
 				18B2AB6619E7AD910041AC1E /* texcube.obj in Resources */,
 				185ED1CA1B70E10A0012667B /* press_highlight.png in Resources */,
 				189B0F5F19EE56C60080C7A6 /* widgetShader.vsh in Resources */,
+				18B4F4791C925FC10075ED58 /* sphere.mtl in Resources */,
 				184532AA1C72D8A1000B8F66 /* peach3d_ui.xml in Resources */,
 				187CF64719C72A5900C8094C /* InfoPlist.strings in Resources */,
 				185ED1C81B70E10A0012667B /* press_down.png in Resources */,
@@ -585,6 +595,7 @@
 				18432DF61C6251C5007B36EC /* peach3d_1.png in Resources */,
 				18D756031A5AA54E00635CD1 /* common_highlight.png in Resources */,
 				18D756011A5AA54E00635CD1 /* common_down.png in Resources */,
+				18B4F47A1C925FC10075ED58 /* sphere.mtl in Resources */,
 				185ED1C91B70E10A0012667B /* press_down.png in Resources */,
 				18A272D919E5434500145FDB /* Cube.mtl in Resources */,
 				1841070E1B6CBB65005133E2 /* front_normal.png in Resources */,
@@ -605,6 +616,7 @@
 				187D77261C8F0B8900F5D161 /* sphere.pmt in Resources */,
 				18432DF81C6251C5007B36EC /* peach3d_2.png in Resources */,
 				18B2AB6719E7AD910041AC1E /* texcube.obj in Resources */,
+				18B4F47C1C925FC10075ED58 /* sphere.obj in Resources */,
 				18432DFE1C6251C5007B36EC /* peach3d_5.png in Resources */,
 				187CF60419C7019000C8094C /* InfoPlist.strings in Resources */,
 				18432DFA1C6251C5007B36EC /* peach3d_3.png in Resources */,
