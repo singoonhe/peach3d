@@ -128,7 +128,7 @@ namespace Peach3D
                     f_lightDir[i] = f_lightDir[i] / lightDis;  \n     /* Normalize light direction. */
 
                     f_attenuate[i] = 1.0 / (pd_lAttenuate[i].x + pd_lAttenuate[i].y * lightDis + pd_lAttenuate[i].z * lightDis * lightDis);\n
-                    f_halfVec[i] = normalize(f_lightDir[i] + pd_eyeDir);\n
+                    f_halfVec[i] = normalize(f_lightDir[i] - pd_eyeDir);\n
 
                     if (lightType > PD_LIGHT_DOT) {\n
                         float spotCos = dot(f_lightDir[i], -pd_lDirection[i]);\n
@@ -141,7 +141,7 @@ namespace Peach3D
                 else {\n
                     f_attenuate[i] = 1.0;\n
                     f_lightDir[i] = -pd_lDirection[i];\n
-                    f_halfVec[i] = normalize(f_lightDir[i] + pd_eyeDir);\n
+                    f_halfVec[i] = normalize(f_lightDir[i] - pd_eyeDir);\n
                 }
             }
             f_matAmbient = pd_ambient;

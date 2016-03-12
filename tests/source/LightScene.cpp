@@ -20,6 +20,11 @@ bool LightScene::init()
 
 void LightSample::init(Widget* parentWidget)
 {
+    const float fixWidth = 40.f;
+    // set ortho projective
+    auto screenSize = LayoutManager::getSingleton().getScreenSize();
+    float calcHeight = screenSize.y * fixWidth / screenSize.x;
+    SceneManager::getSingleton().setOrthoProjection(- fixWidth / 2.f, fixWidth / 2.f, - calcHeight / 2.f, calcHeight / 2.f, -10, 10);
     // add a direction light
     Light dirL(Vector3(0.f, -1.f, -1.f), Color3White);
     SceneManager::getSingleton().addNewLight(dirL);
@@ -42,4 +47,7 @@ LightSample::~LightSample()
 {
     // delete all lights
     SceneManager::getSingleton().deleteAllLights();
+    // reset projective
+    auto screenSize = LayoutManager::getSingleton().getScreenSize();
+    SceneManager::getSingleton().setPerspectiveProjection(90.f, screenSize.x/screenSize.y);
 }
