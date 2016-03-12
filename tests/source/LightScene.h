@@ -22,7 +22,11 @@ public:
 class LightSample : public BaseSample
 {
     void init(Widget* parentWidget);
+    void update(float lastFrameTime);
     virtual ~LightSample();
+    
+private:
+    Light   mDirLight;
 };
 
 #endif /* LIGHT_SCENE_H */

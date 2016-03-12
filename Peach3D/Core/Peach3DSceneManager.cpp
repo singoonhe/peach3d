@@ -241,6 +241,15 @@ namespace Peach3D
         return false;
     }
     
+    void SceneManager::setLight(const char* name, const Light& inL)
+    {
+        if (mLightList.find(name) != mLightList.end()) {
+            mLightList[name] = inL;
+            return ;
+        }
+        Peach3DWarnLog("Can't find light named \"%s\"", name);
+    }
+    
     void SceneManager::deleteLight(const char* name)
     {
         auto findIter = mLightList.find(name);

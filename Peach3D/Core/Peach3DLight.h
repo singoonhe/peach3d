@@ -33,7 +33,20 @@ namespace Peach3D
         Light(const Vector3& _pos, const Vector3& _attenuate = Vector3(2.f, 10.f, 5.f), const Color3& _color = Color3(1.f, 1.f, 1.f), const Color3& _ambient = Color3(0.1f, 0.1f, 0.1f)) : type(LightType::eDot), pos(_pos), attenuate(_attenuate), color(_color), ambient(_ambient) {}
         // constructor for spot light
         Light(const Vector3& _pos, const Vector3& _dir, const Vector2& _ext = Vector2(0.7f, 5.f), const Vector3& _attenuate = Vector3(2.f, 10.f, 5.f), const Color3& _color = Color3(1.f, 1.f, 1.f), const Color3& _ambient = Color3(0.1f, 0.1f, 0.1f)) : type(LightType::eSpot), pos(_pos), spotExt(_ext), attenuate(_attenuate), color(_color), ambient(_ambient) { dir = _dir; dir.normalize(); }
-                
+        //! Operators
+        Light &operator=(const Light& other)
+        {
+            name = other.name;
+            type = other.type;
+            pos = other.pos;
+            dir = other.dir;
+            ambient = other.ambient;
+            color = other.color;
+            attenuate = other.attenuate;
+            spotExt = other.spotExt;
+            return *this;
+        }
+        
     public:
         std::string name;   // light name
         LightType   type;   // light type

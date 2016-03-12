@@ -18,7 +18,7 @@ namespace Peach3D
 {
     struct PEACH3D_DLL Material
     {
-        Material() : shininess(96.0f), UVScrollTexIndex(PD_UINT_MAX), alpha(1.f) { diffuse = Color3White; specular = Color3(0.5f, 0.5f, 0.5f); }
+        Material() : shininess(96.0f), UVScrollTexIndex(PD_UINT_MAX), alpha(1.f) { diffuse = Color3White; specular = Color3Gray; }
         //! Operators
         Material &operator=(const Material& other)
         {
