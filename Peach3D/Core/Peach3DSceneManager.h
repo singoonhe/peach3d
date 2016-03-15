@@ -44,7 +44,7 @@ namespace Peach3D
         /** Add new light, auto new name if not exsited. */
         void addNewLight(const Light& l);
         bool getLight(const char* name, Light* inL);
-        void setLight(const char* name, const Light& outL);
+        void resetLight(const char* name, const Light& outL);
         void deleteLight(const char* name);
         void deleteAllLights() { mLightList.clear(); }
         void tranverseLights(std::function<void(const std::string& name, const Light& l)> callFunc);

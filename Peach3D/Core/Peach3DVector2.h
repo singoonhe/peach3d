@@ -16,7 +16,7 @@ namespace Peach3D
     class PEACH3D_DLL Vector2
     {
     public:
-        Vector2() { x = y = 0.0f; }
+        Vector2(float item = 0.f) { x = y = item; }
         Vector2(float _x, float _y) : x(_x), y(_y) {}
         //! Contructor with another Vector2.
         Vector2(const Vector2& other) : x(other.x), y(other.y) {}

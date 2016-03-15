@@ -18,7 +18,7 @@ namespace Peach3D
     class PEACH3D_DLL Vector3
     {
     public:
-        Vector3() { x = y = z = 0.0f; }
+        Vector3(float item = 0.f) { x = y = z = item; }
         //! Constructor with null params.
         Vector3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
         //! Contructor with another Vector2.

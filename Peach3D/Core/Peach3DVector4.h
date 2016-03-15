@@ -17,7 +17,7 @@ namespace Peach3D
     class PEACH3D_DLL Vector4
     {
     public:
-        Vector4() { x = y = z = w = 0.0f; }
+        Vector4(float item = 0.f) { x = y = z = w = item; }
         Vector4(float _x, float _y, float _z, float _w) : x(_x), y(_y), z(_z), w(_w) {}
         //! Contructor with another Vector3 and w.
         Vector4(const Vector3& other, float _w=1.0f) : x(other.x), y(other.y), z(other.z), w(_w) {}
@@ -52,6 +52,7 @@ namespace Peach3D
                 x /= length; y /= length; z /= length; w /= length;
             }
         }
+        Vector3 xyz() { return Vector3(x, y, z); }
         
     public:
         float x, y, z, w;

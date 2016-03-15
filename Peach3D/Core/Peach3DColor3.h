@@ -14,8 +14,9 @@ namespace Peach3D
     class PEACH3D_DLL Color3
     {
     public:
+        Color3(float item = 0.f) { r = g = b = item; }
         //! Constructor with four float params.
-        Color3(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f) : r(_r), g(_g), b(_b) {}
+        Color3(float _r, float _g, float _b) : r(_r), g(_g), b(_b) {}
         
         //! Operators
         Color3 operator=(const Color3& other) { r = other.r; g = other.g; b = other.b; return *this; }

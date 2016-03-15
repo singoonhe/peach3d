@@ -241,7 +241,7 @@ namespace Peach3D
         return false;
     }
     
-    void SceneManager::setLight(const char* name, const Light& inL)
+    void SceneManager::resetLight(const char* name, const Light& inL)
     {
         if (mLightList.find(name) != mLightList.end()) {
             mLightList[name] = inL;

@@ -123,7 +123,8 @@ namespace Peach3D
 
                 /* Out attenuate for dot and spot light. */
                 if (lightType > PD_LIGHT_DIRECTION) {\n
-                    f_lightDir[i] = pd_lPosition[i] - pd_vertex;\n
+                    vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);
+                    f_lightDir[i] = pd_lPosition[i] - convertVertex.xyz;\n
                     float lightDis = length(f_lightDir[i]);  \n       /* Light to vertex distance. */
                     f_lightDir[i] = f_lightDir[i] / lightDis;  \n     /* Normalize light direction. */
 

@@ -17,16 +17,28 @@ class LightScene : public BaseScene
 public:
     //! add test samples for test
     bool init();
+    void exit();
 };
 
-class LightSample : public BaseSample
+class DirLightSample : public BaseSample
 {
     void init(Widget* parentWidget);
     void update(float lastFrameTime);
-    virtual ~LightSample();
+    virtual ~DirLightSample();
     
 private:
     Light   mDirLight;
+};
+
+class DotLightSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+    void update(float lastFrameTime);
+    virtual ~DotLightSample();
+    
+private:
+    Light   mDotLight;
+    SceneNode*  mDotNode;
 };
 
 #endif /* LIGHT_SCENE_H */
