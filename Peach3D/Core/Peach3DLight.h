@@ -27,12 +27,17 @@ namespace Peach3D
     struct PEACH3D_DLL Light
     {
         Light() : type(LightType::eUnknow) {}
-        // constructor for direction light
+        /** Constructor for direction light with direction and color. */
         Light(const Vector3& _dir, const Color3& _color, const Color3& _ambient = Color3Gray) : type(LightType::eDirection), color(_color), ambient(_ambient) { dir = _dir; dir.normalize(); }
-        // constructor for dot light
-        Light(const Vector3& _pos, const Vector3& _attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& _color = Color3White, const Color3& _ambient = Color3Gray) : type(LightType::eDot), pos(_pos), attenuate(_attenuate), color(_color), ambient(_ambient) {}
-        // constructor for spot light
-        Light(const Vector3& _pos, const Vector3& _dir, const Vector2& _ext = Vector2(0.7f, 5.f), const Vector3& _attenuate = Vector3(2.f, 10.f, 5.f), const Color3& _color = Color3(1.f, 1.f, 1.f), const Color3& _ambient = Color3(0.1f, 0.1f, 0.1f)) : type(LightType::eSpot), pos(_pos), spotExt(_ext), attenuate(_attenuate), color(_color), ambient(_ambient) { dir = _dir; dir.normalize(); }
+        /** Constructor for dot light.
+         * @params _attenuate light attenuation, const/line/square. Example:Vector3(1.f, 0.1f, 0.f).
+         */
+        Light(const Vector3& _pos, const Vector3& _attenuate, const Color3& _color = Color3White, const Color3& _ambient = Color3Gray) : type(LightType::eDot), pos(_pos), attenuate(_attenuate), color(_color), ambient(_ambient) {}
+        /** Constructor for spot light.
+         * @params _attenuate same as dot light.
+         * @params _ext spot light angle cos and transverse attenuate(pow).
+         */
+        Light(const Vector3& _pos, const Vector3& _dir, const Vector3& _attenuate, const Vector2& _ext = Vector2(0.5f, 2.f), const Color3& _color = Color3White, const Color3& _ambient = Color3Gray) : type(LightType::eSpot), pos(_pos), spotExt(_ext), attenuate(_attenuate), color(_color), ambient(_ambient) { dir = _dir; dir.normalize(); }
         //! Operators
         Light &operator=(const Light& other)
         {

@@ -13,6 +13,7 @@ bool LightScene::init()
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new DirLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new DotLightSample();});
+    mSampleList.push_back([]()->BaseSample* {return new SpotLightSample();});
     
     // set ortho projective
     const float fixWidth = 40.f;
@@ -108,7 +109,7 @@ void DotLightSample::init(Widget* parentWidget)
 {
     // add a direction light
     Vector3 initPos(-15.f, 0.f, 6.f);
-    mDotLight = Light(initPos);
+    mDotLight = Light(initPos, Vector3(1.f, 0.1f, 0.f));
     SceneManager::getSingleton().addNewLight(mDotLight);
     // add light node
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
@@ -182,6 +183,52 @@ void DotLightSample::update(float lastFrameTime)
 }
 
 DotLightSample::~DotLightSample()
+{
+    // delete all lights
+    SceneManager::getSingleton().deleteAllLights();
+}
+
+void SpotLightSample::init(Widget* parentWidget)
+{
+    // add a spot light, pos/dir/attenuate
+    mSpotPos = Vector3(0.f, 0.f, 6.f);
+    mLockPos = Vector3(5.f, 0.f, 0.f);
+    auto lightDir = mLockPos - mSpotPos;
+    mSpotLight = Light(Vector3(0.f, 0.f, 6.f), lightDir, Vector3(1.f, 0.1f, 0.f));
+    SceneManager::getSingleton().addNewLight(mSpotLight);
+    // only set title here
+    mTitle = "Spot Light";
+    
+    // create spheres
+    auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");
+    auto rootNode = SceneManager::getSingleton().getRootSceneNode();
+    for (auto i=0; i<7; ++i) {
+        float compareX = i * 3.5f - 7.f;
+        for (auto j=0; j<5; ++j) {
+            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 3.f, 0.f));
+            sphereNode->attachMesh(sphereMesh);
+        }
+    }
+}
+
+void SpotLightSample::update(float lastFrameTime)
+{
+    const float rang = 15.f;
+    static float curItem = mLockPos.x;
+    static bool isPlus = true;
+    curItem += lastFrameTime * (isPlus ? 3.f : -3.f);
+    if (curItem > rang || curItem < -rang) {
+        isPlus = !isPlus;
+        curItem = (curItem > rang) ? rang : curItem;
+        curItem = (curItem < -rang) ? -rang : curItem;
+    }
+    auto lightDir = Vector3(curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
+    lightDir.normalize();
+    mSpotLight.dir = lightDir;
+    SceneManager::getSingleton().resetLight("pd_Light0", mSpotLight);
+}
+
+SpotLightSample::~SpotLightSample()
 {
     // delete all lights
     SceneManager::getSingleton().deleteAllLights();

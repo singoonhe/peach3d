@@ -41,4 +41,16 @@ private:
     SceneNode*  mDotNode;
 };
 
+class SpotLightSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+    void update(float lastFrameTime);
+    virtual ~SpotLightSample();
+    
+private:
+    Light   mSpotLight;
+    Vector3 mLockPos;
+    Vector3 mSpotPos;
+};
+
 #endif /* LIGHT_SCENE_H */

@@ -628,7 +628,7 @@ namespace Peach3D
                             lData[i * 2] = validLights[i].spotExt.x;
                             lData[i * 2 + 1] = validLights[i].spotExt.y;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform2fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightAmbient:
