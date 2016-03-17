@@ -25,6 +25,16 @@ namespace Peach3D
             if (feature.lightsCount > 0) {
                 shaderPreStr += "#define PD_ENABLE_LIGHT\n";
                 shaderPreStr += Utils::formatString("#define PD_LIGHT_COUNT %d\n", feature.lightsCount);
+                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                    shaderPreStr += gCommonLightStruct3D;
+                    if (isVertex) {
+                        shaderPreStr += gCommonLighting3D;
+                    }
+                }
+                else if (!isVertex) {
+                    shaderPreStr += gCommonLightStruct3D;
+                    shaderPreStr += gCommonLighting3D;
+                }
             }
             if (feature.isPoint3) {
                 shaderPreStr += isVertex ? gVerShaderCode3D : gFragShaderCode3D;

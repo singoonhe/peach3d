@@ -95,14 +95,15 @@ void BaseScene::changeToSample(int index)
             mCurSample = nullptr;
         }
         // create new sample and init
-        mCurSample = mSampleList[index]();
-        mCurSample->init(mSampleWidget);
-        mTitleLabel->setText(mCurSample->getSampleTitle());
-        bool isDesc = mCurSample->getSampleDesc().size() > 0;
+        auto sample = mSampleList[index]();
+        sample->init(mSampleWidget);
+        mTitleLabel->setText(sample->getSampleTitle());
+        bool isDesc = sample->getSampleDesc().size() > 0;
         mDescLabel->setVisible(isDesc);
         if (isDesc) {
-            mDescLabel->setText(mCurSample->getSampleDesc());
+            mDescLabel->setText(sample->getSampleDesc());
         }
+        mCurSample = sample;
         mSampleIndex = index;
     }
 }

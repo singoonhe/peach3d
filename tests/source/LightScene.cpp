@@ -14,6 +14,7 @@ bool LightScene::init()
     mSampleList.push_back([]()->BaseSample* {return new DirLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new DotLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new SpotLightSample();});
+    mSampleList.push_back([]()->BaseSample* {return new MultiLightsSample();});
     
     // set ortho projective
     const float fixWidth = 40.f;
@@ -107,7 +108,7 @@ DirLightSample::~DirLightSample()
 
 void DotLightSample::init(Widget* parentWidget)
 {
-    // add a direction light
+    // add a dot light
     Vector3 initPos(-15.f, 0.f, 6.f);
     mDotLight = Light(initPos, Vector3(1.f, 0.1f, 0.f));
     SceneManager::getSingleton().addNewLight(mDotLight);
@@ -191,7 +192,7 @@ DotLightSample::~DotLightSample()
 void SpotLightSample::init(Widget* parentWidget)
 {
     // add a spot light, pos/dir/attenuate
-    mSpotPos = Vector3(0.f, 0.f, 6.f);
+    mSpotPos = Vector3(0.f, 0.f, 60.f);
     mLockPos = Vector3(5.f, 0.f, 0.f);
     auto lightDir = mLockPos - mSpotPos;
     mSpotLight = Light(Vector3(0.f, 0.f, 6.f), lightDir, Vector3(1.f, 0.1f, 0.f));
@@ -229,6 +230,77 @@ void SpotLightSample::update(float lastFrameTime)
 }
 
 SpotLightSample::~SpotLightSample()
+{
+    // delete all lights
+    SceneManager::getSingleton().deleteAllLights();
+}
+
+void MultiLightsSample::init(Widget* parentWidget)
+{
+    // add a direction light
+    Light dirLight(Vector3(0.f, -1.f, -1.f), Color3(0.5f, 0.f, 0.f), Color3Gray);
+    SceneManager::getSingleton().addNewLight(dirLight);
+    
+    // add a dot light
+    Vector3 initPos(-15.f, 0.f, 6.f);
+    mDotLight = Light(initPos, Vector3(1.f, 0.1f, 0.f));
+    mDotLight.name = "DotLight";
+    mDotLight.color = Color3(0.f, 0.5f, 0.f);
+    SceneManager::getSingleton().addNewLight(mDotLight);
+    // add light node
+    auto rootNode = SceneManager::getSingleton().getRootSceneNode();
+    auto cubeMesh = ResourceManager::getSingleton().addMesh("peach.obj");
+    mDotNode = rootNode->createChild(initPos);
+    mDotNode->attachMesh(cubeMesh);
+    mDotNode->setScale(Vector3(0.25f));
+    mDotNode->setLightingEnabled(false);
+    
+    // add a spot light, pos/dir/attenuate
+    mSpotPos = Vector3(0.f, 0.f, 6.f);
+    mLockPos = Vector3(5.f, 0.f, 0.f);
+    auto lightDir = mLockPos - mSpotPos;
+    mSpotLight = Light(Vector3(0.f, 0.f, 6.f), lightDir, Vector3(1.f, 0.1f, 0.f));
+    mSpotLight.name = "SpotLight";
+    mSpotLight.color = Color3(0.f, 0.f, 0.5f);
+    SceneManager::getSingleton().addNewLight(mSpotLight);
+    // only set title here
+    mTitle = "Multi Lights";
+    
+    // create spheres
+    auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");
+    for (auto i=0; i<7; ++i) {
+        float compareX = i * 3.5f - 7.f;
+        for (auto j=0; j<5; ++j) {
+            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 3.f, 0.f));
+            sphereNode->attachMesh(sphereMesh);
+        }
+    }
+}
+
+void MultiLightsSample::update(float lastFrameTime)
+{
+    const float rang = 15.f;
+    static float curItem = 0.f;
+    static bool isPlus = true;
+    curItem += lastFrameTime * (isPlus ? 3.f : -3.f);
+    if (curItem > rang || curItem < -rang) {
+        isPlus = !isPlus;
+        curItem = (curItem > rang) ? rang : curItem;
+        curItem = (curItem < -rang) ? -rang : curItem;
+    }
+    // reset dot light position
+    mDotLight.pos.x = curItem;
+    SceneManager::getSingleton().resetLight("DotLight", mDotLight);
+    // also update light node position
+    mDotNode->setPosition(mDotLight.pos);
+    // reset spot light direction
+    auto lightDir = Vector3(curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
+    lightDir.normalize();
+    mSpotLight.dir = lightDir;
+    SceneManager::getSingleton().resetLight("SpotLight", mSpotLight);
+}
+
+MultiLightsSample::~MultiLightsSample()
 {
     // delete all lights
     SceneManager::getSingleton().deleteAllLights();

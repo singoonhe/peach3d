@@ -108,7 +108,7 @@ namespace Peach3D
         glGetShaderiv(shader, GL_COMPILE_STATUS, &compileState);
         if (compileState == GL_FALSE) {
             // output error log
-            Peach3DLog(LogLevel::eError, "Compile type %s shader of program %u failed",
+            Peach3DLog(LogLevel::eError, "Compile %s shader of program %u failed",
                        type == GL_VERTEX_SHADER ? "vertex" : "fragment", mProgramId);
             
 #if PEACH3D_DEBUG == 1

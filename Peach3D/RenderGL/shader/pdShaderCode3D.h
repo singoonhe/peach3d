@@ -13,13 +13,53 @@
 
 namespace Peach3D
 {
-    const char* gVerShaderCode3D = STRINGIFY(\
-    #ifdef PD_ENABLE_LIGHT
-        \n#define PD_LIGHT_DIRECTION    1.5
+    const char* gCommonLightStruct3D = STRINGIFY(\
+        struct FragLight
+        {
+            vec3 lightDir;
+            vec3 halfVec;
+            float attenuate;
+        };\n
+        );
+
+    const char* gCommonLighting3D = STRINGIFY(\
+        #define PD_LIGHT_DIRECTION    1.5
         \n#define PD_LIGHT_DOT          2.5
         \n#define PD_LIGHT_SPOT         3.5
-    \n#endif
-    \n#ifdef PD_LEVEL_GL3
+        \nFragLight calcFragmentLight(float lType, vec3 lPosition, vec3 lDirection, vec3 lAttenuate, vec2 lSpotExtend, vec3 worldVertex, vec3 eyeDir)
+        {\n
+            FragLight light;
+            /* Out attenuate for dot and spot light. */
+            if (lType > PD_LIGHT_DIRECTION) {
+                light.lightDir = lPosition - worldVertex;
+                float lightDis = length(light.lightDir);    /* Light to vertex distance. */
+                light.lightDir = light.lightDir / lightDis; /* Normalize light direction. */
+
+                /* Diffuse attenuate and specular halfVec. */
+                light.attenuate = 1.0 / (lAttenuate.x + lAttenuate.y * lightDis + lAttenuate.z * lightDis * lightDis);
+                light.halfVec = normalize(light.lightDir - eyeDir);
+
+                /* Spot light special attenuate. */
+                if (lType > PD_LIGHT_DOT) {
+                    float spotCos = dot(light.lightDir, -lDirection);
+                    if (spotCos < lSpotExtend.x)
+                        light.attenuate = 0.0;
+                    else
+                        light.attenuate *= pow(spotCos, lSpotExtend.y);
+                }
+            }
+            else {
+                /* Direction light just return value. */
+                light.attenuate = 1.0;
+                light.lightDir = -lDirection;
+                light.halfVec = normalize(light.lightDir - eyeDir);
+            }
+            return light;
+        \n}\n
+        );
+
+    const char* gVerShaderCode3D = STRINGIFY(\
+    #ifdef PD_LEVEL_GL3
         \n#ifdef PD_ENABLE_LIGHT
             \nuniform LightsUnifroms {
                 float pd_lType[PD_LIGHT_COUNT];
@@ -54,9 +94,7 @@ namespace Peach3D
             out vec3 f_matSpecular;
             out float f_matShininess;
             out vec3 f_matEmissive;
-            out vec3 f_lightDir[PD_LIGHT_COUNT];
-            out vec3 f_halfVec[PD_LIGHT_COUNT];
-            out float f_attenuate[PD_LIGHT_COUNT];
+            out FragLight f_lFrag[PD_LIGHT_COUNT];
             out vec3 f_lAmbient[PD_LIGHT_COUNT];
             out vec3 f_lColor[PD_LIGHT_COUNT];
         \n#endif\n
@@ -74,30 +112,10 @@ namespace Peach3D
         uniform mat4 pd_modelMatrix;
         uniform vec4 pd_diffuse;
         \n#ifdef PD_ENABLE_LIGHT\n
-            uniform float pd_lType[PD_LIGHT_COUNT];
-            uniform vec3 pd_lPosition[PD_LIGHT_COUNT];
-            uniform vec3 pd_lDirection[PD_LIGHT_COUNT];
-            uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT];
-            uniform vec2 pd_lSpotExtend[PD_LIGHT_COUNT];
-            uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];
-            uniform vec3 pd_lColor[PD_LIGHT_COUNT];
-            uniform vec3 pd_eyeDir;
             attribute vec3 pd_normal;
             uniform mat4 pd_normalMatrix;
-            uniform vec3 pd_ambient;
-            uniform vec3 pd_specular;
-            uniform float pd_shininess;
-            uniform vec3 pd_emissive;
             varying vec3 f_normal;
-            varying vec3 f_matAmbient;
-            varying vec3 f_matSpecular;
-            varying float f_matShininess;
-            varying vec3 f_matEmissive;
-            varying vec3 f_lightDir[PD_LIGHT_COUNT];
-            varying vec3 f_halfVec[PD_LIGHT_COUNT];
-            varying float f_attenuate[PD_LIGHT_COUNT];
-            varying vec3 f_lAmbient[PD_LIGHT_COUNT];
-            varying vec3 f_lColor[PD_LIGHT_COUNT];
+            varying vec3 f_worldVertex;
         \n#endif\n
         varying vec4 f_diffuse;
         \n#ifdef PD_ENABLE_TEXUV\n
@@ -114,41 +132,25 @@ namespace Peach3D
             f_uv = pd_uv;
         \n#endif
         \n#ifdef PD_ENABLE_LIGHT\n
+            /* Convert normal to world space. */
             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
-            f_normal = normalize(tnormal.xyz);\n  /* Convert normal to world space. */
-            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {\n
-                float lightType = pd_lType[i];\n                 /* Out light type. */
-                f_lAmbient[i] = pd_lAmbient[i];\n
-                f_lColor[i] = pd_lColor[i];\n
-
-                /* Out attenuate for dot and spot light. */
-                if (lightType > PD_LIGHT_DIRECTION) {\n
-                    vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);
-                    f_lightDir[i] = pd_lPosition[i] - convertVertex.xyz;\n
-                    float lightDis = length(f_lightDir[i]);  \n       /* Light to vertex distance. */
-                    f_lightDir[i] = f_lightDir[i] / lightDis;  \n     /* Normalize light direction. */
-
-                    f_attenuate[i] = 1.0 / (pd_lAttenuate[i].x + pd_lAttenuate[i].y * lightDis + pd_lAttenuate[i].z * lightDis * lightDis);\n
-                    f_halfVec[i] = normalize(f_lightDir[i] - pd_eyeDir);\n
-
-                    if (lightType > PD_LIGHT_DOT) {\n
-                        float spotCos = dot(f_lightDir[i], -pd_lDirection[i]);\n
-                        if (spotCos < pd_lSpotExtend[i].x)\n
-                            f_attenuate[i] = 0.0;\n
-                        else
-                            f_attenuate[i]*= pow(spotCos, pd_lSpotExtend[i].y);\n
-                    }\n
+            f_normal = normalize(tnormal.xyz);
+            /* Convert vertex to world space. */
+            vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);
+            \n#ifdef PD_LEVEL_GL3\n
+                for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
+                    /* Out light ambient and color. */
+                    f_lAmbient[i] = pd_lAmbient[i];
+                    f_lColor[i] = pd_lColor[i];
+                    f_lFrag[i] = calcFragmentLight(pd_lType[i], pd_lPosition[i], pd_lDirection[i], pd_lAttenuate[i], pd_lSpotExtend[i], convertVertex.xyz, pd_eyeDir);
                 }\n
-                else {\n
-                    f_attenuate[i] = 1.0;\n
-                    f_lightDir[i] = -pd_lDirection[i];\n
-                    f_halfVec[i] = normalize(f_lightDir[i] - pd_eyeDir);\n
-                }
-            }
-            f_matAmbient = pd_ambient;
-            f_matSpecular = pd_specular;
-            f_matShininess = pd_shininess;
-            f_matEmissive = pd_emissive;
+                f_matAmbient = pd_ambient;
+                f_matSpecular = pd_specular;
+                f_matShininess = pd_shininess;
+                f_matEmissive = pd_emissive;
+            \n#else\n
+                f_worldVertex = convertVertex.xyz;
+            \n#endif
         \n#endif\n
     });
 
@@ -165,9 +167,7 @@ namespace Peach3D
             in vec3 f_matSpecular;
             in float f_matShininess;
             in vec3 f_matEmissive;
-            in vec3 f_lightDir[PD_LIGHT_COUNT];
-            in vec3 f_halfVec[PD_LIGHT_COUNT];
-            in float f_attenuate[PD_LIGHT_COUNT];
+            in FragLight f_lFrag[PD_LIGHT_COUNT];
             in vec3 f_lAmbient[PD_LIGHT_COUNT];
             in vec3 f_lColor[PD_LIGHT_COUNT];
         \n#endif\n
@@ -179,16 +179,20 @@ namespace Peach3D
             uniform sampler2D pd_texture0;
         \n#endif
         \n#ifdef PD_ENABLE_LIGHT\n
+            uniform float pd_lType[PD_LIGHT_COUNT];
+            uniform vec3 pd_lPosition[PD_LIGHT_COUNT];
+            uniform vec3 pd_lDirection[PD_LIGHT_COUNT];
+            uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT];
+            uniform vec2 pd_lSpotExtend[PD_LIGHT_COUNT];
+            uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];
+            uniform vec3 pd_lColor[PD_LIGHT_COUNT];
+            uniform vec3 pd_eyeDir;
+            uniform vec3 pd_ambient;
+            uniform vec3 pd_specular;
+            uniform float pd_shininess;
+            uniform vec3 pd_emissive;
             varying vec3 f_normal;
-            varying vec3 f_matAmbient;
-            varying vec3 f_matSpecular;
-            varying float f_matShininess;
-            varying vec3 f_matEmissive;
-            varying vec3 f_lightDir[PD_LIGHT_COUNT];
-            varying vec3 f_halfVec[PD_LIGHT_COUNT];
-            varying float f_attenuate[PD_LIGHT_COUNT];
-            varying vec3 f_lAmbient[PD_LIGHT_COUNT];
-            varying vec3 f_lColor[PD_LIGHT_COUNT];
+            varying vec3 f_worldVertex;
         \n#endif
     \n#endif\n
 
@@ -206,20 +210,36 @@ namespace Peach3D
         \n#endif
         /* Calc lighting effect. */
         \n#ifdef PD_ENABLE_LIGHT\n
-            vec3 scatteredLight = vec3(0.0);\n
+            vec3 scatteredLight = vec3(0.0);
             vec3 reflectedLight = vec3(0.0);\n
-            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {\n
-                float diffuse = max(0.0, dot(f_normal, f_lightDir[i]));\n
-                float specular = max(0.0, dot(f_normal, f_halfVec[i]));\n
-                if (diffuse == 0.0)
-                    specular = 0.0;
-                else
-                    specular = pow(specular, f_matShininess);
-                scatteredLight += f_lAmbient[i] * f_matAmbient * f_attenuate[i] + f_lColor[i] * f_diffuse.rgb * diffuse * f_attenuate[i];\n
-                reflectedLight += f_lColor[i] * f_matSpecular * specular * f_attenuate[i];\n
-            }\n
-            vec3 rgb = min(f_matEmissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));\n
-            fragColor = vec4(rgb, fragColor.a);\n
+            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
+                \n#ifdef PD_LEVEL_GL3\n
+                    float diffuse = max(0.0, dot(f_normal, f_lFrag[i].lightDir));
+                    float specular = max(0.0, dot(f_normal, f_lFrag[i].halfVec));
+                    if (diffuse == 0.0)
+                        specular = 0.0;
+                    else
+                        specular = pow(specular, f_matShininess);
+                    scatteredLight += f_lAmbient[i] * f_matAmbient * f_lFrag[i].attenuate + f_lColor[i] * f_diffuse.rgb * diffuse * f_lFrag[i].attenuate;
+                    reflectedLight += f_lColor[i] * f_matSpecular * specular * f_lFrag[i].attenuate;
+                \n#else\n
+                    FragLight lFrag = calcFragmentLight(pd_lType[i], pd_lPosition[i], pd_lDirection[i], pd_lAttenuate[i], pd_lSpotExtend[i], f_worldVertex, pd_eyeDir);
+                    float diffuse = max(0.0, dot(f_normal, lFrag.lightDir));
+                    float specular = max(0.0, dot(f_normal, lFrag.halfVec));
+                    if (diffuse == 0.0)
+                        specular = 0.0;
+                    else
+                        specular = pow(specular, pd_shininess);
+                    scatteredLight += pd_lAmbient[i] * pd_ambient * lFrag.attenuate + pd_lColor[i] * f_diffuse.rgb * diffuse * lFrag.attenuate;
+                    reflectedLight += pd_lColor[i] * pd_specular * specular * lFrag.attenuate;
+                \n#endif\n
+            }
+            \n#ifdef PD_LEVEL_GL3\n
+                vec3 rgb = min(f_matEmissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
+            \n#else\n
+                vec3 rgb = min(pd_emissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
+            \n#endif\n
+            fragColor = vec4(rgb, fragColor.a);
         \n#else
             \n#ifdef PD_ENABLE_TEXUV\n
                 fragColor = fragColor * f_diffuse;
