@@ -136,7 +136,7 @@ namespace Peach3D
                 // set lighting unfo
                 if (firstNode->isLightingEnabled()) {
                     std::vector<Light> validLights;
-                    firstNode->tranverseLighting([&validLights](const std::string& name){
+                    firstNode->tranverseLightingName([&validLights](const std::string& name){
                         Light outL;
                         if (SceneManager::getSingleton().getLight(name.c_str(), &outL)) {
                             validLights.push_back(outL);

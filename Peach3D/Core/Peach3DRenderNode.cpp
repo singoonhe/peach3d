@@ -41,7 +41,7 @@ namespace Peach3D
         updateLightingState();
     }
     
-    void RenderNode::tranverseLighting(std::function<void(const std::string& name)> callFunc)
+    void RenderNode::tranverseLightingName(std::function<void(const std::string& name)> callFunc)
     {
         for (auto iter : mValidLights) {
             callFunc(iter);

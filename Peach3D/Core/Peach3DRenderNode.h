@@ -39,7 +39,7 @@ namespace Peach3D
         bool isLightingEnabled() { return mLightEnable && mValidLights.size() > 0; }
         void setLightingEnabled(bool enable);
         /** Tranverse all valid light for this Node. */
-        void tranverseLighting(std::function<void(const std::string& name)> callFunc);
+        void tranverseLightingName(std::function<void(const std::string& name)> callFunc);
         /** Calc Node need lighting name, no light if VertexType not contain Normal. */
         void updateLightingState();
         

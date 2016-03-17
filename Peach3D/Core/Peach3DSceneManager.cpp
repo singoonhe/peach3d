@@ -219,7 +219,7 @@ namespace Peach3D
             }
             else {
                 static uint lightAutoIndex = 0; // lighting auto increase index
-                auto lName = Utils::formatString("pd_Light%d", lightAutoIndex);
+                auto lName = Utils::formatString("pd_Light%d", lightAutoIndex++);
                 mLightList[lName] = l;
                 mLightList[lName].name = lName;
                 isAddLight = true;

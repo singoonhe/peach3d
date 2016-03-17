@@ -278,7 +278,7 @@ namespace Peach3D
     void ProgramGL::updateObjectLightsUniforms(const std::vector<Light>& lights)
     {
         if (mLightsUBOId != GL_INVALID_INDEX && mLightsCount > 0) {
-            float lData[3 * SceneManager::getSingleton().getLightMax()];
+            float lData[4 * SceneManager::getSingleton().getLightMax()];
             glBindBuffer(GL_UNIFORM_BUFFER, mLightsUBOId);
             // map lights buffer and copy memory on GL3
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mLightsUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
@@ -286,62 +286,62 @@ namespace Peach3D
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eLightType: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i] = (float)lights[i].type;
+                            lData[i * 4] = (float)lights[i].type;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eLightPos: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 3] = lights[i].pos.x;
-                            lData[i * 3 + 1] = lights[i].pos.y;
-                            lData[i * 3 + 2] = lights[i].pos.z;
+                            lData[i * 4] = lights[i].pos.x;
+                            lData[i * 4 + 1] = lights[i].pos.y;
+                            lData[i * 4 + 2] = lights[i].pos.z;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eLightDir: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 3] = lights[i].dir.x;
-                            lData[i * 3 + 1] = lights[i].dir.y;
-                            lData[i * 3 + 2] = lights[i].dir.z;
+                            lData[i * 4] = lights[i].dir.x;
+                            lData[i * 4 + 1] = lights[i].dir.y;
+                            lData[i * 4 + 2] = lights[i].dir.z;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eLightAtten: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 3] = lights[i].attenuate.x;
-                            lData[i * 3 + 1] = lights[i].attenuate.y;
-                            lData[i * 3 + 2] = lights[i].attenuate.z;
+                            lData[i * 4] = lights[i].attenuate.x;
+                            lData[i * 4 + 1] = lights[i].attenuate.y;
+                            lData[i * 4 + 2] = lights[i].attenuate.z;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eLightSpotExt: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 2] = lights[i].spotExt.x;
-                            lData[i * 2 + 1] = lights[i].spotExt.y;
+                            lData[i * 4] = lights[i].spotExt.x;
+                            lData[i * 4 + 1] = lights[i].spotExt.y;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 2 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eLightAmbient: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 3] = lights[i].ambient.r;
-                            lData[i * 3 + 1] = lights[i].ambient.g;
-                            lData[i * 3 + 2] = lights[i].ambient.b;
+                            lData[i * 4] = lights[i].ambient.r;
+                            lData[i * 4 + 1] = lights[i].ambient.g;
+                            lData[i * 4 + 2] = lights[i].ambient.b;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eLightColor: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 3] = lights[i].color.r;
-                            lData[i * 3 + 1] = lights[i].color.g;
-                            lData[i * 3 + 2] = lights[i].color.b;
+                            lData[i * 4] = lights[i].color.r;
+                            lData[i * 4 + 1] = lights[i].color.g;
+                            lData[i * 4 + 2] = lights[i].color.b;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
                     }
                         break;
                     case UniformNameType::eEyeDir: {
@@ -517,7 +517,7 @@ namespace Peach3D
         // set lighting unfo
         std::vector<Light> validLights;
         if (node->isLightingEnabled()) {
-            node->tranverseLighting([&validLights](const std::string& name){
+            node->tranverseLightingName([&validLights](const std::string& name){
                 Light outL;
                 if (SceneManager::getSingleton().getLight(name.c_str(), &outL)) {
                     validLights.push_back(outL);

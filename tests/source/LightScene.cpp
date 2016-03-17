@@ -254,7 +254,7 @@ void MultiLightsSample::init(Widget* parentWidget)
     mDotNode->attachMesh(cubeMesh);
     mDotNode->setScale(Vector3(0.25f));
     mDotNode->setLightingEnabled(false);
-    
+
     // add a spot light, pos/dir/attenuate
     mSpotPos = Vector3(0.f, 0.f, 6.f);
     mLockPos = Vector3(5.f, 0.f, 0.f);
@@ -294,7 +294,7 @@ void MultiLightsSample::update(float lastFrameTime)
     // also update light node position
     mDotNode->setPosition(mDotLight.pos);
     // reset spot light direction
-    auto lightDir = Vector3(curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
+    auto lightDir = Vector3(-curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
     lightDir.normalize();
     mSpotLight.dir = lightDir;
     SceneManager::getSingleton().resetLight("SpotLight", mSpotLight);
