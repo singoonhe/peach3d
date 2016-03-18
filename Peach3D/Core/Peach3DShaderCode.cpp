@@ -45,7 +45,6 @@ namespace Peach3D
             mUniformsNamesMap["pd_normalMatrix"] = UniformNameType::eNormalMatrix;
             mUniformsNamesMap["pd_emissive"] = UniformNameType::eMatEmissive;
             mUniformsNamesMap["pd_specular"] = UniformNameType::eMatSpecular;
-            mUniformsNamesMap["pd_shininess"] = UniformNameType::eMatShininess;
             mUniformsNamesMap["pd_ambient"] = UniformNameType::eMatAmbient;
             
             mUniformsNamesMap["pd_lType"] = UniformNameType::eLightType;

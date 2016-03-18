@@ -567,14 +567,10 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eMatSpecular:
+                    // also pass shininess
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b};
-                        glUniform3fv(location, 1, color);
-                    });
-                    break;
-                case UniformNameType::eMatShininess:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        glUniform1f(location, objMat.shininess);
+                        float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
+                        glUniform4fv(location, 1, color);
                     });
                     break;
                 case UniformNameType::eMatEmissive:
@@ -705,14 +701,10 @@ namespace Peach3D
                         }
                             break;
                         case UniformNameType::eMatSpecular: {
-                            float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b};
-                            memcpy(data + uniformOffset + startOffset, color, 3 * sizeof(float));
-                            startOffset += 3;
-                        }
-                            break;
-                        case UniformNameType::eMatShininess: {
-                            *(data + uniformOffset + startOffset) = objMat.shininess;
-                            startOffset += 1;
+                            // also pass shininess
+                            float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
+                            memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
+                            startOffset += 4;
                         }
                             break;
                         case UniformNameType::eMatEmissive: {

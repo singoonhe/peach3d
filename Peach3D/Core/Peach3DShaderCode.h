@@ -40,8 +40,7 @@ namespace Peach3D
         eModelMatrix,   // model matrix
         eNormalMatrix,  // normal matrix
         eMatEmissive,   // material emissive
-        eMatSpecular,   // material specular
-        eMatShininess,  // material shininess
+        eMatSpecular,   // material specular, include shininess
         eMatAmbient,    // material ambient
         
         eLightType,     // light type
