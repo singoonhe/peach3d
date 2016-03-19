@@ -47,11 +47,10 @@ namespace Peach3D
             mUniformsNamesMap["pd_specular"] = UniformNameType::eMatSpecular;
             mUniformsNamesMap["pd_ambient"] = UniformNameType::eMatAmbient;
             
-            mUniformsNamesMap["pd_lType"] = UniformNameType::eLightType;
+            mUniformsNamesMap["pd_lTypeSpot"] = UniformNameType::eLightTypeSpot;
             mUniformsNamesMap["pd_lPosition"] = UniformNameType::eLightPos;
             mUniformsNamesMap["pd_lDirection"] = UniformNameType::eLightDir;
             mUniformsNamesMap["pd_lAttenuate"] = UniformNameType::eLightAtten;
-            mUniformsNamesMap["pd_lSpotExtend"] = UniformNameType::eLightSpotExt;
             mUniformsNamesMap["pd_lAmbient"] = UniformNameType::eLightAmbient;
             mUniformsNamesMap["pd_lColor"] = UniformNameType::eLightColor;
             mUniformsNamesMap["pd_eyeDir"] = UniformNameType::eEyeDir;

@@ -222,11 +222,10 @@ namespace Peach3D
             mLightsCount = count;
             if (PD_RENDERLEVEL_GL3()) {
                 // set object lights UBO uniforms
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lType", UniformDataType::eFloat));
+                mLightsUBOUniforms.push_back(ProgramUniform("pd_lTypeSpot", UniformDataType::eVector3));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
                 mLightsUBOUniforms.push_back(ProgramUniform("pd_eyeDir", UniformDataType::eVector3));
@@ -277,18 +276,22 @@ namespace Peach3D
     
     void ProgramGL::updateObjectLightsUniforms(const std::vector<Light>& lights)
     {
+        Peach3DAssert(lights.size() == mLightsCount, "Light list must equal to program count!");
         if (mLightsUBOId != GL_INVALID_INDEX && mLightsCount > 0) {
             float lData[4 * SceneManager::getSingleton().getLightMax()];
             glBindBuffer(GL_UNIFORM_BUFFER, mLightsUBOId);
             // map lights buffer and copy memory on GL3
+            const size_t varArraySize = sizeof(float) * 4 * lights.size();
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mLightsUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
             for (auto uniform : mLightsUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
-                    case UniformNameType::eLightType: {
+                    case UniformNameType::eLightTypeSpot: {
                         for (auto i=0; i<lights.size(); ++i) {
                             lData[i * 4] = (float)lights[i].type;
+                            lData[i * 4 + 1] = lights[i].spotExt.x;
+                            lData[i * 4 + 2] = lights[i].spotExt.y;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightPos: {
@@ -297,7 +300,7 @@ namespace Peach3D
                             lData[i * 4 + 1] = lights[i].pos.y;
                             lData[i * 4 + 2] = lights[i].pos.z;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightDir: {
@@ -306,7 +309,7 @@ namespace Peach3D
                             lData[i * 4 + 1] = lights[i].dir.y;
                             lData[i * 4 + 2] = lights[i].dir.z;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightAtten: {
@@ -315,15 +318,7 @@ namespace Peach3D
                             lData[i * 4 + 1] = lights[i].attenuate.y;
                             lData[i * 4 + 2] = lights[i].attenuate.z;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
-                    }
-                        break;
-                    case UniformNameType::eLightSpotExt: {
-                        for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = lights[i].spotExt.x;
-                            lData[i * 4 + 1] = lights[i].spotExt.y;
-                        }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightAmbient: {
@@ -332,7 +327,7 @@ namespace Peach3D
                             lData[i * 4 + 1] = lights[i].ambient.g;
                             lData[i * 4 + 2] = lights[i].ambient.b;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightColor: {
@@ -341,7 +336,7 @@ namespace Peach3D
                             lData[i * 4 + 1] = lights[i].color.g;
                             lData[i * 4 + 2] = lights[i].color.b;
                         }
-                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 4 * mLightsCount);
+                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eEyeDir: {
@@ -580,12 +575,14 @@ namespace Peach3D
                     });
                     break;
                     // lights uniforms
-                case UniformNameType::eLightType:
+                case UniformNameType::eLightTypeSpot:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i] = (float)validLights[i].type;
+                            lData[i * 3] = (float)validLights[i].type;
+                            lData[i * 3 + 1] = validLights[i].spotExt.x;
+                            lData[i * 3 + 2] = validLights[i].spotExt.y;
                         }
-                        glUniform1fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightPos:
@@ -616,15 +613,6 @@ namespace Peach3D
                             lData[i * 3 + 2] = validLights[i].attenuate.z;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
-                    });
-                    break;
-                case UniformNameType::eLightSpotExt:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 2] = validLights[i].spotExt.x;
-                            lData[i * 2 + 1] = validLights[i].spotExt.y;
-                        }
-                        glUniform2fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightAmbient:

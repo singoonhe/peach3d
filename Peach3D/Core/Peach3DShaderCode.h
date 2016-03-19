@@ -43,11 +43,10 @@ namespace Peach3D
         eMatSpecular,   // material specular, include shininess
         eMatAmbient,    // material ambient
         
-        eLightType,     // light type
+        eLightTypeSpot, // light type and spot light extend attenute
         eLightPos,      // light position
         eLightDir,      // light direction
         eLightAtten,    // light attenute
-        eLightSpotExt,  // light spot extend
         eLightAmbient,  // light ambient
         eLightColor,    // light color
         eEyeDir,       // camera direction
