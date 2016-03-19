@@ -27,7 +27,12 @@ namespace Peach3D
                 shaderPreStr += Utils::formatString("#define PD_LIGHT_COUNT %d\n", feature.lightsCount);
             }
             if (feature.isPoint3) {
-                shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
+                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                    shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
+                }
+                else {
+                    shaderPreStr += isVertex ? gVerGL2ShaderCode3D : gFragGL2ShaderCode3D;
+                }
             }
             else {
                 shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
@@ -51,14 +56,7 @@ namespace Peach3D
                     uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
                     uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
                     if (feature.lightsCount > 0) {
-                        uniforms.push_back(ProgramUniform("pd_lType", UniformDataType::eFloat));
-                        uniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
-                        uniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
-                        uniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
-                        uniforms.push_back(ProgramUniform("pd_lSpotExtend", UniformDataType::eVector2));
-                        uniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
-                        uniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
-                        uniforms.push_back(ProgramUniform("pd_eyeDir", UniformDataType::eVector3));
+                        uniforms.insert(uniforms.end(), ShaderCode::mLightUniforms.begin(), ShaderCode::mLightUniforms.end());
                     }
                 }
                 uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));

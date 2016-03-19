@@ -93,6 +93,8 @@ namespace Peach3D
         std::map<std::string, std::vector<ProgramUniform>> mUniformsMap;
         static std::map<UniformDataType, uint> mUniformsBitsMap;
         static std::map<std::string, UniformNameType> mUniformsNamesMap;
+        
+        static std::vector<ProgramUniform>  mLightUniforms;
     };
 }
 

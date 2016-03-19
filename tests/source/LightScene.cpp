@@ -111,6 +111,7 @@ void DotLightSample::init(Widget* parentWidget)
     // add a dot light
     Vector3 initPos(-15.f, 0.f, 6.f);
     mDotLight = Light(initPos, Vector3(1.f, 0.1f, 0.f));
+    mDotLight.name = "DotLight";
     SceneManager::getSingleton().addNewLight(mDotLight);
     // add light node
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
@@ -178,7 +179,7 @@ void DotLightSample::update(float lastFrameTime)
         curItem = (curItem < -rang) ? -rang : curItem;
     }
     mDotLight.pos.x = curItem;
-    SceneManager::getSingleton().resetLight("pd_Light0", mDotLight);
+    SceneManager::getSingleton().resetLight("DotLight", mDotLight);
     // also update light node position
     mDotNode->setPosition(mDotLight.pos);
 }
@@ -196,6 +197,7 @@ void SpotLightSample::init(Widget* parentWidget)
     mLockPos = Vector3(5.f, 0.f, 0.f);
     auto lightDir = mLockPos - mSpotPos;
     mSpotLight = Light(Vector3(0.f, 0.f, 6.f), lightDir, Vector3(1.f, 0.1f, 0.f));
+    mSpotLight.name = "SpotLight";
     SceneManager::getSingleton().addNewLight(mSpotLight);
     // only set title here
     mTitle = "Spot Light";
@@ -226,7 +228,7 @@ void SpotLightSample::update(float lastFrameTime)
     auto lightDir = Vector3(curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
     lightDir.normalize();
     mSpotLight.dir = lightDir;
-    SceneManager::getSingleton().resetLight("pd_Light0", mSpotLight);
+    SceneManager::getSingleton().resetLight("SpotLight", mSpotLight);
 }
 
 SpotLightSample::~SpotLightSample()

@@ -14,6 +14,13 @@ namespace Peach3D
 {
     std::map<UniformDataType, uint> ShaderCode::mUniformsBitsMap;
     std::map<std::string, UniformNameType> ShaderCode::mUniformsNamesMap;
+    std::vector<ProgramUniform> ShaderCode::mLightUniforms = {ProgramUniform("pd_lTypeSpot", UniformDataType::eVector3),
+        ProgramUniform("pd_lPosition", UniformDataType::eVector3),
+        ProgramUniform("pd_lDirection", UniformDataType::eVector3),
+        ProgramUniform("pd_lAttenuate", UniformDataType::eVector3),
+        ProgramUniform("pd_lAmbient", UniformDataType::eVector3),
+        ProgramUniform("pd_lColor", UniformDataType::eVector3),
+        ProgramUniform("pd_eyeDir", UniformDataType::eVector3)};
     
     uint ShaderCode::getUniformFloatBits(UniformDataType type)
     {

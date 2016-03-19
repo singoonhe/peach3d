@@ -222,13 +222,7 @@ namespace Peach3D
             mLightsCount = count;
             if (PD_RENDERLEVEL_GL3()) {
                 // set object lights UBO uniforms
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lTypeSpot", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lPosition", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lDirection", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lAttenuate", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lAmbient", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_lColor", UniformDataType::eVector3));
-                mLightsUBOUniforms.push_back(ProgramUniform("pd_eyeDir", UniformDataType::eVector3));
+                mLightsUBOUniforms = ShaderCode::mLightUniforms;
                 // bind lights UBO
                 bindUniformsBuffer("LightsUnifroms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
             }

@@ -122,7 +122,7 @@ namespace Peach3D
         in vec3 f_lAmbient[PD_LIGHT_COUNT];
         in vec3 f_lColor[PD_LIGHT_COUNT];
     \n#endif\n
-    out vec4 out_FragColor;
+    out vec4 out_FragColor;\n
 
     void main(void)
     {
@@ -159,194 +159,128 @@ namespace Peach3D
         out_FragColor = fragColor;\n
     });
 
-// const char* gVerShaderCode3D = STRINGIFY(\
-//     #ifdef PD_LEVEL_GL3
-//         \n#ifdef PD_ENABLE_LIGHT
-//             \nuniform LightsUnifroms {
-//                 vec3 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate. */
-//                 vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
-//                 vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
-//                 vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
-//                 vec3 pd_lAmbient[PD_LIGHT_COUNT];   /* Light ambient addition. */
-//                 vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
-//                 vec3 pd_eyeDir;
-//             };
-//         \n#endif\n
-//         uniform GlobalUnifroms {
-//             mat4 pd_projMatrix;
-//             mat4 pd_viewMatrix;
-//         };
-//         in vec3 pd_vertex;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             in vec2 pd_uv;
-//         \n#endif\n
-//         in mat4 pd_modelMatrix;
-//         in vec4 pd_diffuse;
-//         \n#ifdef PD_ENABLE_LIGHT\n
-//             in vec3 pd_normal;
-//             in mat4 pd_normalMatrix;
-//             in vec3 pd_ambient;
-//             in vec4 pd_specular; /* Include material shininess. */
-//             in vec3 pd_emissive;
-//             out vec3 f_normal;
-//             out vec3 f_matAmbient;
-//             out vec4 f_matSpecular;
-//             out vec3 f_matEmissive;
-//             out FragLight f_lFrag[PD_LIGHT_COUNT];
-//             out vec3 f_lAmbient[PD_LIGHT_COUNT];
-//             out vec3 f_lColor[PD_LIGHT_COUNT];
-//         \n#endif\n
-//         out vec4 f_diffuse;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             out vec2 f_uv;
-//         \n#endif
-//     \n#else\n
-//         attribute vec3 pd_vertex;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             attribute vec2 pd_uv;
-//         \n#endif\n
-//         uniform mat4 pd_projMatrix;
-//         uniform mat4 pd_viewMatrix;
-//         uniform mat4 pd_modelMatrix;
-//         uniform vec4 pd_diffuse;
-//         \n#ifdef PD_ENABLE_LIGHT\n
-//             attribute vec3 pd_normal;
-//             uniform mat4 pd_normalMatrix;
-//             varying vec3 f_normal;
-//             varying vec3 f_worldVertex;
-//         \n#endif\n
-//         varying vec4 f_diffuse;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             varying vec2 f_uv;
-//         \n#endif
-//     \n#endif\n
+    /************************************** GL2 shders ***************************************/
 
-//     void main(void)
-//     {
-//         mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix;
-//         gl_Position = mvpMatrix * vec4(pd_vertex, 1.0);
-//         f_diffuse = pd_diffuse;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             f_uv = pd_uv;
-//         \n#endif
-//         \n#ifdef PD_ENABLE_LIGHT\n
-//             /* Convert normal to world space. */
-//             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
-//             f_normal = normalize(tnormal.xyz);
-//             /* Convert vertex to world space. */
-//             vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);
-//             \n#ifdef PD_LEVEL_GL3\n
-//                 for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-//                     /* Out light ambient and color. */
-//                     f_lAmbient[i] = pd_lAmbient[i];
-//                     f_lColor[i] = pd_lColor[i];
-//                     f_lFrag[i] = calcFragmentLight(pd_lType[i], pd_lPosition[i], pd_lDirection[i], pd_lAttenuate[i], pd_lSpotExtend[i], convertVertex.xyz, pd_eyeDir);
-//                 }\n
-//                 f_matAmbient = pd_ambient;
-//                 f_matSpecular = pd_specular;
-//                 f_matEmissive = pd_emissive;
-//             \n#else\n
-//                 f_worldVertex = convertVertex.xyz;
-//             \n#endif
-//         \n#endif\n
-//     });
+    const char* gVerGL2ShaderCode3D = STRINGIFY(\
+    attribute vec3 pd_vertex;
+    \n#ifdef PD_ENABLE_TEXUV\n
+        attribute vec2 pd_uv;
+    \n#endif\n
+    uniform mat4 pd_projMatrix;
+    uniform mat4 pd_viewMatrix;
+    uniform mat4 pd_modelMatrix;
+    uniform vec4 pd_diffuse;
+    \n#ifdef PD_ENABLE_LIGHT\n
+        attribute vec3 pd_normal;
+        uniform mat4 pd_normalMatrix;
+        varying vec3 f_normal;
+        varying vec3 f_worldVertex;
+    \n#endif\n
+    varying vec4 f_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
+        varying vec2 f_uv;
+    \n#endif\n
 
-//     const char* gFragShaderCode3D = STRINGIFY(\
-//     #ifdef PD_LEVEL_GL3\n
-//         in vec4 f_diffuse;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             in vec2 f_uv;
-//             uniform sampler2D pd_texture0;
-//         \n#endif
-//         \n#ifdef PD_ENABLE_LIGHT\n
-//             in vec3 f_normal;
-//             in vec3 f_matAmbient;
-//             in vec4 f_matSpecular;
-//             in vec3 f_matEmissive;
-//             in FragLight f_lFrag[PD_LIGHT_COUNT];
-//             in vec3 f_lAmbient[PD_LIGHT_COUNT];
-//             in vec3 f_lColor[PD_LIGHT_COUNT];
-//         \n#endif\n
-//         out vec4 out_FragColor;
-//     \n#else\n
-//         varying vec4 f_diffuse;
-//         \n#ifdef PD_ENABLE_TEXUV\n
-//             varying vec2 f_uv;
-//             uniform sampler2D pd_texture0;
-//         \n#endif
-//         \n#ifdef PD_ENABLE_LIGHT\n
-//             uniform vec3 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate. */
-//             uniform vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
-//             uniform vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
-//             uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
-//             uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];   /* Light ambient addition. */
-//             uniform vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
-//             uniform vec3 pd_eyeDir;
-//             uniform vec3 pd_ambient;
-//             uniform vec4 pd_specular; /* Include material shininess. */
-//             uniform vec3 pd_emissive;
-//             varying vec3 f_normal;
-//             varying vec3 f_worldVertex;
-//         \n#endif
-//     \n#endif\n
+    void main(void)
+    {
+        mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix;
+        gl_Position = mvpMatrix * vec4(pd_vertex, 1.0);
+        f_diffuse = pd_diffuse;
+        \n#ifdef PD_ENABLE_TEXUV\n
+            f_uv = pd_uv;
+        \n#endif
+        \n#ifdef PD_ENABLE_LIGHT\n
+            /* Convert normal to world space. */
+            vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
+            f_normal = normalize(tnormal.xyz);
+            /* Convert vertex to world space. */
+            vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);
+            f_worldVertex = convertVertex.xyz;
+        \n#endif\n
+    });
 
-//     void main(void)
-//     {
-//         \n#ifdef PD_ENABLE_TEXUV
-//             \n#ifdef PD_LEVEL_GL3\n
-//                 vec4 tex_color0 = texture( pd_texture0, f_uv );
-//             \n#else\n
-//                 vec4 tex_color0 = texture2D( pd_texture0, f_uv );
-//             \n#endif\n
-//             vec4 fragColor = tex_color0;
-//         \n#else\n
-//             vec4 fragColor = vec4(vec3(1.0), f_diffuse.a);
-//         \n#endif
-//         /* Calc lighting effect. */
-//         \n#ifdef PD_ENABLE_LIGHT\n
-//             vec3 scatteredLight = vec3(0.0);
-//             vec3 reflectedLight = vec3(0.0);\n
-//             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-//                 \n#ifdef PD_LEVEL_GL3\n
-//                     float diffuse = max(0.0, dot(f_normal, f_lFrag[i].lightDir));
-//                     float specular = max(0.0, dot(f_normal, f_lFrag[i].halfVec));
-//                     if (diffuse == 0.0)
-//                         specular = 0.0;
-//                     else
-//                         specular = pow(specular, f_matSpecular.a);
-//                     scatteredLight += f_lAmbient[i] * f_matAmbient * f_lFrag[i].attenuate + f_lColor[i] * f_diffuse.rgb * diffuse * f_lFrag[i].attenuate;
-//                     reflectedLight += f_lColor[i] * f_matSpecular.rgb * specular * f_lFrag[i].attenuate;
-//                 \n#else\n
-//                     FragLight lFrag = calcFragmentLight(pd_lType[i], pd_lPosition[i], pd_lDirection[i], pd_lAttenuate[i], pd_lSpotExtend[i], f_worldVertex, pd_eyeDir);
-//                     float diffuse = max(0.0, dot(f_normal, lFrag.lightDir));
-//                     float specular = max(0.0, dot(f_normal, lFrag.halfVec));
-//                     if (diffuse == 0.0)
-//                         specular = 0.0;
-//                     else
-//                         specular = pow(specular, pd_specular.a);
-//                     scatteredLight += pd_lAmbient[i] * pd_ambient * lFrag.attenuate + pd_lColor[i] * f_diffuse.rgb * diffuse * lFrag.attenuate;
-//                     reflectedLight += pd_lColor[i] * pd_specular.rgb * specular * lFrag.attenuate;
-//                 \n#endif\n
-//             }
-//             \n#ifdef PD_LEVEL_GL3\n
-//                 vec3 rgb = min(f_matEmissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
-//             \n#else\n
-//                 vec3 rgb = min(pd_emissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
-//             \n#endif\n
-//             fragColor = vec4(rgb, fragColor.a);
-//         \n#else
-//             \n#ifdef PD_ENABLE_TEXUV\n
-//                 fragColor = fragColor * f_diffuse;
-//             \n#else\n
-//                 fragColor = f_diffuse;
-//             \n#endif
-//         \n#endif
-//         \n#ifdef PD_LEVEL_GL3\n
-//             out_FragColor = fragColor;
-//         \n#else\n
-//             gl_FragColor = fragColor;
-//         \n#endif\n
-//     });
+    const char* gFragGL2ShaderCode3D = STRINGIFY(\
+    #ifdef PD_ENABLE_LIGHT
+        \n#define PD_LIGHT_DIRECTION    1.5
+        \n#define PD_LIGHT_DOT          2.5
+        \n#define PD_LIGHT_SPOT         3.5
+    \n#endif\n
+    varying vec4 f_diffuse;
+    \n#ifdef PD_ENABLE_TEXUV\n
+        varying vec2 f_uv;
+        uniform sampler2D pd_texture0;
+    \n#endif
+    \n#ifdef PD_ENABLE_LIGHT\n
+        uniform vec3 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate. */
+        uniform vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
+        uniform vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
+        uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
+        uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];   /* Light ambient addition. */
+        uniform vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
+        uniform vec3 pd_eyeDir;
+        uniform vec3 pd_ambient;
+        uniform vec4 pd_specular; /* Include material shininess. */
+        uniform vec3 pd_emissive;
+        varying vec3 f_normal;
+        varying vec3 f_worldVertex;
+    \n#endif\n
+
+    void main(void)
+    {
+        \n#ifdef PD_ENABLE_TEXUV\n
+            vec4 fragColor = texture2D( pd_texture0, f_uv );
+        \n#else\n
+            vec4 fragColor = vec4(vec3(1.0), f_diffuse.a);
+        \n#endif
+        /* Calc lighting effect. */
+        \n#ifdef PD_ENABLE_LIGHT\n
+            vec3 scatteredLight = vec3(0.0);
+            vec3 reflectedLight = vec3(0.0);
+            vec3 lightDir = vec3(0.0);
+            vec3 halfVec = vec3(0.0);\n
+            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
+                float curAttenuate = 1.0;
+                float lType = pd_lTypeSpot[i].x;
+                if (lType > PD_LIGHT_DIRECTION) {
+                    lightDir = pd_lPosition[i] - f_worldVertex;
+                    float lightDis = length(lightDir); /* Light to vertex distance. */
+                    lightDir = lightDir / lightDis; /* Normalize light direction. */
+
+                    /* Calc attenuate and specular halfVec. */
+                    curAttenuate = 1.0 / (pd_lAttenuate[i].x + pd_lAttenuate[i].y * lightDis + pd_lAttenuate[i].z * lightDis * lightDis);
+                    if (lType > PD_LIGHT_DOT) {
+                        float spotCos = dot(lightDir, -pd_lDirection[i]);
+                        if (spotCos < pd_lTypeSpot[i].y)
+                            curAttenuate = 0.0;
+                        else
+                            curAttenuate *= pow(spotCos, pd_lTypeSpot[i].z);
+                    }
+                }
+                else {
+                    lightDir = -pd_lDirection[i];
+                }
+                halfVec = normalize(lightDir - pd_eyeDir);
+                // accumulate diffuse and specular color
+                float diffuse = max(0.0, dot(f_normal, lightDir));
+                float specular = max(0.0, dot(f_normal, halfVec));
+                if (diffuse == 0.0)
+                    specular = 0.0;
+                else
+                    specular = pow(specular, pd_specular.a);
+                scatteredLight += pd_lAmbient[i] * pd_ambient * curAttenuate + pd_lColor[i] * f_diffuse.rgb * diffuse * curAttenuate;
+                reflectedLight += pd_lColor[i] * pd_specular.rgb * specular * curAttenuate;
+            }
+            vec3 rgb = min(pd_emissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
+            fragColor = vec4(rgb, fragColor.a);
+        \n#else
+            \n#ifdef PD_ENABLE_TEXUV\n
+                fragColor = fragColor * f_diffuse;
+            \n#else\n
+                fragColor = f_diffuse;
+            \n#endif
+        \n#endif\n
+        gl_FragColor = fragColor;\n
+    });
 }
 
 #endif // PD_POSCOLORUV_SHADER_3D_H
