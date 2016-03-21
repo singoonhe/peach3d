@@ -53,6 +53,12 @@ private:
     Vector3  mSpotPos;
 };
 
+class LightTextureSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+    virtual ~LightTextureSample();
+};
+
 class MultiLightsSample : public BaseSample
 {
     void init(Widget* parentWidget);

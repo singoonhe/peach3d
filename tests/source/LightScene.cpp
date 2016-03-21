@@ -14,6 +14,7 @@ bool LightScene::init()
     mSampleList.push_back([]()->BaseSample* {return new DirLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new DotLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new SpotLightSample();});
+    mSampleList.push_back([]()->BaseSample* {return new LightTextureSample();});
     mSampleList.push_back([]()->BaseSample* {return new MultiLightsSample();});
     mSampleList.push_back([]()->BaseSample* {return new LightControlSample();});
     
@@ -230,6 +231,34 @@ void SpotLightSample::update(float lastFrameTime)
 }
 
 SpotLightSample::~SpotLightSample()
+{
+    // delete all lights
+    SceneManager::getSingleton().deleteAllLights();
+}
+
+void LightTextureSample::init(Widget* parentWidget)
+{
+    // add a direction light
+    auto dirLight = SceneManager::getSingleton().addNewLight();
+    dirLight->usingAsDirection(Vector3(0.f, -1.f, -1.f), Color3(0.f, 0.5f, 0.f));
+    // set title and desc
+    mTitle = "Lighting Texture";
+    mDesc = "Texture mesh with direction light";
+    
+    // create peach
+    auto peachMesh = ResourceManager::getSingleton().addMesh("peach.pmt");
+    auto rootNode = SceneManager::getSingleton().getRootSceneNode();
+    for (auto i=0; i<5; ++i) {
+        float compareX = i * 5.1f - 7.f;
+        for (auto j=0; j<4; ++j) {
+            auto peachNode = rootNode->createChild(Vector3(compareX, (j - 2) * 5.1f, 0.f));
+            peachNode->attachMesh(peachMesh);
+            peachNode->setLightingEnabled(j > 0);
+        }
+    }
+}
+
+LightTextureSample::~LightTextureSample()
 {
     // delete all lights
     SceneManager::getSingleton().deleteAllLights();
