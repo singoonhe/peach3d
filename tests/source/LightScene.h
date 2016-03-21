@@ -67,4 +67,13 @@ private:
     Vector3  mSpotPos;
 };
 
+class LightControlSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+    virtual ~LightControlSample();
+    
+private:
+    Light*   mDotLight;
+};
+
 #endif /* LIGHT_SCENE_H */

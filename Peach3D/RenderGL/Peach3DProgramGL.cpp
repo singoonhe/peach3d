@@ -301,7 +301,7 @@ namespace Peach3D
                         break;
                     case UniformNameType::eLightDir: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            auto dir = lights[i]->getPosition();
+                            auto dir = lights[i]->getDirection();
                             lData[i * 4] = dir.x;
                             lData[i * 4 + 1] = dir.y;
                             lData[i * 4 + 2] = dir.z;
@@ -331,7 +331,7 @@ namespace Peach3D
                         break;
                     case UniformNameType::eLightColor: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            auto color = lights[i]->getAmbient();
+                            auto color = lights[i]->getColor();
                             lData[i * 4] = color.r;
                             lData[i * 4 + 1] = color.g;
                             lData[i * 4 + 2] = color.b;

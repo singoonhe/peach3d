@@ -15,6 +15,7 @@ bool LightScene::init()
     mSampleList.push_back([]()->BaseSample* {return new DotLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new SpotLightSample();});
     mSampleList.push_back([]()->BaseSample* {return new MultiLightsSample();});
+    mSampleList.push_back([]()->BaseSample* {return new LightControlSample();});
     
     // set ortho projective
     const float fixWidth = 40.f;
@@ -204,9 +205,9 @@ void SpotLightSample::init(Widget* parentWidget)
     auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     for (auto i=0; i<7; ++i) {
-        float compareX = i * 3.5f - 7.f;
+        float compareX = i * 4.1f - 7.f;
         for (auto j=0; j<5; ++j) {
-            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 3.f, 0.f));
+            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 4.1f, 0.f));
             sphereNode->attachMesh(sphereMesh);
         }
     }
@@ -266,9 +267,9 @@ void MultiLightsSample::init(Widget* parentWidget)
     // create spheres
     auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");
     for (auto i=0; i<7; ++i) {
-        float compareX = i * 3.5f - 7.f;
+        float compareX = i * 4.1f - 7.f;
         for (auto j=0; j<5; ++j) {
-            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 3.f, 0.f));
+            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 4.1f, 0.f));
             sphereNode->attachMesh(sphereMesh);
         }
     }
@@ -297,6 +298,51 @@ void MultiLightsSample::update(float lastFrameTime)
 }
 
 MultiLightsSample::~MultiLightsSample()
+{
+    // delete all lights
+    SceneManager::getSingleton().deleteAllLights();
+}
+
+void LightControlSample::init(Widget* parentWidget)
+{
+    // add a direction light
+    auto dirLight = SceneManager::getSingleton().addNewLight();
+    dirLight->usingAsDirection(Vector3(0.f, -1.f, -1.f), Color3(0.2f, 0.2f, 0.f));
+    // add a dot light
+    Vector3 initPos(5.f, 0.f, 6.f);
+    mDotLight = SceneManager::getSingleton().addNewLight();
+    mDotLight->usingAsDot(initPos);
+    mDotLight->setColor(Color3(0.f, 0.5f, 0.5f));
+    // create open/close button
+    const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    Button* ocButton = Button::create("press_normal.png");
+    ocButton->setPosition(Vector2(100.f, screenSize.y / 2.0f));
+    ocButton->setTitleText("Close");
+    ocButton->setClickedAction([&, ocButton](ClickEvent, const Vector2&){
+        auto enable = mDotLight->isEnabled();
+        enable = !enable;
+        mDotLight->setEnabled(enable);
+        ocButton->setTitleText(enable ? "Close" : "Open");
+    });
+    parentWidget->addChild(ocButton);
+    // only set title here
+    mTitle = "Light control";
+    mDesc = "use button to open and close dot light";
+    
+    // create spheres
+    auto rootNode = SceneManager::getSingleton().getRootSceneNode();
+    auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");
+    for (auto i=0; i<7; ++i) {
+        float compareX = i * 4.1f - 7.f;
+        for (auto j=0; j<5; ++j) {
+            auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 4.1f, 0.f));
+            sphereNode->attachMesh(sphereMesh);
+            sphereNode->setLightingEnabled(j != 4);
+        }
+    }
+}
+
+LightControlSample::~LightControlSample()
 {
     // delete all lights
     SceneManager::getSingleton().deleteAllLights();
