@@ -135,6 +135,8 @@
 		18B2AB8119E8C5460041AC1E /* Peach3DImageParse.h in Headers */ = {isa = PBXBuildFile; fileRef = 18B2AB7E19E8C5460041AC1E /* Peach3DImageParse.h */; };
 		18B2AB9119E8C7980041AC1E /* libios_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B2AB8C19E8C61E0041AC1E /* libios_image.a */; };
 		18B2AB9219E8C79C0041AC1E /* libmac_image.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B2AB8A19E8C61E0041AC1E /* libmac_image.a */; };
+		18B4EE4F1C9FDA41005642A5 /* Peach3DLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18B4EE4E1C9FDA41005642A5 /* Peach3DLight.cpp */; };
+		18B4EE501C9FDA41005642A5 /* Peach3DLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18B4EE4E1C9FDA41005642A5 /* Peach3DLight.cpp */; };
 		18B4F6E019F3F63C009D3A64 /* Peach3DButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18B4F6DE19F3F63C009D3A64 /* Peach3DButton.cpp */; };
 		18B4F6E119F3F63C009D3A64 /* Peach3DButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18B4F6DE19F3F63C009D3A64 /* Peach3DButton.cpp */; };
 		18B4F6E219F3F63C009D3A64 /* Peach3DButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 18B4F6DF19F3F63C009D3A64 /* Peach3DButton.h */; };
@@ -288,6 +290,7 @@
 		18B2AB7D19E8C5460041AC1E /* Peach3DImageParse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DImageParse.cpp; sourceTree = "<group>"; };
 		18B2AB7E19E8C5460041AC1E /* Peach3DImageParse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DImageParse.h; sourceTree = "<group>"; };
 		18B2AB8419E8C61E0041AC1E /* Peach3DImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Peach3DImage.xcodeproj; path = ../Peach3D/Support/projects/IOS_MAC/Peach3DImage.xcodeproj; sourceTree = "<group>"; };
+		18B4EE4E1C9FDA41005642A5 /* Peach3DLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DLight.cpp; sourceTree = "<group>"; };
 		18B4F6DE19F3F63C009D3A64 /* Peach3DButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DButton.cpp; sourceTree = "<group>"; };
 		18B4F6DF19F3F63C009D3A64 /* Peach3DButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DButton.h; sourceTree = "<group>"; };
 		18B5645D1C3513E50043E3C9 /* Peach3DRenderNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DRenderNode.cpp; sourceTree = "<group>"; };
@@ -445,6 +448,7 @@
 				183070A61A24B71F00B4ECB4 /* Peach3DKeyCode.h */,
 				185D824A1B08849C0034F25E /* Peach3DLayoutManager.cpp */,
 				185D824B1B08849C0034F25E /* Peach3DLayoutManager.h */,
+				18B4EE4E1C9FDA41005642A5 /* Peach3DLight.cpp */,
 				18A8924D1C7AF7D8006EB1A6 /* Peach3DLight.h */,
 				18ACF4AE19D543140020F943 /* Peach3DLogPrinter.cpp */,
 				18ACF4AF19D543140020F943 /* Peach3DLogPrinter.h */,
@@ -775,6 +779,7 @@
 				18EB6EE71A6421E300811B80 /* Peach3DUtils.cpp in Sources */,
 				18ACF50919D543140020F943 /* Peach3DNode.cpp in Sources */,
 				18ACF4E319D543140020F943 /* Peach3DCamera.cpp in Sources */,
+				18B4EE4F1C9FDA41005642A5 /* Peach3DLight.cpp in Sources */,
 				18ACF50319D543140020F943 /* Peach3DMatrix4.cpp in Sources */,
 				18B2AB7F19E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
 				185D825B1B08B4B10034F25E /* tinyxml2.cpp in Sources */,
@@ -824,6 +829,7 @@
 				18EB6EE81A6421E300811B80 /* Peach3DUtils.cpp in Sources */,
 				18ACF50A19D543140020F943 /* Peach3DNode.cpp in Sources */,
 				18ACF4E419D543140020F943 /* Peach3DCamera.cpp in Sources */,
+				18B4EE501C9FDA41005642A5 /* Peach3DLight.cpp in Sources */,
 				18ACF50419D543140020F943 /* Peach3DMatrix4.cpp in Sources */,
 				18B2AB8019E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
 				185D825C1B08B4B10034F25E /* tinyxml2.cpp in Sources */,

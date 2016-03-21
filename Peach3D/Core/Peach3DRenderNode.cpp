@@ -15,7 +15,7 @@
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle), mLightEnable(true)
+    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle), mLightEnable(true), mIsLightingDirty(true)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
@@ -38,7 +38,9 @@ namespace Peach3D
     void RenderNode::setLightingEnabled(bool enable)
     {
         mLightEnable = enable;
-        updateLightingState();
+        if (mLightEnable) {
+            setLightingNeedUpdate();
+        }
     }
     
     void RenderNode::tranverseLightingName(std::function<void(const std::string& name)> callFunc)
@@ -47,21 +49,7 @@ namespace Peach3D
             callFunc(iter);
         }
     }
-    
-    void RenderNode::updateLightingState()
-    {
-        mValidLights.clear();
-        if (mLightEnable && (mRenderObj->getVertexType() & VertexType::Normal)) {
-            // save lights name
-            SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light*){
-                mValidLights.push_back(name);
-            });
-            // make name list unique
-            std::sort(mValidLights.begin(), mValidLights.end());
-            mIsRenderCodeDirty = true;
-        }
-    }
-    
+        
     void RenderNode::setOBBEnabled(bool enable)
     {
         if (enable) {
@@ -97,9 +85,25 @@ namespace Peach3D
     void RenderNode::prepareForRender(float lastFrameTime)
     {
         if (mIsRenderCodeDirty) {
+            // calc Node need lighting name, no light if VertexType not contain Normal
+            if (mIsLightingDirty) {
+                mValidLights.clear();
+                if (mLightEnable && (mRenderObj->getVertexType() & VertexType::Normal)) {
+                    // save enabled lights name
+                    SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light*){
+                        mValidLights.push_back(name);
+                    }, true);
+                    // make name list unique
+                    std::sort(mValidLights.begin(), mValidLights.end());
+                    
+                }
+                mIsLightingDirty = false;
+            }
+            
             // set preset program first if needed
-            if (!mRenderProgram) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, (int)mValidLights.size()));
+            auto lCount = (int)mValidLights.size();
+            if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount)) {
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount));
             }
             // calc render unique hash code
             std::string renderState = Utils::formatString("Name:%sProgram:%uDrawMode:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mMode);

@@ -28,23 +28,16 @@ namespace Peach3D
     {
     public:
         /** Direction light only need direction. */
-        void usingAsDirection(const Vector3& dir, const Color3& color = Color3Gray, const Color3& ambient = Color3Gray)
-        {
-            mType = LightType::eDirection; mDir = dir; mColor = color; mAmbient = ambient;
-        }
+        void usingAsDirection(const Vector3& dir, const Color3& color = Color3Gray, const Color3& ambient = Color3Gray);
         /** Dot light need light position and attenuate(const/line/square). */
-        void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray)
-        {
-            mType = LightType::eDot; mPos = pos; mAttenuate = attenuate; mColor = color; mAmbient = ambient;
-        }
+        void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
         /** Spot light need light position and direction, add spot angle cos and transverse attenuate(pow) based on the Dot. */
-        void usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Vector2& ext = Vector2(0.5f, 2.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray)
-        {
-            mType = LightType::eSpot; mPos = pos; mDir = dir; mAttenuate = attenuate; mSpotExt = ext; mColor = color; mAmbient = ambient;
-        }
+        void usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Vector2& ext = Vector2(0.5f, 2.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
         
         const std::string& getName() { return mName; }
         LightType getType() { return mType; }
+        void setEnabled(bool enable);
+        bool isEnabled() { return mIsEnabled; }
         void setPosition(const Vector3& pos) { mPos = pos; };
         const Vector3& getPosition() { return mPos; }
         void setDirection(const Vector3& dir) { mDir = dir; };
@@ -58,10 +51,11 @@ namespace Peach3D
         void setSpotExtend(const Vector2& spotExt) { mSpotExt = spotExt; };
         const Vector2& getSpotExtend() { return mSpotExt; }
     private:
-        Light(const char* name) : mName(name), mType(LightType::eUnknow) {}
+        Light(const char* name) : mName(name), mType(LightType::eUnknow), mIsEnabled(true) {}
         
     private:
         std::string mName;       // light name
+        bool        mIsEnabled;  // is lighting enable
         LightType   mType;       // light type
         Vector3     mPos;        // light position, for Dot and Spot
         Vector3     mDir;        // light direction, for Direction and Spot

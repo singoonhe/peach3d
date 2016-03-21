@@ -219,7 +219,7 @@ namespace Peach3D
     void ProgramGL::setLightsCount(uint count)
     {
         if (count > 0 && (mVertexType & VertexType::Point3)) {
-            mLightsCount = count;
+            IProgram::setLightsCount(count);
             if (PD_RENDERLEVEL_GL3()) {
                 // set object lights UBO uniforms
                 mLightsUBOUniforms = ShaderCode::mLightUniforms;

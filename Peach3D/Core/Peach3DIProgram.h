@@ -48,7 +48,8 @@ namespace Peach3D
         /** Set user uniforms info, GL3 could get offset, DX need fcount to calc offset. */
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList) {mProgramUniformList = uniformList;}
         /** Set program lights count, auto enable lighting. */
-        virtual void setLightsCount(uint count) = 0;
+        virtual void setLightsCount(uint count) { mLightsCount = count; }
+        int getLightsCount() { return mLightsCount; }
         
         /** Update RenderNode unifroms for 3d GL2 object material. */
 		virtual void updateRenderNodeUnifroms(RenderNode* node) {}
@@ -74,7 +75,7 @@ namespace Peach3D
 
     protected:
         //! Create program by IRender, user can't call constructor function.
-        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0) {}
+        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0) {}
         //! Delete program by IRender, user can't call destructor function.
         virtual ~IProgram() {}
         
@@ -82,6 +83,7 @@ namespace Peach3D
         uint        mProgramId;     // program unique id
         bool        mProgramValid;  // is program valid
         uint        mVertexType;    // vertex data type
+        int         mLightsCount;   // lights count
         
         std::vector<ProgramUniform>  mProgramUniformList; // all the program uniforms in shader
         friend class IRender;       //! Declare class IRender is friend class

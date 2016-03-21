@@ -81,7 +81,7 @@ namespace Peach3D
         void setUnifromLocationValue(const std::string& name, std::function<void(GLint)> valueFunc);
         
     private:
-        ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0), mLightsCount(0),
+        ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0),
             mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0) {}
         virtual ~ProgramGL();
         
@@ -96,7 +96,6 @@ namespace Peach3D
         uint    mInstancedCount;        // current instance draw count for GL3
         uint    mUniformsSize;          // once instanced uniforms buffer size for GL3
         
-        int     mLightsCount;           // lights count
         GLuint  mLightsUBOId;           // object lights uniform buffer id for GL3
         GLint   mLightsUBOSize;         // object lights uniform buffer size for GL3
         std::vector<ProgramUniform>     mLightsUBOUniforms;

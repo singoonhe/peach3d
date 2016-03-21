@@ -218,10 +218,6 @@ namespace Peach3D
         // create new null light
         auto newL = new Light(insertName.c_str());
         mLightList[insertName] = newL;
-        // set light
-        mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
-            this->updateSceneNodeLighting(cNode);
-        });
         return newL;
     }
 
@@ -251,11 +247,20 @@ namespace Peach3D
         mLightList.clear();
     }
     
-    void SceneManager::tranverseLights(std::function<void(const std::string& name, const Light* l)> callFunc)
+    void SceneManager::tranverseLights(std::function<void(const std::string& name, const Light* l)> callFunc, bool onlyEnabled)
     {
         for (auto iter : mLightList) {
-            callFunc(iter.first, iter.second);
+            if (!onlyEnabled || iter.second->isEnabled()) {
+                callFunc(iter.first, iter.second);
+            }
         }
+    }
+    
+    void SceneManager::updateAllNodesLighting()
+    {
+        mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
+            this->updateSceneNodeLighting(cNode);
+        });
     }
 
     /*

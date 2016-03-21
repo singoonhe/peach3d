@@ -40,8 +40,8 @@ namespace Peach3D
         void setLightingEnabled(bool enable);
         /** Tranverse all valid light for this Node. */
         void tranverseLightingName(std::function<void(const std::string& name)> callFunc);
-        /** Calc Node need lighting name, no light if VertexType not contain Normal. */
-        void updateLightingState();
+        /** Set lighting state need update, also render state need update. */
+        void setLightingNeedUpdate() { mIsLightingDirty = true; mIsRenderCodeDirty = true; }
         
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
@@ -81,6 +81,7 @@ namespace Peach3D
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         bool            mOBBEnable;     // is OBB display enable
         bool            mLightEnable;   // is lighting enabled
+        bool            mIsLightingDirty;   // is lighting state need update
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         std::vector<std::string>    mValidLights;
         

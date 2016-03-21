@@ -96,7 +96,7 @@ namespace Peach3D
     {
         // update all RenderNode state
         for (auto node : mRenderNodeMap) {
-            node.second->updateLightingState();
+            node.second->setLightingNeedUpdate();
         }
     }
     
