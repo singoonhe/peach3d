@@ -57,6 +57,8 @@ namespace Peach3D
         }
         mCameraList.clear();
         mActiveCamera = nullptr;
+        // delete all lights and free memory
+        deleteAllLights();
         // clean root scene node and all child node
         if (mRootSceneNode) {
             delete mRootSceneNode;
@@ -206,59 +208,50 @@ namespace Peach3D
         mProjectionMatrix = Matrix4::createOrthoProjection(left, right, bottom, top, nearVal, farVal);
     }
     
-    void SceneManager::addNewLight(const Light& l)
+    Light* SceneManager::addNewLight(const char* name)
     {
-        Peach3DAssert(l.type != LightType::eUnknow, "Can't add unknow type light");
-        if (l.type != LightType::eUnknow) {
-            bool isAddLight = false;
-            if (l.name.size() > 0) {
-                if (mLightList.find(l.name) == mLightList.end()) {
-                    mLightList[l.name] = l;
-                    isAddLight = true;
-                }
-            }
-            else {
-                static uint lightAutoIndex = 0; // lighting auto increase index
-                auto lName = Utils::formatString("pd_Light%d", lightAutoIndex++);
-                mLightList[lName] = l;
-                mLightList[lName].name = lName;
-                isAddLight = true;
-            }
-            if (isAddLight) {
-                mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
-                    this->updateSceneNodeLighting(cNode);
-                });
-            }
+        std::string insertName = name;
+        if (insertName.empty() || mLightList.find(insertName) != mLightList.end()) {
+            static uint lightAutoIndex = 0; // lighting auto increase index
+            insertName = Utils::formatString("pd_Light%d", lightAutoIndex++);
         }
+        // create new null light
+        auto newL = new Light(insertName.c_str());
+        mLightList[insertName] = newL;
+        // set light
+        mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
+            this->updateSceneNodeLighting(cNode);
+        });
+        return newL;
     }
 
-    bool SceneManager::getLight(const char* name, Light* outL)
+    Light* SceneManager::getLight(const char* name)
     {
-        if (mLightList.find(name) != mLightList.end()) {
-            *outL = mLightList[name];
-            return true;
+        if (name && mLightList.find(name) != mLightList.end()) {
+            return mLightList[name];
         }
-        return false;
-    }
-    
-    void SceneManager::resetLight(const char* name, const Light& inL)
-    {
-        if (mLightList.find(name) != mLightList.end()) {
-            mLightList[name] = inL;
-            return ;
-        }
-        Peach3DWarnLog("Can't find light named \"%s\"", name);
+        return nullptr;
     }
     
     void SceneManager::deleteLight(const char* name)
     {
         auto findIter = mLightList.find(name);
         if (findIter != mLightList.end()) {
+            delete findIter->second;
             mLightList.erase(findIter);
         }
     }
     
-    void SceneManager::tranverseLights(std::function<void(const std::string& name, const Light& l)> callFunc)
+    void SceneManager::deleteAllLights()
+    {
+        // delete all lights memory
+        for (auto iter : mLightList) {
+            delete iter.second;
+        }
+        mLightList.clear();
+    }
+    
+    void SceneManager::tranverseLights(std::function<void(const std::string& name, const Light* l)> callFunc)
     {
         for (auto iter : mLightList) {
             callFunc(iter.first, iter.second);

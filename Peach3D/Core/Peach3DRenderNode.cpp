@@ -53,7 +53,7 @@ namespace Peach3D
         mValidLights.clear();
         if (mLightEnable && (mRenderObj->getVertexType() & VertexType::Normal)) {
             // save lights name
-            SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light& l){
+            SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light*){
                 mValidLights.push_back(name);
             });
             // make name list unique

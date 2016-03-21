@@ -135,11 +135,11 @@ namespace Peach3D
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
                 // set lighting unfo
                 if (firstNode->isLightingEnabled()) {
-                    std::vector<Light> validLights;
+                    std::vector<Light*> validLights;
                     firstNode->tranverseLightingName([&validLights](const std::string& name){
-                        Light outL;
-                        if (SceneManager::getSingleton().getLight(name.c_str(), &outL)) {
-                            validLights.push_back(outL);
+                        Light* namedLight = SceneManager::getSingleton().getLight(name.c_str());
+                        if (namedLight) {
+                            validLights.push_back(namedLight);
                         }
                     });
                     ((ProgramGL*)usedProgram)->updateObjectLightsUniforms(validLights);

@@ -268,7 +268,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateObjectLightsUniforms(const std::vector<Light>& lights)
+    void ProgramGL::updateObjectLightsUniforms(const std::vector<Light*>& lights)
     {
         Peach3DAssert(lights.size() == mLightsCount, "Light list must equal to program count!");
         if (mLightsUBOId != GL_INVALID_INDEX && mLightsCount > 0) {
@@ -281,54 +281,60 @@ namespace Peach3D
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eLightTypeSpot: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = (float)lights[i].type;
-                            lData[i * 4 + 1] = lights[i].spotExt.x;
-                            lData[i * 4 + 2] = lights[i].spotExt.y;
+                            lData[i * 4] = (float)lights[i]->getType();
+                            auto spotExt = lights[i]->getSpotExtend();
+                            lData[i * 4 + 1] = spotExt.x;
+                            lData[i * 4 + 2] = spotExt.y;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightPos: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = lights[i].pos.x;
-                            lData[i * 4 + 1] = lights[i].pos.y;
-                            lData[i * 4 + 2] = lights[i].pos.z;
+                            auto pos = lights[i]->getPosition();
+                            lData[i * 4] = pos.x;
+                            lData[i * 4 + 1] = pos.y;
+                            lData[i * 4 + 2] = pos.z;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightDir: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = lights[i].dir.x;
-                            lData[i * 4 + 1] = lights[i].dir.y;
-                            lData[i * 4 + 2] = lights[i].dir.z;
+                            auto dir = lights[i]->getPosition();
+                            lData[i * 4] = dir.x;
+                            lData[i * 4 + 1] = dir.y;
+                            lData[i * 4 + 2] = dir.z;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightAtten: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = lights[i].attenuate.x;
-                            lData[i * 4 + 1] = lights[i].attenuate.y;
-                            lData[i * 4 + 2] = lights[i].attenuate.z;
+                            auto atten = lights[i]->getAttenuate();
+                            lData[i * 4] = atten.x;
+                            lData[i * 4 + 1] = atten.y;
+                            lData[i * 4 + 2] = atten.z;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightAmbient: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = lights[i].ambient.r;
-                            lData[i * 4 + 1] = lights[i].ambient.g;
-                            lData[i * 4 + 2] = lights[i].ambient.b;
+                            auto ambient = lights[i]->getAmbient();
+                            lData[i * 4] = ambient.r;
+                            lData[i * 4 + 1] = ambient.g;
+                            lData[i * 4 + 2] = ambient.b;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
                     case UniformNameType::eLightColor: {
                         for (auto i=0; i<lights.size(); ++i) {
-                            lData[i * 4] = lights[i].color.r;
-                            lData[i * 4 + 1] = lights[i].color.g;
-                            lData[i * 4 + 2] = lights[i].color.b;
+                            auto color = lights[i]->getAmbient();
+                            lData[i * 4] = color.r;
+                            lData[i * 4 + 1] = color.g;
+                            lData[i * 4 + 2] = color.b;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
@@ -504,12 +510,12 @@ namespace Peach3D
         // lights attribute
         float lData[3 * SceneManager::getSingleton().getLightMax()];
         // set lighting unfo
-        std::vector<Light> validLights;
+        std::vector<Light*> validLights;
         if (node->isLightingEnabled()) {
             node->tranverseLightingName([&validLights](const std::string& name){
-                Light outL;
-                if (SceneManager::getSingleton().getLight(name.c_str(), &outL)) {
-                    validLights.push_back(outL);
+                auto namedLight = SceneManager::getSingleton().getLight(name.c_str());
+                if (namedLight) {
+                    validLights.push_back(namedLight);
                 }
             });
         }
@@ -572,9 +578,10 @@ namespace Peach3D
                 case UniformNameType::eLightTypeSpot:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 3] = (float)validLights[i].type;
-                            lData[i * 3 + 1] = validLights[i].spotExt.x;
-                            lData[i * 3 + 2] = validLights[i].spotExt.y;
+                            auto spotExt = validLights[i]->getSpotExtend();
+                            lData[i * 3] = (float)validLights[i]->getType();
+                            lData[i * 3 + 1] = spotExt.x;
+                            lData[i * 3 + 2] = spotExt.y;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
@@ -582,9 +589,10 @@ namespace Peach3D
                 case UniformNameType::eLightPos:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 3] = validLights[i].pos.x;
-                            lData[i * 3 + 1] = validLights[i].pos.y;
-                            lData[i * 3 + 2] = validLights[i].pos.z;
+                            auto pos = validLights[i]->getPosition();
+                            lData[i * 3] = pos.x;
+                            lData[i * 3 + 1] = pos.y;
+                            lData[i * 3 + 2] = pos.z;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
@@ -592,9 +600,10 @@ namespace Peach3D
                 case UniformNameType::eLightDir:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 3] = validLights[i].dir.x;
-                            lData[i * 3 + 1] = validLights[i].dir.y;
-                            lData[i * 3 + 2] = validLights[i].dir.z;
+                            auto dir = validLights[i]->getDirection();
+                            lData[i * 3] = dir.x;
+                            lData[i * 3 + 1] = dir.y;
+                            lData[i * 3 + 2] = dir.z;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
@@ -602,9 +611,10 @@ namespace Peach3D
                 case UniformNameType::eLightAtten:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 3] = validLights[i].attenuate.x;
-                            lData[i * 3 + 1] = validLights[i].attenuate.y;
-                            lData[i * 3 + 2] = validLights[i].attenuate.z;
+                            auto attenuate = validLights[i]->getAttenuate();
+                            lData[i * 3] = attenuate.x;
+                            lData[i * 3 + 1] = attenuate.y;
+                            lData[i * 3 + 2] = attenuate.z;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
@@ -612,9 +622,10 @@ namespace Peach3D
                 case UniformNameType::eLightAmbient:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 3] = validLights[i].ambient.r;
-                            lData[i * 3 + 1] = validLights[i].ambient.g;
-                            lData[i * 3 + 2] = validLights[i].ambient.b;
+                            auto ambient = validLights[i]->getAmbient();
+                            lData[i * 3] = ambient.r;
+                            lData[i * 3 + 1] = ambient.g;
+                            lData[i * 3 + 2] = ambient.b;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });
@@ -622,9 +633,10 @@ namespace Peach3D
                 case UniformNameType::eLightColor:
                     setUnifromLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
-                            lData[i * 3] = validLights[i].color.r;
-                            lData[i * 3 + 1] = validLights[i].color.g;
-                            lData[i * 3 + 2] = validLights[i].color.b;
+                            auto color = validLights[i]->getColor();
+                            lData[i * 3] = color.r;
+                            lData[i * 3 + 1] = color.g;
+                            lData[i * 3 + 2] = color.b;
                         }
                         glUniform3fv(location, (GLsizei)validLights.size(), lData);
                     });

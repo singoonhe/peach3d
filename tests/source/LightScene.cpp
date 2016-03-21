@@ -37,8 +37,8 @@ void LightScene::exit()
 void DirLightSample::init(Widget* parentWidget)
 {
     // add a direction light
-    mDirLight = Light(Vector3(0.f, -1.f, -1.f), Color3Gray, Color3Gray);
-    SceneManager::getSingleton().addNewLight(mDirLight);
+    mDirLight = SceneManager::getSingleton().addNewLight();
+    mDirLight->usingAsDirection(Vector3(0.f, -1.f, -1.f));
     // only set title here
     mTitle = "Direction Light";
     mDesc = "*.pmt using vertex normal, *.obj using face normal";
@@ -96,8 +96,7 @@ void DirLightSample::update(float lastFrameTime)
         curItem = (curItem > 0.8f) ? 0.8f : curItem;
         curItem = (curItem < 0.f) ? 0.f : curItem;
     }
-    mDirLight.ambient = Color3(curItem, curItem, curItem);
-    SceneManager::getSingleton().resetLight("pd_Light0", mDirLight);
+    mDirLight->setAmbient(Color3(curItem));
 }
 
 DirLightSample::~DirLightSample()
@@ -110,9 +109,8 @@ void DotLightSample::init(Widget* parentWidget)
 {
     // add a dot light
     Vector3 initPos(-15.f, 0.f, 6.f);
-    mDotLight = Light(initPos, Vector3(1.f, 0.1f, 0.f));
-    mDotLight.name = "DotLight";
-    SceneManager::getSingleton().addNewLight(mDotLight);
+    mDotLight = SceneManager::getSingleton().addNewLight();
+    mDotLight->usingAsDot(initPos);
     // add light node
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     auto cubeMesh = ResourceManager::getSingleton().addMesh("peach.obj");
@@ -170,7 +168,8 @@ void DotLightSample::init(Widget* parentWidget)
 void DotLightSample::update(float lastFrameTime)
 {
     const float rang = 15.f;
-    static float curItem = mDotLight.pos.x;
+    auto lastPos = mDotLight->getPosition();
+    static float curItem = lastPos.x;
     static bool isPlus = true;
     curItem += lastFrameTime * (isPlus ? 3.f : -3.f);
     if (curItem > rang || curItem < -rang) {
@@ -178,10 +177,10 @@ void DotLightSample::update(float lastFrameTime)
         curItem = (curItem > rang) ? rang : curItem;
         curItem = (curItem < -rang) ? -rang : curItem;
     }
-    mDotLight.pos.x = curItem;
-    SceneManager::getSingleton().resetLight("DotLight", mDotLight);
+    lastPos.x = curItem;
+    mDotLight->setPosition(lastPos);
     // also update light node position
-    mDotNode->setPosition(mDotLight.pos);
+    mDotNode->setPosition(lastPos);
 }
 
 DotLightSample::~DotLightSample()
@@ -196,9 +195,8 @@ void SpotLightSample::init(Widget* parentWidget)
     mSpotPos = Vector3(0.f, 0.f, 60.f);
     mLockPos = Vector3(5.f, 0.f, 0.f);
     auto lightDir = mLockPos - mSpotPos;
-    mSpotLight = Light(Vector3(0.f, 0.f, 6.f), lightDir, Vector3(1.f, 0.1f, 0.f));
-    mSpotLight.name = "SpotLight";
-    SceneManager::getSingleton().addNewLight(mSpotLight);
+    mSpotLight = SceneManager::getSingleton().addNewLight();
+    mSpotLight->usingAsSpot(Vector3(0.f, 0.f, 6.f), lightDir);
     // only set title here
     mTitle = "Spot Light";
     
@@ -225,10 +223,9 @@ void SpotLightSample::update(float lastFrameTime)
         curItem = (curItem > rang) ? rang : curItem;
         curItem = (curItem < -rang) ? -rang : curItem;
     }
-    auto lightDir = Vector3(curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
+    auto lightDir = Vector3(curItem, mLockPos.y, mLockPos.z) - mSpotLight->getPosition();
     lightDir.normalize();
-    mSpotLight.dir = lightDir;
-    SceneManager::getSingleton().resetLight("SpotLight", mSpotLight);
+    mSpotLight->setDirection(lightDir);
 }
 
 SpotLightSample::~SpotLightSample()
@@ -240,15 +237,14 @@ SpotLightSample::~SpotLightSample()
 void MultiLightsSample::init(Widget* parentWidget)
 {
     // add a direction light
-    Light dirLight(Vector3(0.f, -1.f, -1.f), Color3(0.5f, 0.f, 0.f), Color3Gray);
-    SceneManager::getSingleton().addNewLight(dirLight);
+    auto dirLight = SceneManager::getSingleton().addNewLight();
+    dirLight->usingAsDirection(Vector3(0.f, -1.f, -1.f), Color3(0.5f, 0.f, 0.f));
     
     // add a dot light
     Vector3 initPos(-15.f, 0.f, 6.f);
-    mDotLight = Light(initPos, Vector3(1.f, 0.1f, 0.f));
-    mDotLight.name = "DotLight";
-    mDotLight.color = Color3(0.f, 0.5f, 0.f);
-    SceneManager::getSingleton().addNewLight(mDotLight);
+    mDotLight = SceneManager::getSingleton().addNewLight();
+    mDotLight->usingAsDot(initPos);
+    mDotLight->setColor(Color3(0.f, 0.5f, 0.f));
     // add light node
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     auto cubeMesh = ResourceManager::getSingleton().addMesh("peach.obj");
@@ -261,10 +257,9 @@ void MultiLightsSample::init(Widget* parentWidget)
     mSpotPos = Vector3(0.f, 0.f, 6.f);
     mLockPos = Vector3(5.f, 0.f, 0.f);
     auto lightDir = mLockPos - mSpotPos;
-    mSpotLight = Light(Vector3(0.f, 0.f, 6.f), lightDir, Vector3(1.f, 0.1f, 0.f));
-    mSpotLight.name = "SpotLight";
-    mSpotLight.color = Color3(0.f, 0.f, 0.5f);
-    SceneManager::getSingleton().addNewLight(mSpotLight);
+    mSpotLight = SceneManager::getSingleton().addNewLight();
+    mSpotLight->usingAsSpot(Vector3(0.f, 0.f, 6.f), lightDir);
+    mSpotLight->setColor(Color3(0.f, 0.f, 0.5f));
     // only set title here
     mTitle = "Multi Lights";
     
@@ -291,15 +286,14 @@ void MultiLightsSample::update(float lastFrameTime)
         curItem = (curItem < -rang) ? -rang : curItem;
     }
     // reset dot light position
-    mDotLight.pos.x = curItem;
-    SceneManager::getSingleton().resetLight("DotLight", mDotLight);
+    auto dotPos = mDotLight->getPosition();
+    mDotLight->setPosition(Vector3(curItem, dotPos.y, dotPos.z));
     // also update light node position
-    mDotNode->setPosition(mDotLight.pos);
+    mDotNode->setPosition(dotPos);
     // reset spot light direction
-    auto lightDir = Vector3(-curItem, mLockPos.y, mLockPos.z) - mSpotLight.pos;
+    auto lightDir = Vector3(-curItem, mLockPos.y, mLockPos.z) - mSpotLight->getPosition();
     lightDir.normalize();
-    mSpotLight.dir = lightDir;
-    SceneManager::getSingleton().resetLight("SpotLight", mSpotLight);
+    mSpotLight->setDirection(lightDir);
 }
 
 MultiLightsSample::~MultiLightsSample()
