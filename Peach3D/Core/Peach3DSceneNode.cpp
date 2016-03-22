@@ -35,6 +35,7 @@ namespace Peach3D
         // set default lighting enabled
         mLightEnable = true;
         mIsLightingDirty = true;
+        mObjMaxLength = 0.f;
     }
     
     void SceneNode::attachMesh(Mesh* mesh)
@@ -269,11 +270,23 @@ namespace Peach3D
             }
             Matrix4 modelMatrix = translateMat * rotateMatrix * scaleMat;
             // set model matrix to all child RenderNode
+            mObjMaxLength = 0.f;
             for (auto node : mRenderNodeMap) {
                 node.second->setModelMatrix(modelMatrix);
                 OBB* renderOBB = node.second->getRenderOBB();
                 if (renderOBB) {
                     renderOBB->setModelMatrix(translateMat, rotateMatrix, scaleMat);
+                    // calc object max length
+                    float* lengthMat = (float*)renderOBB->getModelMatrix().mat;
+                    if (lengthMat[0] > mObjMaxLength) {
+                        mObjMaxLength = lengthMat[0];
+                    }
+                    if (lengthMat[5] > mObjMaxLength) {
+                        mObjMaxLength = lengthMat[5];
+                    }
+                    if (lengthMat[10] > mObjMaxLength) {
+                        mObjMaxLength = lengthMat[10];
+                    }
                 }
             }
             
@@ -286,8 +299,20 @@ namespace Peach3D
             bool isNormal = mAttachedMesh->getAnyVertexType() & VertexType::Normal;
             if (mLightEnable && isNormal) {
                 // save enabled lights name
-                SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light* l){
-                    validLights.push_back(name);
+                SceneManager::getSingleton().tranverseLights([&](const std::string& name, Light* l){
+                    if (l->getType() != LightType::eDirection) {
+                        auto lenVector = mWorldPosition - l->getPosition();
+                        float calLen = fmaxf(0.f, lenVector.length() - mObjMaxLength);
+                        auto attenV = l->getAttenuate();
+                        // calc light accumulate for node, ignore light if too far
+                        float accuAtten = attenV.x + attenV.y * calLen + attenV.z * calLen * calLen;
+                        if (accuAtten < 100.f) {
+                            validLights.push_back(name);
+                        }
+                    }
+                    else {
+                        validLights.push_back(name);
+                    }
                 }, true);
                 // make name list unique
                 std::sort(validLights.begin(), validLights.end());

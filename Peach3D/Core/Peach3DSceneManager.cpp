@@ -247,10 +247,10 @@ namespace Peach3D
         mLightList.clear();
     }
     
-    void SceneManager::tranverseLights(std::function<void(const std::string& name, const Light* l)> callFunc, bool onlyEnabled)
+    void SceneManager::tranverseLights(std::function<void(const std::string& name, Light* l)> callFunc, bool onlyEnabled)
     {
         for (auto iter : mLightList) {
-            if (!onlyEnabled || iter.second->isEnabled()) {
+            if ((!onlyEnabled || iter.second->isEnabled()) && iter.second->getType() != LightType::eUnknow) {
                 callFunc(iter.first, iter.second);
             }
         }

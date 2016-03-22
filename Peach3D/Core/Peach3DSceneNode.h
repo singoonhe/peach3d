@@ -126,6 +126,7 @@ namespace Peach3D
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         bool            mLightEnable;   // is lighting enabled, default is true
         bool            mIsLightingDirty;   // is lighting state need update
+        float           mObjMaxLength;  // objects max length
         
         bool            mOBBEnable;     // is OBB display enable
         bool            mPickEnabled;   // is object picking eanbled

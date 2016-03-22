@@ -254,6 +254,7 @@ void LightTextureSample::init(Widget* parentWidget)
             auto peachNode = rootNode->createChild(Vector3(compareX, (j - 2) * 5.1f, 0.f));
             peachNode->attachMesh(peachMesh);
             peachNode->setLightingEnabled(j > 0);
+            peachNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.f, PD_PI, 0.f), 5.f)));
         }
     }
 }
