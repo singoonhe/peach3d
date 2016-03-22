@@ -57,13 +57,13 @@ namespace Peach3D
         }
         mCameraList.clear();
         mActiveCamera = nullptr;
-        // delete all lights and free memory
-        deleteAllLights();
         // clean root scene node and all child node
         if (mRootSceneNode) {
             delete mRootSceneNode;
             mRootSceneNode = nullptr;
         }
+        // delete all lights and free memory
+        deleteAllLights();
         // delete draw stats update schedule
         if (mDrawUpdateSchedule) {
             IPlatform::getSingletonPtr()->deleteScheduler(mDrawUpdateSchedule);
@@ -155,7 +155,7 @@ namespace Peach3D
     
     void SceneManager::updateSceneNodeLighting(Node* sNode)
     {
-        ((SceneNode*)sNode)->updateLightingState();
+        ((SceneNode*)sNode)->setLightingStateNeedUpdate();
         // auto update children
         sNode->tranverseChildNode([&](size_t, Node* cNode){
             this->updateSceneNodeLighting(cNode);

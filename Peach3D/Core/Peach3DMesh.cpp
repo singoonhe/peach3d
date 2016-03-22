@@ -14,8 +14,7 @@ namespace Peach3D
     IObject* Mesh::createObject(const char* name)
     {
         const char* newName = name;
-        if (!newName)
-        {
+        if (!newName) {
             // generate mesh name if name==nullptr
             char pName[100] = { 0 };
             static uint meshAutoCount = 0;
@@ -30,8 +29,7 @@ namespace Peach3D
     
     IObject* Mesh::getObjectByName(const char* name)
     {
-        if (mObjectMap.find(name) != mObjectMap.end())
-        {
+        if (mObjectMap.find(name) != mObjectMap.end()) {
             return mObjectMap[name];
         }
         return nullptr;
@@ -39,19 +37,26 @@ namespace Peach3D
     
     void Mesh::tranverseObjects(std::function<void(const char*, IObject*)> callFunc)
     {
-        for (auto iter=mObjectMap.begin(); iter!=mObjectMap.end(); ++iter) {
+        for (auto iter : mObjectMap) {
             // tranverse all child with param func
-            callFunc(iter->first.c_str(), iter->second);
+            callFunc(iter.first.c_str(), iter.second);
         }
+    }
+    
+    uint Mesh::getAnyVertexType()
+    {
+        for (auto iter : mObjectMap) {
+            return iter.second->getVertexType();
+        }
+        return 0;
     }
     
     Mesh::~Mesh()
     {
         IRender* render = IRender::getSingletonPtr();
-        for (auto iter=mObjectMap.begin(); iter!=mObjectMap.end(); ++iter)
-        {
+        for (auto iter : mObjectMap) {
             // tranverse all child with param func
-            render->deleteObject(iter->second);
+            render->deleteObject(iter.second);
         }
         mObjectMap.clear();
     }

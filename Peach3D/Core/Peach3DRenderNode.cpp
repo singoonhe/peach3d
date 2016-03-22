@@ -15,7 +15,7 @@
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle), mLightEnable(true), mIsLightingDirty(true)
+    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
@@ -32,21 +32,6 @@ namespace Peach3D
         if (mRenderOBB) {
             delete mRenderOBB;
             mRenderOBB = nullptr;
-        }
-    }
-    
-    void RenderNode::setLightingEnabled(bool enable)
-    {
-        mLightEnable = enable;
-        if (mLightEnable) {
-            setLightingNeedUpdate();
-        }
-    }
-    
-    void RenderNode::tranverseLightingName(std::function<void(const std::string& name)> callFunc)
-    {
-        for (auto iter : mValidLights) {
-            callFunc(iter);
         }
     }
         
@@ -85,23 +70,8 @@ namespace Peach3D
     void RenderNode::prepareForRender(float lastFrameTime)
     {
         if (mIsRenderCodeDirty) {
-            // calc Node need lighting name, no light if VertexType not contain Normal
-            if (mIsLightingDirty) {
-                mValidLights.clear();
-                if (mLightEnable && (mRenderObj->getVertexType() & VertexType::Normal)) {
-                    // save enabled lights name
-                    SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light*){
-                        mValidLights.push_back(name);
-                    }, true);
-                    // make name list unique
-                    std::sort(mValidLights.begin(), mValidLights.end());
-                    
-                }
-                mIsLightingDirty = false;
-            }
-            
             // set preset program first if needed
-            auto lCount = (int)mValidLights.size();
+            auto lCount = (int)mRenderLights.size();
             if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount)) {
                 mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount));
             }
@@ -110,8 +80,8 @@ namespace Peach3D
             for (auto tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();
             }
-            for (auto l : mValidLights) {
-                renderState = renderState + l;
+            for (auto lName : mRenderLights) {
+                renderState = renderState + lName;
             }
             mRenderHash = XXH32((void*)renderState.c_str(), (int)renderState.size(), 0);
             

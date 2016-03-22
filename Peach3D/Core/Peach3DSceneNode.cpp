@@ -34,6 +34,7 @@ namespace Peach3D
         mRotateUseVec = false;
         // set default lighting enabled
         mLightEnable = true;
+        mIsLightingDirty = true;
     }
     
     void SceneNode::attachMesh(Mesh* mesh)
@@ -86,18 +87,8 @@ namespace Peach3D
     void SceneNode::setLightingEnabled(bool enable)
     {
         mLightEnable = enable;
-        // set all RenderNode lighting enable
-        for (auto node : mRenderNodeMap) {
-            node.second->setLightingEnabled(enable);
-        }
-    }
-    
-    void SceneNode::updateLightingState()
-    {
-        // update all RenderNode state
-        for (auto node : mRenderNodeMap) {
-            node.second->setLightingNeedUpdate();
-        }
+        // set used lights need update
+        setLightingStateNeedUpdate();
     }
     
     void SceneNode::setPickingEnabled(bool enable, bool always)
@@ -287,6 +278,25 @@ namespace Peach3D
             }
             
             mIsRenderDirty = false;
+        }
+        
+        if (mIsLightingDirty && mAttachedMesh) {
+            std::vector<std::string> validLights;
+            // is attached mesh contain vertex normal
+            bool isNormal = mAttachedMesh->getAnyVertexType() & VertexType::Normal;
+            if (mLightEnable && isNormal) {
+                // save enabled lights name
+                SceneManager::getSingleton().tranverseLights([&](const std::string& name, const Light* l){
+                    validLights.push_back(name);
+                }, true);
+                // make name list unique
+                std::sort(validLights.begin(), validLights.end());
+            }
+            // set all RenderNode lights
+            for (auto node : mRenderNodeMap) {
+                node.second->setRenderLights(validLights);
+            }
+            mIsLightingDirty = false;
         }
     }
     

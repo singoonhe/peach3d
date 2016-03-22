@@ -45,7 +45,6 @@ namespace Peach3D
         /** Auto set child RenderNode lighting enable. */
         void setLightingEnabled(bool enable);
         bool isLightingEnabled() { return mLightEnable; }
-        void updateLightingState();
         
         /**
          * Set node picking enabled, auto generate OBB for all RenderNode.
@@ -93,6 +92,8 @@ namespace Peach3D
         void setDepthBias(float depthBias) { mDepthBias = depthBias; }
         float getDepthBias() { return mDepthBias; }
         
+        /** Lights used will be update before render. */
+        void setLightingStateNeedUpdate() { mIsLightingDirty = true; }
         /** Traverse RenderNode, will auto call lambda func. */
         void tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc);
         /** Judge is need render. */
@@ -124,6 +125,7 @@ namespace Peach3D
         float           mDepthBias;     // rendering depth bias, valid if bigger than 0.0f
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         bool            mLightEnable;   // is lighting enabled, default is true
+        bool            mIsLightingDirty;   // is lighting state need update
         
         bool            mOBBEnable;     // is OBB display enable
         bool            mPickEnabled;   // is object picking eanbled

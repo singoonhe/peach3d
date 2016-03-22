@@ -79,7 +79,8 @@ class LightControlSample : public BaseSample
     virtual ~LightControlSample();
     
 private:
-    Light*   mDotLight;
+    Light*      mDotLight;
+    SceneNode*  mControlNode;
 };
 
 #endif /* LIGHT_SCENE_H */

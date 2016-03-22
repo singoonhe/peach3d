@@ -334,6 +334,7 @@ MultiLightsSample::~MultiLightsSample()
 
 void LightControlSample::init(Widget* parentWidget)
 {
+    mControlNode = nullptr;
     // add a direction light
     auto dirLight = SceneManager::getSingleton().addNewLight();
     dirLight->usingAsDirection(Vector3(0.f, -1.f, -1.f), Color3(0.2f, 0.2f, 0.f));
@@ -344,19 +345,32 @@ void LightControlSample::init(Widget* parentWidget)
     mDotLight->setColor(Color3(0.f, 0.5f, 0.5f));
     // create open/close button
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
-    Button* ocButton = Button::create("press_normal.png");
-    ocButton->setPosition(Vector2(100.f, screenSize.y / 2.0f));
-    ocButton->setTitleText("Close");
-    ocButton->setClickedAction([&, ocButton](ClickEvent, const Vector2&){
+    Button* lcButton = Button::create("press_normal.png");
+    lcButton->setPosition(Vector2(100.f, screenSize.y / 3.0f));
+    lcButton->setTitleText("Close");
+    lcButton->setClickedAction([&, lcButton](ClickEvent, const Vector2&){
         auto enable = mDotLight->isEnabled();
         enable = !enable;
         mDotLight->setEnabled(enable);
-        ocButton->setTitleText(enable ? "Close" : "Open");
+        lcButton->setTitleText(enable ? "Close" : "Open");
     });
-    parentWidget->addChild(ocButton);
+    parentWidget->addChild(lcButton);
+    // create enable/disable button
+    Button* ncButton = Button::create("press_normal.png");
+    ncButton->setPosition(Vector2(100.f, screenSize.y * 2 / 3.0f));
+    ncButton->setTitleText("Enable");
+    ncButton->setClickedAction([&, ncButton](ClickEvent, const Vector2&){
+        auto enable = mControlNode->isLightingEnabled();
+        enable = !enable;
+        ncButton->setTitleText(enable ? "Disable" : "Enable");
+        if (mControlNode) {
+            mControlNode->setLightingEnabled(enable);
+        }
+    });
+    parentWidget->addChild(ncButton);
     // only set title here
     mTitle = "Light control";
-    mDesc = "use button to open and close dot light";
+    mDesc = "use button to open/close dot light and  enable/disable node lighting";
     
     // create spheres
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
@@ -367,6 +381,9 @@ void LightControlSample::init(Widget* parentWidget)
             auto sphereNode = rootNode->createChild(Vector3(compareX, (j - 2) * 4.1f, 0.f));
             sphereNode->attachMesh(sphereMesh);
             sphereNode->setLightingEnabled(j != 4);
+            if (i == 6 && j == 4) {
+                mControlNode = sphereNode;
+            }
         }
     }
 }

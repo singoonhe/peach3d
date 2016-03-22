@@ -511,13 +511,14 @@ namespace Peach3D
         float lData[3 * SceneManager::getSingleton().getLightMax()];
         // set lighting unfo
         std::vector<Light*> validLights;
-        if (node->isLightingEnabled()) {
-            node->tranverseLightingName([&validLights](const std::string& name){
-                auto namedLight = SceneManager::getSingleton().getLight(name.c_str());
-                if (namedLight) {
-                    validLights.push_back(namedLight);
+        auto lightsName = node->getRenderLights();
+        if (lightsName.size() > 0) {
+            for (auto name : lightsName) {
+                Light* vl = SceneManager::getSingleton().getLight(name.c_str());
+                if (vl) {
+                    validLights.push_back(vl);
                 }
-            });
+            }
         }
         // update object uniforms in list
         for (auto uniform : mProgramUniformList) {

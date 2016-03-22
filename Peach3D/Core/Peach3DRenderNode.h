@@ -36,12 +36,9 @@ namespace Peach3D
         const Material& getMaterial() { return mMaterial; }
         void setDrawMode(DrawMode mode) { mMode = mode; mIsRenderCodeDirty = true; }
         DrawMode getDrawMode() { return mMode; }
-        bool isLightingEnabled() { return mLightEnable && mValidLights.size() > 0; }
-        void setLightingEnabled(bool enable);
-        /** Tranverse all valid light for this Node. */
-        void tranverseLightingName(std::function<void(const std::string& name)> callFunc);
-        /** Set lighting state need update, also render state need update. */
-        void setLightingNeedUpdate() { mIsLightingDirty = true; mIsRenderCodeDirty = true; }
+        /** Reset render lights name, called by parent in preparing render. */
+        void setRenderLights(const std::vector<std::string>& ls) { mRenderLights = ls; mIsRenderCodeDirty = true;}
+        const std::vector<std::string>& getRenderLights() { return mRenderLights; }
         
         void setOBBEnabled(bool enable);
         bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
@@ -80,11 +77,9 @@ namespace Peach3D
         IProgram*       mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         bool            mOBBEnable;     // is OBB display enable
-        bool            mLightEnable;   // is lighting enabled
-        bool            mIsLightingDirty;   // is lighting state need update
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
-        std::vector<std::string>    mValidLights;
         
+        std::vector<std::string>    mRenderLights;  // valid lights name, setting by parent
         std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering
         bool            mIsRenderCodeDirty; // control when render hash need recalc

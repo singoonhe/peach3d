@@ -14,6 +14,12 @@
 
 namespace Peach3D
 {
+    Light::~Light()
+    {
+        // delete a light, node need update valid name
+        SceneManager::getSingleton().updateAllNodesLighting();
+    }
+    
     void Light::usingAsDirection(const Vector3& dir, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eDirection; mDir = dir; mColor = color; mAmbient = ambient;

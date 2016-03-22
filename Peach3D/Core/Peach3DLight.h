@@ -52,6 +52,7 @@ namespace Peach3D
         const Vector2& getSpotExtend() { return mSpotExt; }
     private:
         Light(const char* name) : mName(name), mType(LightType::eUnknow), mIsEnabled(true) {}
+        ~Light();
         
     private:
         std::string mName;       // light name
