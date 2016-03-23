@@ -18,12 +18,15 @@ Core/Peach3DIRender.cpp \
 Core/Peach3DIScene.cpp \
 Core/Peach3DITexture.cpp \
 Core/Peach3DLayoutManager.cpp \
+Core/Peach3DLight.cpp \
 Core/Peach3DLogPrinter.cpp \
 Core/Peach3DMatrix4.cpp \
 Core/Peach3DMesh.cpp \
 Core/Peach3DNode.cpp \
 Core/Peach3DOBB.cpp \
 Core/Peach3DObjLoader.cpp \
+Core/Peach3DPmbLoader.cpp \
+Core/Peach3DPmtLoader.cpp \
 Core/Peach3DQuaternion.cpp \
 Core/Peach3DRenderNode.cpp \
 Core/Peach3DResourceManager.cpp \
