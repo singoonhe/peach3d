@@ -37,6 +37,12 @@
 		184532A91C72D8A1000B8F66 /* peach3d_ui.png in Resources */ = {isa = PBXBuildFile; fileRef = 184532A61C72D8A1000B8F66 /* peach3d_ui.png */; };
 		184532AA1C72D8A1000B8F66 /* peach3d_ui.xml in Resources */ = {isa = PBXBuildFile; fileRef = 184532A71C72D8A1000B8F66 /* peach3d_ui.xml */; };
 		184532AB1C72D8A1000B8F66 /* peach3d_ui.xml in Resources */ = {isa = PBXBuildFile; fileRef = 184532A71C72D8A1000B8F66 /* peach3d_ui.xml */; };
+		18461D901CA25C16001A9829 /* girl.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8E1CA25C16001A9829 /* girl.pmt */; };
+		18461D911CA25C16001A9829 /* girl.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8E1CA25C16001A9829 /* girl.pmt */; };
+		18461D921CA25C16001A9829 /* girl.png in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8F1CA25C16001A9829 /* girl.png */; };
+		18461D931CA25C16001A9829 /* girl.png in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8F1CA25C16001A9829 /* girl.png */; };
+		18461D981CA25C78001A9829 /* CostumeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* CostumeScene.cpp */; };
+		18461D991CA25C78001A9829 /* CostumeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* CostumeScene.cpp */; };
 		184962CD1C4A42B100304991 /* peach.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 184962CA1C4A42B100304991 /* peach.mtl */; };
 		184962CE1C4A42B100304991 /* peach.obj in Resources */ = {isa = PBXBuildFile; fileRef = 184962CB1C4A42B100304991 /* peach.obj */; };
 		184962CF1C4A42B100304991 /* peach.png in Resources */ = {isa = PBXBuildFile; fileRef = 184962CC1C4A42B100304991 /* peach.png */; };
@@ -165,6 +171,10 @@
 		184532A11C71C939000B8F66 /* common_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = common_disable.png; sourceTree = "<group>"; };
 		184532A61C72D8A1000B8F66 /* peach3d_ui.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peach3d_ui.png; sourceTree = "<group>"; };
 		184532A71C72D8A1000B8F66 /* peach3d_ui.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = peach3d_ui.xml; sourceTree = "<group>"; };
+		18461D8E1CA25C16001A9829 /* girl.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = girl.pmt; sourceTree = "<group>"; };
+		18461D8F1CA25C16001A9829 /* girl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = girl.png; sourceTree = "<group>"; };
+		18461D961CA25C78001A9829 /* CostumeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CostumeScene.cpp; sourceTree = "<group>"; };
+		18461D971CA25C78001A9829 /* CostumeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CostumeScene.h; sourceTree = "<group>"; };
 		184962CA1C4A42B100304991 /* peach.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.mtl; sourceTree = "<group>"; };
 		184962CB1C4A42B100304991 /* peach.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.obj; sourceTree = "<group>"; };
 		184962CC1C4A42B100304991 /* peach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peach.png; sourceTree = "<group>"; };
@@ -381,6 +391,8 @@
 				1899802619B9B7FB003FBA2D /* demoShader.vsh */,
 				184107081B6CAE94005133E2 /* exit_normal.png */,
 				1841070B1B6CBB65005133E2 /* front_normal.png */,
+				18461D8E1CA25C16001A9829 /* girl.pmt */,
+				18461D8F1CA25C16001A9829 /* girl.png */,
 				1841070C1B6CBB65005133E2 /* next_normal.png */,
 				184962CA1C4A42B100304991 /* peach.mtl */,
 				184962CB1C4A42B100304991 /* peach.obj */,
@@ -425,6 +437,8 @@
 				184106FC1B6B8E2D005133E2 /* BaseSample.h */,
 				184107041B6CAD4B005133E2 /* BaseScene.cpp */,
 				184107051B6CAD4B005133E2 /* BaseScene.h */,
+				18461D961CA25C78001A9829 /* CostumeScene.cpp */,
+				18461D971CA25C78001A9829 /* CostumeScene.h */,
 				182181831C579FBD00635EFE /* DeviceScene.cpp */,
 				182181841C579FBD00635EFE /* DeviceScene.h */,
 				187D771A1C8ECF9300F5D161 /* LightScene.cpp */,
@@ -565,6 +579,7 @@
 				1891F4F41C73777D00DDA79D /* texcube.pmt in Resources */,
 				18432DF51C6251C5007B36EC /* peach3d_1.png in Resources */,
 				184FED1B1C6302650014B2E0 /* peach3d_log.png in Resources */,
+				18461D921CA25C16001A9829 /* girl.png in Resources */,
 				184532A21C71C939000B8F66 /* common_disable.png in Resources */,
 				18432DFD1C6251C5007B36EC /* peach3d_5.png in Resources */,
 				18B4EE521CA03C53005642A5 /* peach.pmt in Resources */,
@@ -575,6 +590,7 @@
 				18B4F4791C925FC10075ED58 /* sphere.mtl in Resources */,
 				184532AA1C72D8A1000B8F66 /* peach3d_ui.xml in Resources */,
 				187CF64719C72A5900C8094C /* InfoPlist.strings in Resources */,
+				18461D901CA25C16001A9829 /* girl.pmt in Resources */,
 				185ED1C81B70E10A0012667B /* press_down.png in Resources */,
 				18A272D819E5434500145FDB /* Cube.mtl in Resources */,
 				1813BB741B78F23300023159 /* restart_normal.png in Resources */,
@@ -602,7 +618,9 @@
 				18D756011A5AA54E00635CD1 /* common_down.png in Resources */,
 				18B4F47A1C925FC10075ED58 /* sphere.mtl in Resources */,
 				185ED1C91B70E10A0012667B /* press_down.png in Resources */,
+				18461D911CA25C16001A9829 /* girl.pmt in Resources */,
 				18A272D919E5434500145FDB /* Cube.mtl in Resources */,
+				18461D931CA25C16001A9829 /* girl.png in Resources */,
 				1841070E1B6CBB65005133E2 /* front_normal.png in Resources */,
 				184962D31C4A8AD800304991 /* peach.obj in Resources */,
 				184FED1C1C6302650014B2E0 /* peach3d_log.png in Resources */,
@@ -653,6 +671,7 @@
 				188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107061B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
+				18461D981CA25C78001A9829 /* CostumeScene.cpp in Sources */,
 				18F9F4D719C5E5640023C83B /* PlatformDelegate.cpp in Sources */,
 				18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */,
 				187CF64119C72A3100C8094C /* main.m in Sources */,
@@ -671,6 +690,7 @@
 				188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107071B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
+				18461D991CA25C78001A9829 /* CostumeScene.cpp in Sources */,
 				187CF63319C7053100C8094C /* PlatformDelegate.cpp in Sources */,
 				18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */,
 				187CF60A19C7019000C8094C /* AppDelegate.mm in Sources */,
