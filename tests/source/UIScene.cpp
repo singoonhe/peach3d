@@ -64,33 +64,61 @@ void SpriteSample::init(Widget* parentWidget)
     mDesc = "create sprite with file/frame/#xxx";
     
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    auto firstPosY = screenSize.y * 3.f / 4.f;
+    auto firstSpriteY = firstPosY - 80;
     // create sprite with texture file
     Label* label1 = Label::create("texture file name", 20 * LayoutManager::getSingleton().getMinScale());
-    label1->setPosition(Vector2(screenSize.x * 0.7f / 4.0f, screenSize.y * 2.f / 3.f));
+    label1->setPosition(Vector2(screenSize.x * 0.7f / 4.0f, firstPosY));
     parentWidget->addChild(label1);
     Sprite* sprite1 = Sprite::create("peach3d_1.png");
-    sprite1->setPosition(Vector2(screenSize.x * 0.7f / 4.0f, screenSize.y / 2.0f));
+    sprite1->setPosition(Vector2(screenSize.x * 0.7f / 4.0f, firstSpriteY));
     parentWidget->addChild(sprite1);
-    
     // read frame action from file
     std::vector<TextureFrame> fileLogoList;
     Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", &fileLogoList), "Load frame file failed");
-    
     // create sprite with texture frame
     Label* label2 = Label::create("texture second frame", 20 * LayoutManager::getSingleton().getMinScale());
-    label2->setPosition(Vector2(screenSize.x / 2.f, screenSize.y * 2.f / 3.f));
+    label2->setPosition(Vector2(screenSize.x / 2.f, firstPosY));
     parentWidget->addChild(label2);
     Sprite* sprite2 = Sprite::create(fileLogoList[1]);
-    sprite2->setPosition(Vector2(screenSize.x / 2.f, screenSize.y / 2.0f));
+    sprite2->setPosition(Vector2(screenSize.x / 2.f, firstSpriteY));
     parentWidget->addChild(sprite2);
-    
     // create sprite with "#xxx" format name
     Label* label3 = Label::create("using \"#peach3d_3.png\"", 20 * LayoutManager::getSingleton().getMinScale());
-    label3->setPosition(Vector2(screenSize.x * 3.3f / 4.0f, screenSize.y * 2.f / 3.f));
+    label3->setPosition(Vector2(screenSize.x * 3.3f / 4.0f, firstPosY));
     parentWidget->addChild(label3);
     Sprite* sprite3 = Sprite::create("#peach3d_3.png");
-    sprite3->setPosition(Vector2(screenSize.x * 3.3f / 4.0f, screenSize.y / 2.0f));
+    sprite3->setPosition(Vector2(screenSize.x * 3.3f / 4.0f, firstSpriteY));
     parentWidget->addChild(sprite3);
+    
+    auto secondPosY = screenSize.y * 2 / 5.f;
+    auto secondSpriteY = secondPosY - 110;
+    // create scale9 type sprite
+    Label* label4 = Label::create("scale9 sprite with default center rect", 20 * LayoutManager::getSingleton().getMinScale());
+    label4->setPosition(Vector2(screenSize.x / 3.f, secondPosY));
+    parentWidget->addChild(label4);
+    Sprite* sprite4 = Sprite::create("peach3d_1.png");
+    sprite4->setPosition(Vector2(screenSize.x / 3.f, secondSpriteY));
+    sprite4->setScale9Enabled(true);
+    sprite4->setContentSize(Vector2(150.f));
+    parentWidget->addChild(sprite4);
+    // create change sprite scale9 type button
+    Sprite* sprite5 = Sprite::create("#peach3d_3.png");
+    sprite5->setPosition(Vector2(screenSize.x * 2.f / 3.f, secondSpriteY));
+    sprite5->setCenterRect(Rect(Vector2(0.2f), Vector2(0.6f)));
+    sprite5->setScale9Enabled(true);
+    sprite5->setContentSize(Vector2(150.f));
+    parentWidget->addChild(sprite5);
+    Button* grayButton = Button::create("press_normal.png");
+    grayButton->setPosition(Vector2(screenSize.x * 2.f / 3.f, secondPosY));
+    grayButton->setTitleText("normal");
+    grayButton->setClickedAction([grayButton, sprite5](ClickEvent, const Vector2&){
+        auto enable = sprite5->getScale9Enabled();
+        enable = !enable;
+        grayButton->setTitleText(enable ? "normal" : "scale9");
+        sprite5->setScale9Enabled(enable);
+    });
+    parentWidget->addChild(grayButton);
 }
 
 void LabelSample::init(Widget* parentWidget)

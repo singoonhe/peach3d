@@ -46,6 +46,12 @@ namespace Peach3D
     {
         // default to set alpha 1.0f for texture UI
         setAlpha(1.0f);
+        // init child sprites for scale 9 type
+        for (auto i=0; i<9; ++i) {
+            m9Child[i] = nullptr;
+        }
+        auto dStep = 1.f / 3.f;
+        mCenterRect = Rect(Vector2(dStep), Vector2(dStep));
     }
     
     void Sprite::setTextureFrame(const TextureFrame& frame)
@@ -58,6 +64,8 @@ namespace Peach3D
             if (mIsAutoResize) {
                 resetCotentSizeWithTexture();
             }
+            // update scale9 children texture rect
+            setCenterRect(mCenterRect);
         }
     }
     
@@ -65,6 +73,57 @@ namespace Peach3D
     {
         Vector2 texSize((float)mRenderFrame.tex->getWidth(), (float)mRenderFrame.tex->getHeight());
         Widget::setContentSize(texSize * mRenderFrame.rc.size);
+    }
+    
+    void Sprite::setScale9Enabled(bool enable)
+    {
+        mIsUse9Scale = enable;
+        if (mIsUse9Scale) {
+            // hide self, show children
+            setAlpha(0.f);
+            // create scale9 children widgets if enable
+            if (!m9Child[0] && mRenderFrame.tex) {
+                for (auto i=0; i<9; ++i) {
+                    m9Child[i] = Sprite::create(mRenderFrame);
+                    addChild(m9Child[i]);
+                }
+                // set default center rect
+                setCenterRect(mCenterRect);
+            }
+        }
+        else if (m9Child[0]) {
+            for (auto i=0; i<9; ++i) {
+                m9Child[i]->deleteFromParent();
+                m9Child[i] = nullptr;
+            }
+            // show self
+            setAlpha(1.f);
+        }
+        mIsRenderDirty = mIsUse9Scale;
+    }
+    
+    void Sprite::setCenterRect(const Rect& rc)
+    {
+        Peach3DAssert(rc.pos.x > 0.f && rc.pos.x < 1.f && rc.pos.y > 0.f && rc.pos.y < 1.f && rc.size.x> 0.f && rc.size.x < 1.f && rc.size.y > 0.f && rc.size.y < 1.f && (rc.pos.x + rc.size.x) < 1.f && (rc.pos.y + rc.size.y) < 1.f, "Invalid center rect, every item must be clamp (0-1)");
+        mCenterRect = rc;
+        if (mIsUse9Scale && m9Child[0]) {
+            auto rtSize = mCenterRect.pos + mCenterRect.size;
+            float xSizeV[] = {0.f, mCenterRect.pos.x, rtSize.x, 1.f};
+            float ySizeV[] = {0.f, mCenterRect.pos.y, rtSize.y, 1.f};
+            float anchorV[] = {0.f, 0.5f, 1.f};
+            for (auto i=0; i<9; ++i) {
+                auto curFrame = mRenderFrame;
+                int xIndex = i % 3;
+                int yIndex = int(i / 3);
+                auto startPos = Vector2(xSizeV[xIndex], ySizeV[yIndex]);
+                curFrame.rc.pos = curFrame.rc.pos + curFrame.rc.size * startPos;
+                auto endPos = Vector2(xSizeV[xIndex + 1], ySizeV[yIndex + 1]);
+                curFrame.rc.size = curFrame.rc.size * (endPos - startPos);
+                m9Child[i]->setTextureFrame(curFrame);
+                // set children anchor point to four corners
+                m9Child[i]->setAnchorPoint(Vector2(0.f, 0.f));
+            }
+        }
     }
     
     void Sprite::setClickEnabled(bool enabled)
@@ -109,6 +168,39 @@ namespace Peach3D
         mEventFuncMap[type] = func;
         // enable touch if disabled
         setClickEnabled(true);
+    }
+    
+    void Sprite::updateRenderingAttributes(float lastFrameTime)
+    {
+        if (mIsRenderDirty) {
+            // update content size and position ...
+            Widget::updateRenderingAttributes(lastFrameTime);
+            
+            if (mIsUse9Scale && m9Child[0]) {
+                auto texWidth = mRenderFrame.tex->getWidth() * mRenderFrame.rc.size.x;
+                auto texHeight = mRenderFrame.tex->getHeight() * mRenderFrame.rc.size.y;
+                // calc children size
+                auto rSizeV = Vector2(1.f) - (mCenterRect.pos + mCenterRect.size);
+                float xSizeV[] = {texWidth * mCenterRect.pos.x, 0.f, texWidth * rSizeV.x};
+                xSizeV[1] = mRect.size.x - xSizeV[0] - xSizeV[2];
+                float ySizeV[] = {texHeight * mCenterRect.pos.y, 0.f, texHeight * rSizeV.y};
+                ySizeV[1] = mRect.size.y - ySizeV[0] - ySizeV[2];
+                // calc children start pos
+                float xPosV[] = {0.f, xSizeV[0], mRect.size.x - xSizeV[2]};
+                float yPosV[] = {0.f, ySizeV[0], mRect.size.y - ySizeV[2]};
+                // update all children position and content
+                for (auto i=0; i<9; ++i) {
+                    int xIndex = i % 3;
+                    int yIndex = int(i / 3);
+                    m9Child[i]->setPosition(Vector2(xPosV[xIndex], yPosV[yIndex]));
+                    m9Child[i]->setContentSize(Vector2(xSizeV[xIndex], ySizeV[yIndex]));
+                }
+            }
+        }
+        else {
+            // maybe other state need update
+            Widget::updateRenderingAttributes(lastFrameTime);
+        }
     }
     
     void Sprite::updateRenderingState(const std::string& extState)

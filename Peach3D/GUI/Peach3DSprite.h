@@ -43,8 +43,15 @@ namespace Peach3D
         /** Default widget click event not enabled. */
         virtual void setClickEnabled(bool enabled);
         bool getClickEnabled() {return mIsEnabled;}
+        /** Set is run scale action when touch down. */
         void setClickZoomed(bool zoomed) {mIsClickZoomed = zoomed;}
         bool getClickZoomed() {return mIsClickZoomed;}
+        /** Set is use scale9 tyle. */
+        void setScale9Enabled(bool enable);
+        bool getScale9Enabled() { return mIsUse9Scale; }
+        /** Set center sprite relative rect for scale9, default is Rect(1/3.f, 1/3.f, 1/3.f, 1/3.f). */
+        void setCenterRect(const Rect& rc);
+        const Rect& getCenterRect() { return mCenterRect; }
         /** Set clicked event call func. */
         virtual void setClickedAction(ControlListenerFunction func, ClickEvent type = ClickEvent::eClicked);
         
@@ -57,19 +64,22 @@ namespace Peach3D
         Sprite();
         virtual ~Sprite() {}
         
+        /** Update rendering attributes, about world rect/rotate/scale... */
+        virtual void updateRenderingAttributes(float lastFrameTime);
         /** Update rendering state, preset program and calculate hash code. */
         virtual void updateRenderingState(const std::string& extState="");
         
     protected:
-        bool        mIsUse9Scale;   // is need scale 9 type
-        bool        mIsGrayscale;   // is need show grayscale
-        bool        mIsAutoResize;  // is auto resize to texture size
-        
+        bool            mIsGrayscale;   // is need show grayscale
+        bool            mIsAutoResize;  // is auto resize to texture size
         TextureFrame    mRenderFrame;   // render frame, include texture and coord
+        bool            mIsUse9Scale;   // is need scale9 type
+        Rect            mCenterRect;    // center sprite rect for scale9
+        Sprite          *m9Child[9];    // child sprites when using scale9
         
-        bool        mIsEnabled;     // is event enabled
-        bool        mIsClickZoomed; // is auto zoom when clicked down
-        bool        mCurrentZoomed; // current widget is zoomed
+        bool            mIsEnabled;     // is event enabled
+        bool            mIsClickZoomed; // is auto zoom when clicked down
+        bool            mCurrentZoomed; // current widget is zoomed
         std::map<ClickEvent, ControlListenerFunction> mEventFuncMap;
     };
 }
