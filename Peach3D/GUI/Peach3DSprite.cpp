@@ -86,6 +86,8 @@ namespace Peach3D
                 for (auto i=0; i<9; ++i) {
                     m9Child[i] = Sprite::create(mRenderFrame);
                     addChild(m9Child[i]);
+                    // make children zorder low enough
+                    m9Child[i]->setLocalZOrder(std::numeric_limits<int>::min() + 100);
                 }
                 // set default center rect
                 setCenterRect(mCenterRect);

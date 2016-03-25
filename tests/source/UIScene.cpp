@@ -113,7 +113,7 @@ void SpriteSample::init(Widget* parentWidget)
     grayButton->setPosition(Vector2(screenSize.x * 2.f / 3.f, secondPosY));
     grayButton->setTitleText("normal");
     grayButton->setClickedAction([grayButton, sprite5](ClickEvent, const Vector2&){
-        auto enable = sprite5->getScale9Enabled();
+        auto enable = sprite5->isScale9Enabled();
         enable = !enable;
         grayButton->setTitleText(enable ? "normal" : "scale9");
         sprite5->setScale9Enabled(enable);
@@ -164,29 +164,28 @@ void ButtonSample::init(Widget* parentWidget)
     mDesc = "Whole image button, button auto gray, title button and clicked event";
     // whole button
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    const float firstRowY = screenSize.y * 2.f / 3.0f;
     Button* wholeButton = Button::create("press_normal.png", "press_down.png", "press_highlight.png");
-    wholeButton->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 2.0f));
+    wholeButton->setPosition(Vector2(screenSize.x / 4.0f, firstRowY));
     parentWidget->addChild(wholeButton);
-    
     // disable button
     Button* grayButton = Button::create("press_normal.png");
-    grayButton->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 2.0f));
+    grayButton->setPosition(Vector2(screenSize.x / 2.0f, firstRowY));
     grayButton->setTitleText("change disable");
     grayButton->setClickedAction([grayButton](ClickEvent, const Vector2&){
         grayButton->setClickEnabled(false);
         grayButton->setTitleText("disable now");
     });
     parentWidget->addChild(grayButton);
-    
     // title button action
     mTitleButton = Button::create("press_normal.png");
     mTitleButton->setTitleText("show label");
-    mTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, screenSize.y / 2.0f));
+    mTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, firstRowY));
     mTitleButton->setClickedAction([&](ClickEvent, const Vector2&){
         // create notice label
         if (!mEventLabel) {
             mEventLabel = Label::create("Button click event!!!", 30 * LayoutManager::getSingleton().getMinScale());
-            mEventLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y / 4.0f));
+            mEventLabel->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, firstRowY + 80.f));
             mEventLabel->setColor(Color3Yellow);
             mParentWidget->addChild(mEventLabel);
             mTitleButton->setTitleText("hide label");
@@ -200,23 +199,36 @@ void ButtonSample::init(Widget* parentWidget)
     parentWidget->addChild(mTitleButton);
     
     // create button from frame
+    const float secondRowY = screenSize.y / 3.0f;
     std::vector<TextureFrame> frameList;
     Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_ui.xml", &frameList), "Load frame file failed");
     Button* frameButton = Button::create("#common_normal.png", "#common_highlight.png", "#common_down.png", "#common_disable.png");
-    frameButton->setPosition(Vector2(screenSize.x / 4.0f, screenSize.y / 4.0f));
+    frameButton->setPosition(Vector2(screenSize.x / 4.0f, secondRowY));
     frameButton->setTitleText("frame button");
     frameButton->setClickedAction([frameButton](ClickEvent, const Vector2&){
         frameButton->setClickEnabled(false);
     });
     parentWidget->addChild(frameButton);
-    
     // button title auto scale
-    Button* scaleTitleButton = Button::create("press_normal.png");
+    Button* scaleTitleButton = Button::create("common_normal.png");
     scaleTitleButton->setScale(2.0f);
     scaleTitleButton->setTitleText("scale twice");
-    scaleTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, screenSize.y / 4.0f));
+    scaleTitleButton->setPosition(Vector2(screenSize.x / 2.0f, secondRowY));
     scaleTitleButton->setClickEnabled(false);
     parentWidget->addChild(scaleTitleButton);
+    // button title auto scale using scale9 type
+    Button* scale9TitleButton = Button::create("common_normal.png");
+    scale9TitleButton->setContentSize(scaleTitleButton->getContentSize() * 2.f);
+    scale9TitleButton->setTitleText("content twice");
+    scale9TitleButton->setScale9Enabled(true);
+    scale9TitleButton->setPosition(Vector2(screenSize.x * 5.0f / 6.0f, secondRowY));
+    scale9TitleButton->setClickedAction([scale9TitleButton](ClickEvent, const Vector2&){
+        auto enable = scale9TitleButton->isScale9Enabled();
+        enable = !enable;
+        scale9TitleButton->setScale9Enabled(enable);
+        scale9TitleButton->setTitleText(enable ? "content twice" : "scale9 twice");
+    });
+    parentWidget->addChild(scale9TitleButton);
 }
 
 void LayoutSample::init(Widget* parentWidget)

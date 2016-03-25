@@ -48,7 +48,7 @@ namespace Peach3D
         bool getClickZoomed() {return mIsClickZoomed;}
         /** Set is use scale9 tyle. */
         void setScale9Enabled(bool enable);
-        bool getScale9Enabled() { return mIsUse9Scale; }
+        bool isScale9Enabled() { return mIsUse9Scale; }
         /** Set center sprite relative rect for scale9, default is Rect(1/3.f, 1/3.f, 1/3.f, 1/3.f). */
         void setCenterRect(const Rect& rc);
         const Rect& getCenterRect() { return mCenterRect; }
