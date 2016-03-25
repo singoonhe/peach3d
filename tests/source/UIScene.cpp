@@ -214,7 +214,6 @@ void ButtonSample::init(Widget* parentWidget)
     scaleTitleButton->setScale(2.0f);
     scaleTitleButton->setTitleText("scale twice");
     scaleTitleButton->setPosition(Vector2(screenSize.x / 2.0f, secondRowY));
-    scaleTitleButton->setClickEnabled(false);
     parentWidget->addChild(scaleTitleButton);
     // button title auto scale using scale9 type
     Button* scale9TitleButton = Button::create("common_normal.png");

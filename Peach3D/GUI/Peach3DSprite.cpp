@@ -77,7 +77,11 @@ namespace Peach3D
     
     void Sprite::setScale9Enabled(bool enable)
     {
+        if (mIsUse9Scale == enable)
+            return ;
+        
         mIsUse9Scale = enable;
+        mIsRenderDirty = true;
         if (mIsUse9Scale) {
             // hide self, show children
             setAlpha(0.f);
@@ -101,7 +105,6 @@ namespace Peach3D
             // show self
             setAlpha(1.f);
         }
-        mIsRenderDirty = mIsUse9Scale;
     }
     
     void Sprite::setCenterRect(const Rect& rc)
@@ -181,6 +184,11 @@ namespace Peach3D
             if (mIsUse9Scale && m9Child[0]) {
                 auto texWidth = mRenderFrame.tex->getWidth() * mRenderFrame.rc.size.x;
                 auto texHeight = mRenderFrame.tex->getHeight() * mRenderFrame.rc.size.y;
+                // ratio scale if content size is too small
+                if (texWidth > mRect.size.x || texHeight > mRect.size.y) {
+                    texWidth = mRect.size.x;
+                    texHeight = mRect.size.y;
+                }
                 // calc children size
                 auto rSizeV = Vector2(1.f) - (mCenterRect.pos + mCenterRect.size);
                 float xSizeV[] = {texWidth * mCenterRect.pos.x, 0.f, texWidth * rSizeV.x};
