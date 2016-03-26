@@ -293,6 +293,7 @@ void MultiLightsSample::init(Widget* parentWidget)
     mSpotLight->setColor(Color3(0.f, 0.f, 0.5f));
     // only set title here
     mTitle = "Multi Lights";
+    mDesc = "Red direction light, green dot light and blue spot light";
     
     // create spheres
     auto sphereMesh = ResourceManager::getSingleton().addMesh("sphere.pmt");

@@ -294,23 +294,17 @@ namespace Peach3D
     }
      */
     
-    void SceneManager::render(float lastFrameTime)
+    void SceneManager::renderOncePass(float lastFrameTime, bool isMain)
     {
-        // update camera
-        mActiveCamera->prepareForRender(lastFrameTime);
-        
-        // clear render and picking scene node list
+        // clear render scene node list
         mRenderNodeMap.clear();
         mRenderOBBList.clear();
-        mPickSceneNodeList.clear();
         // update root node and add children to render list
         mRootSceneNode->prepareForRender(lastFrameTime);
         mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
-            this->addSceneNodeToCacheList(childNode, lastFrameTime);
+            this->addSceneNodeToCacheList(childNode, lastFrameTime, isMain);
         });
         
-        IRender* mainRender = IRender::getSingletonPtr();
-        mainRender->prepareForObjectRender();
         // draw all scene node
         RenderNode* lastRenderNode = nullptr;
         std::vector<RenderNode*> curNodeList;
@@ -329,11 +323,24 @@ namespace Peach3D
             // render last objects
             lastRenderNode->getObject()->render(curNodeList);
         }
-        
         // draw all OBB
         if (mRenderOBBList.size() > 0) {
             mOBBObject->render(mRenderOBBList);
         }
+    }
+    
+    void SceneManager::render(float lastFrameTime)
+    {
+        // clear picking scene node list once, only add in main pass
+        mPickSceneNodeList.clear();
+        for (auto camera : mCameraList) {
+            camera->prepareForRender(lastFrameTime);
+        }
+        // we can update global uniforms here, OBB programe had generate
+        IRender* mainRender = IRender::getSingletonPtr();
+        mainRender->prepareForObjectRender();
+        // draw the main pass, cache clicked node
+        renderOncePass(lastFrameTime, true);
         
         /*
         // draw rays
@@ -388,7 +395,7 @@ namespace Peach3D
         }
     }
     
-    void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime)
+    void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime, bool isMain)
     {
         SceneNode* rNode = static_cast<SceneNode*>(node);
         // prepare render first for update "NeedRender"
@@ -400,10 +407,12 @@ namespace Peach3D
             });
         }
         
-        // cache pick node
-        bool pickEnabled = rNode->isPickingEnabled();
-        if (pickEnabled && (node->isNeedRender() || rNode->isPickingAlways())) {
-            mPickSceneNodeList.push_back(rNode);
+        // cache pick node in main pass, just update once for each frame
+        if (isMain) {
+            bool pickEnabled = rNode->isPickingEnabled();
+            if (pickEnabled && (node->isNeedRender() || rNode->isPickingAlways())) {
+                mPickSceneNodeList.push_back(rNode);
+            }
         }
         
         // cache OBB node
@@ -417,7 +426,7 @@ namespace Peach3D
         
         node->tranverseChildNode([&](size_t, Node* child) {
             // add all children scene node
-            this->addSceneNodeToCacheList(child, lastFrameTime);
+            this->addSceneNodeToCacheList(child, lastFrameTime, isMain);
         });
     }
     

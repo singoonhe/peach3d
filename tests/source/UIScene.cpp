@@ -213,14 +213,14 @@ void ButtonSample::init(Widget* parentWidget)
     Button* scaleTitleButton = Button::create("common_normal.png");
     scaleTitleButton->setScale(2.0f);
     scaleTitleButton->setTitleText("scale twice");
-    scaleTitleButton->setPosition(Vector2(screenSize.x / 2.0f, secondRowY));
+    scaleTitleButton->setPosition(Vector2(screenSize.x * 2.f / 3.0f, secondRowY + 60));
     parentWidget->addChild(scaleTitleButton);
     // button title auto scale using scale9 type
     Button* scale9TitleButton = Button::create("common_normal.png");
     scale9TitleButton->setContentSize(scaleTitleButton->getContentSize() * 2.f);
     scale9TitleButton->setTitleText("content twice");
     scale9TitleButton->setScale9Enabled(true);
-    scale9TitleButton->setPosition(Vector2(screenSize.x * 5.0f / 6.0f, secondRowY));
+    scale9TitleButton->setPosition(Vector2(screenSize.x * 2.f / 3.0f, secondRowY - 60));
     scale9TitleButton->setClickedAction([scale9TitleButton](ClickEvent, const Vector2&){
         auto enable = scale9TitleButton->isScale9Enabled();
         enable = !enable;

@@ -17,7 +17,7 @@ namespace Peach3D
     void ActionImplement::prepareForRender(float lastFrameTime)
     {
         // update action list
-        if (mActionList.size() > 0) {
+        if (mActionList.size() > 0 && lastFrameTime > FLT_EPSILON) {
             IAction* firstAction = mActionList.front();
             firstAction->update(this, lastFrameTime);
             

@@ -72,8 +72,12 @@ namespace Peach3D
         virtual ~SceneManager();
         //! init
         void init();
-        //! render
+        /** Render one frame, executing all pass. */
         virtual void render(float lastFrameTime);
+        /** Render once pass, update-draw. 
+         * @params isMain main pass will cache clicked node list.
+         */
+        virtual void renderOncePass(float lastFrameTime, bool isMain = false);
         
         /** Create draw stats node. */
         void createDrawStatsNode();
@@ -81,8 +85,10 @@ namespace Peach3D
         void createPresetObjects();
         /** Update SceneNode and children. */
         void updateSceneNodeLighting(Node* sNode);
-        /** Add render and picking scene node to cache list, also prepare for render. */
-        void addSceneNodeToCacheList(Node* node, float lastFrameTime);
+        /** Add render and picking scene node to cache list, also prepare for render.
+         * @params isMain main pass will cache clicked node list.
+         */
+        void addSceneNodeToCacheList(Node* node, float lastFrameTime, bool isMain);
         /** Add render widget to cache list, also prepare for render. */
         void addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime);
 
