@@ -96,6 +96,12 @@ namespace Peach3D
         return isNewSuccess;
     }
     
+    bool TextureGL::usingAsRenderTexture(int width, int height)
+    {
+        bool isSuccess = ITexture::usingAsRenderTexture(width, height);
+        return isSuccess;
+    }
+    
     void TextureGL::setFilter(TextureFilter filter)
     {
         if (mTextureId && filter != mTexFilter)

@@ -35,6 +35,10 @@ namespace Peach3D
         ITexture* addTexture(const char* file);
         /** Create texture from encode memory, auto read file format and compress state */
         ITexture* createTexture(const char* name, void* data, ulong size);
+        /** Create texture from decompressed data */
+        ITexture* createTexture(void* data, uint size, int width, int height, TextureFormat format);
+        /** Create RTT(render to texture) texture, texture will auto release if not used. */
+        ITexture* createRenderTexture(int width, int height);
         /**
          * Create Cube texture from six file, return texture if file loaded.
          * Texture name must be set manually.
@@ -42,10 +46,10 @@ namespace Peach3D
         ITexture* addCubeTexture(const char* name, const char* file[6]);
         /** Create texture from six chunk encode memory, auto read file format and compress state */
         ITexture* createCubeTexture(const char* name, void* dataList[6], ulong sizeList[6]);
-        /** Create texture from decompressed data */
-        ITexture* createTexture(void* data, uint size, int width, int height, TextureFormat format);
-        /** Delete texture */
+        /** Delete texture. */
         void deleteTexture(ITexture* tex);
+        /** Return current all RTT(render to texture) textures, used in rendering loop. */
+        const std::vector<ITexture*>& getRenderTextureList() { return mRTTList; }
         
         /** Create texture frames from file, return frame list in param.
          * Current support TexturePacker general xml export format.
@@ -123,6 +127,7 @@ namespace Peach3D
         std::map<std::string, Mesh*>        mMeshMap;       // mesh list
         std::map<uint, IProgram*>           mProgramMap;    // program list
         std::map<std::string, ITexture*>    mTextureMap;    // texture list
+        std::vector<ITexture*>              mRTTList;       // RTT texture list, have no name
         std::map<std::string, std::vector<TextureFrame>> mTexFrameMap;  // texture frame cache list
         
         static std::vector<VertexAttrInfo> mVertexAttrList; // all vertex attr info, same in all objects

@@ -60,7 +60,7 @@ namespace Peach3D
          \return return the new object pointer, return nullptr if create failed. */
         virtual IObject* createObject(const char* objectName);
         
-        //! Create texture with name
+        /** Create texture with name. */
         virtual ITexture* createTexture(const char* name);
         
         //! Create render program with name. Program include vertex and pixel shader for render.

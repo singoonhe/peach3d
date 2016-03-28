@@ -11,6 +11,7 @@
 #include "Peach3DLabel.h"
 #include "Peach3DVector4.h"
 #include "Peach3DUtils.h"
+#include "Peach3DResourceManager.h"
 
 namespace Peach3D
 {
@@ -339,8 +340,24 @@ namespace Peach3D
         // we can update global uniforms here, OBB programe had generate
         IRender* mainRender = IRender::getSingletonPtr();
         mainRender->prepareForObjectRender();
+        // draw render target
+        std::vector<ITexture*> rttList = ResourceManager::getSingleton().getRenderTextureList();
+        bool isNodeUpdate = false;
+        for (auto tex : rttList) {
+            auto beforeFunc = tex->getBeforeRenderingFunc();
+            if (beforeFunc) {
+                beforeFunc();
+            }
+            renderOncePass(isNodeUpdate ? 0.f : lastFrameTime);
+            auto afterFunc = tex->getAfterRenderingFunc();
+            if (afterFunc) {
+                afterFunc();
+            }
+            // make node only update action once
+            isNodeUpdate = true;
+        }
         // draw the main pass, cache clicked node
-        renderOncePass(lastFrameTime, true);
+        renderOncePass(isNodeUpdate ? 0.f : lastFrameTime, true);
         
         /*
         // draw rays

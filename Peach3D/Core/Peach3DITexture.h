@@ -25,8 +25,10 @@ namespace Peach3D
     // define texture type
     enum class PEACH3D_DLL TextureType
     {
+        eUnknow,    // default texture type
         e2D,        // 2D texture
         eCube,      // cube texture
+        eRTT,       // render to texture
     };
 
     // define texture format supported
@@ -62,27 +64,28 @@ namespace Peach3D
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
         virtual bool setTextureData(void* dataList[6], uint sizeList[6], TextureDataStatus status = TextureDataStatus::eDecoded);
+        /** Create RTT texture(render to texture). */
+        virtual bool usingAsRenderTexture(int width, int height) { return mTexType != TextureType::eUnknow; }
         
-        //! set texture format
         virtual void setFormat(TextureFormat format) { mTexFormat = format; }
-        //! get texture format
         TextureFormat getFormat() { return mTexFormat; }
-        //! set texture width
         virtual void setWidth(uint width) { mWidth = width; }
-        //! get texture width
         uint getWidth() { return mWidth; }
-        //! set texture height
         virtual void setHeight(uint height) { mHeight = height; }
-        //! get texture height
         uint getHeight() { return mHeight; }
-        //! get texture name
-        const std::string& getName()const {return mTexName;}
-        
-        //! set texture filter
         virtual void setFilter(TextureFilter filter) { mTexFilter = filter; }
-        //! set wrap texture
+        TextureFilter getFilter() { return mTexFilter; }
         virtual void setWrap(TextureWrap wrap) { mTexWrap = wrap; }
-        
+        TextureWrap getWrap() { return mTexWrap; }
+        /* Return texture file name or system name. */
+        const std::string& getName()const { return mTexName; }
+        TextureType getType() { return mTexType; }
+        /* Return texture file name or system name. */
+        void setBeforeRenderingFunc(const std::function<void()>& func) { mBeforeFunc = func; }
+        const std::function<void()>& getBeforeRenderingFunc() { return mBeforeFunc; }
+        void setAfterRenderingFunc(const std::function<void()>& func) { mAfterFunc = func; }
+        const std::function<void()>& getAfterRenderingFunc() { return mAfterFunc; }
+
     protected:
         ITexture(const char* name);
         virtual ~ITexture() {}
@@ -95,6 +98,10 @@ namespace Peach3D
         TextureFilter   mTexFilter; // texture filter
         TextureWrap     mTexWrap;   // texture wrap
         TextureType     mTexType;   // texture type
+        
+        bool            mIsActived; // is texture actived, used for RTT
+        std::function<void()>   mBeforeFunc;// render before function
+        std::function<void()>   mAfterFunc; // render after function
         
         friend class   IRender;
     };

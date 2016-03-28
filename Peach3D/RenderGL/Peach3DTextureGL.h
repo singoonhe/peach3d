@@ -29,6 +29,8 @@ namespace Peach3D
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
         virtual bool setTextureData(void* dataList[6], uint sizeList[6], TextureDataStatus status = TextureDataStatus::eDecoded);
+        /** Create RTT texture(render to texture). */
+        virtual bool usingAsRenderTexture(int width, int height);
         
         //! set texture filter
         virtual void setFilter(TextureFilter filter);

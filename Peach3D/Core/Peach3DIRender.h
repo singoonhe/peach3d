@@ -56,7 +56,7 @@ namespace Peach3D
         //! delete object
         virtual void deleteObject(IObject* object) { delete object; }
         
-        //! create texture with data
+        /** Create normal texture with name. */
         virtual ITexture* createTexture(const char* name) = 0;
         //! delete texture
         virtual void deleteTexture(ITexture* tex) { delete tex; }

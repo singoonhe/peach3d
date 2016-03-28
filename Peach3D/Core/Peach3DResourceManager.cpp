@@ -50,12 +50,19 @@ namespace Peach3D
         for (auto iter=mTextureMap.begin(); iter!=mTextureMap.end(); iter++) {
             render->deleteTexture(iter->second);
         }
+        mTextureMap.clear();
+        for (auto rtt : mRTTList) {
+            render->deleteTexture(rtt);
+        }
+        mRTTList.clear();
         for (auto iter=mMeshMap.begin(); iter!=mMeshMap.end(); iter++) {
             delete iter->second;
         }
+        mMeshMap.clear();
         for (auto iter=mProgramMap.begin(); iter!=mProgramMap.end(); iter++) {
             render->deleteProgram(iter->second);
         }
+        mProgramMap.clear();
         delete mPresetShader;
     }
     
@@ -353,6 +360,17 @@ namespace Peach3D
             IRender::getSingletonPtr()->deleteTexture(texture);
             texture = nullptr;
         }
+        return texture;
+    }
+    
+    ITexture* ResourceManager::createRenderTexture(int width, int height)
+    {
+        char pName[100] = { 0 };
+        static uint rttAutoCount = 0;
+        sprintf(pName, "pd_RTexture%d", rttAutoCount++);
+        ITexture *texture = IRender::getSingletonPtr()->createTexture(pName);
+        texture->usingAsRenderTexture(width, height);
+        mRTTList.push_back(texture);
         return texture;
     }
     
