@@ -100,7 +100,7 @@ namespace Peach3D
         glLineWidth(newWidth);
     }
     
-    void RenderGL::prepareForRender()
+    void RenderGL::prepareForMainRender()
     {
         // is need clean stencil
         static bool isStencilEnabled = (IPlatform::getSingleton().getCreationParams().sBits > 0);

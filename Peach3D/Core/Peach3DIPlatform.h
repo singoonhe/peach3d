@@ -89,7 +89,7 @@ namespace Peach3D
 
         //! base platform will be initialized with params.
         /** 
-         * @params the params that defined above this file.
+         * @params params the params that defined above this file.
          * @return the window of the render frame displayed.
          */
         virtual bool initWithParams(const PlatformCreationParams &params);

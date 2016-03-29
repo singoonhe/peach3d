@@ -344,20 +344,18 @@ namespace Peach3D
         std::vector<ITexture*> rttList = ResourceManager::getSingleton().getRenderTextureList();
         bool isNodeUpdate = false;
         for (auto tex : rttList) {
-            auto beforeFunc = tex->getBeforeRenderingFunc();
-            if (beforeFunc) {
-                beforeFunc();
-            }
+            tex->beforeRendering();
             renderOncePass(isNodeUpdate ? 0.f : lastFrameTime);
-            auto afterFunc = tex->getAfterRenderingFunc();
-            if (afterFunc) {
-                afterFunc();
-            }
+            tex->afterRendering();
             // make node only update action once
             isNodeUpdate = true;
         }
+        // clean frame before render
+        mainRender->prepareForMainRender();
         // draw the main pass, cache clicked node
         renderOncePass(isNodeUpdate ? 0.f : lastFrameTime, true);
+        // present after draw over
+        mainRender->finishForMainRender();
         
         /*
         // draw rays

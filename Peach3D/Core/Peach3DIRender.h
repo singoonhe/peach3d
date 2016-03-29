@@ -30,17 +30,17 @@ namespace Peach3D
         /** Return render video card name. */
         const std::string& getVideoCard() { return mVideoCard; }
         
-        // clear old frame before render
-        virtual void prepareForRender() = 0;
-        // open depth test...
+        /** Open depth test... */
         virtual void prepareForObjectRender() = 0;
-        // close depth test...
+        /** Close depth test... */
         virtual void prepareForWidgetRender() = 0;
+        /** Clear old frame before render. */
+        virtual void prepareForMainRender() = 0;
         /**
          * Present view after render for DX11.
          * OpenGL have do nothing after render, buffer will swap in PlatformXXX.
          */
-        virtual void finishForRender() {}
+        virtual void finishForMainRender() {}
 
         virtual void setRenderClearColor(const Color4& newColor) { mRenderClearColor = newColor;}
         Color4 getRenderClearColor()const { return mRenderClearColor; }

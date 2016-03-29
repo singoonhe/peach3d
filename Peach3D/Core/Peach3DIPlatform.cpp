@@ -165,11 +165,7 @@ namespace Peach3D
             // clean draw count and triangle count
             mDrawCount = 0;
             mTriangleCount = 0;
-            // clean frame before render
-            mRender->prepareForRender();
             mSceneManager->render(lastFrameTime);
-            // present after draw over
-            mRender->finishForRender();
         }
     }
     

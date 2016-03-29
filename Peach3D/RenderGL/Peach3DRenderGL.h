@@ -29,12 +29,12 @@ namespace Peach3D
         ~RenderGL();
         // init render, set view port
         virtual bool initRender(const Vector2& size);
-        // clear old frame before render
-        virtual void prepareForRender();
-        // open depth test...
+        /** Open depth test... */
         virtual void prepareForObjectRender();
-        // close depth test...
+        /** Close depth test... */
         virtual void prepareForWidgetRender();
+        /** Clear old frame before render. */
+        virtual void prepareForMainRender();
         //! return is support type gl extersion
         bool isTypeExtersionSupport(GLExtensionType type)
         {

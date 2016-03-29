@@ -39,6 +39,7 @@ namespace Peach3D
         eA8I8,      // texture include 8 bits gray and 8 bits alpha
         eRGB8,      // R8G8B8 texture
         eRGBA8,     // R8G8B8A8 texture
+        eDepthFloat, // depth component float format
     };
     
     // define texture filter
@@ -64,8 +65,10 @@ namespace Peach3D
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
         virtual bool setTextureData(void* dataList[6], uint sizeList[6], TextureDataStatus status = TextureDataStatus::eDecoded);
-        /** Create RTT texture(render to texture). */
-        virtual bool usingAsRenderTexture(int width, int height) { return mTexType != TextureType::eUnknow; }
+        /** Create RTT texture(render to texture).
+         * @params isDepth if true, draw depth data to texture.
+         */
+        virtual bool usingAsRenderTexture(int width, int height, bool isDepth = false) { return mTexType != TextureType::eUnknow; }
         
         virtual void setFormat(TextureFormat format) { mTexFormat = format; }
         TextureFormat getFormat() { return mTexFormat; }
@@ -82,9 +85,10 @@ namespace Peach3D
         TextureType getType() { return mTexType; }
         /* Return texture file name or system name. */
         void setBeforeRenderingFunc(const std::function<void()>& func) { mBeforeFunc = func; }
-        const std::function<void()>& getBeforeRenderingFunc() { return mBeforeFunc; }
         void setAfterRenderingFunc(const std::function<void()>& func) { mAfterFunc = func; }
-        const std::function<void()>& getAfterRenderingFunc() { return mAfterFunc; }
+        /* SceneManager rendering called function. */
+        virtual void beforeRendering() { if (mBeforeFunc) mBeforeFunc();}
+        virtual void afterRendering() { if (mAfterFunc) mAfterFunc();}
 
     protected:
         ITexture(const char* name);

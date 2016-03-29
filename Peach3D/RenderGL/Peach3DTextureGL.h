@@ -29,18 +29,23 @@ namespace Peach3D
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
         virtual bool setTextureData(void* dataList[6], uint sizeList[6], TextureDataStatus status = TextureDataStatus::eDecoded);
-        /** Create RTT texture(render to texture). */
-        virtual bool usingAsRenderTexture(int width, int height);
+        /** Create RTT texture(render to texture).
+         * @params isDepth if true, draw depth data to texture.
+         */
+        virtual bool usingAsRenderTexture(int width, int height, bool isDepth = false);
         
-        //! set texture filter
+        /* Set texture filter. */
         virtual void setFilter(TextureFilter filter);
-        //! set texture wrap
+        /* Set texture wrap. */
         virtual void setWrap(TextureWrap wrap);
-        //! get GL texture id
+        /* Change GL state before rendering to texture. */
+        virtual void beforeRendering();
+        /* Restore GL state after rendering to texture. */
+        virtual void afterRendering();
         GLuint getGLTextureId() { return mTextureId; }
         
     protected:
-        TextureGL(const char* name) : ITexture(name), mTextureId(0) {}
+        TextureGL(const char* name) : ITexture(name), mTextureId(0), mFrameBuffer(0), mIsDepthFrame(false) {}
         ~TextureGL();
         //! fill GL the texture format map
         static void fillGLTextureFormatMap();
@@ -52,6 +57,8 @@ namespace Peach3D
         
     private:
         GLuint      mTextureId;
+        GLuint      mFrameBuffer;   // frame buffer for render texture
+        bool        mIsDepthFrame;  // is current frame buffer bind depth
         
         static std::map<TextureFormat, TextureGLFormatInfo> mGLTextureFormatMap;
         friend class RenderGL;
