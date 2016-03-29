@@ -339,12 +339,13 @@ namespace Peach3D
         }
         // we can update global uniforms here, OBB programe had generate
         IRender* mainRender = IRender::getSingletonPtr();
-        mainRender->prepareForObjectRender();
         // draw render target
         std::vector<ITexture*> rttList = ResourceManager::getSingleton().getRenderTextureList();
         bool isNodeUpdate = false;
         for (auto tex : rttList) {
             tex->beforeRendering();
+            // reupdate global uniforms for GL3, befor rendering may modify camera
+            mainRender->prepareForObjectRender();
             renderOncePass(isNodeUpdate ? 0.f : lastFrameTime);
             tex->afterRendering();
             // make node only update action once
@@ -352,6 +353,8 @@ namespace Peach3D
         }
         // clean frame before render
         mainRender->prepareForMainRender();
+        // reupdate global uniforms for GL3
+        mainRender->prepareForObjectRender();
         // draw the main pass, cache clicked node
         renderOncePass(isNodeUpdate ? 0.f : lastFrameTime, true);
         // present after draw over
