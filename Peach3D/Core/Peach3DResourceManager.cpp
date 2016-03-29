@@ -363,13 +363,13 @@ namespace Peach3D
         return texture;
     }
     
-    ITexture* ResourceManager::createRenderTexture(int width, int height)
+    ITexture* ResourceManager::createRenderTexture(int width, int height, bool isDepth)
     {
         char pName[100] = { 0 };
         static uint rttAutoCount = 0;
         sprintf(pName, "pd_RTexture%d", rttAutoCount++);
         ITexture *texture = IRender::getSingletonPtr()->createTexture(pName);
-        texture->usingAsRenderTexture(width, height);
+        texture->usingAsRenderTexture(width, height, isDepth);
         mRTTList.push_back(texture);
         return texture;
     }

@@ -27,6 +27,7 @@ LOCAL_SRC_FILES := main.cpp \
 ../../source/LightScene.cpp \
 ../../source/UIScene.cpp \
 ../../source/ActionScene.cpp \
+../../source/RTTShadowScene.cpp \
 ../../source/MeshScene.cpp
 
 LOCAL_LDLIBS    := -llog -landroid

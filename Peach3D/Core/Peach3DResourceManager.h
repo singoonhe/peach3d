@@ -37,8 +37,10 @@ namespace Peach3D
         ITexture* createTexture(const char* name, void* data, ulong size);
         /** Create texture from decompressed data */
         ITexture* createTexture(void* data, uint size, int width, int height, TextureFormat format);
-        /** Create RTT(render to texture) texture, texture will auto release if not used. */
-        ITexture* createRenderTexture(int width, int height);
+        /** Create RTT(render to texture) texture, texture will auto release if not used.
+         * @params isDepth Bind depth buffer if true, or bind colors.
+         */
+        ITexture* createRenderTexture(int width, int height, bool isDepth = false);
         /**
          * Create Cube texture from six file, return texture if file loaded.
          * Texture name must be set manually.

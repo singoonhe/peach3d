@@ -43,6 +43,8 @@
 		18461D931CA25C16001A9829 /* girl.png in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8F1CA25C16001A9829 /* girl.png */; };
 		18461D981CA25C78001A9829 /* CostumeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* CostumeScene.cpp */; };
 		18461D991CA25C78001A9829 /* CostumeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* CostumeScene.cpp */; };
+		18461DAA1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */; };
+		18461DAB1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */; };
 		184962CD1C4A42B100304991 /* peach.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 184962CA1C4A42B100304991 /* peach.mtl */; };
 		184962CE1C4A42B100304991 /* peach.obj in Resources */ = {isa = PBXBuildFile; fileRef = 184962CB1C4A42B100304991 /* peach.obj */; };
 		184962CF1C4A42B100304991 /* peach.png in Resources */ = {isa = PBXBuildFile; fileRef = 184962CC1C4A42B100304991 /* peach.png */; };
@@ -175,6 +177,8 @@
 		18461D8F1CA25C16001A9829 /* girl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = girl.png; sourceTree = "<group>"; };
 		18461D961CA25C78001A9829 /* CostumeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CostumeScene.cpp; sourceTree = "<group>"; };
 		18461D971CA25C78001A9829 /* CostumeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CostumeScene.h; sourceTree = "<group>"; };
+		18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RTTShadowScene.cpp; sourceTree = "<group>"; };
+		18461DA91CAA68F6001A9829 /* RTTShadowScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTTShadowScene.h; sourceTree = "<group>"; };
 		184962CA1C4A42B100304991 /* peach.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.mtl; sourceTree = "<group>"; };
 		184962CB1C4A42B100304991 /* peach.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.obj; sourceTree = "<group>"; };
 		184962CC1C4A42B100304991 /* peach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peach.png; sourceTree = "<group>"; };
@@ -447,6 +451,8 @@
 				184C3BBF1C3AB6E20073B598 /* MeshScene.h */,
 				18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */,
 				18F9F4D619C5E5640023C83B /* PlatformDelegate.h */,
+				18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */,
+				18461DA91CAA68F6001A9829 /* RTTShadowScene.h */,
 				188637F519D02BED00BD6FE3 /* TestScene.cpp */,
 				188637F619D02BED00BD6FE3 /* TestScene.h */,
 				18BE16E01C4933F5000592A4 /* TouchScene.cpp */,
@@ -674,6 +680,7 @@
 				18461D981CA25C78001A9829 /* CostumeScene.cpp in Sources */,
 				18F9F4D719C5E5640023C83B /* PlatformDelegate.cpp in Sources */,
 				18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */,
+				18461DAA1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */,
 				187CF64119C72A3100C8094C /* main.m in Sources */,
 				187CF63F19C71BBC00C8094C /* AppDelegate.mm in Sources */,
 			);
@@ -693,6 +700,7 @@
 				18461D991CA25C78001A9829 /* CostumeScene.cpp in Sources */,
 				187CF63319C7053100C8094C /* PlatformDelegate.cpp in Sources */,
 				18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */,
+				18461DAB1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */,
 				187CF60A19C7019000C8094C /* AppDelegate.mm in Sources */,
 				187CF60619C7019000C8094C /* main.m in Sources */,
 			);

@@ -60,6 +60,7 @@ namespace Peach3D
         GLuint      mFrameBuffer;   // frame buffer for render texture
         bool        mIsDepthFrame;  // is current frame buffer bind depth
         
+        static GLint mOldFrameBuffer;   // only cache last frame buffer
         static std::map<TextureFormat, TextureGLFormatInfo> mGLTextureFormatMap;
         friend class RenderGL;
     };

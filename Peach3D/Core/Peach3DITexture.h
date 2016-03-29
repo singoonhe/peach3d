@@ -68,7 +68,7 @@ namespace Peach3D
         /** Create RTT texture(render to texture).
          * @params isDepth if true, draw depth data to texture.
          */
-        virtual bool usingAsRenderTexture(int width, int height, bool isDepth = false) { return mTexType != TextureType::eUnknow; }
+        virtual bool usingAsRenderTexture(int width, int height, bool isDepth = false) { return mTexType == TextureType::eUnknow; }
         
         virtual void setFormat(TextureFormat format) { mTexFormat = format; }
         TextureFormat getFormat() { return mTexFormat; }

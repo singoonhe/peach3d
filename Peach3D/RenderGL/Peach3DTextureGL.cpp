@@ -13,6 +13,7 @@
 
 namespace Peach3D
 {
+    GLint TextureGL::mOldFrameBuffer = 0;
     std::map<TextureFormat, TextureGLFormatInfo> TextureGL::mGLTextureFormatMap;
     
     void TextureGL::fillGLTextureFormatMap()
@@ -112,16 +113,18 @@ namespace Peach3D
                 mTexFormat = TextureFormat::eDepthFloat;
             }
             else {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-                mTexFormat = TextureFormat::eRGB8;
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+                mTexFormat = TextureFormat::eRGBA8;
             }
             // set default texture filter
-            setFilterNoBind(mTexFilter);
+            setFilterNoBind(TextureFilter::eLinear);
             // set texture wrap
             //!!! this must be set, or texture2D() will return black on OpenGL ES
             setWrapNoBind(mTexWrap);
             glBindTexture(GL_TEXTURE_2D, 0);
             
+            // cache old frame buffer
+            glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mOldFrameBuffer);
             // generate frame buffer
             glGenFramebuffers(1, &mFrameBuffer);
             glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
@@ -141,6 +144,8 @@ namespace Peach3D
                 mTextureId = 0;
                 glDeleteFramebuffers(1, &mFrameBuffer);
                 mFrameBuffer = 0;
+                // restore old frame buffer if error
+                glBindFramebuffer(GL_FRAMEBUFFER, mOldFrameBuffer);
                 return false;
             }
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -159,7 +164,7 @@ namespace Peach3D
         if (mTextureId && filter != mTexFilter) {
             ITexture::setFilter(filter);
             
-            GLenum curTarget = mTexType == TextureType::e2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP;
+            GLenum curTarget = mTexType == TextureType::eCube ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
             glBindTexture(curTarget, mTextureId);
             setFilterNoBind(filter);
             glBindTexture(curTarget, 0);
@@ -168,7 +173,7 @@ namespace Peach3D
     
     void TextureGL::setFilterNoBind(TextureFilter filter)
     {
-        GLenum curTarget = mTexType == TextureType::e2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP;
+        GLenum curTarget = mTexType == TextureType::eCube ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
         bool mipmapEnabled = ResourceManager::getSingleton().isTextureMipMapEnabled();
         if (filter == TextureFilter::eLinear) {
             // set linear texture filter
@@ -200,7 +205,7 @@ namespace Peach3D
                 return ;
             }
 #endif
-            GLenum curTarget = mTexType == TextureType::e2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP;
+            GLenum curTarget = mTexType == TextureType::eCube ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
             ITexture::setWrap(wrap);
             // set texture wrap
             glBindTexture(curTarget, mTextureId);
@@ -211,7 +216,7 @@ namespace Peach3D
     
     void TextureGL::setWrapNoBind(TextureWrap wrap)
     {
-        GLenum curTarget = mTexType == TextureType::e2D ? GL_TEXTURE_2D : GL_TEXTURE_CUBE_MAP;
+        GLenum curTarget = mTexType == TextureType::eCube ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
         if (wrap == TextureWrap::eClampToEdge) {
             // clamp to edge
             glTexParameteri(curTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -240,6 +245,10 @@ namespace Peach3D
     
     void TextureGL::beforeRendering()
     {
+        ITexture::beforeRendering();
+        
+        // cache last frame buffer first
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &mOldFrameBuffer);
         // bind framebuffer and set viewport
         glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
         glViewport(0, 0, mWidth, mHeight);
@@ -254,16 +263,17 @@ namespace Peach3D
             // use normal GL state
             IRender::getSingleton().prepareForMainRender();
         }
-        ITexture::beforeRendering();
     }
     
     void TextureGL::afterRendering()
     {
         ITexture::afterRendering();
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        
         if (mIsDepthFrame) {
             glDisable(GL_POLYGON_OFFSET_FILL);
         }
+        // restore frame buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, mOldFrameBuffer);
         // restore viewport
         auto size = LayoutManager::getSingleton().getScreenSize();
         glViewport(0, 0, (int)lroundf(size.x), (int)lroundf(size.y));
