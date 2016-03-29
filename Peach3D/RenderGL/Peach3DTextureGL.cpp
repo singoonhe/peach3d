@@ -100,6 +100,8 @@ namespace Peach3D
     {
         bool isSuccess = ITexture::usingAsRenderTexture(width, height);
         if (isSuccess) {
+            mIsDepthFrame = isDepth;
+            mTexType = TextureType::eRTT;
             // generate GL texture
             glGenTextures(1, &mTextureId);
             glBindTexture(GL_TEXTURE_2D, mTextureId);
@@ -151,10 +153,8 @@ namespace Peach3D
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             
             isSuccess = true;
-            mTexType = TextureType::eRTT;
             mWidth = width;
             mHeight = height;
-            mIsDepthFrame = isDepth;
         }
         return isSuccess;
     }

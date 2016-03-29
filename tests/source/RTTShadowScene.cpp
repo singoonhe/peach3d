@@ -33,7 +33,7 @@ void RTTSample::init(Widget* parentWidget)
     texNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
     
     // create RTT
-    int rw = screenSize.x / 10, rh = screenSize.y / 10;
+    int rw = screenSize.x / 5, rh = screenSize.y / 5;
     ITexture* rttT = ResourceManager::getSingleton().createRenderTexture(rw, rh);
     rttT->setBeforeRenderingFunc([]{
         auto activeCamera = SceneManager::getSingleton().getActiveCamera();

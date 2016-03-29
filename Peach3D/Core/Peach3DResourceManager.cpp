@@ -369,8 +369,13 @@ namespace Peach3D
         static uint rttAutoCount = 0;
         sprintf(pName, "pd_RTexture%d", rttAutoCount++);
         ITexture *texture = IRender::getSingletonPtr()->createTexture(pName);
-        texture->usingAsRenderTexture(width, height, isDepth);
-        mRTTList.push_back(texture);
+        if (texture->usingAsRenderTexture(width, height, isDepth)) {
+            mRTTList.push_back(texture);
+        }
+        else {
+            deleteTexture(texture);
+            texture = nullptr;
+        }
         return texture;
     }
     

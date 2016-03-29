@@ -42,7 +42,6 @@ namespace Peach3D
         struct jpeg_decompress_struct cinfo;
         /* libjpeg data structure for storing one row, that is, scanline of an image */
         JSAMPROW row_pointer = nullptr;
-        unsigned long location = 0;
         
         uchar* outData = nullptr;
         struct PdJpegErrorMgr jerr;
@@ -87,6 +86,7 @@ namespace Peach3D
             // malloc return buffer
             row_pointer = static_cast<JSAMPROW>(malloc(sizeof(unsigned char) * widthByte));
             *outSize = widthByte * cinfo.output_height;
+            unsigned long location = *outSize - widthByte;
             outData = static_cast<unsigned char*>(malloc((*outSize) * sizeof(unsigned char)));
             
             /* now actually read the jpeg into the raw buffer */
@@ -95,7 +95,7 @@ namespace Peach3D
             while( cinfo.output_scanline < cinfo.output_height ) {
                 jpeg_read_scanlines( &cinfo, cachePointer, 1 );
                 memcpy(outData + location, &row_pointer[0], cinfo.output_width*cinfo.output_components);
-                location += widthByte;
+                location -= widthByte;
             }
         } while (0);
         
@@ -226,7 +226,7 @@ namespace Peach3D
             png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * (*height));
             outData = static_cast<unsigned char*>(malloc((*outSize) * sizeof(unsigned char)));
             for(int y = 0; y < *height; y++) {
-                row_pointers[y] = outData + widthByte * y;
+                row_pointers[y] = outData + widthByte * (*height - y - 1);
             }
             png_read_image(png_ptr, row_pointers);
             

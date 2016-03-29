@@ -384,7 +384,7 @@ namespace Peach3D
         
         uint imageWidth = (uint)renderSize.x, imageHeight = (uint)renderSize.y;
         NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(imageWidth, imageHeight)];
-        [image lockFocus];
+        [image lockFocusFlipped:YES];
         // just for test texture created rect
         //[[NSColor whiteColor] drawSwatchInRect:NSMakeRect (0.0f, 0.0f, renderSize.x, renderSize.y)];
         
@@ -394,7 +394,7 @@ namespace Peach3D
         [[NSAffineTransform transform] set];
         for (auto lineList : drawInfoList) {
             for (auto info : lineList) {
-                info.start.y = renderSize.y-info.start.y-info.size.height - startPosY;
+                info.start.y = info.start.y + startPosY;
                 if (info.start.y >= (-info.size.height) && info.start.y <= renderSize.y) {
                     if (info.image) {
                         [info.image drawInRect:NSMakeRect(info.start.x, info.start.y, [info.image size].width, [info.image size].height)];

@@ -320,9 +320,9 @@ namespace Peach3D
                                                             kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
         
         CGColorSpaceRelease(colorSpace);
-        // move Y rendering to the top of the image
-        CGContextTranslateCTM(context, 0.0f, renderSize.y );
-        CGContextScaleCTM(context, 1.0f, -1.0f); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
+        // move Y rendering to the bottom of the image
+        CGContextTranslateCTM(context, 0.0f, 0.0f );
+        CGContextScaleCTM(context, 1.0f, 1.0f);
         
         // store the current context
         UIGraphicsPushContext(context);

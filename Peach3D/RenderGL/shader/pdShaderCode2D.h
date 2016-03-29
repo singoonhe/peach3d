@@ -101,7 +101,7 @@ namespace Peach3D
         \n#ifdef PD_ENABLE_TEXUV\n
             float uvX = (pd_vertex.x * pd_texEffect.x + 1.0) * pd_uvRect.z / 2.0 + pd_uvRect.x;
             float uvY = (pd_vertex.y * pd_texEffect.y + 1.0) * pd_uvRect.w / 2.0 + pd_uvRect.y;
-            f_uv = vec2(uvX, 1.0 -uvY);
+            f_uv = vec2(uvX, uvY);
             f_gray = pd_texEffect.z;
         \n#endif\n
     });

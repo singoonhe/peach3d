@@ -188,7 +188,6 @@ namespace Peach3D
                                 float uv[2];
                                 sscanf(vecStr.c_str(), "%f %f", &uv[0], &uv[1]);
                                 // upside down tex coord V
-                                uv[1] = 1.0f - uv[1];
                                 memcpy((*meshUVCache) + readUVCount, uv, sizeof(float) * 2);
                                 readUVCount += 2;
                                 // set texture warp
