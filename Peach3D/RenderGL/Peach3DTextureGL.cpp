@@ -136,17 +136,16 @@ namespace Peach3D
             else {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
             }
-            // check
-            if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+            // check is frame buffer complete
+            auto isComplete = glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE;
+            glBindFramebuffer(GL_FRAMEBUFFER, mOldFrameBuffer);
+            if(isComplete) {
                 glDeleteTextures(1, &mTextureId);
                 mTextureId = 0;
                 glDeleteFramebuffers(1, &mFrameBuffer);
                 mFrameBuffer = 0;
-                // restore old frame buffer if error
-                glBindFramebuffer(GL_FRAMEBUFFER, mOldFrameBuffer);
                 return false;
             }
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
             
             isSuccess = true;
             mWidth = width;

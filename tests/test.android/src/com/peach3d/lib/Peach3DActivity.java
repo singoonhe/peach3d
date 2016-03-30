@@ -12,7 +12,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo; 
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Bundle;
@@ -40,7 +40,7 @@ public class Peach3DActivity extends android.app.NativeActivity {
         mGlobalActivity = this;
         mGlobalHandler = new Handler();
     }
-	
+
 	/* The values are the same as Peach3D/Core/Peach3DTypes.h. */
 	private static final int TEXTHALIGNMENT_LEFT = 0;
     private static final int TEXTHALIGNMENT_CENTER = 1;
@@ -69,10 +69,10 @@ public class Peach3DActivity extends android.app.NativeActivity {
     private static native Bitmap nativeCreateBitmapFromFile(final String file);
     // native function, add a click rect to label
     private static native void nativeAddLabelClickRect(final String key, int startX, int startY, int width, int height);
-	    
+
     private static PointF calcTextRenderInfoList(final String[] stringList, final String[] imageList,
-        final int[] colorList, final boolean[] clickEnabledList, final Paint paint, 
-        final int imageVAlignment, final int pWidth, final int pHeight, 
+        final int[] colorList, final boolean[] clickEnabledList, final Paint paint,
+        final int imageVAlignment, final int pWidth, final int pHeight,
         final int screenWidth, Vector<Vector<tTextDrawInfo>> drawInfoList)
 	{
         mClickedStrMap.clear();
@@ -83,7 +83,7 @@ public class Peach3DActivity extends android.app.NativeActivity {
         if (pWidth == 0) {
             rSize.x = screenWidth;
         }
-        
+
         float curWidth=0.0f, curHeight=0.0f;
         float lineMaxHeight=0.0f, textMaxWidth=0.0f;
         Vector<tTextDrawInfo> lineInfoList = new Vector<tTextDrawInfo>();
@@ -216,7 +216,7 @@ public class Peach3DActivity extends android.app.NativeActivity {
         if (curWidth > textMaxWidth) {
             textMaxWidth = curWidth;
         }
-        
+
         // save text need render size
         if (pWidth == 0) {
             rSize.x = textMaxWidth;
@@ -225,9 +225,9 @@ public class Peach3DActivity extends android.app.NativeActivity {
         return rSize;
 	}
 
-	public static Bitmap createTextBitmap(final String[] stringList, final String[] imageList, 
-        final int[] colorList, final boolean[] clickEnabledList, final String pFontName, 
-        final int pFontSize, final int pAlignment, final int pWidth, final int pHeight, final int screenWidth) 
+	public static Bitmap createTextBitmap(final String[] stringList, final String[] imageList,
+        final int[] colorList, final boolean[] clickEnabledList, final String pFontName,
+        final int pFontSize, final int pAlignment, final int pWidth, final int pHeight, final int screenWidth)
     {
         // get text alignment and label image alignment
         final int hAlignment = pAlignment & 0x0F;
@@ -235,7 +235,7 @@ public class Peach3DActivity extends android.app.NativeActivity {
         final int imageVAlignment = (pAlignment >> 8) & 0x0F;
         // create paint
         final Paint paint = new Paint();
-        paint.setTextSize(pFontSize); 
+        paint.setTextSize(pFontSize);
         paint.setAntiAlias(true);
         paint.setTypeface(Typeface.create(pFontName, Typeface.NORMAL));
 
@@ -275,9 +275,11 @@ public class Peach3DActivity extends android.app.NativeActivity {
 
         // create bitmap and canvas
         final FontMetricsInt fm = paint.getFontMetricsInt();
-        final Bitmap bitmap = Bitmap.createBitmap((int)renderSize.x, (int)renderSize.y, 
+        final Bitmap bitmap = Bitmap.createBitmap((int)renderSize.x, (int)renderSize.y,
             Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
+        // make bitmap upside
+        canvas.scale(1, -1);
         // just for test
         // paint.setColor(Color.WHITE);
         // canvas.drawRect(0, 0, (int)renderSize.x, (int)renderSize.y, paint);
@@ -290,10 +292,10 @@ public class Peach3DActivity extends android.app.NativeActivity {
                     	canvas.drawBitmap(info.image, info.start.x, info.start.y, paint);
                     }
                     else if (info.str!=null && info.str.length() > 0) {
-                        info.start.y = info.start.y + startPosY + (info.size.y - fm.descent);
+                        info.start.y = info.start.y + startPosY + (info.size.y - fm.descent) - renderSize.y;
                     	paint.setColor(info.color);
                     	canvas.drawText(info.str, info.start.x, info.start.y, paint);
-                        
+
                         // add click enabled rect
                     	String findValue = mClickedStrMap.get(info.str);
                         if (findValue!=null && findValue.length() > 0) {

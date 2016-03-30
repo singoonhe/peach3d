@@ -18,7 +18,8 @@ namespace Peach3D
         \n#define PD_LIGHT_DIRECTION    1.5
         \n#define PD_LIGHT_DOT          2.5
         \n#define PD_LIGHT_SPOT         3.5
-        \nuniform LightsUnifroms {
+        /* Use std140 to make unify same offset for vec3, some verder maybe different. */
+        \nlayout (std140) uniform LightsUnifroms {
             vec3 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate. */
             vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
             vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
