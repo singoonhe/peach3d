@@ -164,19 +164,20 @@ namespace Peach3D
 
     void PlatformWinUwp::renderOneFrame(float lastFrameTime)
     {
-        static double perFrameTime = 1 / mCreationParams.maxFPS;
-        static double curDeltaTime = 0.0;
+        // calculate the fixed frame delay time, allow some not exact interval
+        static double fixedFrameTime = 0.9 / mCreationParams.maxFPS;
+        static double fpsTime = 0.0;
         // get current time and delta
         LARGE_INTEGER currentTime;
         QueryPerformanceCounter(&currentTime);
 
         if (mLastRecordTime.QuadPart > 0) {
             double deltaTime = double(currentTime.QuadPart - mLastRecordTime.QuadPart) / (mFrequency.QuadPart);
-            curDeltaTime += deltaTime;
+            fpsTime += deltaTime;
             // if delta time bigger than 1/FPS, render frame.
-            if (curDeltaTime >= perFrameTime) {
-                IPlatform::renderOneFrame(float(curDeltaTime));
-                curDeltaTime = 0;
+            if (fpsTime >= fixedFrameTime) {
+                IPlatform::renderOneFrame(float(fpsTime));
+                fpsTime = 0.0;
             }
         }
         mLastRecordTime = currentTime;
@@ -217,7 +218,7 @@ namespace Peach3D
     void PlatformWinUwp::openUrl(const std::string& url)
     {
         if (url.size()==0) return;
-        
+
         // auto add "http://" header
         std::string finalUrl = url;
         if (finalUrl.find("http://")==std::string::npos) {

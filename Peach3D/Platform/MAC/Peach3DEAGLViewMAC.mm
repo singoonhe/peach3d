@@ -91,9 +91,8 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 
 - (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
 {
-    // calculate the fixed frame delay time
-    static CFAbsoluteTime fixedFrameTime = 1.0 / IPlatform::getSingleton().getCreationParams().maxFPS;
-    static CFAbsoluteTime multiFFT = 10.0 * fixedFrameTime;
+    // calculate the fixed frame delay time, allow some not exact interval
+    static CFAbsoluteTime fixedFrameTime = 0.9 / IPlatform::getSingleton().getCreationParams().maxFPS;
     
     CFAbsoluteTime nowTime = CFAbsoluteTimeGetCurrent();
     // When window resume from miniaturize, drawRect will called by MAC.
@@ -103,15 +102,10 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
         // calculate the deltaTime
         fpsTime += (nowTime - mLastFrameTime);
         
-        if (fpsTime >= multiFFT) {
+        if (fpsTime >= fixedFrameTime) {
             // render one frame with time
             [self drawView:fpsTime];
             fpsTime = 0.0;
-        }
-        else if (fpsTime >= fixedFrameTime) {
-            // render one frame with time
-            [self drawView:fixedFrameTime];
-            fpsTime -= fixedFrameTime;
         }
     }
     mLastFrameTime = nowTime;

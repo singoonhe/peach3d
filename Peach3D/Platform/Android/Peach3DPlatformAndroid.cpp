@@ -320,9 +320,8 @@ namespace Peach3D
         if (!mAnimating) {
             return;
         }
-        // calculate the fixed frame delay time
-        static const long fixedFrameTime = 1000000000/mCreationParams.maxFPS;
-        static const long multiFFT = 10 * fixedFrameTime;
+        // calculate the fixed frame delay time, allow some not exact interval
+        static const long fixedFrameTime = 900000000/mCreationParams.maxFPS;
 
         if  (mAnimating && isRenderWindowValid()) {
             // get current time
@@ -333,20 +332,12 @@ namespace Peach3D
         		static uint64_t fpsTime = 0;
                 fpsTime += nowNs - mLastTime;
 
-                if (fpsTime >= multiFFT) {
+                if (fpsTime >= fixedFrameTime) {
                     // render one frame with time
                     IPlatform::renderOneFrame(fpsTime * 0.000000001f);
                     // swap buffers
                     eglSwapBuffers(mDisplay, mSurface);
-
                     fpsTime = 0;
-                }
-                else if (fpsTime >= fixedFrameTime) {
-                    // render one frame with time
-                    IPlatform::renderOneFrame(fixedFrameTime * 0.000000001f);
-                    // swap buffers
-                    eglSwapBuffers(mDisplay, mSurface);
-                    fpsTime -= fixedFrameTime;
                 }
             }
 
