@@ -17,6 +17,10 @@ namespace Peach3D
     class PEACH3D_DLL Mesh
     {
     public:
+        // constructor and destructor must be public, because shared_ptr need call them
+        Mesh(const char* name) : mMeshName(name) {}
+        ~Mesh();
+        
         const char* getName() { return mMeshName.c_str(); }
         ObjectPtr getObjectByName(const char* name);
         /* Create a object with name. If name is nullptr, system will named it. */
@@ -30,14 +34,12 @@ namespace Peach3D
         uint getAnyVertexType();
         
     protected:
-        Mesh(const char* name) : mMeshName(name) {}
-        ~Mesh();
-
-    protected:
         std::string     mMeshName;      // mesh name
         std::map<std::string, ObjectPtr> mObjectMap; // all object list
-        friend class ResourceManager;   // only ResourceManager can create Mesh
     };
+    
+    // make shared object simple
+    using MeshPtr = std::shared_ptr<Mesh>;
 }
 
 #endif // PEACH3D_MESH_H

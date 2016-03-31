@@ -243,7 +243,7 @@ namespace Peach3D
         }
     }
     
-    bool ObjLoader::objMeshDataParse(uchar* orignData, ulong length, const char* dir, Mesh* dMesh)
+    bool ObjLoader::objMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh)
     {
         std::string mtlFileName;
         uint meshPosCount = 0, meshNormalCount = 0, meshUVCount = 0;
@@ -359,7 +359,7 @@ namespace Peach3D
         return true;
     }
     
-    void ObjLoader::readMtlFile(const std::string& mtlFile, const std::string& dir, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)
+    void ObjLoader::readMtlFile(const std::string& mtlFile, const std::string& dir, const MeshPtr& dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)
     {
         ulong fileLength = 0;
         // get mtl file data
@@ -464,7 +464,7 @@ namespace Peach3D
         }
     }
     
-    void ObjLoader::setMaterialToObject(Material* mat, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)
+    void ObjLoader::setMaterialToObject(Material* mat, const MeshPtr& dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)
     {
         // set material to object
         dMesh->tranverseObjects([&](const char* name, const ObjectPtr& obj) {

@@ -75,12 +75,12 @@ namespace Peach3D
         bool isTextureMipMapEnabled() { return mTexMipMapEnabled; }
         
         //! create mesh from file, return mesh if file loaded.
-        Mesh* addMesh(const char* file);
+        MeshPtr addMesh(const char* file);
         //! create empty mesh
         // will created with system name when name==nullptr
-        Mesh* createMesh(const char* name=nullptr);
+        MeshPtr createMesh(const char* name=nullptr);
         //! delete mesh
-        void deleteMesh(Mesh* mesh);
+        void deleteMesh(const MeshPtr& mesh);
         
         /** Add program from file, windows need set isCompiled=true if use vs compiled.
          * @params vertexType Used to bind attribute or create layout for DX.
@@ -128,7 +128,7 @@ namespace Peach3D
         bool            mTexMipMapEnabled;  // texture is mipmap enabled, default false
         
         std::vector<std::string>            mSearchDirs;    // resource search dir list
-        std::map<std::string, Mesh*>        mMeshMap;       // mesh list
+        std::map<std::string, MeshPtr>      mMeshMap;       // mesh list
         std::map<uint, IProgram*>           mProgramMap;    // program list
         std::map<std::string, TexturePtr>   mTextureMap;    // texture list
         std::vector<TexturePtr>             mRTTList;       // RTT texture list, have no name

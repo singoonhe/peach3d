@@ -20,7 +20,7 @@ namespace Peach3D
     {
     public:
         /* *.pmb is Peach3D Mesh Binary file. */
-        static bool pmbMeshDataParse(uchar* orignData, ulong length, const std::string& dir, Mesh* dMesh);
+        static bool pmbMeshDataParse(uchar* orignData, ulong length, const std::string& dir, const MeshPtr& dMesh);
     };
 }
 

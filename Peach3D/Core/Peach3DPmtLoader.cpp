@@ -13,7 +13,7 @@
 
 namespace Peach3D
 {
-    bool PmtLoader::pmtMeshDataParse(uchar* orignData, ulong length, const char* dir, Mesh* dMesh)
+    bool PmtLoader::pmtMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh)
     {
         bool loadRes = false;
         XMLDocument readDoc;
@@ -34,7 +34,7 @@ namespace Peach3D
         return loadRes;
     }
     
-    void PmtLoader::objDataParse(const XMLElement* objEle, const char* dir, Mesh* dMesh)
+    void PmtLoader::objDataParse(const XMLElement* objEle, const char* dir, const MeshPtr& dMesh)
     {
         auto objName = objEle->Attribute("name");
         // read vertex type element

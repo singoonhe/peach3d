@@ -22,11 +22,11 @@ namespace Peach3D
     {
     public:
         /* *.pmb is Peach3D Mesh Text file. */
-        static bool pmtMeshDataParse(uchar* orignData, ulong length, const char* dir, Mesh* dMesh);
+        static bool pmtMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh);
         
     private:
         /* Read object data, include vertex/index/material. */
-        static void objDataParse(const XMLElement* objEle, const char* dir, Mesh* dMesh);
+        static void objDataParse(const XMLElement* objEle, const char* dir, const MeshPtr& dMesh);
         /* Read object vertex data. */
         static const XMLElement* objVertexDataParse(const XMLElement* prevEle, uint verType, const ObjectPtr& obj);
         /* Read object index data. */

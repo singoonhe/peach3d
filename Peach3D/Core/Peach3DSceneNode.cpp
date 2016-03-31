@@ -38,7 +38,7 @@ namespace Peach3D
         mObjMaxLength = 0.f;
     }
     
-    void SceneNode::attachMesh(Mesh* mesh)
+    void SceneNode::attachMesh(const MeshPtr& mesh)
     {
         Peach3DAssert(mesh, "Can't attach a null Object to Node");
         mAttachedMesh = mesh;

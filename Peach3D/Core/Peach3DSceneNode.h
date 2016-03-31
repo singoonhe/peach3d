@@ -13,18 +13,18 @@
 #include "Peach3DVector3.h"
 #include "Peach3DMatrix4.h"
 #include "Peach3DQuaternion.h"
+#include "Peach3DMesh.h"
 #include "Peach3DRenderNode.h"
 
 namespace Peach3D
 {
-    class Mesh;
     class PEACH3D_DLL SceneNode : public Node
     {
     public:
         //! attach Object and save object materials
-        void attachMesh(Mesh* mesh);
+        void attachMesh(const MeshPtr& mesh);
         //! get attached mesh
-        Mesh* getAttachedMesh() { return mAttachedMesh; }
+        const MeshPtr& getAttachedMesh() { return mAttachedMesh; }
         //! detach mesh
         void detachMesh() { mAttachedMesh = nullptr; }
         //! is attached mesh
@@ -111,7 +111,7 @@ namespace Peach3D
         virtual void updateRenderingAttributes(float lastFrameTime);
         
     private:
-        Mesh*           mAttachedMesh;  // attached object
+        MeshPtr         mAttachedMesh;  // attached object
         Vector3         mPosition;      // scene node position
         Vector3         mScale;         // scene node scale
         Vector3         mRotation;      // scene node rotation

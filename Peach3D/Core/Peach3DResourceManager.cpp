@@ -50,9 +50,7 @@ namespace Peach3D
         // texture will auto release, they are shared_ptr.
         mTextureMap.clear();
         mRTTList.clear();
-        for (auto iter=mMeshMap.begin(); iter!=mMeshMap.end(); iter++) {
-            delete iter->second;
-        }
+        // mesh will auto release, they are shared_ptr.
         mMeshMap.clear();
         for (auto iter=mProgramMap.begin(); iter!=mProgramMap.end(); iter++) {
             render->deleteProgram(iter->second);
@@ -382,14 +380,14 @@ namespace Peach3D
         return mRTTList;
     }
     
-    Mesh* ResourceManager::addMesh(const char* file)
+    MeshPtr ResourceManager::addMesh(const char* file)
     {
         if (mMeshMap.find(file) != mMeshMap.end()) {
             return mMeshMap[file];
         }
         else
         {
-            Mesh* fileMesh = nullptr;
+            MeshPtr fileMesh = nullptr;
             ulong fileLength = 0;
             // get texture file data
             uchar *fileData = getFileData(file, &fileLength);
@@ -428,7 +426,7 @@ namespace Peach3D
         }
     }
     
-    Mesh* ResourceManager::createMesh(const char* name)
+    MeshPtr ResourceManager::createMesh(const char* name)
     {
         if (name && (mMeshMap.find(name) != mMeshMap.end())) {
             return mMeshMap[name];
@@ -443,20 +441,20 @@ namespace Peach3D
                 meshName = pName;
                 Peach3DLog(LogLevel::eInfo, "Create mesh with default name \"%s\"", meshName);
             }
-            Mesh* newMesh = new Mesh(meshName);
+            MeshPtr newMesh(new Mesh(meshName));
             mMeshMap[meshName] = newMesh;
             return newMesh;
         }
     }
     
-    void ResourceManager::deleteMesh(Mesh* mesh)
+    void ResourceManager::deleteMesh(const MeshPtr& mesh)
     {
         Peach3DAssert(mesh, "Can't delete a null mesh!");
         if (mesh) {
             auto nameIter = mMeshMap.find(mesh->getName());
+            // mesh will auto release, so just erase from cache
             if (nameIter != mMeshMap.end()) {
                 mMeshMap.erase(nameIter);
-                delete mesh;
             }
         }
     }
