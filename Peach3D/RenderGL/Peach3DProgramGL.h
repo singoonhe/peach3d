@@ -17,9 +17,12 @@ namespace Peach3D
 {
     class ProgramGL : public IProgram
     {
-        //! declare class RenderGL is friend class, so RenderGL can call constructor function.
-        friend class RenderGL;
     public:
+        //! Create program by IRender, user can't call constructor function.
+        ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0),
+            mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0) {}
+        virtual ~ProgramGL();
+        
         // set vertex shader, program will valid when vs and ps all is set
         virtual bool setVertexShader(const char* data, int size, bool isCompiled=false);
         // set pixel shader, program will valid when vs and ps all is set
@@ -80,11 +83,6 @@ namespace Peach3D
         //! set uniform value in shader, used for GL2 and GL3
         void setUnifromLocationValue(const std::string& name, std::function<void(GLint)> valueFunc);
         
-    private:
-        ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0),
-            mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0) {}
-        virtual ~ProgramGL();
-        
     protected:
         GLuint  mVSShader;
         GLuint  mPSShader;
@@ -110,6 +108,7 @@ namespace Peach3D
         
         std::function<uint(const std::string&, std::vector<Widget*>, float*, uint)> mGL3ExtendFunc;
         std::function<uint(const std::string&, Widget*)> mGL2ExtendFunc;
+        friend class RenderGL;          // Declare class RenderGL is friend class
     };
 }
 

@@ -33,12 +33,16 @@ namespace Peach3D
         eUV,        // uv attr in vertex
     };
     
-    class Widget;
     class OBB;
+    class Widget;
     class RenderNode;
     class PEACH3D_DLL IProgram
     {
     public:
+        //! Create program by IRender, user can't call constructor function.
+        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0) {}
+        virtual ~IProgram() {}
+        
         /** Set vertex shader, program will valid when vs and ps all is set. */
         virtual bool setVertexShader(const char* data, int size, bool isCompiled=false) = 0;
         /** Set pixel shader, program will valid when vs and ps all is set. */
@@ -74,20 +78,16 @@ namespace Peach3D
         virtual bool isProgramValid() { return mProgramValid; }
 
     protected:
-        //! Create program by IRender, user can't call constructor function.
-        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0) {}
-        //! Delete program by IRender, user can't call destructor function.
-        virtual ~IProgram() {}
-        
-    protected:
         uint        mProgramId;     // program unique id
         bool        mProgramValid;  // is program valid
         uint        mVertexType;    // vertex data type
         int         mLightsCount;   // lights count
         
         std::vector<ProgramUniform>  mProgramUniformList; // all the program uniforms in shader
-        friend class IRender;       //! Declare class IRender is friend class
     };
+    
+    // make shared program simple
+    using ProgramPtr = std::shared_ptr<IProgram>;
 }
 
 

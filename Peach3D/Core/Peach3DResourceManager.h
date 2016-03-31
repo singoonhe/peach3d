@@ -87,14 +87,14 @@ namespace Peach3D
          * @params uniformList Use program needed uniforms info.
          * @params isCompiled Is shader had compiled, *.cso file need set true.
         */
-        IProgram* addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled = false);
+        ProgramPtr addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled = false);
         /** Create program from memory, params see @addProgram. */
-        IProgram* createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool isCompiled=false);
+        ProgramPtr createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool isCompiled=false);
         //! delete program
-        void deleteProgram(IProgram* program);
+        void deleteProgram(const ProgramPtr& program);
         
         //! get preset object program in Peach3D system, program will create if not find
-        IProgram* getPresetProgram(const PresetProgramFeatures& feature);
+        ProgramPtr getPresetProgram(const PresetProgramFeatures& feature);
         
         //! set assert manager just for android
         void setAssetsManager(void* manager) { mAssetsManager=manager; }
@@ -129,7 +129,7 @@ namespace Peach3D
         
         std::vector<std::string>            mSearchDirs;    // resource search dir list
         std::map<std::string, MeshPtr>      mMeshMap;       // mesh list
-        std::map<uint, IProgram*>           mProgramMap;    // program list
+        std::map<uint, ProgramPtr>          mProgramMap;    // program list
         std::map<std::string, TexturePtr>   mTextureMap;    // texture list
         std::vector<TexturePtr>             mRTTList;       // RTT texture list, have no name
         std::map<std::string, std::vector<TextureFrame>> mTexFrameMap;  // texture frame cache list

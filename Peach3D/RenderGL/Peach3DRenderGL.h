@@ -66,7 +66,7 @@ namespace Peach3D
         //! Create render program with name. Program include vertex and pixel shader for render.
         /** \params the name of new OpenGL ES program.
          \return pointer of new program, return nullptr if create failed. */
-        virtual IProgram* createProgram(uint pId);
+        virtual ProgramPtr createProgram(uint pId);
 
     protected:
         //! filter which extension gpu supported

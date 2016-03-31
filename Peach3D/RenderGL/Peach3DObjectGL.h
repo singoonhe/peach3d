@@ -49,7 +49,7 @@ namespace Peach3D
          * Generate or bind VAO for program, each program need a new VAO for DrawInstance.
          * Every program will generate a VBO for DrawInstance.
          */
-        void generateProgramVertexArray(IProgram* program);
+        void generateProgramVertexArray(const ProgramPtr& program);
         /**
          * Bind object vertex attrib, once called if VertexArray supported.
          */
@@ -69,7 +69,7 @@ namespace Peach3D
         GLuint mIndexBuffer;    // object own index buffer
         
         std::map<GLuint, GLuint> mVAOMap;   // each program need different VAO (program will create VBO, bind to VAO)
-        static IProgram* mOBBProgram;       // OBB rendering program
+        static ProgramPtr mOBBProgram;       // OBB rendering program
     };
 }
 

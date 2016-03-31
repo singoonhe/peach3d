@@ -125,7 +125,7 @@ namespace Peach3D
         }
     }
     
-    void Widget::useProgramForRender(IProgram* program)
+    void Widget::useProgramForRender(const ProgramPtr& program)
     {
         Peach3DAssert(program, "Object could not use a null program!");
         if (program) {

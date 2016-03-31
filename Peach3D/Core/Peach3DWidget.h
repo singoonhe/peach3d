@@ -66,8 +66,8 @@ namespace Peach3D
         /** Get render hash. */
         uint getRenderStateHash()const {return mRenderStateHash;}
         
-        void useProgramForRender(IProgram* program);
-        IProgram* getProgramForRender() {return mRenderProgram;}
+        void useProgramForRender(const ProgramPtr& program);
+        const ProgramPtr& getProgramForRender() {return mRenderProgram;}
         virtual void setColor(const Color3& color) { mDiffColor = color; }
         const Color3& getColor()const { return mDiffColor; }
         
@@ -110,7 +110,7 @@ namespace Peach3D
         float       mWorldRotate;       // cache world rotate
         Rect        mWorldAnchorRect;   // cache world rendering rect, pos with anchor
         
-        IProgram*   mRenderProgram;     // render program
+        ProgramPtr  mRenderProgram;     // render program
         uint        mRenderStateHash;   // render state hash, used for instancing render
         bool        mIsRenderHashDirty; // is render state hash need update
         

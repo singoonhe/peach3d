@@ -264,7 +264,7 @@ namespace Peach3D
     GLuint rayVertexArrayId = 0;
     GLuint rayVertexBuffer = 0;
     Color4 rayColor = Color4Black;
-    IProgram* rayProgram = nullptr;
+    ProgramPtr rayProgram = nullptr;
     void genRay()
     {
         if (rayVertexArrayId > 0) {

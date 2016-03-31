@@ -45,16 +45,12 @@ namespace Peach3D
     
     ResourceManager::~ResourceManager()
     {
-        // release all resource
-        IRender* render = IRender::getSingletonPtr();
         // texture will auto release, they are shared_ptr.
         mTextureMap.clear();
         mRTTList.clear();
         // mesh will auto release, they are shared_ptr.
         mMeshMap.clear();
-        for (auto iter=mProgramMap.begin(); iter!=mProgramMap.end(); iter++) {
-            render->deleteProgram(iter->second);
-        }
+        // program will auto release, they are shared_ptr.
         mProgramMap.clear();
         delete mPresetShader;
     }
@@ -459,9 +455,9 @@ namespace Peach3D
         }
     }
     
-    IProgram* ResourceManager::addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled)
+    ProgramPtr ResourceManager::addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled)
     {
-        IProgram* newPrograme = nullptr;
+        ProgramPtr newPrograme = nullptr;
         
         ulong vsLength = 0, psLength = 0;
         // get vs file data
@@ -482,7 +478,7 @@ namespace Peach3D
         return newPrograme;
     }
     
-    IProgram* ResourceManager::createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize, ulong psSize, bool isCompiled)
+    ProgramPtr ResourceManager::createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize, ulong psSize, bool isCompiled)
     {
         IRender* render = IRender::getSingletonPtr();
         // generate program unique id
@@ -492,7 +488,7 @@ namespace Peach3D
         uint hashPID = XXH32((void*)pName, (int)strlen(pName), 0);
         
         // create program
-        IProgram* program = render->createProgram(hashPID);
+        ProgramPtr program = render->createProgram(hashPID);
         // add shader to program
         program->setVertexShader(vs, (vsSize==0) ? (int)strlen(vs) : (int)vsSize, isCompiled);
         program->setPixelShader(ps, (psSize==0) ? (int)strlen(ps) : (int)psSize, isCompiled);
@@ -508,19 +504,19 @@ namespace Peach3D
         return program;
     }
     
-    void ResourceManager::deleteProgram(IProgram* program)
+    void ResourceManager::deleteProgram(const ProgramPtr& program)
     {
         Peach3DAssert(program, "Can't delete a null program!");
         if (program) {
             auto idIter = mProgramMap.find(program->getProgramId());
+            // program will auto release, so just erase from cache
             if (idIter != mProgramMap.end()) {
                 mProgramMap.erase(idIter);
-                IRender::getSingletonPtr()->deleteProgram(program);
             }
         }
     }
     
-    IProgram* ResourceManager::getPresetProgram(const PresetProgramFeatures& feature)
+    ProgramPtr ResourceManager::getPresetProgram(const PresetProgramFeatures& feature)
     {
         auto verData = mPresetShader->getShaderCode(true, feature);
         auto fragData = mPresetShader->getShaderCode(false, feature);
@@ -533,7 +529,7 @@ namespace Peach3D
             }
             else {
                 // create a new preset program
-                IProgram* program = IRender::getSingletonPtr()->createProgram(hashPID);
+                ProgramPtr program = IRender::getSingletonPtr()->createProgram(hashPID);
                 // add shader code to program
                 program->setVertexShader(verData.c_str(), (int)verData.size(), false);
                 program->setPixelShader(fragData.c_str(), (int)fragData.size(), false);

@@ -38,7 +38,7 @@ namespace Peach3D
         std::map<std::string, ObjectPtr> mObjectMap; // all object list
     };
     
-    // make shared object simple
+    // make shared mesh simple
     using MeshPtr = std::shared_ptr<Mesh>;
 }
 

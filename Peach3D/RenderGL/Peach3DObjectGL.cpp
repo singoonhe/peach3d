@@ -37,7 +37,7 @@ namespace Peach3D
     }
     
     /** Special program used for OBB rendering. */
-    IProgram* ObjectGL::mOBBProgram = nullptr;
+    ProgramPtr ObjectGL::mOBBProgram = nullptr;
     
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
@@ -46,7 +46,7 @@ namespace Peach3D
         }
     }
     
-    void ObjectGL::generateProgramVertexArray(IProgram* program)
+    void ObjectGL::generateProgramVertexArray(const ProgramPtr& program)
     {
         GLuint programId = program ? program->getProgramId() : 0;
         // check is new VAO for program need
@@ -60,7 +60,7 @@ namespace Peach3D
             bindObjectVertexAttrib();
             // bind program buffer for GL3
             if (program && PD_RENDERLEVEL_GL3()) {
-                static_cast<ProgramGL*>(program)->bindProgramVertexAttrib();
+                static_cast<ProgramGL*>(program.get())->bindProgramVertexAttrib();
             }
             mVAOMap[programId] = vaoId;
         }
@@ -128,7 +128,7 @@ namespace Peach3D
             IF_BREAK(listSize == 0, nullptr);
             
             RenderNode* firstNode = renderList[0];
-            IProgram* usedProgram = firstNode->getProgramForRender();
+            ProgramPtr usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
@@ -143,7 +143,7 @@ namespace Peach3D
                             validLights.push_back(vl);
                         }
                     }
-                    ((ProgramGL*)usedProgram)->updateObjectLightsUniforms(validLights);
+                    ((ProgramGL*)usedProgram.get())->updateObjectLightsUniforms(validLights);
                 }
             }
             
@@ -161,7 +161,7 @@ namespace Peach3D
             auto firMat = firstNode->getMaterial();
             for (auto i = 0; i < firMat.getTextureCount(); i++) {
                 GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i].get())->getGLTextureId();
-                static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, i);
+                static_cast<ProgramGL*>(usedProgram.get())->activeTextures(glTextureId, i);
             }
             
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
@@ -206,7 +206,7 @@ namespace Peach3D
             IF_BREAK(listSize == 0, nullptr);
             
             Widget* firstNode = renderList[0];
-            IProgram* usedProgram = firstNode->getProgramForRender();
+            ProgramPtr usedProgram = firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
@@ -229,7 +229,7 @@ namespace Peach3D
                 auto stex = texSprite->getTextureFrame().tex;
                 if (stex) {
                     GLuint glTextureId = static_cast<TextureGL*>(stex.get())->getGLTextureId();
-                    static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, 0);
+                    static_cast<ProgramGL*>(usedProgram.get())->activeTextures(glTextureId, 0);
                 }
             }
             

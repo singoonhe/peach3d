@@ -46,8 +46,8 @@ namespace Peach3D
         virtual ~IObject() {}
         
         /** Set template program, all using current Object Node will use current program first. */
-        void setProgram(IProgram* program) { mObjectProgram = program; }
-        IProgram* getProgram() { return mObjectProgram; }
+        void setProgram(const ProgramPtr& program) { mObjectProgram = program; }
+        const ProgramPtr& getProgram() { return mObjectProgram; }
 
         /**
         * @brief Set vertex buffer data for render object.
@@ -89,7 +89,7 @@ namespace Peach3D
 
     protected:
         std::string    mObjectName;        // name of object
-        IProgram*      mObjectProgram;     // current used template program
+        ProgramPtr     mObjectProgram;     // current used template program
         Material       mObjectMtl;         // object material, scene node template material
 
         uint           mIndexBufferSize;   // index buffer byte count

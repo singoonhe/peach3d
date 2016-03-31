@@ -50,20 +50,20 @@ namespace Peach3D
         virtual void setRenderLineWidth(float newWidth) { mLineWidth = newWidth; }
         float getRenderLineWidth() {return mLineWidth;}
 
-        //! Create renderable object.
-        /** \params the name of new renderable object.
-            \return return the new object pointer, return nullptr if create failed. */
+        /** Create renderable object.
+         * @params objectName the name of new renderable object.
+         * @return return the new object pointer, return nullptr if create failed. 
+         */
         virtual ObjectPtr createObject(const char* objectName) = 0;
         
         /** Create normal texture with name. */
         virtual TexturePtr createTexture(const char* name) = 0;
         
-        //! Create render program with name. Program include vertex and pixel shader for render.
-        /** \params the name of new program.
-         \return pointer of new program, return nullptr if create failed. */
-        virtual IProgram* createProgram(uint pId) = 0;
-        //! delete program
-        virtual void deleteProgram(IProgram* program) { delete program; }
+        /** Create render program with name. Program include vertex and pixel shader for render.
+         * @params pId the name of new program.
+         * @return pointer of new program, return nullptr if create failed.
+         */
+        virtual ProgramPtr createProgram(uint pId) = 0;
         
     protected:
         bool        mIsRenderValid;     // render is init?

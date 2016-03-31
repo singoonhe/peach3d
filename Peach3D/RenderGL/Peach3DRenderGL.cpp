@@ -133,9 +133,9 @@ namespace Peach3D
         }
     }
     
-    IProgram* RenderGL::createProgram(uint pId)
+    ProgramPtr RenderGL::createProgram(uint pId)
     {
-        ProgramGL* program = new ProgramGL(pId);
+        ProgramPtr program(new ProgramGL(pId));
         return program;
     }
     

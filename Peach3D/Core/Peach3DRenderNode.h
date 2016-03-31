@@ -57,8 +57,8 @@ namespace Peach3D
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
         void resetTextureByIndex(int index, TexturePtr texture);
         /** Set render program, preset program will be set default. */
-        void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
-        IProgram* getProgramForRender() { return mRenderProgram; }
+        void setRenderProgram(const ProgramPtr& program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
+        const ProgramPtr& getProgramForRender() { return mRenderProgram; }
         
         const ObjectPtr& getObject() const { return mRenderObj; }
         uint getRenderHash() { return mRenderHash; }
@@ -74,7 +74,7 @@ namespace Peach3D
         Matrix4         mModelMatrix;   // render node model matrix
         Material        mMaterial;      // render object material
         ObjectPtr       mRenderObj;     // render object
-        IProgram*       mRenderProgram; // render program
+        ProgramPtr      mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         bool            mOBBEnable;     // is OBB display enable
         DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
