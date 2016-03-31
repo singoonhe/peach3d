@@ -55,6 +55,27 @@ namespace Peach3D
         delete mPresetShader;
     }
     
+    void ResourceManager::purgeCachedData()
+    {
+        // release unhand texture and mesh
+        for (auto it = mMeshMap.begin(); it != mMeshMap.end();) {
+            if (it->second.use_count() <= 1) {
+                it = mMeshMap.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        for (auto it = mTextureMap.begin(); it != mTextureMap.end();) {
+            if (it->second.use_count() <= 1) {
+                it = mTextureMap.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+    }
+    
     TexturePtr ResourceManager::addTexture(const char* file)
     {
         TexturePtr newTexture;

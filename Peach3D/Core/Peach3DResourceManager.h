@@ -90,12 +90,13 @@ namespace Peach3D
         ProgramPtr addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled = false);
         /** Create program from memory, params see @addProgram. */
         ProgramPtr createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool isCompiled=false);
-        //! delete program
+        /** Get preset object program in Peach3D system, program will create if not find. */
+        ProgramPtr getPresetProgram(const PresetProgramFeatures& feature);
         void deleteProgram(const ProgramPtr& program);
         
-        //! get preset object program in Peach3D system, program will create if not find
-        ProgramPtr getPresetProgram(const PresetProgramFeatures& feature);
-        
+        //! get file data and length, nullptr will return if file not exist
+        //! Notice: you should free buffer after using.
+        uchar* getFileData(const char* relativePath, ulong* size);
         //! set assert manager just for android
         void setAssetsManager(void* manager) { mAssetsManager=manager; }
         /** Add a directory for file search. 
@@ -104,12 +105,11 @@ namespace Peach3D
         void addSearchDirectory(const char* dir, bool isBack = true);
         /** Reture all search directorys. */
         const std::vector<std::string>& getSearchDirectory() { return mSearchDirs; }
-        //! get file data and length, nullptr will return if file not exist
-        //! Notice: you should free buffer after using.
-        uchar* getFileData(const char* relativePath, ulong* size);
         
-        //! get default vertex attr info list
+        /** Get default vertex attr info list. */
         static const std::vector<VertexAttrInfo>& getVertexAttrInfoList() { return mVertexAttrList; }
+        /** Purge texture and mesh which count is 1, no one hand it. */
+        void purgeCachedData();
         
     protected:
         /** Read file data */
