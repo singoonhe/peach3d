@@ -17,7 +17,6 @@
 
 namespace Peach3D
 {
-    class IObject;
     class Mesh;
     class PEACH3D_DLL SceneNode : public Node
     {
@@ -106,7 +105,7 @@ namespace Peach3D
         /** Init SceneNode some attribution. */
         void init();
         //! delete SceneNode by SceneManager, user can't call destructor function.
-        virtual ~SceneNode() {}
+        virtual ~SceneNode();
         
         /* Update rendering attributes, about world rect/rotate/scale... */
         virtual void updateRenderingAttributes(float lastFrameTime);

@@ -100,8 +100,8 @@ namespace Peach3D
         
         Scheduler*              mDrawUpdateSchedule;// draw stats update schedule
         Widget*                 mDebugDrawNode;     // draw stats widget
-        IObject*                mWidgetObject;      // object for rendering widget
-        IObject*                mOBBObject;         // object for rendering OBB
+        ObjectPtr                mWidgetObject;      // object for rendering widget
+        ObjectPtr                mOBBObject;         // object for rendering OBB
         
         Camera*                 mActiveCamera;      // current active camera
         std::vector<Camera*>    mCameraList;        // scene camera list

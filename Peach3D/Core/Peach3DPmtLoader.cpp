@@ -44,7 +44,7 @@ namespace Peach3D
         // Object must have name and Type must include Point3 attribute
         if (objName && (verType & VertexType::Point3)) {
             // create IObject
-            IObject* obj = dMesh->createObject(objName);
+            ObjectPtr obj = dMesh->createObject(objName);
             // read vertex data, vertex data must be valid
             auto nextEle = PmtLoader::objVertexDataParse(vTypeEle, verType, obj);
             // read index data, index data must be valid
@@ -54,7 +54,7 @@ namespace Peach3D
         }
     }
     
-    const XMLElement* PmtLoader::objVertexDataParse(const XMLElement* prevEle, uint verType, IObject* obj)
+    const XMLElement* PmtLoader::objVertexDataParse(const XMLElement* prevEle, uint verType, const ObjectPtr& obj)
     {
         // read vertexes count
         auto countEle = prevEle->NextSiblingElement();
@@ -102,7 +102,7 @@ namespace Peach3D
         return verDataEle;
     }
     
-    const XMLElement* PmtLoader::objIndexDataParse(const XMLElement* prevEle, IObject* obj)
+    const XMLElement* PmtLoader::objIndexDataParse(const XMLElement* prevEle, const ObjectPtr& obj)
     {
         // read indexes count
         auto indexCountEle = prevEle->NextSiblingElement("IndexCount");
@@ -145,7 +145,7 @@ namespace Peach3D
         return inxDataEle;
     }
     
-    const XMLElement* PmtLoader::objMaterialDataParse(const XMLElement* prevEle, const char* dir, IObject* obj)
+    const XMLElement* PmtLoader::objMaterialDataParse(const XMLElement* prevEle, const char* dir, const ObjectPtr& obj)
     {
         Material objMat;
         auto matEle = prevEle->NextSiblingElement("Material");

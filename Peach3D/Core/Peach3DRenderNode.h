@@ -19,7 +19,7 @@ namespace Peach3D
     class PEACH3D_DLL RenderNode
     {
     public:
-        RenderNode(const std::string& meshName, IObject* obj);
+        RenderNode(const std::string& meshName, const ObjectPtr& obj);
         ~RenderNode();
         
         /*
@@ -60,7 +60,7 @@ namespace Peach3D
         void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         IProgram* getProgramForRender() { return mRenderProgram; }
         
-        IObject* getObject() const { return mRenderObj; }
+        const ObjectPtr& getObject() const { return mRenderObj; }
         uint getRenderHash() { return mRenderHash; }
         /** Recalc render code if needed. */
         void prepareForRender(float lastFrameTime);
@@ -73,7 +73,7 @@ namespace Peach3D
          */
         Matrix4         mModelMatrix;   // render node model matrix
         Material        mMaterial;      // render object material
-        IObject*        mRenderObj;     // render object
+        ObjectPtr       mRenderObj;     // render object
         IProgram*       mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         bool            mOBBEnable;     // is OBB display enable

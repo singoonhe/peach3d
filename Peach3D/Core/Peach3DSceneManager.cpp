@@ -76,15 +76,9 @@ namespace Peach3D
             delete mRootWidget;
             mRootWidget = nullptr;
         }
-        // clean preset objects
-        if (mWidgetObject) {
-            IRender::getSingleton().deleteObject(mWidgetObject);
-            mWidgetObject = nullptr;
-        }
-        if (mOBBObject) {
-            IRender::getSingleton().deleteObject(mOBBObject);
-            mOBBObject = nullptr;
-        }
+        // mWidgetObject and mOBBObject will auto clean
+        mWidgetObject = nullptr;
+        mOBBObject = nullptr;
     }
     
     void SceneManager::reset()

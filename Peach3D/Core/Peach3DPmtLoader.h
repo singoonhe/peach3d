@@ -28,11 +28,11 @@ namespace Peach3D
         /* Read object data, include vertex/index/material. */
         static void objDataParse(const XMLElement* objEle, const char* dir, Mesh* dMesh);
         /* Read object vertex data. */
-        static const XMLElement* objVertexDataParse(const XMLElement* prevEle, uint verType, IObject* obj);
+        static const XMLElement* objVertexDataParse(const XMLElement* prevEle, uint verType, const ObjectPtr& obj);
         /* Read object index data. */
-        static const XMLElement* objIndexDataParse(const XMLElement* prevEle, IObject* obj);
+        static const XMLElement* objIndexDataParse(const XMLElement* prevEle, const ObjectPtr& obj);
         /* Read object material data. */
-        static const XMLElement* objMaterialDataParse(const XMLElement* prevEle, const char* dir, IObject* obj);
+        static const XMLElement* objMaterialDataParse(const XMLElement* prevEle, const char* dir, const ObjectPtr& obj);
     };
 }
 

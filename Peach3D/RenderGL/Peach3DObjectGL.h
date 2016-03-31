@@ -17,9 +17,8 @@ namespace Peach3D
 {
     class ObjectGL : public IObject
     {
-        //! declare class RenderGL is friend class, so RenderGL can call constructor function.
-        friend class RenderGL;
     public:
+        // constructor and destructor must be public, because shared_ptr need call them
         ObjectGL(const char* name);
         virtual ~ObjectGL();
         

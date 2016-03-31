@@ -41,6 +41,10 @@ namespace Peach3D
     class PEACH3D_DLL IObject
     {
     public:
+        // constructor and destructor must be public, because shared_ptr need call them
+        IObject(const char* name);
+        virtual ~IObject() {}
+        
         /** Set template program, all using current Object Node will use current program first. */
         void setProgram(IProgram* program) { mObjectProgram = program; }
         IProgram* getProgram() { return mObjectProgram; }
@@ -84,12 +88,6 @@ namespace Peach3D
         uint getVertexType() { return mVertexDataType; }
 
     protected:
-        //! create object by IRender, user can't call constructor function.
-        IObject(const char* name);
-        //! delete object by IRender, user can't call destructor function.
-        virtual ~IObject() {}
-
-    protected:
         std::string    mObjectName;        // name of object
         IProgram*      mObjectProgram;     // current used template program
         Material       mObjectMtl;         // object material, scene node template material
@@ -102,9 +100,10 @@ namespace Peach3D
         uint           mVertexDataType;    // vertex data format type
         Vector3        mBorderMax;         // object base border max
         Vector3        mBorderMin;         // object base border min
-
-        friend class   IRender;
     };
+    
+    // make shared object simple
+    using ObjectPtr = std::shared_ptr<IObject>;
 }
 
 #endif // PEACH3D_IOBJECT_H

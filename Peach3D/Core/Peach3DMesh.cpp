@@ -11,7 +11,7 @@
 
 namespace Peach3D
 {
-    IObject* Mesh::createObject(const char* name)
+    ObjectPtr Mesh::createObject(const char* name)
     {
         const char* newName = name;
         if (!newName) {
@@ -22,12 +22,12 @@ namespace Peach3D
             newName = pName;
         }
         // add Object to mesh
-        IObject* childObject = IRender::getSingletonPtr()->createObject(newName);
+        ObjectPtr childObject = IRender::getSingletonPtr()->createObject(newName);
         mObjectMap[newName] = childObject;
         return childObject;
     }
     
-    IObject* Mesh::getObjectByName(const char* name)
+    ObjectPtr Mesh::getObjectByName(const char* name)
     {
         if (mObjectMap.find(name) != mObjectMap.end()) {
             return mObjectMap[name];
@@ -35,7 +35,7 @@ namespace Peach3D
         return nullptr;
     }
     
-    void Mesh::tranverseObjects(std::function<void(const char*, IObject*)> callFunc)
+    void Mesh::tranverseObjects(std::function<void(const char*, const ObjectPtr&)> callFunc)
     {
         for (auto iter : mObjectMap) {
             // tranverse all child with param func
@@ -53,11 +53,7 @@ namespace Peach3D
     
     Mesh::~Mesh()
     {
-        IRender* render = IRender::getSingletonPtr();
-        for (auto iter : mObjectMap) {
-            // tranverse all child with param func
-            render->deleteObject(iter.second);
-        }
+        // object will auto release
         mObjectMap.clear();
     }
 }

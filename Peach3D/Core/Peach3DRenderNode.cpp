@@ -15,7 +15,7 @@
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, IObject* obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle)
+    RenderNode::RenderNode(const std::string& meshName, const ObjectPtr& obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();

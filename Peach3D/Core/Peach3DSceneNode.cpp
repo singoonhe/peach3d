@@ -44,7 +44,7 @@ namespace Peach3D
         mAttachedMesh = mesh;
         // new all render node for objects
         mRenderNodeMap.clear();
-        mesh->tranverseObjects([&](const char* name, IObject* object) {
+        mesh->tranverseObjects([&](const char* name, const ObjectPtr& object) {
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
         // init RenderNode render status, so functions can called after attachMesh
@@ -338,5 +338,14 @@ namespace Peach3D
             }
         }
         return nullptr;
+    }
+    
+    SceneNode::~SceneNode()
+    {
+        // release all render node
+        for (auto rn : mRenderNodeMap) {
+            delete rn.second;
+        }
+        mRenderNodeMap.clear();
     }
 }

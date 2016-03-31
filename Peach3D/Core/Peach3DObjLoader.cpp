@@ -299,7 +299,7 @@ namespace Peach3D
             std::map<std::string, uint>& pointsIndexMap = iter.second->pointsIndexMap;
             if (pointsIndexMap.size() > 0 && iter.second->indexCount > 0) {
                 // create IObject
-                IObject* obj = dMesh->createObject(iter.first.c_str());
+                ObjectPtr obj = dMesh->createObject(iter.first.c_str());
                 
                 // fill vertex buffer
                 for (auto strPoint : pointsIndexMap) {
@@ -467,7 +467,7 @@ namespace Peach3D
     void ObjLoader::setMaterialToObject(Material* mat, Mesh* dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)
     {
         // set material to object
-        dMesh->tranverseObjects([&](const char* name, IObject* obj) {
+        dMesh->tranverseObjects([&](const char* name, const ObjectPtr& obj) {
             for (auto iter=objInfoMap.begin(); iter!=objInfoMap.end(); ++iter) {
                 // set object material
                 if ((*iter).first.compare(name) == 0) {

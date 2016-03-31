@@ -23,6 +23,7 @@ namespace Peach3D
     public:
         IRender() : mIsRenderValid(false), mLineWidth(2.0f) {}
         virtual ~IRender() {}
+        
         // init render, set view port
         virtual bool initRender(const Vector2& size);
         /** Return render state. */
@@ -52,9 +53,7 @@ namespace Peach3D
         //! Create renderable object.
         /** \params the name of new renderable object.
             \return return the new object pointer, return nullptr if create failed. */
-        virtual IObject* createObject(const char* objectName) = 0;
-        //! delete object
-        virtual void deleteObject(IObject* object) { delete object; }
+        virtual ObjectPtr createObject(const char* objectName) = 0;
         
         /** Create normal texture with name. */
         virtual TexturePtr createTexture(const char* name) = 0;
@@ -72,9 +71,6 @@ namespace Peach3D
         Color4      mOBBColor;          // OBB lines render color
         float       mLineWidth;         // draw line width, include OBB
         std::string mVideoCard;         // current video card name, need assigned in RenderXX
-        
-        friend class        ResourceManager;
-        friend class        SceneManager;
     };
 }
 

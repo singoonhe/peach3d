@@ -18,14 +18,14 @@ namespace Peach3D
     {
     public:
         const char* getName() { return mMeshName.c_str(); }
-        IObject* getObjectByName(const char* name);
+        ObjectPtr getObjectByName(const char* name);
         /* Create a object with name. If name is nullptr, system will named it. */
-        IObject* createObject(const char* name = nullptr);
+        ObjectPtr createObject(const char* name = nullptr);
         /**
          * Traverse objects, will auto call lambda func.
          * This func will used to copy object materials to node.
          */
-        void tranverseObjects(std::function<void(const char*, IObject*)> callFunc);
+        void tranverseObjects(std::function<void(const char*, const ObjectPtr&)> callFunc);
         /* Return any object vertex type. */
         uint getAnyVertexType();
         
@@ -35,7 +35,7 @@ namespace Peach3D
 
     protected:
         std::string     mMeshName;      // mesh name
-        std::map<std::string, IObject*> mObjectMap; // all object list
+        std::map<std::string, ObjectPtr> mObjectMap; // all object list
         friend class ResourceManager;   // only ResourceManager can create Mesh
     };
 }

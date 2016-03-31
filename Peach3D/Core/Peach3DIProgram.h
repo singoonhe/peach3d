@@ -34,8 +34,8 @@ namespace Peach3D
     };
     
     class Widget;
-    class RenderNode;
     class OBB;
+    class RenderNode;
     class PEACH3D_DLL IProgram
     {
     public:
