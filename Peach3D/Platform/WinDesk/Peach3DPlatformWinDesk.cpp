@@ -51,7 +51,7 @@ namespace Peach3D
         OSVERSIONINFOEX osver;
         osver.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
         if (GetVersionEx((LPOSVERSIONINFOA)&osver)) {
-            mOSVerStr = Utils::formatString("%d.%d Build %d Service Pack %d.%d", osver.dwMajorVersion, osver.dwMinorVersion, 
+            mOSVerStr = Utils::formatString("%d.%d Build %d Service Pack %d.%d", osver.dwMajorVersion, osver.dwMinorVersion,
                 osver.dwBuildNumber, osver.wServicePackMajor, osver.wServicePackMinor);
         }
 
@@ -150,7 +150,7 @@ namespace Peach3D
         return false;
     }
 
-    ITexture* PlatformWinDesk::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+    TexturePtr PlatformWinDesk::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
         std::map<std::string, std::vector<Rect>>& clicksRect)
     {
         char pName[100] = { 0 };
@@ -165,11 +165,11 @@ namespace Peach3D
         return texture;
     }
 
-    
+
     void PlatformWinDesk::openUrl(const std::string& url)
     {
         if (url.size()==0) return;
-        
+
         // auto add "http://" header
         std::string finalUrl = url;
         if (finalUrl.find("http://")==std::string::npos)

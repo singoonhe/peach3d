@@ -61,7 +61,7 @@ namespace Peach3D
         virtual IObject* createObject(const char* objectName);
         
         /** Create texture with name. */
-        virtual ITexture* createTexture(const char* name);
+        virtual TexturePtr createTexture(const char* name);
         
         //! Create render program with name. Program include vertex and pixel shader for render.
         /** \params the name of new OpenGL ES program.

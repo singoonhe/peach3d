@@ -57,9 +57,7 @@ namespace Peach3D
         virtual void deleteObject(IObject* object) { delete object; }
         
         /** Create normal texture with name. */
-        virtual ITexture* createTexture(const char* name) = 0;
-        //! delete texture
-        virtual void deleteTexture(ITexture* tex) { delete tex; }
+        virtual TexturePtr createTexture(const char* name) = 0;
         
         //! Create render program with name. Program include vertex and pixel shader for render.
         /** \params the name of new program.

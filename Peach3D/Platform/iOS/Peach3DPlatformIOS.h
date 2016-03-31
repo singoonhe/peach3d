@@ -40,7 +40,7 @@ namespace Peach3D
         //! resume animating
         virtual void resumeAnimating();
         //! get label text texture
-        ITexture* getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+        TexturePtr getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                  std::map<std::string, std::vector<Rect>>& clicksRect);
         
         /** Open url, "http://" is not necessary. */

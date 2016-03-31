@@ -474,10 +474,10 @@ namespace Peach3D
         } while(0);
     }
 
-    ITexture* PlatformAndroid::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+    TexturePtr PlatformAndroid::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                           std::map<std::string, std::vector<Rect>>& clicksRect)
     {
-        ITexture* texture = nullptr;
+        TexturePtr texture = nullptr;
         labelClicksRect.clear();
 
         callJniFunc([&](JNIEnv* env, jclass activityClazz) {

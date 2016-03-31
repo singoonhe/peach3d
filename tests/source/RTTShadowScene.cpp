@@ -37,7 +37,7 @@ void RTTSample::init(Widget* parentWidget)
     
     // create RTT
     int rw = screenSize.x / 5, rh = screenSize.y / 5;
-    ITexture* rttT = ResourceManager::getSingleton().createRenderTexture(rw, rh);
+    TexturePtr rttT = ResourceManager::getSingleton().createRenderTexture(rw, rh);
     rttT->setBeforeRenderingFunc([]{
         auto activeCamera = SceneManager::getSingleton().getActiveCamera();
         activeCamera->setPosition(Vector3(-6.f, 3.5f, 3.f));

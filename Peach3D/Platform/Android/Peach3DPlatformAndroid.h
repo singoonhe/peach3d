@@ -47,7 +47,7 @@ namespace Peach3D
         /** Call jni func, activity class will use if className not set. */
         void callJniFunc(const std::function<void(JNIEnv*, jclass)>& callback, const char* className = nullptr);
         //! get label text texture
-        ITexture* getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+        TexturePtr getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                  std::map<std::string, std::vector<Rect>>& clicksRect);
         /** Open url, "http://" is not necessary. */
         virtual void openUrl(const std::string& url);

@@ -25,6 +25,10 @@ namespace Peach3D
     class TextureGL : public ITexture
     {
     public:
+        // constructor and destructor must be public, because shared_ptr need call them 
+        TextureGL(const char* name) : ITexture(name), mTextureId(0), mFrameBuffer(0), mIsDepthFrame(false) {}
+        ~TextureGL();
+        
         /** Set texture data and init texture, format and size must set before. */
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
@@ -45,8 +49,6 @@ namespace Peach3D
         GLuint getGLTextureId() { return mTextureId; }
         
     protected:
-        TextureGL(const char* name) : ITexture(name), mTextureId(0), mFrameBuffer(0), mIsDepthFrame(false) {}
-        ~TextureGL();
         //! fill GL the texture format map
         static void fillGLTextureFormatMap();
         
@@ -62,7 +64,6 @@ namespace Peach3D
         
         static GLint mOldFrameBuffer;   // only cache last frame buffer
         static std::map<TextureFormat, TextureGLFormatInfo> mGLTextureFormatMap;
-        friend class RenderGL;
     };
 }
 

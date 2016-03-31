@@ -49,7 +49,7 @@ namespace Peach3D
         //! is flag key down
         bool isFlagKeyDown(KeyCode flagKey);
         //! get label text texture
-        ITexture* getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+        TexturePtr getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                  std::map<std::string, std::vector<Rect>>& clicksRect);
         
         /** Open url, "http://" is not necessary. */

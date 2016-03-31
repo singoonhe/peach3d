@@ -33,9 +33,9 @@ namespace Peach3D
         void setCursorEnabled(bool enabled) { mIsCursorEnabled = enabled; }
         
         /** Set multi status texture use combination sign "|", default cursor will show before texture set. */
-        void setTextureForStatus(ITexture* tex, uint status);
+        void setTextureForStatus(const TexturePtr& tex, uint status);
         /** Return status's texture. */
-        ITexture* getTextureForStatus(uint status) { return mStatusTexs[getStatusIndex(status)]; }
+        const TexturePtr& getTextureForStatus(uint status) { return mStatusTexs[getStatusIndex(status)]; }
         /** Set multi status rect use combination sign "|". */
         void setTextureRectForStatus(Rect rect, uint status);
         /** Return status's texture rect. */
@@ -57,7 +57,7 @@ namespace Peach3D
         Sprite*     mCursorSprite;      // cursor sprite, highest zorder
         
         uint        mCurStatus;
-        ITexture*   mStatusTexs[CursorState::Count];
+        TexturePtr   mStatusTexs[CursorState::Count];
         Rect        mStatusTexRects[CursorState::Count];
     };
 }

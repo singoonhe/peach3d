@@ -160,7 +160,7 @@ namespace Peach3D
             // enable render state, flip using shader
             auto firMat = firstNode->getMaterial();
             for (auto i = 0; i < firMat.getTextureCount(); i++) {
-                GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i])->getGLTextureId();
+                GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i].get())->getGLTextureId();
                 static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, i);
             }
             
@@ -228,7 +228,7 @@ namespace Peach3D
             if (texSprite) {
                 auto stex = texSprite->getTextureFrame().tex;
                 if (stex) {
-                    GLuint glTextureId = static_cast<TextureGL*>(stex)->getGLTextureId();
+                    GLuint glTextureId = static_cast<TextureGL*>(stex.get())->getGLTextureId();
                     static_cast<ProgramGL*>(usedProgram)->activeTextures(glTextureId, 0);
                 }
             }

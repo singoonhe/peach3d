@@ -198,7 +198,7 @@ namespace Peach3D
             
             size_t oldClickedCount = mClickRectMap.size();
             mClickRectMap.clear();
-            ITexture* labelTex = IPlatform::getSingleton().getTextTexture(stageList, defined, mClickRectMap);
+            TexturePtr labelTex = IPlatform::getSingleton().getTextTexture(stageList, defined, mClickRectMap);
             if (labelTex) {
                 if (mRenderFrame.tex) {
                     ResourceManager::getSingleton().deleteTexture(mRenderFrame.tex);

@@ -261,7 +261,7 @@ namespace Peach3D
         return rSize;
     }
     
-    ITexture* PlatformIOS::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+    TexturePtr PlatformIOS::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                           std::map<std::string, std::vector<Rect>>& clicksRect)
     {
         // create font
@@ -355,7 +355,7 @@ namespace Peach3D
         CGContextRelease(context);
         
         // create texture
-        ITexture* textTex = ResourceManager::getSingleton().createTexture(imageData, imageDataSize, renderSize.x, renderSize.y, TextureFormat::eRGBA8);
+        TexturePtr textTex = ResourceManager::getSingleton().createTexture(imageData, imageDataSize, renderSize.x, renderSize.y, TextureFormat::eRGBA8);
         return textTex;
     }
     

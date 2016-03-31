@@ -49,7 +49,7 @@ namespace Peach3D
         }
     }
     
-    void CursorManager::setTextureForStatus(ITexture* tex, uint status)
+    void CursorManager::setTextureForStatus(const TexturePtr& tex, uint status)
     {
         uint statusList[] = {CursorState::Normal, CursorState::Down};
         for (uint perStatus : statusList) {

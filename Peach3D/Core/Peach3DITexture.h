@@ -61,6 +61,10 @@ namespace Peach3D
     class PEACH3D_DLL ITexture
     {
     public:
+        // constructor and destructor must be public, because shared_ptr need call them
+        ITexture(const char* name);
+        virtual ~ITexture() {}
+        
         /** Set texture data and init texture, format and size must set before. */
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
@@ -89,10 +93,6 @@ namespace Peach3D
         /* SceneManager rendering called function. */
         virtual void beforeRendering() { if (mBeforeFunc) mBeforeFunc();}
         virtual void afterRendering() { if (mAfterFunc) mAfterFunc();}
-
-    protected:
-        ITexture(const char* name);
-        virtual ~ITexture() {}
         
     protected:
         std::string     mTexName;   // texture name (file relative path or named by user)
@@ -110,15 +110,18 @@ namespace Peach3D
         friend class   IRender;
     };
     
+    // make shared texture simple
+    using TexturePtr = std::shared_ptr<ITexture>;
+    
     // define texture frame, include texture and coord
     struct PEACH3D_DLL TextureFrame
     {
         TextureFrame() : tex(nullptr) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
-        TextureFrame(ITexture* _tex) : tex(_tex) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
-        TextureFrame(ITexture* _tex, const Rect& _rc, const std::string& _name="") : tex(_tex), rc(_rc), name(_name) {}
+        TextureFrame(const TexturePtr& _tex) : tex(_tex) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
+        TextureFrame(const TexturePtr& _tex, const Rect& _rc, const std::string& _name="") : tex(_tex), rc(_rc), name(_name) {}
         TextureFrame &operator=(const TextureFrame& other){ name = other.name; tex = other.tex; rc = other.rc; return *this; }
         std::string name;   // texture name, used for Sprite::create "#xxxx.png"
-        ITexture*   tex;    // texture handler
+        TexturePtr   tex;    // texture handler
         Rect        rc;     // texture coord
     };
 }

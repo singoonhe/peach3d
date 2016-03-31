@@ -337,7 +337,7 @@ namespace Peach3D
         return rSize;
     }
     
-    ITexture* PlatformMAC::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+    TexturePtr PlatformMAC::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                           std::map<std::string, std::vector<Rect>>& clicksRect)
     {
         // create font
@@ -419,7 +419,7 @@ namespace Peach3D
         uint textureSize = imageWidth*imageHeight*4;
         
         // create texture
-        ITexture* textTex = ResourceManager::getSingleton().createTexture(data, textureSize, imageWidth, imageHeight, TextureFormat::eRGBA8);
+        TexturePtr textTex = ResourceManager::getSingleton().createTexture(data, textureSize, imageWidth, imageHeight, TextureFormat::eRGBA8);
         return textTex;
     }
     

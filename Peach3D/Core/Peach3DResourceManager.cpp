@@ -47,13 +47,8 @@ namespace Peach3D
     {
         // release all resource
         IRender* render = IRender::getSingletonPtr();
-        for (auto iter=mTextureMap.begin(); iter!=mTextureMap.end(); iter++) {
-            render->deleteTexture(iter->second);
-        }
+        // texture will auto release, they are shared_ptr.
         mTextureMap.clear();
-        for (auto rtt : mRTTList) {
-            render->deleteTexture(rtt);
-        }
         mRTTList.clear();
         for (auto iter=mMeshMap.begin(); iter!=mMeshMap.end(); iter++) {
             delete iter->second;
@@ -66,9 +61,9 @@ namespace Peach3D
         delete mPresetShader;
     }
     
-    ITexture* ResourceManager::addTexture(const char* file)
+    TexturePtr ResourceManager::addTexture(const char* file)
     {
-        ITexture* newTexture = nullptr;
+        TexturePtr newTexture;
         if (mTextureMap.find(file) != mTextureMap.end()) {
             newTexture = mTextureMap[file];
         }
@@ -171,7 +166,7 @@ namespace Peach3D
                 }
             }
             else {
-                ITexture* loadTex = addTexture(name);
+                TexturePtr loadTex = addTexture(name);
                 if (loadTex) {
                     isFind = true;
                     if (outFrame) {
@@ -210,14 +205,14 @@ namespace Peach3D
     }
 #endif
     
-    ITexture* ResourceManager::createTexture(const char* name, void* data, ulong size)
+    TexturePtr ResourceManager::createTexture(const char* name, void* data, ulong size)
     {
         // release old texture
         if (mTextureMap.find(name) != mTextureMap.end()) {
             deleteTexture(mTextureMap[name]);
         }
         
-        ITexture *texture = nullptr;
+        TexturePtr texture;
         bool isTexDataValid = false;
 #if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_DX
         bool isCompressTex = false;
@@ -241,22 +236,17 @@ namespace Peach3D
             free(texBuffer);
         }
 #endif
-        if (texture) {
-            if (!isTexDataValid){
-                IRender::getSingletonPtr()->deleteTexture(texture);
-                texture = nullptr;
-            }
-            else {
-                mTextureMap[name] = texture;
-                Peach3DLog(LogLevel::eInfo, "Create new texture %s success, with:%d height:%d", name, texture->getWidth(), texture->getHeight());
-            }
+        // texture will auto release if not valid
+        if (texture && isTexDataValid) {
+            mTextureMap[name] = texture;
+            Peach3DLog(LogLevel::eInfo, "Create new texture %s success, with:%d height:%d", name, texture->getWidth(), texture->getHeight());
         }
         return texture;
     }
     
-    ITexture* ResourceManager::addCubeTexture(const char* name, const char* file[6])
+    TexturePtr ResourceManager::addCubeTexture(const char* name, const char* file[6])
     {
-        ITexture* newTexture = nullptr;
+        TexturePtr newTexture;
         if (mTextureMap.find(name) != mTextureMap.end()) {
             newTexture = mTextureMap[name];
         }
@@ -286,14 +276,14 @@ namespace Peach3D
         return newTexture;
     }
 
-    ITexture* ResourceManager::createCubeTexture(const char* name, void* dataList[6], ulong sizeList[6])
+    TexturePtr ResourceManager::createCubeTexture(const char* name, void* dataList[6], ulong sizeList[6])
     {
         // release old texture
         if (mTextureMap.find(name) != mTextureMap.end()) {
             deleteTexture(mTextureMap[name]);
         }
         
-        ITexture *texture = nullptr;
+        TexturePtr texture;
         bool isTexDataValid = false;
 #if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_DX
         bool isCompressTex = false;
@@ -329,26 +319,21 @@ namespace Peach3D
             }
         }
 #endif
-        if (texture) {
-            if (!isTexDataValid){
-                IRender::getSingletonPtr()->deleteTexture(texture);
-                texture = nullptr;
-            }
-            else {
-                mTextureMap[name] = texture;
-                Peach3DLog(LogLevel::eInfo, "Create new Cube texture %s success, with:%d height:%d", name, texture->getWidth(), texture->getHeight());
-            }
+        // texture will auto release if not valid
+        if (texture && isTexDataValid) {
+            mTextureMap[name] = texture;
+            Peach3DLog(LogLevel::eInfo, "Create new Cube texture %s success, with:%d height:%d", name, texture->getWidth(), texture->getHeight());
         }
         return texture;
     }
     
-    ITexture* ResourceManager::createTexture(void* data, uint size, int width, int height, TextureFormat format)
+    TexturePtr ResourceManager::createTexture(void* data, uint size, int width, int height, TextureFormat format)
     {
         char pName[100] = { 0 };
         static uint texAutoCount = 0;
         sprintf(pName, "pd_Texture%d", texAutoCount++);
         // create texture with inner name
-        ITexture *texture = IRender::getSingletonPtr()->createTexture(pName);
+        TexturePtr texture = IRender::getSingletonPtr()->createTexture(pName);
         texture->setFormat(format);
         texture->setWidth(width);
         texture->setHeight(height);
@@ -356,40 +341,45 @@ namespace Peach3D
         if (texture->setTextureData(data, size, TextureDataStatus::eDecoded)) {
             mTextureMap[pName] = texture;
         }
-        else {
-            IRender::getSingletonPtr()->deleteTexture(texture);
-            texture = nullptr;
-        }
         return texture;
     }
     
-    ITexture* ResourceManager::createRenderTexture(int width, int height, bool isDepth)
+    TexturePtr ResourceManager::createRenderTexture(int width, int height, bool isDepth)
     {
         char pName[100] = { 0 };
         static uint rttAutoCount = 0;
         sprintf(pName, "pd_RTexture%d", rttAutoCount++);
-        ITexture *texture = IRender::getSingletonPtr()->createTexture(pName);
+        TexturePtr texture = IRender::getSingletonPtr()->createTexture(pName);
         if (texture->usingAsRenderTexture(width, height, isDepth)) {
             mRTTList.push_back(texture);
-        }
-        else {
-            deleteTexture(texture);
-            texture = nullptr;
         }
         return texture;
     }
     
-    void ResourceManager::deleteTexture(ITexture* tex)
+    void ResourceManager::deleteTexture(const TexturePtr& tex)
     {
         Peach3DAssert(tex, "Can't delete a null texture!");
         if (tex) {
             auto nameIter = mTextureMap.find(tex->getName());
+            // texture will auto release if no one hand it
             if (nameIter != mTextureMap.end()) {
                 mTextureMap.erase(nameIter);
             }
-            // delete texture always
-            IRender::getSingletonPtr()->deleteTexture(tex);
         }
+    }
+    
+    const std::vector<TexturePtr>& ResourceManager::getRenderTextureList()
+    {
+        for (auto it = mRTTList.begin(); it != mRTTList.end();) {
+            // auto realse RTT which count is 1, no one hand it except list
+            if (it->use_count() <= 1) {
+                it = mRTTList.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        return mRTTList;
     }
     
     Mesh* ResourceManager::addMesh(const char* file)

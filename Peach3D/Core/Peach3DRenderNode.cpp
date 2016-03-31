@@ -51,7 +51,7 @@ namespace Peach3D
         }
     }
     
-    void RenderNode::resetTextureByIndex(int index, ITexture* texture)
+    void RenderNode::resetTextureByIndex(int index, TexturePtr texture)
     {
         if (!texture) {
             return ;

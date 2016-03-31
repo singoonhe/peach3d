@@ -35,13 +35,13 @@ namespace Peach3D
         virtual IObject* createObject(const char* objectName);
 
         //! Create texture with data
-        virtual ITexture* createTexture(const char* name);
+        virtual TexturePtr createTexture(const char* name);
 
         //! Create render program with name. Program include vertex and pixel shader for render.
         /** \params the name of new OpenGL ES program.
         \return pointer of new program, return nullptr if create failed. */
         virtual IProgram* createProgram(uint pId);
-        
+
         //! get Direct2D factory
         ID2D1Factory1* getD2DFactory() { return mD2DFactory; }
         //! get DWrite factory

@@ -15,7 +15,7 @@
 #include "Peach3DMesh.h"
 #include "tinyxml2/tinyxml2.h"
 
-using namespace::tinyxml2;
+using namespace tinyxml2;
 namespace Peach3D
 {
     class PmtLoader

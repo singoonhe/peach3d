@@ -14,7 +14,7 @@
 #include "Peach3DWidget.h"
 #include "tinyxml2/tinyxml2.h"
 
-using namespace::tinyxml2;
+using namespace tinyxml2;
 namespace Peach3D
 {
     // define enum type to case attribute name

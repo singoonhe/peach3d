@@ -104,7 +104,7 @@ namespace Peach3D
         //! is flag key down
         virtual bool isFlagKeyDown(KeyCode flagKey) {return false;}
         //! get label text texture
-        virtual ITexture* getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+        virtual TexturePtr getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                          std::map<std::string, std::vector<Rect>>& clicksRect) {return nullptr;}
 
         //! pause animating

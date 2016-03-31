@@ -139,10 +139,10 @@ namespace Peach3D
         return program;
     }
     
-    ITexture* RenderGL::createTexture(const char* name)
+    TexturePtr RenderGL::createTexture(const char* name)
     {
         Peach3DAssert(strlen(name)>0, "The texture name can't be null");
-        TextureGL* texture = new TextureGL(name);
+        TexturePtr texture(new TextureGL(name));
         return texture;
     }
     

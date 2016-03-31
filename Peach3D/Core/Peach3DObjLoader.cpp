@@ -430,7 +430,7 @@ namespace Peach3D
                         std::vector<std::string> mtlList = Utils::split(iter->c_str(), ' ');
                         if (mtlList[0].compare("map_Kd") == 0 && mtlList.size() >= 2) {
                             std::string relativePath = mtlList[1].substr(mtlList[1].rfind('/') == std::string::npos ? 0 : mtlList[1].rfind('/') + 1);
-                            ITexture* tex = ResourceManager::getSingleton().addTexture(relativePath.c_str());
+                            TexturePtr tex = ResourceManager::getSingleton().addTexture(relativePath.c_str());
                             if (!tex && dir.size() > 0){
                                 // read texture from absolute path
                                 tex = ResourceManager::getSingleton().addTexture((dir + relativePath).c_str());

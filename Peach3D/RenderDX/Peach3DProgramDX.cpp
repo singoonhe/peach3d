@@ -12,7 +12,7 @@ namespace Peach3D
     ComPtr<ID3D11DeviceContext2> ProgramDX::mGlobalUpdateContext = NULL;
     uint ProgramDX::mGlobalUboSize = 0;
     std::map<std::string, int>   ProgramDX::mGUniformOffsetMap;
-    
+
     ProgramDX::ProgramDX(ComPtr<ID3D12Device> device, uint pId)
         : IProgram(pId), mVertexBlob(nullptr), mPixelBlob(nullptr), mD3DDevice(device), mOUniformBuffer(nullptr),
         mPixelShader(nullptr), mVertexShader(nullptr), mInputLayout(nullptr), mVertexShaderData(nullptr)
@@ -86,7 +86,7 @@ namespace Peach3D
 
         int offset = 0;
         // calc uniform offset and need buffer size
-        // the rule of offset here : http://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx 
+        // the rule of offset here : http://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx
         int lastSize = 16;
         for (auto iter = mProgramUniformList.begin(); iter != mProgramUniformList.end(); ++iter)
         {
@@ -141,7 +141,7 @@ namespace Peach3D
 
             // active textures
             if (mtl) {
-                mtl->tranverseTextures([&](int index, ITexture* texture){
+                mtl->tranverseTextures([&](int index, TexturePtr texture){
                     TextureDX* dxTexture = static_cast<TextureDX*>(texture);
                     if (dxTexture)
                     {
@@ -176,7 +176,7 @@ namespace Peach3D
         }
 
         // active textures
-        const std::vector<ITexture*>& texList = widget->getTextureList();
+        const std::vector<TexturePtr>& texList = widget->getTextureList();
         for (size_t i = 0; i<texList.size(); ++i)
         {
             TextureDX* dxTexture = static_cast<TextureDX*>(texList[i]);

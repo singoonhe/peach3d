@@ -340,7 +340,7 @@ namespace Peach3D
         // we can update global uniforms here, OBB programe had generate
         IRender* mainRender = IRender::getSingletonPtr();
         // draw render target
-        std::vector<ITexture*> rttList = ResourceManager::getSingleton().getRenderTextureList();
+        std::vector<TexturePtr> rttList = ResourceManager::getSingleton().getRenderTextureList();
         bool isNodeUpdate = false;
         for (auto tex : rttList) {
             tex->beforeRendering();

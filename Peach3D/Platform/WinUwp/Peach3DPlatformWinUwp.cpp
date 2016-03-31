@@ -200,7 +200,7 @@ namespace Peach3D
         terminate();
     }
 
-    ITexture* PlatformWinUwp::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
+    TexturePtr PlatformWinUwp::getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
         std::map<std::string, std::vector<Rect>>& clicksRect)
     {
         char pName[100] = { 0 };

@@ -178,7 +178,7 @@ namespace Peach3D
             else if (strcmp(eleName, "Texture") == 0) {
                 auto texFileEle = attrEle->FirstChildElement();
                 std::string fileName = texFileEle->GetText();
-                ITexture* tex = ResourceManager::getSingleton().addTexture(fileName.c_str());
+                TexturePtr tex = ResourceManager::getSingleton().addTexture(fileName.c_str());
                 if (!tex && strlen(dir) > 0){
                     // read texture from absolute path
                     tex = ResourceManager::getSingleton().addTexture((dir + fileName).c_str());

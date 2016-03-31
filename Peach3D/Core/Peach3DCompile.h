@@ -18,6 +18,7 @@
 #include <list>
 #include <functional>
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <assert.h>
 // Peach3D current version

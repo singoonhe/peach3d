@@ -55,7 +55,7 @@ namespace Peach3D
         void setEmissive(const Color3& emissive) { mMaterial.emissive = emissive; }
         void setAlpha(float alpha) { mMaterial.alpha = alpha; }
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
-        void resetTextureByIndex(int index, ITexture* texture);
+        void resetTextureByIndex(int index, TexturePtr texture);
         /** Set render program, preset program will be set default. */
         void setRenderProgram(IProgram* program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         IProgram* getProgramForRender() { return mRenderProgram; }

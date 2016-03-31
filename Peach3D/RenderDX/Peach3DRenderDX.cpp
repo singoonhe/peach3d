@@ -72,7 +72,7 @@ namespace Peach3D
             );
         if (FAILED(hr)) {
             // If the initialization fails, fall back to the WARP device.
-            // For more information on WARP, see: 
+            // For more information on WARP, see:
             // http://go.microsoft.com/fwlink/?LinkId=286690
 
             ComPtr<IDXGIAdapter> warpAdapter;
@@ -176,7 +176,7 @@ namespace Peach3D
             ComPtr<IDXGISwapChain1> swapChain;
             auto uwpWindow = IPlatform::getSingleton().getCreationParams().window;
             mDXFactory->CreateSwapChainForCoreWindow(mCommandQueue.Get(), reinterpret_cast<IUnknown*>(uwpWindow),
-                &swapChainDesc, nullptr, &swapChain); 
+                &swapChainDesc, nullptr, &swapChain);
             swapChain.As(&mSwapChain);
         }
 
@@ -223,7 +223,7 @@ namespace Peach3D
             mD3DDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&mDsvHeap));
 
             D3D12_HEAP_PROPERTIES depthHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-            D3D12_RESOURCE_DESC depthResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, 
+            D3D12_RESOURCE_DESC depthResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT,
                 static_cast<UINT>(size.x), static_cast<UINT>(size.y), 1, 0, 1, 0,
                 D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
@@ -277,7 +277,7 @@ namespace Peach3D
             Peach3DLog(LogLevel::eError, "Create DWirte factory failed!");
             return false;
         }
-        // 
+        //
 #if (PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_WINDESK)
         // COM initialize, use multi thread
         hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
@@ -361,7 +361,7 @@ namespace Peach3D
         // frames that will never be displayed to the screen.
         HRESULT hr = mSwapChain->Present(1, 0);
 
-        // If the device was removed either by a disconnection or a driver upgrade, we 
+        // If the device was removed either by a disconnection or a driver upgrade, we
         // must recreate all device resources.
         if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET) {
             // If the device was removed for any reason, a new device and swap chain will need to be created.
@@ -372,7 +372,7 @@ namespace Peach3D
         }
     }
 
-    ITexture* RenderDX::createTexture(const char* name)
+    TexturePtr RenderDX::createTexture(const char* name)
     {
         Peach3DAssert(strlen(name)>0, "The texture name can't be null");
         TextureDX* texture = new TextureDX(mD3DDevice, name);

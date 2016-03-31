@@ -88,7 +88,7 @@ namespace Peach3D
         Vector2 CurUVOffset;       // current uv scroll offset
         uint    UVScrollTexIndex;  // default is PD_UINT_MAX, not enable uv scroll
         
-        std::vector<ITexture*> textureList;    // used texture list
+        std::vector<TexturePtr> textureList;    // used texture list
     };
 }
 
