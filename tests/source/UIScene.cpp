@@ -112,7 +112,7 @@ void SpriteSample::init(Widget* parentWidget)
     Button* grayButton = Button::create("press_normal.png");
     grayButton->setPosition(Vector2(screenSize.x * 2.f / 3.f, secondPosY));
     grayButton->setTitleText("normal");
-    grayButton->setClickedAction([grayButton, sprite5](ClickEvent, const Vector2&){
+    grayButton->setClickedAction([grayButton, sprite5](const Vector2&){
         auto enable = sprite5->isScale9Enabled();
         enable = !enable;
         grayButton->setTitleText(enable ? "normal" : "scale9");
@@ -172,7 +172,7 @@ void ButtonSample::init(Widget* parentWidget)
     Button* grayButton = Button::create("press_normal.png");
     grayButton->setPosition(Vector2(screenSize.x / 2.0f, firstRowY));
     grayButton->setTitleText("change disable");
-    grayButton->setClickedAction([grayButton](ClickEvent, const Vector2&){
+    grayButton->setClickedAction([grayButton](const Vector2&){
         grayButton->setClickEnabled(false);
         grayButton->setTitleText("disable now");
     });
@@ -181,7 +181,7 @@ void ButtonSample::init(Widget* parentWidget)
     mTitleButton = Button::create("press_normal.png");
     mTitleButton->setTitleText("show label");
     mTitleButton->setPosition(Vector2(screenSize.x * 3.0f / 4.0f, firstRowY));
-    mTitleButton->setClickedAction([&](ClickEvent, const Vector2&){
+    mTitleButton->setClickedAction([&](const Vector2&){
         // create notice label
         if (!mEventLabel) {
             mEventLabel = Label::create("Button click event!!!", 30 * LayoutManager::getSingleton().getMinScale());
@@ -205,7 +205,7 @@ void ButtonSample::init(Widget* parentWidget)
     Button* frameButton = Button::create("#common_normal.png", "#common_highlight.png", "#common_down.png", "#common_disable.png");
     frameButton->setPosition(Vector2(screenSize.x / 4.0f, secondRowY));
     frameButton->setTitleText("frame button");
-    frameButton->setClickedAction([frameButton](ClickEvent, const Vector2&){
+    frameButton->setClickedAction([frameButton](const Vector2&){
         frameButton->setClickEnabled(false);
     });
     parentWidget->addChild(frameButton);
@@ -221,7 +221,7 @@ void ButtonSample::init(Widget* parentWidget)
     scale9TitleButton->setTitleText("content twice");
     scale9TitleButton->setScale9Enabled(true);
     scale9TitleButton->setPosition(Vector2(screenSize.x * 2.f / 3.0f, secondRowY - 60));
-    scale9TitleButton->setClickedAction([scale9TitleButton](ClickEvent, const Vector2&){
+    scale9TitleButton->setClickedAction([scale9TitleButton](const Vector2&){
         auto enable = scale9TitleButton->isScale9Enabled();
         enable = !enable;
         scale9TitleButton->setScale9Enabled(enable);
@@ -245,7 +245,7 @@ void LayoutSample::init(Widget* parentWidget)
         LAYOUT_BIND_NAME_VARIATE("ChangeButton", mChangeButton, name, widget)
     }, [&](const std::string& name) {
         if (mChangeButton && mNoticeLabel && mLogoSprite) {
-            mChangeButton->setClickedAction([&](ClickEvent, const Vector2&){
+            mChangeButton->setClickedAction([&](const Vector2&){
                 bool curGray = !mLogoSprite->isGrayscaleEnabled();
                 mLogoSprite->setGrayscaleEnabled(curGray);
                 mNoticeLabel->setText(curGray ? "Logo show gray!" : "Logo show normal!");

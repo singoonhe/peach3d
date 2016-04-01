@@ -20,7 +20,7 @@ bool BaseScene::init()
     Button* exitButton = Button::create("exit_normal.png");
     exitButton->setAnchorPoint(Vector2(0.0f, 1.0f));
     exitButton->setPosition(Vector2(0, screenSize.y));
-    exitButton->setClickedAction([](ClickEvent, const Vector2&){
+    exitButton->setClickedAction([](const Vector2&){
         // return to test scene
         IPlatform::getSingleton().replaceWithNewScene(new TestScene());
     });
@@ -43,7 +43,7 @@ bool BaseScene::init()
     Button* frontButton = Button::create("front_normal.png");
     frontButton->setAnchorPoint(Vector2(0.5f, 0.0f));
     frontButton->setPosition(Vector2(screenSize.x / 2.0f - 100 * minScale, 0.0f));
-    frontButton->setClickedAction([&](ClickEvent, const Vector2&){
+    frontButton->setClickedAction([&](const Vector2&){
         int index = (mSampleIndex - 1) < 0 ? (int)mSampleList.size() - 1 : mSampleIndex - 1;
         this->changeToSample(index);
     });
@@ -52,7 +52,7 @@ bool BaseScene::init()
     Button* restartButton = Button::create("restart_normal.png");
     restartButton->setAnchorPoint(Vector2(0.5f, 0.0f));
     restartButton->setPosition(Vector2(screenSize.x / 2.0f, 0.0f));
-    restartButton->setClickedAction([&](ClickEvent, const Vector2&){
+    restartButton->setClickedAction([&](const Vector2&){
         this->changeToSample(mSampleIndex);
     });
     rootWidget->addChild(restartButton);
@@ -60,7 +60,7 @@ bool BaseScene::init()
     Button* nextButton = Button::create("next_normal.png");
     nextButton->setAnchorPoint(Vector2(0.5f, 0.0f));
     nextButton->setPosition(Vector2(screenSize.x / 2.0f + 100 * minScale, 0.0f));
-    nextButton->setClickedAction([&](ClickEvent, const Vector2&){
+    nextButton->setClickedAction([&](const Vector2&){
         int index = (mSampleIndex + 1) >= (int)mSampleList.size() ? 0 : mSampleIndex + 1;
         this->changeToSample(index);
     });

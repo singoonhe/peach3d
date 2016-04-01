@@ -176,47 +176,47 @@ namespace Peach3D
         
         // deal with button event
         if (mEventFuncMap.empty()) {
-            mEventFuncMap[ClickEvent::eMoveIn] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eMoveIn] = [&](const Vector2& pos) {
                 setButtonShowStatus(ButtonState::Highlight);
                 if (mButtonFuncMap.find(ClickEvent::eMoveIn) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eMoveIn](event, pos);
+                    mButtonFuncMap[ClickEvent::eMoveIn](pos);
                 }
             };
-            mEventFuncMap[ClickEvent::eUp] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eUp] = [&](const Vector2& pos) {
                 uint upState = (CursorManager::getSingleton().isCursorEnabled() ? ButtonState::Highlight : ButtonState::Normal);
                 setButtonShowStatus(upState);
                 if (mButtonFuncMap.find(ClickEvent::eUp) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eUp](event, pos);
+                    mButtonFuncMap[ClickEvent::eUp](pos);
                 }
             };
-            mEventFuncMap[ClickEvent::eDown] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eDown] = [&](const Vector2& pos) {
                 setButtonShowStatus(ButtonState::Down);
                 if (mButtonFuncMap.find(ClickEvent::eDown) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eDown](event, pos);
+                    mButtonFuncMap[ClickEvent::eDown](pos);
                 }
             };
-            mEventFuncMap[ClickEvent::eDragIn] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eDragIn] = [&](const Vector2& pos) {
                 setButtonShowStatus(ButtonState::Down);
                 if (mButtonFuncMap.find(ClickEvent::eDragIn) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eDragIn](event, pos);
+                    mButtonFuncMap[ClickEvent::eDragIn](pos);
                 }
             };
-            mEventFuncMap[ClickEvent::eMoveOut] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eMoveOut] = [&](const Vector2& pos) {
                 setButtonShowStatus(ButtonState::Normal);
                 if (mButtonFuncMap.find(ClickEvent::eMoveOut) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eMoveOut](event, pos);
+                    mButtonFuncMap[ClickEvent::eMoveOut](pos);
                 }
             };
-            mEventFuncMap[ClickEvent::eDragOut] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eDragOut] = [&](const Vector2& pos) {
                 setButtonShowStatus(ButtonState::Normal);
                 if (mButtonFuncMap.find(ClickEvent::eDragOut) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eDragOut](event, pos);
+                    mButtonFuncMap[ClickEvent::eDragOut](pos);
                 }
             };
-            mEventFuncMap[ClickEvent::eCancel] = [&](ClickEvent event, const Vector2& pos) {
+            mEventFuncMap[ClickEvent::eCancel] = [&](const Vector2& pos) {
                 setButtonShowStatus(ButtonState::Normal);
                 if (mButtonFuncMap.find(ClickEvent::eCancel) != mButtonFuncMap.end()) {
-                    mButtonFuncMap[ClickEvent::eCancel](event, pos);
+                    mButtonFuncMap[ClickEvent::eCancel](pos);
                 }
             };
         }

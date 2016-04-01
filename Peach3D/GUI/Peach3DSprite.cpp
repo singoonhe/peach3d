@@ -156,7 +156,7 @@ namespace Peach3D
                 }
                 // trigger button registered event
                 if (mEventFuncMap.find(event) != mEventFuncMap.end()) {
-                    mEventFuncMap[event](event, poss[0]);
+                    mEventFuncMap[event](poss[0]);
                 }
             });
         }

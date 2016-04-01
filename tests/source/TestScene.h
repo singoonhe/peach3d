@@ -28,7 +28,7 @@ private:
     //! message box
     void showMessageBox(const std::string& text, const ControlListenerFunction& okCallBack);
     //! delete message box
-    void deleteMsgWidgetAction(ClickEvent, const Vector2&);
+    void deleteMsgWidgetAction(const Vector2&);
     
 private:
     Widget* mMsgNode;

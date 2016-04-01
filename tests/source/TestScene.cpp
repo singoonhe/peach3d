@@ -43,7 +43,7 @@ bool TestScene::init()
         Label* testLabel = Label::create(gTestSceneList[i].title.c_str(), labelHeight);
         testLabel->setAnchorPoint(Vector2(0.5f, 1.0f));
         testLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y - labelHeight * i));
-        testLabel->setClickedAction([i](ClickEvent, const Vector2&){
+        testLabel->setClickedAction([i](const Vector2&){
             IPlatform::getSingleton().replaceWithNewScene(gTestSceneList[i].callback());
         });
         rootWidget->addChild(testLabel);
@@ -59,14 +59,14 @@ void TestScene::keyboardEventCallback(KeyboardEvent event, KeyCode code)
     // PC esc or mobile back, show message box
     if ((code == KeyCode::eESC || code == KeyCode::eBack) && event == KeyboardEvent::eKeyDown) {
         if (!mMsgNode) {
-            showMessageBox("Are you sure exit ?", [&](ClickEvent, const Vector2&) {
+            showMessageBox("Are you sure exit ?", [&](const Vector2&) {
                 // exit game
                 IPlatform::getSingleton().terminate();
             });
         }
         else {
             // delete msg widget
-            deleteMsgWidgetAction(ClickEvent::eClicked, Vector2());
+            deleteMsgWidgetAction(Vector2Zero);
         }
     }
 }
@@ -99,11 +99,11 @@ void TestScene::showMessageBox(const std::string& text, const ControlListenerFun
     Button* cancelButton = Button::create("press_normal.png", "press_down.png", "press_highlight.png");
     cancelButton->setPosition(Vector2(nodeSize.x * 0.75f, nodeSize.y * 0.25f));
     cancelButton->setTitleText("Cancel");
-    cancelButton->setClickedAction(std::bind(&TestScene::deleteMsgWidgetAction, this, std::placeholders::_1, std::placeholders::_2));
+    cancelButton->setClickedAction(std::bind(&TestScene::deleteMsgWidgetAction, this, std::placeholders::_1));
     mMsgNode->addChild(cancelButton);
 }
 
-void TestScene::deleteMsgWidgetAction(ClickEvent, const Vector2&)
+void TestScene::deleteMsgWidgetAction(const Vector2&)
 {
     if (mMsgNode) {
         mMsgNode->deleteFromParent();

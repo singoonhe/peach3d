@@ -60,7 +60,7 @@ void RTTSample::init(Widget* parentWidget)
     ncButton->setPosition(Vector2(screenSize.x, screenSize.y / 2.f + rh / 2.f));
     ncButton->setAnchorPoint(Vector2(1.f, 0.f));
     ncButton->setTitleText("Hide");
-    ncButton->setClickedAction([&, ncButton, rttSprite](ClickEvent, const Vector2&){
+    ncButton->setClickedAction([&, ncButton, rttSprite](const Vector2&){
         auto visible = rttSprite->getVisible();
         visible = !visible;
         ncButton->setTitleText(visible ? "Hide" : "Show");

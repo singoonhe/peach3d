@@ -350,7 +350,7 @@ void LightControlSample::init(Widget* parentWidget)
     Button* lcButton = Button::create("press_normal.png");
     lcButton->setPosition(Vector2(100.f, screenSize.y / 3.0f));
     lcButton->setTitleText("Close");
-    lcButton->setClickedAction([&, lcButton](ClickEvent, const Vector2&){
+    lcButton->setClickedAction([&, lcButton](const Vector2&){
         auto enable = mDotLight->isEnabled();
         enable = !enable;
         mDotLight->setEnabled(enable);
@@ -361,7 +361,7 @@ void LightControlSample::init(Widget* parentWidget)
     Button* ncButton = Button::create("press_normal.png");
     ncButton->setPosition(Vector2(100.f, screenSize.y * 2 / 3.0f));
     ncButton->setTitleText("Enable");
-    ncButton->setClickedAction([&, ncButton](ClickEvent, const Vector2&){
+    ncButton->setClickedAction([&, ncButton](const Vector2&){
         auto enable = mControlNode->isLightingEnabled();
         enable = !enable;
         ncButton->setTitleText(enable ? "Disable" : "Enable");

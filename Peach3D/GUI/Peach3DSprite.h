@@ -16,7 +16,7 @@
 namespace Peach3D
 {
     // redefine control event listener function, target not needed because c++11 Lambda
-    typedef std::function<void(ClickEvent, const Vector2&)> ControlListenerFunction;
+    typedef std::function<void(const Vector2&)> ControlListenerFunction;
 
     class PEACH3D_DLL Sprite : public Widget
     {
