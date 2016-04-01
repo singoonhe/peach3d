@@ -13,7 +13,7 @@
 namespace Peach3D
 {
     ITexture::ITexture(const char* name) : mTexName(name), mTexType(TextureType::eUnknow), mTexFormat(TextureFormat::eUnknow),
-        mTexWrap(TextureWrap::eClampToEdge), mWidth(0), mHeight(0)
+        mTexWrap(TextureWrap::eClampToEdge), mWidth(0), mHeight(0), mIsActived(false)
     {
         mBeforeFunc = mAfterFunc = nullptr;
         // set texture filter and mipmap

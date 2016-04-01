@@ -20,6 +20,13 @@
 
 namespace Peach3D
 {
+    struct PEACH3D_DLL Render3DPassContent
+    {
+        std::multimap<uint, RenderNode*> nodeMap; // cache 3d render node map, using "multimap" to reduce sort
+        std::vector<OBB*> OBBList; // cache OBB render node list
+        void clear() { nodeMap.clear(); OBBList.clear(); }
+    };
+    
     class PEACH3D_DLL SceneManager : public Singleton < SceneManager >
     {
         //! declare class IPlatform is friend class, so IRender can call destructor function.
@@ -75,9 +82,9 @@ namespace Peach3D
         /** Render one frame, executing all pass. */
         virtual void render(float lastFrameTime);
         /** Render once pass, update-draw. 
-         * @params isMain main pass will cache clicked node list.
+         * @params content render content node and OBB.
          */
-        virtual void renderOncePass(float lastFrameTime, bool isMain = false);
+        virtual void renderOncePass(const Render3DPassContent& content);
         
         /** Create draw stats node. */
         void createDrawStatsNode();
@@ -86,9 +93,10 @@ namespace Peach3D
         /** Update SceneNode and children. */
         void updateSceneNodeLighting(Node* sNode);
         /** Add render and picking scene node to cache list, also prepare for render.
+         * @params content where node and obb list saved.
          * @params isMain main pass will cache clicked node list.
          */
-        void addSceneNodeToCacheList(Node* node, float lastFrameTime, bool isMain);
+        void addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, bool isMain);
         /** Add render widget to cache list, also prepare for render. */
         void addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime);
 
@@ -107,9 +115,8 @@ namespace Peach3D
         std::vector<Camera*>    mCameraList;        // scene camera list
         
         std::map<std::string, Light*>       mLightList;         // scene light list
+        Render3DPassContent                 mPassContent;       // cache render pass content
         std::vector<Widget*>                mRenderWidgetList;  // cache widget list
-        std::vector<OBB*>                   mRenderOBBList;     // cache OBB render node list
-        std::multimap<uint, RenderNode*>    mRenderNodeMap;     // cache 3d render node map, using "multimap" to reduce sort
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
     };
 }

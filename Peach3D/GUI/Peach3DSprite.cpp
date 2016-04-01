@@ -211,6 +211,11 @@ namespace Peach3D
             // maybe other state need update
             Widget::updateRenderingAttributes(lastFrameTime);
         }
+        
+        // make widget used RTT active
+        if (isNeedRender() && mRenderFrame.tex->getType() == TextureType::eRTT) {
+            mRenderFrame.tex->setActived(true);
+        }
     }
     
     void Sprite::updateRenderingState(const std::string& extState)

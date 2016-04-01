@@ -239,8 +239,10 @@ namespace Peach3D
         Node::prepareForRender(lastFrameTime);
         
         // update all RenderNode
-        for (auto node : mRenderNodeMap) {
-            node.second->prepareForRender(lastFrameTime);
+        if (isNeedRender()) {
+            for (auto node : mRenderNodeMap) {
+                node.second->prepareForRender(lastFrameTime);
+            }
         }
     }
     

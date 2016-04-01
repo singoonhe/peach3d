@@ -93,6 +93,9 @@ namespace Peach3D
         /* SceneManager rendering called function. */
         virtual void beforeRendering() { if (mBeforeFunc) mBeforeFunc();}
         virtual void afterRendering() { if (mAfterFunc) mAfterFunc();}
+        /* Control is RTT need update, used by engine. */
+        void setActived(bool active) { mIsActived = active; }
+        bool isActived() { return mIsActived; }
         
     protected:
         std::string     mTexName;   // texture name (file relative path or named by user)

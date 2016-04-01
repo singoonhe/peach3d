@@ -87,5 +87,12 @@ namespace Peach3D
             
             mIsRenderCodeDirty = false;
         }
+        
+        // make object used RTT active
+        for (auto tex : mMaterial.textureList) {
+            if (tex->getType() == TextureType::eRTT) {
+                tex->setActived(true);
+            }
+        }
     }
 }

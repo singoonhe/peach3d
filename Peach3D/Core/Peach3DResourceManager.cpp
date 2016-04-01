@@ -383,6 +383,13 @@ namespace Peach3D
         }
     }
     
+    void ResourceManager::inactiveRenderTextures()
+    {
+        for (auto it : mRTTList) {
+            it->setActived(false);
+        }
+    }
+    
     const std::vector<TexturePtr>& ResourceManager::getRenderTextureList()
     {
         for (auto it = mRTTList.begin(); it != mRTTList.end();) {

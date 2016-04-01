@@ -35,7 +35,7 @@ void RTTSample::init(Widget* parentWidget)
     texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
     texNode2->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, -DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
     
-    // create RTT
+    // create RTT, move camera to head
     int rw = screenSize.x / 5, rh = screenSize.y / 5;
     TexturePtr rttT = ResourceManager::getSingleton().createRenderTexture(rw, rh);
     rttT->setBeforeRenderingFunc([]{
@@ -54,4 +54,31 @@ void RTTSample::init(Widget* parentWidget)
     auto rttSprite = Sprite::create(TextureFrame(rttT));
     rttSprite->setPosition(Vector2(screenSize.x - rw / 2.f, screenSize.y / 2.f));
     parentWidget->addChild(rttSprite);
+    
+    // create show/hide button, control sprite visible
+    Button* ncButton = Button::create("press_normal.png");
+    ncButton->setPosition(Vector2(screenSize.x, screenSize.y / 2.f + rh / 2.f));
+    ncButton->setAnchorPoint(Vector2(1.f, 0.f));
+    ncButton->setTitleText("Hide");
+    ncButton->setClickedAction([&, ncButton, rttSprite](ClickEvent, const Vector2&){
+        auto visible = rttSprite->getVisible();
+        visible = !visible;
+        ncButton->setTitleText(visible ? "Hide" : "Show");
+        rttSprite->setVisible(visible);
+    });
+    parentWidget->addChild(ncButton);
+    
+    // create RTT2
+    TexturePtr rttT2 = ResourceManager::getSingleton().createRenderTexture(rw, rh);
+    rttT2->setBeforeRenderingFunc([texNode1]{
+        texNode1->setScale(Vector3(1.5f));
+        IRender::getSingleton().setRenderClearColor(Color4(0.f, 0.f, 1.f));
+    });
+    rttT2->setAfterRenderingFunc([texNode1]{
+        texNode1->setScale(Vector3(1.0f));
+        IRender::getSingleton().setRenderClearColor(Color4Gray);
+    });
+    auto rttSprite2 = Sprite::create(TextureFrame(rttT2));
+    rttSprite2->setPosition(Vector2(rw / 2.f, screenSize.y / 2.f));
+    parentWidget->addChild(rttSprite2);
 }

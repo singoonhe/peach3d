@@ -50,6 +50,8 @@ namespace Peach3D
         TexturePtr createCubeTexture(const char* name, void* dataList[6], ulong sizeList[6]);
         /** Delete texture. */
         void deleteTexture(const TexturePtr& tex);
+        /** Make RTT inactive first, then active it in Node::prepareForRender. */
+        void inactiveRenderTextures();
         /** Return current all RTT(render to texture) textures, used in rendering loop.
          * This function will auto check RTT and release unsed texture.
          */

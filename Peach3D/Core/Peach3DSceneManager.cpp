@@ -289,21 +289,12 @@ namespace Peach3D
     }
      */
     
-    void SceneManager::renderOncePass(float lastFrameTime, bool isMain)
+    void SceneManager::renderOncePass(const Render3DPassContent& content)
     {
-        // clear render scene node list
-        mRenderNodeMap.clear();
-        mRenderOBBList.clear();
-        // update root node and add children to render list
-        mRootSceneNode->prepareForRender(lastFrameTime);
-        mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
-            this->addSceneNodeToCacheList(childNode, lastFrameTime, isMain);
-        });
-        
         // draw all scene node
         RenderNode* lastRenderNode = nullptr;
         std::vector<RenderNode*> curNodeList;
-        for (auto iter : mRenderNodeMap) {
+        for (auto iter : content.nodeMap) {
             RenderNode* curNode = iter.second;
             if (lastRenderNode && lastRenderNode->getRenderHash() != curNode->getRenderHash()){
                 // render current objects
@@ -319,8 +310,8 @@ namespace Peach3D
             lastRenderNode->getObject()->render(curNodeList);
         }
         // draw all OBB
-        if (mRenderOBBList.size() > 0) {
-            mOBBObject->render(mRenderOBBList);
+        if (content.OBBList.size() > 0) {
+            mOBBObject->render(content.OBBList);
         }
     }
     
@@ -331,26 +322,51 @@ namespace Peach3D
         for (auto camera : mCameraList) {
             camera->prepareForRender(lastFrameTime);
         }
+        
+        // make all RTT inactive first
+        ResourceManager::getSingleton().inactiveRenderTextures();
+        // just traverse all nodes, activate used RTT
+        /* root scene node must update, children may need delete. */
+        mRootSceneNode->prepareForRender(lastFrameTime);
+        mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
+            this->addSceneNodeToCacheList(childNode, lastFrameTime, nullptr, true);
+        });
+        // sort widgets, activate used RTT
+        mRenderWidgetList.clear();
+        int currentZOrder = 0;
+        addWidgetToCacheList(&currentZOrder, mRootWidget, lastFrameTime);
+        
         // we can update global uniforms here, OBB programe had generate
         IRender* mainRender = IRender::getSingletonPtr();
         // draw render target
-        std::vector<TexturePtr> rttList = ResourceManager::getSingleton().getRenderTextureList();
-        bool isNodeUpdate = false;
+        auto rttList = ResourceManager::getSingleton().getRenderTextureList();
         for (auto tex : rttList) {
-            tex->beforeRendering();
-            // reupdate global uniforms for GL3, befor rendering may modify camera
-            mainRender->prepareForObjectRender();
-            renderOncePass(isNodeUpdate ? 0.f : lastFrameTime);
-            tex->afterRendering();
-            // make node only update action once
-            isNodeUpdate = true;
+            if (tex->isActived()) {
+                // clean frame before render
+                tex->beforeRendering();
+                // reupdate global uniforms for GL3, befor rendering may modify camera
+                mainRender->prepareForObjectRender();
+                // search RTT need updated node and OBB, not update animation
+                mPassContent.clear();
+                mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
+                    this->addSceneNodeToCacheList(childNode, 0.f, &mPassContent, false);
+                });
+                // render RTT pass
+                renderOncePass(mPassContent);
+                tex->afterRendering();
+            }
         }
         // clean frame before render
         mainRender->prepareForMainRender();
         // reupdate global uniforms for GL3
         mainRender->prepareForObjectRender();
+        // search main need updated node and OBB, not update animation
+        mPassContent.clear();
+        mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
+            this->addSceneNodeToCacheList(childNode, 0.f, &mPassContent, false);
+        });
         // draw the main pass, cache clicked node
-        renderOncePass(isNodeUpdate ? 0.f : lastFrameTime, true);
+        renderOncePass(mPassContent);
         // present after draw over
         mainRender->finishForMainRender();
         
@@ -380,11 +396,6 @@ namespace Peach3D
             glDisable(GL_POLYGON_OFFSET_FILL);
         }*/
         
-        // sort widgets
-        mRenderWidgetList.clear();
-        int currentZOrder = 0;
-        addWidgetToCacheList(&currentZOrder, mRootWidget, lastFrameTime);
-        
         // must after widget prepare, because may be no program created.
         mainRender->prepareForWidgetRender();
         // render widgets. Notice: GL3 need create IObject for diff program, hash code change can't cause program generating VBO.
@@ -407,15 +418,15 @@ namespace Peach3D
         }
     }
     
-    void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime, bool isMain)
+    void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, bool isMain)
     {
         SceneNode* rNode = static_cast<SceneNode*>(node);
         // prepare render first for update "NeedRender"
         rNode->prepareForRender(lastFrameTime);
-        if (node->isNeedRender()) {
+        if (node->isNeedRender() && content) {
             // cache all RenderNode from SceneNode
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
-                mRenderNodeMap.insert(std::make_pair(node->getRenderHash(), node));
+                content->nodeMap.insert(std::make_pair(node->getRenderHash(), node));
             });
         }
         
@@ -428,17 +439,17 @@ namespace Peach3D
         }
         
         // cache OBB node
-        if (rNode->getOBBEnabled()) {
+        if (rNode->getOBBEnabled() && content) {
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
                 if (node->getOBBEnabled()) {
-                    mRenderOBBList.push_back(node->getRenderOBB());
+                    content->OBBList.push_back(node->getRenderOBB());
                 }
             });
         }
         
         node->tranverseChildNode([&](size_t, Node* child) {
             // add all children scene node
-            this->addSceneNodeToCacheList(child, lastFrameTime, isMain);
+            this->addSceneNodeToCacheList(child, lastFrameTime, content, isMain);
         });
     }
     
