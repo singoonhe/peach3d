@@ -16,6 +16,15 @@
 
 namespace Peach3D
 {
+    struct PEACH3D_DLL NodeRenderState
+    {
+        NodeRenderState() : OBBEnable(false), isBringShadow(false), isAcceptShadow(false), mode(DrawMode::eTriangle) {}
+        bool OBBEnable;     // is OBB display enable
+        bool isBringShadow; // node will draw when shadow rendering
+        bool isAcceptShadow;// node will mix shadow when rendering
+        DrawMode mode;      // node draw mode, Points/Lines/Triangles
+    };
+    
     class PEACH3D_DLL RenderNode
     {
     public:
@@ -34,14 +43,13 @@ namespace Peach3D
         const Matrix4& getModelMatrix() { return mModelMatrix; }
         void setMaterial(const Material& mate) { mMaterial = mate; mIsRenderCodeDirty = true; }
         const Material& getMaterial() { return mMaterial; }
-        void setDrawMode(DrawMode mode) { mMode = mode; mIsRenderCodeDirty = true; }
-        DrawMode getDrawMode() { return mMode; }
         /** Reset render lights name, called by parent in preparing render. */
         void setRenderLights(const std::vector<std::string>& ls) { mRenderLights = ls; mIsRenderCodeDirty = true;}
         const std::vector<std::string>& getRenderLights() { return mRenderLights; }
         
-        void setOBBEnabled(bool enable);
-        bool getOBBEnabled() { return mOBBEnable && mRenderOBB; }
+        void setRenderState(const NodeRenderState& state);
+        DrawMode getDrawMode() { return mNodeState.mode; }
+        bool getOBBEnabled() { return mNodeState.OBBEnable && mRenderOBB; }
         /** Generate OBB for picking or drawing. */
         void generateOBB();
         OBB* getRenderOBB() const { return mRenderOBB; }
@@ -76,10 +84,9 @@ namespace Peach3D
         ObjectPtr       mRenderObj;     // render object
         ProgramPtr      mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
-        bool            mOBBEnable;     // is OBB display enable
-        DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         
         std::vector<std::string>    mRenderLights;  // valid lights name, setting by parent
+        NodeRenderState mNodeState;     // include OBB, shadow, mode state
         std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering
         bool            mIsRenderCodeDirty; // control when render hash need recalc

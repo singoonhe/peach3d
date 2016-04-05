@@ -35,12 +35,18 @@ namespace Peach3D
         /** Get is need rendering. */
         virtual bool isNeedRender() {return Node::isNeedRender() && mAttachedMesh;}
         
-        /** Auto set child RenderNode draw mode. */
-        void setDrawMode(DrawMode mode);
-        DrawMode getDrawMode() {return mMode;}
-        /** Auto set child RenderNode OBB enable. */
-        void setOBBEnabled(bool enable);
-        bool getOBBEnabled() { return mOBBEnable; }
+        /** Set node draw mode, Points/Lines/Trangles. */
+        void setDrawMode(DrawMode mode) { mNodeState.mode = mode; updateRenderState(); }
+        DrawMode getDrawMode() {return mNodeState.mode;}
+        /** Set is node need show OBB. */
+        void setOBBEnabled(bool enable) { mNodeState.OBBEnable = enable; updateRenderState(); }
+        bool getOBBEnabled() { return mNodeState.OBBEnable; }
+        /** Set is node will bring shadow to other node. */
+        void setBringShadow(bool enable) { mNodeState.isBringShadow = enable; updateRenderState(); }
+        bool isBringShadow() { return mNodeState.isBringShadow; }
+        /** Set is node will show shadow. */
+        void setAcceptShadow(bool enable) { mNodeState.isAcceptShadow = enable; updateRenderState(); }
+        bool isAcceptShadow() { return mNodeState.isAcceptShadow; }
         /** Auto set child RenderNode lighting enable. */
         void setLightingEnabled(bool enable);
         bool isLightingEnabled() { return mLightEnable; }
@@ -107,6 +113,8 @@ namespace Peach3D
         //! delete SceneNode by SceneManager, user can't call destructor function.
         virtual ~SceneNode();
         
+        /* Update child RenderNode state. */
+        void updateRenderState();
         /* Update rendering attributes, about world rect/rotate/scale... */
         virtual void updateRenderingAttributes(float lastFrameTime);
         
@@ -122,12 +130,11 @@ namespace Peach3D
         Vector3         mWorldScale;    // cache scene node world scale
         Vector3         mWorldRotation; // cache scene node world rotation
         float           mDepthBias;     // rendering depth bias, valid if bigger than 0.0f
-        DrawMode        mMode;          // node draw mode, Points/Lines/Triangles
         bool            mLightEnable;   // is lighting enabled, default is true
         bool            mIsLightingDirty;   // is lighting state need update
+        NodeRenderState mNodeState;     // include OBB, shadow, mode state
         float           mObjMaxLength;  // objects max length
         
-        bool            mOBBEnable;     // is OBB display enable
         bool            mPickEnabled;   // is object picking eanbled
         bool            mPickAlways;    // is object always picking eanbled, even not render
         

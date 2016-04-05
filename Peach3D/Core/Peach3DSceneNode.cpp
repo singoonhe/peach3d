@@ -24,10 +24,8 @@ namespace Peach3D
     
     void SceneNode::init()
     {
-        mMode = DrawMode::eTriangle;
         mScale = Vector3(1.0f, 1.0f, 1.0f);
         mAttachedMesh = nullptr;
-        mOBBEnable = false;
         mPickEnabled = false;
         mPickAlways = false;
         mDepthBias = 0.0f;
@@ -48,8 +46,7 @@ namespace Peach3D
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
         // init RenderNode render status, so functions can called after attachMesh
-        setDrawMode(mMode);
-        setOBBEnabled(mOBBEnable);
+        updateRenderState();
         setPickingEnabled(mPickEnabled, mPickAlways);
         setAlpha(mAlpha);
         // default enable lighting
@@ -67,21 +64,11 @@ namespace Peach3D
         }
     }
     
-    void SceneNode::setDrawMode(DrawMode mode)
+    void SceneNode::updateRenderState()
     {
-        mMode = mode;
         // set all RenderNode draw mode
         for (auto node : mRenderNodeMap) {
-            node.second->setDrawMode(mode);
-        }
-    }
-    
-    void SceneNode::setOBBEnabled(bool enable)
-    {
-        mOBBEnable = enable;
-        // set all RenderNode draw mode
-        for (auto node : mRenderNodeMap) {
-            node.second->setOBBEnabled(enable);
+            node.second->setRenderState(mNodeState);
         }
     }
     

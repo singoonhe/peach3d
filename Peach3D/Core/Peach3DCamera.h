@@ -17,6 +17,17 @@
 
 namespace Peach3D
 {
+    struct PEACH3D_DLL CameraState
+    {
+        Vector3 pos;        // camera position
+        Vector3 rotation;   // camera rotation
+        Vector3 lockPos;    // locked position for locked camera
+        Vector3 up;         // camera up
+        Vector3 forward;    // forward for free camera
+        bool    isLocked;   // is camera locked to position(free camera or locked camera)
+        CameraState &operator=(const CameraState& other) { pos = other.pos; rotation = other.rotation; lockPos = other.lockPos; up = other.up; forward = other.forward; isLocked = other.isLocked; return *this; }
+    };
+    
     class PEACH3D_DLL Camera : public ActionImplement
     {
     public:
@@ -26,15 +37,15 @@ namespace Peach3D
         //! set camera position
         void setPosition(const Vector3& pos);
         //! get camera position
-        Vector3 getPosition() {return mCameraPos;}
+        Vector3 getPosition() {return mState.pos;}
         //! translate camera position
-        void translate(const Vector3& trans) {setPosition(mCameraPos + trans);}
+        void translate(const Vector3& trans) {setPosition(mState.pos + trans);}
         //! set camera rotation, it will effect position when lock to position
         void setRotation(const Vector3& rotation);
         //! get camera rotation
         Vector3 getRotation();
         //! rotate camera
-        void rotate(const Vector3& rotate) {setRotation(mRotation + rotate);}
+        void rotate(const Vector3& rotate) {setRotation(mState.rotation + rotate);}
         //! rotate camera around x-axis
         void pitch(float radia) {rotate(Vector3(radia, 0.0f, 0.0f));}
         //! rotate camera around y-axis
@@ -45,16 +56,16 @@ namespace Peach3D
         //! set camera lock to look at position
         void lockToPosition(const Vector3& pos);
         //! get locked position
-        Vector3 getLockedPosition() {return mLockPos;}
+        Vector3 getLockedPosition() {return mState.isLocked;}
         //! is camera locked
-        bool isLocked() {return mIsLocked;}
-        //! unlock camera from mLockPos
-        void unLock() {mIsLocked = false; mIsDataDirty = true;}
+        bool isLocked() {return mState.isLocked;}
+        //! unlock camera from mState.isLocked
+        void unLock() {mState.isLocked = false; mIsDataDirty = true;}
         
-        //! get camera forward, it only valid for free camera
         Vector3 getForward();
-        //! get camera up
-        Vector3 getUp() {getViewMatrix(); return mCameraUp;}
+        Vector3 getUp() {getViewMatrix(); return mState.up;}
+        void setState(const CameraState& state) { mState = state; mIsDataDirty = true; }
+        const CameraState& getState() { return mState; }
         
     protected:
         //! init camera and lock to center
@@ -67,13 +78,7 @@ namespace Peach3D
     protected:
         Matrix4     mViewMatrix;    // camera transform matrix
         bool        mIsDataDirty;   // matrix will update if data is dirty
-        
-        Vector3     mCameraPos;     // camera position
-        Vector3     mRotation;      // camera rotation
-        Vector3     mLockPos;       // locked position for locked camera
-        Vector3     mCameraUp;      // camera up
-        Vector3     mCameraForward; // forward for free camera
-        bool        mIsLocked;      // is camera locked to position(free camera or locked camera)
+        CameraState mState;         // camera position and direction
         
         friend class SceneManager;  // SceneManager can call destructor function
     };

@@ -95,6 +95,11 @@ namespace Peach3D
         EventDispatcher::getSingleton().deleteClickEventListener(mRootWidget);
         // delete all lights if exsited
         deleteAllLights();
+        // delete shadow texture
+        if (mShadowTexture) {
+            ResourceManager::getSingleton().deleteTexture(mShadowTexture);
+            mShadowTexture = nullptr;
+        }
     }
     
     void SceneManager::createDrawStatsNode()
@@ -257,6 +262,38 @@ namespace Peach3D
             this->updateSceneNodeLighting(cNode);
         });
     }
+    
+    void SceneManager::setShadowEnabled(bool enable, float factor)
+    {
+        if (enable && !mShadowTexture) {
+            factor = std::max(factor, 1.f);
+            mShadowSize = IPlatform::getSingleton().getCreationParams().winSize * factor;
+            // create shadow depth texture
+            mShadowTexture = ResourceManager::getSingleton().createRenderTexture(int(mShadowSize.x), int(mShadowSize.y), true);
+            static CameraState lastState; // cache camera state
+            mShadowTexture->setBeforeRenderingFunc([&]{
+                lastState = mActiveCamera->getState();
+                // only direction light could bring shadow
+                Light* dirLight = nullptr;
+                for (auto l : mLightList) {
+                    if (l.second->getType() == LightType::eDirection) {
+                        dirLight = l.second;
+                        break;
+                    }
+                }
+                // set camera to light pos
+                if (dirLight) {
+                }
+            });
+            mShadowTexture->setAfterRenderingFunc([&]{
+                mActiveCamera->setState(lastState);
+            });
+        }
+        else if (!enable && mShadowTexture) {
+            ResourceManager::getSingleton().deleteTexture(mShadowTexture);
+            mShadowTexture = nullptr;
+        }
+    }
 
     /*
 #include "Peach3DCommonGL.h"
@@ -325,8 +362,8 @@ namespace Peach3D
         
         // make all RTT inactive first
         ResourceManager::getSingleton().inactiveRenderTextures();
-        // just traverse all nodes, activate used RTT
-        /* root scene node must update, children may need delete. */
+        /* traverse all nodes, activate used RTT.
+         root scene node must update, children may need delete. */
         mRootSceneNode->prepareForRender(lastFrameTime);
         mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
             this->addSceneNodeToCacheList(childNode, lastFrameTime, nullptr, true);

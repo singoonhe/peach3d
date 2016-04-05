@@ -15,7 +15,7 @@
 
 namespace Peach3D
 {
-    RenderNode::RenderNode(const std::string& meshName, const ObjectPtr& obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mOBBEnable(false), mMode(DrawMode::eTriangle)
+    RenderNode::RenderNode(const std::string& meshName, const ObjectPtr& obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr)
     {
         // current render obj unique name
         mObjSpliceName = meshName + obj->getName();
@@ -34,14 +34,17 @@ namespace Peach3D
             mRenderOBB = nullptr;
         }
     }
-        
-    void RenderNode::setOBBEnabled(bool enable)
+
+    void RenderNode::setRenderState(const NodeRenderState& state)
     {
-        if (enable) {
+        if (state.mode != mNodeState.mode) {
+            mIsRenderCodeDirty = true;
+        }
+        if (state.OBBEnable) {
             // auto generate OBB for drawing
             generateOBB();
         }
-        mOBBEnable = enable;
+        mNodeState = state;
     }
     
     void RenderNode::generateOBB()
@@ -76,7 +79,7 @@ namespace Peach3D
                 mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount));
             }
             // calc render unique hash code
-            std::string renderState = Utils::formatString("Name:%sProgram:%uDrawMode:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mMode);
+            std::string renderState = Utils::formatString("Name:%sProgram:%uDrawMode:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
             for (auto tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();
             }
