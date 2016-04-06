@@ -6,10 +6,11 @@
 //  Copyright (c) 2014 singoon.he. All rights reserved.
 //
 
-#ifndef PEACH3D_PEACH3DCOMMONGL_h
-#define PEACH3D_PEACH3DCOMMONGL_h
+#ifndef PEACH3D_PEACH3DCOMMONGL_H
+#define PEACH3D_PEACH3DCOMMONGL_H
 
 #include "Peach3DCompile.h"
+#include "Peach3DLogPrinter.h"
 
 #if (PEACH3D_CURRENT_PLATFORM==PEACH3D_PLATFORM_IOS)
 #import <OpenGLES/ES2/glext.h>
@@ -34,5 +35,12 @@
 #define PD_GLEXT_SUPPORT(ext) ((RenderGL*)IRender::getSingletonPtr())->isTypeExtersionSupport(ext)
 // check opengl "VertexArray" extersion support
 #define PD_GLEXT_VERTEXARRAY_SUPPORT() (PD_RENDERLEVEL_GL3() || PD_GLEXT_SUPPORT(GLExtensionType::eVertexArray))
+// check gl function error
+#if PEACH3D_DEBUG == 1
+extern void checkGlError(const char* op);
+#define GL_CHECK_ERROR(op) checkGlError(op);
+#else
+#define GL_CHECK_ERROR(op)
+#endif
 
 #endif

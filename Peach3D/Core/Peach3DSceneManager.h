@@ -67,6 +67,7 @@ namespace Peach3D
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
         /** Set ortho projection. */
         void setOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal);
+        void setProjectionMatrix(const Matrix4& proj) { mProjectionMatrix = proj; }
         const Matrix4& getProjectionMatrix() {return mProjectionMatrix;}
         
         /**

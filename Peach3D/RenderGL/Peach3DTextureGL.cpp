@@ -107,15 +107,21 @@ namespace Peach3D
             glBindTexture(GL_TEXTURE_2D, mTextureId);
             if (isDepth) {
 #if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_GLES
-                GLint internalFormat = PD_RENDERLEVEL_GL3() ? GL_DEPTH_COMPONENT32F : GL_DEPTH_COMPONENT16;
-                glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+                GLint internalFormat = PD_RENDERLEVEL_GL3() ? GL_DEPTH_COMPONENT32F : GL_DEPTH_COMPONENT;
 #else
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+                GLint internalFormat = PD_RENDERLEVEL_GL3() ? GL_DEPTH_COMPONENT32F : GL_DEPTH_COMPONENT32;
 #endif
+                GLenum dataType = PD_RENDERLEVEL_GL3() ? GL_FLOAT : GL_UNSIGNED_INT;
+                glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_DEPTH_COMPONENT, dataType, 0);
+                GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glTexImage2D");
                 mTexFormat = TextureFormat::eDepthFloat;
+                // set depth compare stype
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
             }
             else {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+                GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glTexImage2D");
                 mTexFormat = TextureFormat::eRGBA8;
             }
             // set default texture filter
@@ -131,19 +137,21 @@ namespace Peach3D
             glGenFramebuffers(1, &mFrameBuffer);
             glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
             if (isDepth) {
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
             }
             else {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
             }
+            GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glFramebufferTexture2D");
             // check is frame buffer complete
-            auto isComplete = glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE;
+            auto checkStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
             glBindFramebuffer(GL_FRAMEBUFFER, mOldFrameBuffer);
-            if(isComplete) {
+            if(checkStatus != GL_FRAMEBUFFER_COMPLETE) {
                 glDeleteTextures(1, &mTextureId);
                 mTextureId = 0;
                 glDeleteFramebuffers(1, &mFrameBuffer);
                 mFrameBuffer = 0;
+                Peach3DErrorLog("Render texture frame buffer check error code:%d", checkStatus);
                 return false;
             }
             

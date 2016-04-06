@@ -12,6 +12,7 @@ bool RTTShadowScene::init()
 {
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new RTTSample();});
+    mSampleList.push_back([]()->BaseSample* {return new ShadowSample();});
     
     // init base scene
     BaseScene::init();
@@ -81,4 +82,42 @@ void RTTSample::init(Widget* parentWidget)
     auto rttSprite2 = Sprite::create(TextureFrame(rttT2));
     rttSprite2->setPosition(Vector2(rw / 2.f, screenSize.y / 2.f));
     parentWidget->addChild(rttSprite2);
+}
+
+void ShadowSample::init(Widget* parentWidget)
+{
+    // only set title here
+    mTitle = "shadow sample";
+    mDesc = "render 3D world to texture, used on sprite";
+    
+    // add a direction light
+    auto dirLight = SceneManager::getSingleton().addNewLight();
+    dirLight->usingAsDirection(Vector3(-1.f, -1.f, 0.f), Color3(0.5f, 0.f, 0.f));
+    // enable shadow
+    SceneManager::getSingleton().setShadowEnabled(true);
+    
+    // create a girl
+    auto girlMesh = ResourceManager::getSingleton().addMesh("girl.pmt");
+    auto texNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -5.f, 0.f));
+    texNode1->attachMesh(girlMesh);
+    texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
+    // create a plane using cube
+    auto cubeMesh = ResourceManager::getSingleton().addMesh("Cube.obj");
+    auto cubeNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -15.f, 0.f));
+    cubeNode->attachMesh(cubeMesh);
+    cubeNode->setScale(Vector3(10.f));
+    
+    
+    // create sprite with RTT
+    auto screenSize = LayoutManager::getSingleton().getScreenSize();
+    int rw = screenSize.x / 5;
+    auto rttSprite = Sprite::create(TextureFrame(SceneManager::getSingleton().getShadowTexture()));
+    rttSprite->setPosition(Vector2(screenSize.x - rw / 2.f, screenSize.y / 2.f));
+    parentWidget->addChild(rttSprite);
+}
+
+ShadowSample::~ShadowSample()
+{
+    // delete all lights
+    SceneManager::getSingleton().deleteAllLights();
 }

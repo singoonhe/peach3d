@@ -24,4 +24,10 @@ class RTTSample : public BaseSample
     void init(Widget* parentWidget);
 };
 
+class ShadowSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+    virtual ~ShadowSample();
+};
+
 #endif /* RTTSHADOW_SCENE_H */
