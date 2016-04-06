@@ -36,6 +36,7 @@ Core/Peach3DShaderCode.cpp \
 Core/Peach3DUtils.cpp \
 Core/Peach3DVector.cpp \
 Core/Peach3DWidget.cpp \
+RenderGL/Peach3DCommonGL.cpp \
 RenderGL/Peach3DObjectGL.cpp \
 RenderGL/Peach3DProgramGL.cpp \
 RenderGL/Peach3DRenderGL.cpp \
