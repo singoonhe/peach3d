@@ -42,6 +42,8 @@ namespace Peach3D
         void setShadowEnabled(bool enable, float factor = 1.f);
         /** Return RTT texture or judge is shadow enabled. */
         TexturePtr getShadowTexture() { return mShadowTexture; }
+        /** Set shadow focus position. */
+        void setShadowFocusPos(const Vector3& pos) { mShadowFocus = pos; }
         
         const std::string& getName() { return mName; }
         LightType getType() { return mType; }
@@ -75,9 +77,10 @@ namespace Peach3D
         Vector2     mSpotExt;    // extent spot and cut cos attenuate, for Spot
         
         TexturePtr  mShadowTexture; // world shadow texture
-        CameraState mLastCameraState; // cache camera state
-        Matrix4     mLastProjMatrix;  // cache projective matrix
-        bool        mIsRestoreProj;   // is projection matrix need restore
+        Vector3     mShadowFocus;   // current shadow/view focus position
+        static CameraState mLastCameraState; // cache camera state
+        static Matrix4     mLastProjMatrix;  // cache projective matrix
+        static bool        mIsRestoreProj;   // is projection matrix need restore
         
         friend class SceneManager; // only SceneManager could create light
     };

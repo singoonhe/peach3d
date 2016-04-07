@@ -16,6 +16,10 @@
 
 namespace Peach3D
 {
+    CameraState Light::mLastCameraState;
+    Matrix4     Light::mLastProjMatrix;
+    bool        Light::mIsRestoreProj = false;
+    
     Light::~Light()
     {
         // delete a light, node need update valid name
@@ -68,12 +72,21 @@ namespace Peach3D
                 mIsRestoreProj = smger->isOrthoProjection() != (mType == LightType::eDirection);
                 if (mIsRestoreProj) {
                     mLastProjMatrix = smger->getProjectionMatrix();
+                    if (mType == LightType::eDirection) {
+                        smger->setOrthoProjection(-shadowSize.x, shadowSize.x, -shadowSize.y, shadowSize.y, 1.f, 1000.f);
+                    }
+                    else {
+                        smger->setPerspectiveProjection(180, shadowSize.x/shadowSize.y);
+                    }
                 }
                 // move camera to light pos
-                if (mType == LightType::eDot) {
-                    camera->setPosition(mPos);
-                    camera->lockToPosition(mPos + Vector3(-1, -1, 0));
+                if (mType == LightType::eDirection) {
+                    camera->setPosition(mShadowFocus - mDir);
                 }
+                else {
+                    camera->setPosition(mPos);
+                }
+                camera->lockToPosition(mShadowFocus);
             });
             mShadowTexture->setAfterRenderingFunc([&]{
                 auto smger = SceneManager::getSingletonPtr();

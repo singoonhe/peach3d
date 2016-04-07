@@ -140,12 +140,18 @@ namespace Peach3D
             glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
             if (isDepth) {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
-                // draw nothing
-                GLenum drawBuffers[1] = {GL_NONE};
-                glDrawBuffers(1, drawBuffers);
-                GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glDrawBuffers");
-                glReadBuffer(GL_NONE);
-                GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glReadBuffer");
+                bool isModifyBuffers = true;
+#if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_GLES
+                isModifyBuffers = PD_RENDERLEVEL_GL3();
+#endif
+                if (isModifyBuffers) {
+                    // draw nothing
+                    GLenum drawBuffers[1] = {GL_NONE};
+                    glDrawBuffers(1, drawBuffers);
+                    GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glDrawBuffers");
+                    glReadBuffer(GL_NONE);
+                    GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glReadBuffer");
+                }
             }
             else {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
