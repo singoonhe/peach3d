@@ -10,9 +10,11 @@
 #define PEACH3D_LIGHT_H
 
 #include "Peach3DCompile.h"
-#include "Peach3DVector2.h"
-#include "Peach3DVector3.h"
 #include "Peach3DColor4.h"
+#include "Peach3DVector3.h"
+#include "Peach3DMatrix4.h"
+#include "Peach3DTypes.h"
+#include "Peach3DITexture.h"
 
 namespace Peach3D
 {
@@ -33,6 +35,13 @@ namespace Peach3D
         void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
         /** Spot light need light position and direction, add spot angle cos and transverse attenuate(pow) based on the Dot. */
         void usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Vector2& ext = Vector2(0.5f, 2.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
+        
+        /** Create shadow RTT with texture size, or disable shadow.
+         * @params factor must not samller than 1.f, TextureSize = ScreenSize * factor.
+         */
+        void setShadowEnabled(bool enable, float factor = 1.f);
+        /** Return RTT texture or judge is shadow enabled. */
+        TexturePtr getShadowTexture() { return mShadowTexture; }
         
         const std::string& getName() { return mName; }
         LightType getType() { return mType; }
@@ -64,6 +73,11 @@ namespace Peach3D
         Color3      mColor;      // light color
         Vector3     mAttenuate;  // light const/line/quadratic attenuate, for Dot and Spot
         Vector2     mSpotExt;    // extent spot and cut cos attenuate, for Spot
+        
+        TexturePtr  mShadowTexture; // world shadow texture
+        CameraState mLastCameraState; // cache camera state
+        Matrix4     mLastProjMatrix;  // cache projective matrix
+        bool        mIsRestoreProj;   // is projection matrix need restore
         
         friend class SceneManager; // only SceneManager could create light
     };

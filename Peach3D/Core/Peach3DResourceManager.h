@@ -37,7 +37,7 @@ namespace Peach3D
         TexturePtr createTexture(const char* name, void* data, ulong size);
         /** Create texture from decompressed data */
         TexturePtr createTexture(void* data, uint size, int width, int height, TextureFormat format);
-        /** Create RTT(render to texture) texture, texture will auto release if not used.
+        /** Create RTT(render to texture) texture, color texture will auto release if not used.
          * @params isDepth Bind depth buffer if true, or bind colors.
          */
         TexturePtr createRenderTexture(int width, int height, bool isDepth = false);

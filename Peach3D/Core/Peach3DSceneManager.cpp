@@ -95,11 +95,6 @@ namespace Peach3D
         EventDispatcher::getSingleton().deleteClickEventListener(mRootWidget);
         // delete all lights if exsited
         deleteAllLights();
-        // delete shadow texture
-        if (mShadowTexture) {
-            ResourceManager::getSingleton().deleteTexture(mShadowTexture);
-            mShadowTexture = nullptr;
-        }
     }
     
     void SceneManager::createDrawStatsNode()
@@ -200,11 +195,13 @@ namespace Peach3D
     void SceneManager::setPerspectiveProjection(float fovY, float asPect, float zNear, float zFar)
     {
         Peach3DAssert(zNear > FLT_EPSILON, "zNear must bigger than 0!");
+        mIsOrthoProj = false;
         mProjectionMatrix = Matrix4::createPerspectiveProjection(fovY, asPect, zNear, zFar);
     }
     
     void SceneManager::setOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal)
     {
+        mIsOrthoProj = true;
         mProjectionMatrix = Matrix4::createOrthoProjection(left, right, bottom, top, nearVal, farVal);
     }
     
@@ -261,38 +258,6 @@ namespace Peach3D
         mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
             this->updateSceneNodeLighting(cNode);
         });
-    }
-    
-    void SceneManager::setShadowEnabled(bool enable, float factor)
-    {
-        if (enable && !mShadowTexture) {
-            factor = std::max(factor, 1.f);
-            mShadowSize = IPlatform::getSingleton().getCreationParams().winSize * factor;
-            // create shadow depth texture
-            mShadowTexture = ResourceManager::getSingleton().createRenderTexture(int(mShadowSize.x), int(mShadowSize.y), true);
-            static CameraState lastState; // cache camera state
-            mShadowTexture->setBeforeRenderingFunc([&]{
-                lastState = mActiveCamera->getState();
-                // only direction light could bring shadow
-                Light* dirLight = nullptr;
-                for (auto l : mLightList) {
-                    if (l.second->getType() == LightType::eDirection) {
-                        dirLight = l.second;
-                        break;
-                    }
-                }
-                // set camera to light pos
-                if (dirLight) {
-                }
-            });
-            mShadowTexture->setAfterRenderingFunc([&]{
-                mActiveCamera->setState(lastState);
-            });
-        }
-        else if (!enable && mShadowTexture) {
-            ResourceManager::getSingleton().deleteTexture(mShadowTexture);
-            mShadowTexture = nullptr;
-        }
     }
 
     /*
@@ -378,7 +343,7 @@ namespace Peach3D
         // draw render target
         auto rttList = ResourceManager::getSingleton().getRenderTextureList();
         for (auto tex : rttList) {
-            if (tex->isActived()) {
+            if (tex->isActived() || tex->getFormat() == TextureFormat::eDepth) {
                 // clean frame before render
                 tex->beforeRendering();
                 // reupdate global uniforms for GL3, befor rendering may modify camera

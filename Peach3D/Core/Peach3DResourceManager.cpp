@@ -375,10 +375,17 @@ namespace Peach3D
     {
         Peach3DAssert(tex, "Can't delete a null texture!");
         if (tex) {
-            auto nameIter = mTextureMap.find(tex->getName());
             // texture will auto release if no one hand it
+            auto nameIter = mTextureMap.find(tex->getName());
             if (nameIter != mTextureMap.end()) {
                 mTextureMap.erase(nameIter);
+            }
+            // find tex in RTT, delete it
+            for (auto iter=mRTTList.begin(); iter!=mRTTList.end(); ++iter) {
+                if (tex == *iter) {
+                    mRTTList.erase(iter);
+                    break;
+                }
             }
         }
     }
@@ -394,7 +401,8 @@ namespace Peach3D
     {
         for (auto it = mRTTList.begin(); it != mRTTList.end();) {
             // auto realse RTT which count is 1, no one hand it except list
-            if (it->use_count() <= 1) {
+            // shadow texture will release when light destroy
+            if (it->use_count() <= 1 && it->get()->getFormat() != TextureFormat::eDepth) {
                 it = mRTTList.erase(it);
             }
             else {

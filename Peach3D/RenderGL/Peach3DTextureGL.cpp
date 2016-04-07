@@ -114,7 +114,7 @@ namespace Peach3D
                 GLenum dataType = PD_RENDERLEVEL_GL3() ? GL_FLOAT : GL_UNSIGNED_INT;
                 glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, GL_DEPTH_COMPONENT, dataType, 0);
                 GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glTexImage2D");
-                mTexFormat = TextureFormat::eDepthFloat;
+                mTexFormat = TextureFormat::eDepth;
                 // set depth compare stype
                 if (PD_RENDERLEVEL_GL3()) {
                     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
@@ -140,6 +140,12 @@ namespace Peach3D
             glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
             if (isDepth) {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, mTextureId, 0);
+                // draw nothing
+                GLenum drawBuffers[1] = {GL_NONE};
+                glDrawBuffers(1, drawBuffers);
+                GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glDrawBuffers");
+                glReadBuffer(GL_NONE);
+                GL_CHECK_ERROR("TextureGL::usingAsRenderTexture glReadBuffer");
             }
             else {
                 glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextureId, 0);
@@ -263,9 +269,6 @@ namespace Peach3D
             // open polygon offset
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(2.f, 4.f);
-            // draw nothing
-            GLenum drawBuffers[1] = {GL_NONE};
-            glDrawBuffers(1, drawBuffers);
         }
         else {
             // use normal GL state
@@ -279,9 +282,6 @@ namespace Peach3D
         
         if (mIsDepthFrame) {
             glDisable(GL_POLYGON_OFFSET_FILL);
-            // restore draw color
-            GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-            glDrawBuffers(1, drawBuffers);
         }
         // restore frame buffer
         glBindFramebuffer(GL_FRAMEBUFFER, mOldFrameBuffer);

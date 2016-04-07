@@ -10,7 +10,7 @@
 #define PEACH3D_TYPES_H
 
 #include "Peach3DKeyCode.h"
-#include "Peach3DVector2.h"
+#include "Peach3DVector3.h"
 #include "Peach3DColor4.h"
 
 namespace Peach3D
@@ -22,6 +22,18 @@ namespace Peach3D
         eDX,	// feature level for dx12
         eGL3,   // feature level for OpenGL 3.2 or OpenGL ES 3.0
         eGL2    // feature level for OpenGL ES 2.0 or OpenGL 2.x
+    };
+    
+    /////////////////////RenderFeatureLevel////////////////////
+    struct PEACH3D_DLL CameraState
+    {
+        Vector3 pos;        // camera position
+        Vector3 rotation;   // camera rotation
+        Vector3 lockPos;    // locked position for locked camera
+        Vector3 up;         // camera up
+        Vector3 forward;    // forward for free camera
+        bool    isLocked;   // is camera locked to position(free camera or locked camera)
+        CameraState &operator=(const CameraState& other) { pos = other.pos; rotation = other.rotation; lockPos = other.lockPos; up = other.up; forward = other.forward; isLocked = other.isLocked; return *this; }
     };
     
     /////////////////////input event////////////////////

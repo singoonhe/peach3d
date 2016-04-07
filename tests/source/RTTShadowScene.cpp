@@ -90,30 +90,35 @@ void ShadowSample::init(Widget* parentWidget)
     mTitle = "shadow sample";
     mDesc = "render 3D world to texture, used on sprite";
     
-    // add a direction light
-    auto dirLight = SceneManager::getSingleton().addNewLight();
-    dirLight->usingAsDirection(Vector3(-1.f, -1.f, 0.f), Color3(0.5f, 0.f, 0.f));
+    // add a dot light
+    Vector3 initPos(5.f, 5.f, 0.f);
+    mDotLight = SceneManager::getSingleton().addNewLight();
+    mDotLight->usingAsDot(initPos);
+    // add light node
+    auto rootNode = SceneManager::getSingleton().getRootSceneNode();
+    auto cubeMesh = ResourceManager::getSingleton().addMesh("peach.obj");
+    mDotNode = rootNode->createChild(initPos);
+    mDotNode->attachMesh(cubeMesh);
+    mDotNode->setScale(Vector3(0.2f));
+    mDotNode->setLightingEnabled(false);
     // enable shadow
-    SceneManager::getSingleton().setShadowEnabled(true);
+    mDotLight->setShadowEnabled(true);
     
     // create a girl
     auto girlMesh = ResourceManager::getSingleton().addMesh("girl.pmt");
-    auto texNode1 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -5.f, 0.f));
+    auto texNode1 = rootNode->createChild(Vector3(0.f, -5.f, 0.f));
     texNode1->attachMesh(girlMesh);
     texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
     // create a plane using cube
-    auto cubeMesh = ResourceManager::getSingleton().addMesh("Cube.obj");
-    auto cubeNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -15.f, 0.f));
-    cubeNode->attachMesh(cubeMesh);
+    auto cubeMesh1 = ResourceManager::getSingleton().addMesh("texcube.obj");
+    auto cubeNode = rootNode->createChild(Vector3(0.f, -15.f, 0.f));
+    cubeNode->attachMesh(cubeMesh1);
     cubeNode->setScale(Vector3(10.f));
-    
-    
-    // create sprite with RTT
-    auto screenSize = LayoutManager::getSingleton().getScreenSize();
-    int rw = screenSize.x / 5;
-    auto rttSprite = Sprite::create(TextureFrame(SceneManager::getSingleton().getShadowTexture()));
-    rttSprite->setPosition(Vector2(screenSize.x - rw / 2.f, screenSize.y / 2.f));
-    parentWidget->addChild(rttSprite);
+    // just for test texture
+    auto cubeObj = cubeNode->getRenderNode("Cube");
+    if (cubeObj) {
+        cubeObj->resetTextureByIndex(0, mDotLight->getShadowTexture());
+    }
 }
 
 ShadowSample::~ShadowSample()

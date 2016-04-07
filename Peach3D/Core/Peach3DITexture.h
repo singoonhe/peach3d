@@ -39,7 +39,7 @@ namespace Peach3D
         eA8I8,      // texture include 8 bits gray and 8 bits alpha
         eRGB8,      // R8G8B8 texture
         eRGBA8,     // R8G8B8A8 texture
-        eDepthFloat, // depth component float format
+        eDepth,     // depth component format
     };
     
     // define texture filter

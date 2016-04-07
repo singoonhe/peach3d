@@ -143,7 +143,9 @@ namespace Peach3D
                             validLights.push_back(vl);
                         }
                     }
-                    ((ProgramGL*)usedProgram.get())->updateObjectLightsUniforms(validLights);
+                    if (validLights.size() > 0) {
+                        ((ProgramGL*)usedProgram.get())->updateObjectLightsUniforms(validLights);
+                    }
                 }
             }
             

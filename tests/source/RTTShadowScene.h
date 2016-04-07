@@ -28,6 +28,10 @@ class ShadowSample : public BaseSample
 {
     void init(Widget* parentWidget);
     virtual ~ShadowSample();
+    
+private:
+    Light*   mDotLight;
+    SceneNode*  mDotNode;
 };
 
 #endif /* RTTSHADOW_SCENE_H */

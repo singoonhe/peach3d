@@ -10,24 +10,13 @@
 #define PEACH3D_CAMERA_H
 
 #include "Peach3DCompile.h"
-#include "Peach3DVector3.h"
 #include "Peach3DMatrix4.h"
+#include "Peach3DTypes.h"
 #include "Peach3DQuaternion.h"
 #include "Peach3DActionImplement.h"
 
 namespace Peach3D
 {
-    struct PEACH3D_DLL CameraState
-    {
-        Vector3 pos;        // camera position
-        Vector3 rotation;   // camera rotation
-        Vector3 lockPos;    // locked position for locked camera
-        Vector3 up;         // camera up
-        Vector3 forward;    // forward for free camera
-        bool    isLocked;   // is camera locked to position(free camera or locked camera)
-        CameraState &operator=(const CameraState& other) { pos = other.pos; rotation = other.rotation; lockPos = other.lockPos; up = other.up; forward = other.forward; isLocked = other.isLocked; return *this; }
-    };
-    
     class PEACH3D_DLL Camera : public ActionImplement
     {
     public:

@@ -56,17 +56,12 @@ namespace Peach3D
         void tranverseLights(std::function<void(const std::string& name, Light* l)> callFunc, bool onlyEnabled = false);
         /** Update all SceneNode light state, will be called when light changed. */
         void updateAllNodesLighting();
-        /** Create shadow RTT with texture size, or disable shadow. 
-         * @params factor must not samller than 1.f, TextureSize = ScreenSize * factor.
-         */
-        void setShadowEnabled(bool enable, float factor = 1.f);
-        /** Return RTT texture or judge is shadow enabled. */
-        TexturePtr getShadowTexture() { return mShadowTexture; }
         
         /** Set perspective projection. */
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
         /** Set ortho projection. */
         void setOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal);
+        bool isOrthoProjection() { return mIsOrthoProj; }
         void setProjectionMatrix(const Matrix4& proj) { mProjectionMatrix = proj; }
         const Matrix4& getProjectionMatrix() {return mProjectionMatrix;}
         
@@ -111,14 +106,13 @@ namespace Peach3D
         SceneNode*              mRootSceneNode;     // root scene node
         Widget*                 mRootWidget;        // root Widget
         Matrix4                 mProjectionMatrix;  // used projective matrix for object
+        bool                    mIsOrthoProj;       // is ortho projection matrix used
         int                     mLightMax;          // lighting  max supported count
         
         Scheduler*              mDrawUpdateSchedule;// draw stats update schedule
         Widget*                 mDebugDrawNode;     // draw stats widget
         ObjectPtr               mWidgetObject;      // object for rendering widget
         ObjectPtr               mOBBObject;         // object for rendering OBB
-        TexturePtr              mShadowTexture;     // world shadow texture
-        Vector2                 mShadowSize;        // shadow texture size
         
         Camera*                 mActiveCamera;      // current active camera
         std::vector<Camera*>    mCameraList;        // scene camera list
