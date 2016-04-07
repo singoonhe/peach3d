@@ -55,6 +55,9 @@ namespace Peach3D
         OBB* getRenderOBB() const { return mRenderOBB; }
         /** Check is ray intersect to current node. */
         bool isRayIntersect(const Ray& ray) { generateOBB(); return mRenderOBB->isRayIntersect(ray); }
+        /** Set node will rendering for shadow, using special program. */
+        void setRenderShadow(bool shadow) { mIsRenderShadow = shadow; }
+        bool isRenderShadow() { return mIsRenderShadow; }
         
         void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }
@@ -89,6 +92,7 @@ namespace Peach3D
         NodeRenderState mNodeState;     // include OBB, shadow, mode state
         std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering
+        bool            mIsRenderShadow;    // is rendering for shadow
         bool            mIsRenderCodeDirty; // control when render hash need recalc
     };
 }

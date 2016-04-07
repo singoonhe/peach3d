@@ -27,6 +27,13 @@ namespace Peach3D
         void clear() { nodeMap.clear(); OBBList.clear(); }
     };
     
+    enum class PEACH3D_DLL PassDrawType
+    {
+        eColor, // default draw colors
+        eDepth, // draw depth in shadow
+        eNone,  // just update node, draw nothing
+    };
+    
     class PEACH3D_DLL SceneManager : public Singleton < SceneManager >
     {
         //! declare class IPlatform is friend class, so IRender can call destructor function.
@@ -83,10 +90,9 @@ namespace Peach3D
         void init();
         /** Render one frame, executing all pass. */
         virtual void render(float lastFrameTime);
-        /** Render once pass, update-draw. 
-         * @params content render content node and OBB.
-         */
-        virtual void renderOncePass(const Render3DPassContent& content);
+        /** Render once pass, update-draw. */
+        virtual void renderOncePass(float lastFrameTime, PassDrawType type, bool pickEnabled = false);
+        virtual void renderForRTT(float lastFrameTime, PassDrawType type, const TexturePtr& rtt);
         
         /** Create draw stats node. */
         void createDrawStatsNode();
@@ -96,9 +102,9 @@ namespace Peach3D
         void updateSceneNodeLighting(Node* sNode);
         /** Add render and picking scene node to cache list, also prepare for render.
          * @params content where node and obb list saved.
-         * @params isMain main pass will cache clicked node list.
+         * @params pickEnabled pass will cache clicked node list.
          */
-        void addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, bool isMain);
+        void addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, PassDrawType type, bool pickEnabled);
         /** Add render widget to cache list, also prepare for render. */
         void addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime);
 
@@ -118,7 +124,6 @@ namespace Peach3D
         std::vector<Camera*>    mCameraList;        // scene camera list
         
         std::map<std::string, Light*>       mLightList;         // scene light list
-        Render3DPassContent                 mPassContent;       // cache render pass content
         std::vector<Widget*>                mRenderWidgetList;  // cache widget list
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
     };

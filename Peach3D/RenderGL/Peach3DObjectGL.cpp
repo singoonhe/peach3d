@@ -38,11 +38,16 @@ namespace Peach3D
     
     /** Special program used for OBB rendering. */
     ProgramPtr ObjectGL::mOBBProgram = nullptr;
+    ProgramPtr ObjectGL::mShadowProgram = nullptr;
     
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
         if (!mOBBProgram) {
             mOBBProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
+        }
+        // create shadow program if not exist
+        if (!mShadowProgram) {
+            mShadowProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false, 0));
         }
     }
     
@@ -128,14 +133,15 @@ namespace Peach3D
             IF_BREAK(listSize == 0, nullptr);
             
             RenderNode* firstNode = renderList[0];
-            ProgramPtr usedProgram = firstNode->getProgramForRender();
+            auto isRenderShadow = firstNode->isRenderShadow();
+            ProgramPtr usedProgram = isRenderShadow ? mShadowProgram : firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
                 usedProgram->updateInstancedRenderNodeUnifroms(renderList);
-                // set lighting unfo
+                // set lighting unfo when render color
                 auto lightsName = firstNode->getRenderLights();
-                if (lightsName.size() > 0) {
+                if (!isRenderShadow && lightsName.size() > 0) {
                     std::vector<Light*> validLights;
                     for (auto name : lightsName) {
                         Light* vl = SceneManager::getSingleton().getLight(name.c_str());
@@ -161,9 +167,11 @@ namespace Peach3D
             
             // enable render state, flip using shader
             auto firMat = firstNode->getMaterial();
-            for (auto i = 0; i < firMat.getTextureCount(); i++) {
-                GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i].get())->getGLTextureId();
-                static_cast<ProgramGL*>(usedProgram.get())->activeTextures(glTextureId, i);
+            if (!isRenderShadow) {
+                for (auto i = 0; i < firMat.getTextureCount(); i++) {
+                    GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i].get())->getGLTextureId();
+                    static_cast<ProgramGL*>(usedProgram.get())->activeTextures(glTextureId, i);
+                }
             }
             
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
@@ -187,7 +195,7 @@ namespace Peach3D
                 }
             }
             // disable render state
-            if (firMat.getTextureCount() > 0) {
+            if (!isRenderShadow && firMat.getTextureCount() > 0) {
                 glBindTexture(GL_TEXTURE_2D, 0);
             }
             

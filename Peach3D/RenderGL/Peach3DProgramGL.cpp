@@ -512,7 +512,7 @@ namespace Peach3D
         // set lighting unfo
         std::vector<Light*> validLights;
         auto lightsName = node->getRenderLights();
-        if (lightsName.size() > 0) {
+        if (!node->isRenderShadow() && lightsName.size() > 0) {
             for (auto name : lightsName) {
                 Light* vl = SceneManager::getSingleton().getLight(name.c_str());
                 if (vl) {
