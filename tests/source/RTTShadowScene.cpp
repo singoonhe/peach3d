@@ -114,9 +114,9 @@ void ShadowSample::init(Widget* parentWidget)
     texNode1->setAcceptShadow(true);
     // create a plane using cube
     auto cubeMesh1 = ResourceManager::getSingleton().addMesh("texcube.obj");
-    auto cubeNode = rootNode->createChild(Vector3(0.f, -15.f, 0.f));
+    auto cubeNode = rootNode->createChild(Vector3(0.f, -10.f, 0.f));
     cubeNode->attachMesh(cubeMesh1);
-    cubeNode->setScale(Vector3(10.f));
+    cubeNode->setScale(Vector3(5.f));
     // cube just accept shadow, not bring shadow
     cubeNode->setAcceptShadow(true);
     // just for test texture

@@ -300,6 +300,8 @@ namespace Peach3D
         });
         
         if (type != PassDrawType::eNone) {
+            // reupdate global uniforms for GL3, befor rendering may modify camera
+            IRender::getSingleton().prepareForObjectRender();
             // draw all scene node
             RenderNode* lastRenderNode = nullptr;
             std::vector<RenderNode*> curNodeList;
@@ -327,13 +329,11 @@ namespace Peach3D
     
     void SceneManager::renderForRTT(float lastFrameTime, PassDrawType type, const TexturePtr& rtt)
     {
-        IRender* mainRender = IRender::getSingletonPtr();
         // clean frame before render
         rtt->beforeRendering();
-        // reupdate global uniforms for GL3, befor rendering may modify camera
-        mainRender->prepareForObjectRender();
         // render RTT pass, not cache click list
         renderOncePass(lastFrameTime, type, false);
+        // restore render state
         rtt->afterRendering();
     }
     
@@ -379,8 +379,6 @@ namespace Peach3D
         }
         // clean frame before render
         mainRender->prepareForMainRender();
-        // reupdate global uniforms for GL3
-        mainRender->prepareForObjectRender();
         // render RTT pass, not cache click list
         renderOncePass(0.f, PassDrawType::eColor, true);
         // present after draw over

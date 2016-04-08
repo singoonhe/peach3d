@@ -27,6 +27,7 @@ namespace Peach3D
                 shaderPreStr += Utils::formatString("#define PD_LIGHT_COUNT %d\n", feature.lightsCount);
             }
             if (feature.isPoint3) {
+                // choose 3D node program
                 if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
                     shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
                 }
@@ -35,6 +36,7 @@ namespace Peach3D
                 }
             }
             else {
+                // choose 2D node program
                 shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
                 shaderPreStr += isVertex ? gVerShaderCode2D : gFragShaderCode2D;
             }
