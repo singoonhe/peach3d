@@ -439,8 +439,9 @@ namespace Peach3D
         SceneNode* rNode = static_cast<SceneNode*>(node);
         // prepare render first for update "NeedRender"
         rNode->prepareForRender(lastFrameTime);
-        // add node to render list
-        if (node->isNeedRender() && content) {
+        // add node to render list. If node can't bring shadow when render shadow, discard it.
+        auto shadowNeed = !(type == PassDrawType::eDepth && !rNode->isBringShadow());
+        if (node->isNeedRender() && content && shadowNeed) {
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
                 content->nodeMap.insert(std::make_pair(node->getRenderHash(), node));
                 node->setRenderShadow(type == PassDrawType::eDepth);

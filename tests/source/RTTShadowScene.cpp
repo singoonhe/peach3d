@@ -109,11 +109,16 @@ void ShadowSample::init(Widget* parentWidget)
     auto texNode1 = rootNode->createChild(Vector3(0.f, -5.f, 0.f));
     texNode1->attachMesh(girlMesh);
     texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
+    // set girl bring shadow and accept shadow
+    texNode1->setBringShadow(true);
+    texNode1->setAcceptShadow(true);
     // create a plane using cube
     auto cubeMesh1 = ResourceManager::getSingleton().addMesh("texcube.obj");
     auto cubeNode = rootNode->createChild(Vector3(0.f, -15.f, 0.f));
     cubeNode->attachMesh(cubeMesh1);
     cubeNode->setScale(Vector3(10.f));
+    // cube just accept shadow, not bring shadow
+    cubeNode->setAcceptShadow(true);
     // just for test texture
     auto cubeObj = cubeNode->getRenderNode("Cube");
     if (cubeObj) {

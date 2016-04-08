@@ -69,8 +69,7 @@ namespace Peach3D
         GLuint mIndexBuffer;    // object own index buffer
         
         std::map<GLuint, GLuint> mVAOMap;   // each program need different VAO (program will create VBO, bind to VAO)
-        static ProgramPtr mOBBProgram;      // OBB rendering program
-        static ProgramPtr mShadowProgram;   // special program for render shadow
+        static ProgramPtr mBaseProgram;     // base rendering program, no texture and lights
     };
 }
 

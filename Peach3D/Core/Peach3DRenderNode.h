@@ -58,6 +58,8 @@ namespace Peach3D
         /** Set node will rendering for shadow, using special program. */
         void setRenderShadow(bool shadow) { mIsRenderShadow = shadow; }
         bool isRenderShadow() { return mIsRenderShadow; }
+        /** Is show shadow when rendering, modify by SceneNode. */
+        bool isAcceptShadow() { return mNodeState.isAcceptShadow; }
         
         void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }

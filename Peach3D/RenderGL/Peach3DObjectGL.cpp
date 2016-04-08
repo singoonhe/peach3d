@@ -36,18 +36,14 @@ namespace Peach3D
         return resMode;
     }
     
-    /** Special program used for OBB rendering. */
-    ProgramPtr ObjectGL::mOBBProgram = nullptr;
-    ProgramPtr ObjectGL::mShadowProgram = nullptr;
+    /** Special program used for base rendering. */
+    ProgramPtr ObjectGL::mBaseProgram = nullptr;
     
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
-        if (!mOBBProgram) {
-            mOBBProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
-        }
-        // create shadow program if not exist
-        if (!mShadowProgram) {
-            mShadowProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false, 0));
+        // create base program if not exist for OBB and shadow
+        if (!mBaseProgram) {
+            mBaseProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
         }
     }
     
@@ -134,7 +130,7 @@ namespace Peach3D
             
             RenderNode* firstNode = renderList[0];
             auto isRenderShadow = firstNode->isRenderShadow();
-            ProgramPtr usedProgram = isRenderShadow ? mShadowProgram : firstNode->getProgramForRender();
+            ProgramPtr usedProgram = isRenderShadow ? mBaseProgram : firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
@@ -281,15 +277,15 @@ namespace Peach3D
         do {
             IF_BREAK(listSize == 0, nullptr);
             
-            IF_BREAK(!mOBBProgram || !mOBBProgram->useAsRenderProgram(), nullptr);
+            IF_BREAK(!mBaseProgram || !mBaseProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
-                mOBBProgram->updateInstancedOBBUnifroms(renderList);
+                mBaseProgram->updateInstancedOBBUnifroms(renderList);
             }
             
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mOBBProgram : nullptr);
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mBaseProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -307,7 +303,7 @@ namespace Peach3D
             else {
                 for (size_t i = 0; i < listSize; ++i) {
                     // update current OBB uniforms
-                    mOBBProgram->updateOBBUnifroms(renderList[i]);
+                    mBaseProgram->updateOBBUnifroms(renderList[i]);
                     // draw one OBB
                     glDrawElements(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
                     PD_ADD_DRAWCALL(1);
