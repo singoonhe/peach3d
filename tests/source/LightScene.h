@@ -27,7 +27,7 @@ class DirLightSample : public BaseSample
     virtual ~DirLightSample();
     
 private:
-    Light*   mDirLight;
+    LightPtr   mDirLight;
 };
 
 class DotLightSample : public BaseSample
@@ -37,7 +37,7 @@ class DotLightSample : public BaseSample
     virtual ~DotLightSample();
     
 private:
-    Light*   mDotLight;
+    LightPtr    mDotLight;
     SceneNode*  mDotNode;
 };
 
@@ -48,7 +48,7 @@ class SpotLightSample : public BaseSample
     virtual ~SpotLightSample();
     
 private:
-    Light*   mSpotLight;
+    LightPtr mSpotLight;
     Vector3  mLockPos;
     Vector3  mSpotPos;
 };
@@ -66,9 +66,9 @@ class MultiLightsSample : public BaseSample
     virtual ~MultiLightsSample();
     
 private:
-    Light*   mDotLight;
+    LightPtr mDotLight;
     SceneNode*  mDotNode;
-    Light*   mSpotLight;
+    LightPtr mSpotLight;
     Vector3  mLockPos;
     Vector3  mSpotPos;
 };
@@ -79,7 +79,7 @@ class LightControlSample : public BaseSample
     virtual ~LightControlSample();
     
 private:
-    Light*      mDotLight;
+    LightPtr    mDotLight;
     SceneNode*  mControlNode;
 };
 

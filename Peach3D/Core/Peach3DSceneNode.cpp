@@ -33,7 +33,6 @@ namespace Peach3D
         // set default lighting enabled
         mLightEnable = true;
         mIsLightingDirty = true;
-        mObjMaxLength = 0.f;
     }
     
     void SceneNode::attachMesh(const MeshPtr& mesh)
@@ -213,12 +212,46 @@ namespace Peach3D
         }
     }
     
+    void SceneNode::setLightingStateNeedUpdate()
+    {
+        mIsLightingDirty = true;
+        // auto set children lighting state update
+        for (auto cn : mChildNodeList) {
+            static_cast<SceneNode*>(cn)->setLightingStateNeedUpdate();
+        }
+    }
+    
     void SceneNode::tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc)
     {
         for (auto iter=mRenderNodeMap.begin(); iter!=mRenderNodeMap.end(); ++iter) {
             // tranverse all child with param func
             callFunc(iter->first.c_str(), iter->second);
         }
+    }
+    
+    bool SceneNode::isLightShineNode(const LightPtr& l)
+    {
+        bool isShine = false;
+        // light can't be ignored
+        for (auto igL : mIgnoreLights) {
+            if (igL == l) {
+                return isShine;
+            }
+        }
+        if (l->getType() != LightType::eDirection) {
+            // calc light accumulate for node, ignore light if too far
+            auto lenVector = mWorldPosition - l->getPosition();
+            float calLen = lenVector.length();
+            auto attenV = l->getAttenuate();
+            float accuAtten = attenV.x + attenV.y * calLen + attenV.z * calLen * calLen;
+            if (accuAtten < 100.f) {
+                isShine = true;
+            }
+        }
+        else {
+            isShine = true;
+        }
+        return isShine;
     }
     
     void SceneNode::prepareForRender(float lastFrameTime)
@@ -259,23 +292,11 @@ namespace Peach3D
             }
             Matrix4 modelMatrix = translateMat * rotateMatrix * scaleMat;
             // set model matrix to all child RenderNode
-            mObjMaxLength = 0.f;
             for (auto node : mRenderNodeMap) {
                 node.second->setModelMatrix(modelMatrix);
                 OBB* renderOBB = node.second->getRenderOBB();
                 if (renderOBB) {
                     renderOBB->setModelMatrix(translateMat, rotateMatrix, scaleMat);
-                    // calc object max length
-                    float* lengthMat = (float*)renderOBB->getModelMatrix().mat;
-                    if (lengthMat[0] > mObjMaxLength) {
-                        mObjMaxLength = lengthMat[0];
-                    }
-                    if (lengthMat[5] > mObjMaxLength) {
-                        mObjMaxLength = lengthMat[5];
-                    }
-                    if (lengthMat[10] > mObjMaxLength) {
-                        mObjMaxLength = lengthMat[10];
-                    }
                 }
             }
             
@@ -283,32 +304,23 @@ namespace Peach3D
         }
         
         if (mIsLightingDirty && mAttachedMesh) {
-            std::vector<std::string> validLights;
+            std::vector<LightPtr> validLights, shadowLights;
             // is attached mesh contain vertex normal
             bool isNormal = mAttachedMesh->getAnyVertexType() & VertexType::Normal;
             if (mLightEnable && isNormal) {
                 // save enabled lights name
-                SceneManager::getSingleton().tranverseLights([&](const std::string& name, Light* l){
-                    if (l->getType() != LightType::eDirection) {
-                        auto lenVector = mWorldPosition - l->getPosition();
-                        float calLen = fmaxf(0.f, lenVector.length() - mObjMaxLength);
-                        auto attenV = l->getAttenuate();
-                        // calc light accumulate for node, ignore light if too far
-                        float accuAtten = attenV.x + attenV.y * calLen + attenV.z * calLen * calLen;
-                        if (accuAtten < 100.f) {
-                            validLights.push_back(name);
+                SceneManager::getSingleton().tranverseLights([&](const std::string& name, const LightPtr& l){
+                    if (isLightShineNode(l)) {
+                        validLights.push_back(l);
+                        if (l->getShadowTexture()) {
+                            shadowLights.push_back(l);
                         }
                     }
-                    else {
-                        validLights.push_back(name);
-                    }
                 }, true);
-                // make name list unique
-                std::sort(validLights.begin(), validLights.end());
             }
             // set all RenderNode lights
             for (auto node : mRenderNodeMap) {
-                node.second->setRenderLights(validLights);
+                node.second->setRenderLights(validLights, shadowLights);
             }
             mIsLightingDirty = false;
         }

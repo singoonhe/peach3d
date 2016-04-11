@@ -31,6 +31,7 @@ bool LightScene::init()
 
 void LightScene::exit()
 {
+    BaseScene::exit();
     // reset projective
     auto screenSize = LayoutManager::getSingleton().getScreenSize();
     SceneManager::getSingleton().setPerspectiveProjection(90.f, screenSize.x/screenSize.y);

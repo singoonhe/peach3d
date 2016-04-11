@@ -97,8 +97,8 @@ namespace Peach3D
         void setDepthBias(float depthBias) { mDepthBias = depthBias; }
         float getDepthBias() { return mDepthBias; }
         
-        /** Lights used will be update before render. */
-        void setLightingStateNeedUpdate() { mIsLightingDirty = true; }
+        /** Lights used will be update before render, called when lights changed. */
+        void setLightingStateNeedUpdate();
         /** Traverse RenderNode, will auto call lambda func. */
         void tranverseRenderNode(std::function<void(const char*, RenderNode*)> callFunc);
         /** Judge is need render. */
@@ -113,6 +113,8 @@ namespace Peach3D
         //! delete SceneNode by SceneManager, user can't call destructor function.
         virtual ~SceneNode();
         
+        /* Return is light shine scene node. */
+        bool isLightShineNode(const LightPtr& l);
         /* Update child RenderNode state. */
         void updateRenderState();
         /* Update rendering attributes, about world rect/rotate/scale... */
@@ -130,10 +132,11 @@ namespace Peach3D
         Vector3         mWorldScale;    // cache scene node world scale
         Vector3         mWorldRotation; // cache scene node world rotation
         float           mDepthBias;     // rendering depth bias, valid if bigger than 0.0f
-        bool            mLightEnable;   // is lighting enabled, default is true
-        bool            mIsLightingDirty;   // is lighting state need update
         NodeRenderState mNodeState;     // include OBB, shadow, mode state
-        float           mObjMaxLength;  // objects max length
+        
+        bool            mLightEnable;   // is lighting enabled, default is true
+        bool            mIsLightingDirty;       // is lighting state need update
+        std::vector<LightPtr>   mIgnoreLights;  // need ignore lights
         
         bool            mPickEnabled;   // is object picking eanbled
         bool            mPickAlways;    // is object always picking eanbled, even not render

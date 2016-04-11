@@ -75,16 +75,23 @@ namespace Peach3D
         if (mIsRenderCodeDirty) {
             // set preset program first if needed
             auto lCount = (int)mRenderLights.size();
-            if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount)) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount));
+            auto sCount = (int)mShadowLights.size();
+            if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount) || (mRenderProgram->getShadowCount() != sCount)) {
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount, sCount));
             }
-            // calc render unique hash code
-            std::string renderState = Utils::formatString("Name:%sProgram:%uDrawMode:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
+            // calc render unique hash code(Name:Program:DrawMode)
+            std::string renderState = Utils::formatString("N:%sP:%uDM:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
+            renderState += "MT"; // Material Texture
             for (auto tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();
             }
-            for (auto lName : mRenderLights) {
-                renderState = renderState + lName;
+            renderState += "RL"; // Render Lights
+            for (auto l : mRenderLights) {
+                renderState = renderState + l->getName();
+            }
+            renderState += "SL"; // Shadow Lights
+            for (auto l : mShadowLights) {
+                renderState = renderState + l->getName();
             }
             mRenderHash = XXH32((void*)renderState.c_str(), (int)renderState.size(), 0);
             

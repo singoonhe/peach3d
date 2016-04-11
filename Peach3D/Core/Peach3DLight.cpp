@@ -22,38 +22,37 @@ namespace Peach3D
     
     Light::~Light()
     {
-        // delete a light, node need update valid name
-        SceneManager::getSingleton().updateAllNodesLighting();
         // delete shadow texture
         if (mShadowTexture) {
             ResourceManager::getSingleton().deleteTexture(mShadowTexture);
             mShadowTexture = nullptr;
         }
+        // SceneManager have update scenenode, so do nothing here
     }
     
     void Light::usingAsDirection(const Vector3& dir, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eDirection; mDir = dir; mColor = color; mAmbient = ambient;
-        SceneManager::getSingleton().updateAllNodesLighting();
+        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::usingAsDot(const Vector3& pos, const Vector3& attenuate, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eDot; mPos = pos; mAttenuate = attenuate; mColor = color; mAmbient = ambient;
-        SceneManager::getSingleton().updateAllNodesLighting();
+        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate, const Vector2& ext, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eSpot; mPos = pos; mDir = dir; mAttenuate = attenuate; mSpotExt = ext; mColor = color; mAmbient = ambient;
-        SceneManager::getSingleton().updateAllNodesLighting();
+        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::setEnabled(bool enable)
     {
         mIsEnabled = enable;
         // SceneNode may need update lighting count
-        SceneManager::getSingleton().updateAllNodesLighting();
+        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::setShadowEnabled(bool enable, float factor)
@@ -102,6 +101,8 @@ namespace Peach3D
             ResourceManager::getSingleton().deleteTexture(mShadowTexture);
             mShadowTexture = nullptr;
         }
+        // SceneNode may need update lighting count
+        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
 }
 

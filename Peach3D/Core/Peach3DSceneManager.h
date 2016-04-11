@@ -56,13 +56,11 @@ namespace Peach3D
         void setLightMax(int count) { if (count > 0) mLightMax = count; }
         int getLightMax() { return mLightMax; }
         /** Add new light, auto new name if null. */
-        Light* addNewLight(const char* name = "");
-        Light* getLight(const char* name);
+        LightPtr addNewLight(const char* name = "");
+        LightPtr getLight(const char* name);
         void deleteLight(const char* name);
         void deleteAllLights();
-        void tranverseLights(std::function<void(const std::string& name, Light* l)> callFunc, bool onlyEnabled = false);
-        /** Update all SceneNode light state, will be called when light changed. */
-        void updateAllNodesLighting();
+        void tranverseLights(std::function<void(const std::string& name, const LightPtr& l)> callFunc, bool onlyEnabled = false);
         
         /** Set perspective projection. */
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
@@ -98,8 +96,6 @@ namespace Peach3D
         void createDrawStatsNode();
         /** Create preset widget object and OBB object. */
         void createPresetObjects();
-        /** Update SceneNode and children. */
-        void updateSceneNodeLighting(Node* sNode);
         /** Add render and picking scene node to cache list, also prepare for render.
          * @params content where node and obb list saved.
          * @params pickEnabled pass will cache clicked node list.
@@ -123,7 +119,7 @@ namespace Peach3D
         Camera*                 mActiveCamera;      // current active camera
         std::vector<Camera*>    mCameraList;        // scene camera list
         
-        std::map<std::string, Light*>       mLightList;         // scene light list
+        std::map<std::string, LightPtr>     mLightList;         // scene light list
         std::vector<Widget*>                mRenderWidgetList;  // cache widget list
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
     };

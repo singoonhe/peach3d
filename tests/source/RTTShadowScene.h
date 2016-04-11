@@ -30,7 +30,7 @@ class ShadowSample : public BaseSample
     virtual ~ShadowSample();
     
 private:
-    Light*   mDotLight;
+    LightPtr    mDotLight;
     SceneNode*  mDotNode;
 };
 

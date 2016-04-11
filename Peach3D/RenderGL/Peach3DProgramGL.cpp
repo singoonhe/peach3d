@@ -268,7 +268,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateObjectLightsUniforms(const std::vector<Light*>& lights)
+    void ProgramGL::updateObjectLightsUniforms(const std::vector<LightPtr>& lights)
     {
         Peach3DAssert(lights.size() == mLightsCount, "Light list must equal to program count!");
         if (mLightsUBOId != GL_INVALID_INDEX && mLightsCount > 0) {
@@ -510,15 +510,9 @@ namespace Peach3D
         // lights attribute
         float lData[3 * SceneManager::getSingleton().getLightMax()];
         // set lighting unfo
-        std::vector<Light*> validLights;
-        auto lightsName = node->getRenderLights();
-        if (!node->isRenderShadow() && lightsName.size() > 0) {
-            for (auto name : lightsName) {
-                Light* vl = SceneManager::getSingleton().getLight(name.c_str());
-                if (vl) {
-                    validLights.push_back(vl);
-                }
-            }
+        std::vector<LightPtr> validLights;
+        if (!node->isRenderShadow()) {
+            validLights = node->getRenderLights();
         }
         // update object uniforms in list
         for (auto uniform : mProgramUniformList) {

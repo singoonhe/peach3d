@@ -44,7 +44,7 @@ namespace Peach3D
         /** Update RenderNode unifroms for 3d object material. */
         virtual void updateRenderNodeUnifroms(RenderNode* node);
         /** Update lights uniform buffer for 3d object. */
-        void updateObjectLightsUniforms(const std::vector<Light*>& lights);
+        void updateObjectLightsUniforms(const std::vector<LightPtr>& lights);
         /** Update instanced RenderNode unifroms depend on mProgramUniformList. */
         virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
         

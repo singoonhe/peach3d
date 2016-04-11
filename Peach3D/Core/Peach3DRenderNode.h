@@ -13,6 +13,7 @@
 #include "Peach3DMaterial.h"
 #include "Peach3DIObject.h"
 #include "Peach3DNode.h"
+#include "Peach3DLight.h"
 
 namespace Peach3D
 {
@@ -44,8 +45,9 @@ namespace Peach3D
         void setMaterial(const Material& mate) { mMaterial = mate; mIsRenderCodeDirty = true; }
         const Material& getMaterial() { return mMaterial; }
         /** Reset render lights name, called by parent in preparing render. */
-        void setRenderLights(const std::vector<std::string>& ls) { mRenderLights = ls; mIsRenderCodeDirty = true;}
-        const std::vector<std::string>& getRenderLights() { return mRenderLights; }
+        void setRenderLights(const std::vector<LightPtr>& rl, const std::vector<LightPtr>& sl) { mRenderLights = rl; mShadowLights = sl; mIsRenderCodeDirty = true;}
+        const std::vector<LightPtr>& getRenderLights() { return mRenderLights; }
+        const std::vector<LightPtr>& getShadowLights() { return mShadowLights; }
         
         void setRenderState(const NodeRenderState& state);
         DrawMode getDrawMode() { return mNodeState.mode; }
@@ -90,7 +92,8 @@ namespace Peach3D
         ProgramPtr      mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         
-        std::vector<std::string>    mRenderLights;  // valid lights name, setting by parent
+        std::vector<LightPtr>   mRenderLights;  // valid lights, setting by parent
+        std::vector<LightPtr>   mShadowLights;  // valid shadow lights, setting by parent
         NodeRenderState mNodeState;     // include OBB, shadow, mode state
         std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering

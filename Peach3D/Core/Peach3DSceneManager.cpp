@@ -148,15 +148,6 @@ namespace Peach3D
         }
     }
     
-    void SceneManager::updateSceneNodeLighting(Node* sNode)
-    {
-        ((SceneNode*)sNode)->setLightingStateNeedUpdate();
-        // auto update children
-        sNode->tranverseChildNode([&](size_t, Node* cNode){
-            this->updateSceneNodeLighting(cNode);
-        });
-    }
-    
     Camera* SceneManager::createFreeCamera(const Vector3& pos, const Vector3& rotate)
     {
         Camera* newCamera = new Camera(pos, rotate);
@@ -205,7 +196,7 @@ namespace Peach3D
         mProjectionMatrix = Matrix4::createOrthoProjection(left, right, bottom, top, nearVal, farVal);
     }
     
-    Light* SceneManager::addNewLight(const char* name)
+    LightPtr SceneManager::addNewLight(const char* name)
     {
         std::string insertName = name;
         if (insertName.empty() || mLightList.find(insertName) != mLightList.end()) {
@@ -213,12 +204,12 @@ namespace Peach3D
             insertName = Utils::formatString("pd_Light%d", lightAutoIndex++);
         }
         // create new null light
-        auto newL = new Light(insertName.c_str());
+        LightPtr newL(new Light(insertName.c_str()));
         mLightList[insertName] = newL;
         return newL;
     }
 
-    Light* SceneManager::getLight(const char* name)
+    LightPtr SceneManager::getLight(const char* name)
     {
         if (name && mLightList.find(name) != mLightList.end()) {
             return mLightList[name];
@@ -229,35 +220,27 @@ namespace Peach3D
     void SceneManager::deleteLight(const char* name)
     {
         auto findIter = mLightList.find(name);
+        // light will autorelease, just erase it
         if (findIter != mLightList.end()) {
-            delete findIter->second;
             mLightList.erase(findIter);
+            // delete a light, node need update valid name
+            mRootSceneNode->setLightingStateNeedUpdate();
         }
     }
     
     void SceneManager::deleteAllLights()
     {
-        // delete all lights memory
-        for (auto iter : mLightList) {
-            delete iter.second;
-        }
+        // lights will autorelease
         mLightList.clear();
     }
     
-    void SceneManager::tranverseLights(std::function<void(const std::string& name, Light* l)> callFunc, bool onlyEnabled)
+    void SceneManager::tranverseLights(std::function<void(const std::string& name, const LightPtr& l)> callFunc, bool onlyEnabled)
     {
         for (auto iter : mLightList) {
             if ((!onlyEnabled || iter.second->isEnabled()) && iter.second->getType() != LightType::eUnknow) {
                 callFunc(iter.first, iter.second);
             }
         }
-    }
-    
-    void SceneManager::updateAllNodesLighting()
-    {
-        mRootSceneNode->tranverseChildNode([&](size_t, Node* cNode){
-            this->updateSceneNodeLighting(cNode);
-        });
     }
 
     /*

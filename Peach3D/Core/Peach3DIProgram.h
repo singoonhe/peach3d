@@ -40,7 +40,7 @@ namespace Peach3D
     {
     public:
         //! Create program by IRender, user can't call constructor function.
-        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0) {}
+        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0), mShadowCount(0) {}
         virtual ~IProgram() {}
         
         /** Set vertex shader, program will valid when vs and ps all is set. */
@@ -54,6 +54,9 @@ namespace Peach3D
         /** Set program lights count, auto enable lighting. */
         virtual void setLightsCount(uint count) { mLightsCount = count; }
         int getLightsCount() { return mLightsCount; }
+        /** Set program shadow count. */
+        virtual void setShadowCount(uint count) { mShadowCount = count; }
+        int getShadowCount() { return mShadowCount; }
         
         /** Update RenderNode unifroms for 3d GL2 object material. */
 		virtual void updateRenderNodeUnifroms(RenderNode* node) {}
@@ -82,6 +85,7 @@ namespace Peach3D
         bool        mProgramValid;  // is program valid
         uint        mVertexType;    // vertex data type
         int         mLightsCount;   // lights count
+        int         mShadowCount;   // lights shadow count
         
         std::vector<ProgramUniform>  mProgramUniformList; // all the program uniforms in shader
     };

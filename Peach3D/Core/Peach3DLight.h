@@ -29,6 +29,9 @@ namespace Peach3D
     class PEACH3D_DLL Light
     {
     public:
+        Light(const char* name) : mName(name), mType(LightType::eUnknow), mIsEnabled(true) {}
+        ~Light();
+        
         /** Direction light only need direction. */
         void usingAsDirection(const Vector3& dir, const Color3& color = Color3Gray, const Color3& ambient = Color3Gray);
         /** Dot light need light position and attenuate(const/line/square). */
@@ -61,9 +64,6 @@ namespace Peach3D
         const Vector3& getAttenuate() { return mAttenuate; }
         void setSpotExtend(const Vector2& spotExt) { mSpotExt = spotExt; };
         const Vector2& getSpotExtend() { return mSpotExt; }
-    private:
-        Light(const char* name) : mName(name), mType(LightType::eUnknow), mIsEnabled(true) {}
-        ~Light();
         
     private:
         std::string mName;       // light name
@@ -81,9 +81,10 @@ namespace Peach3D
         static CameraState mLastCameraState; // cache camera state
         static Matrix4     mLastProjMatrix;  // cache projective matrix
         static bool        mIsRestoreProj;   // is projection matrix need restore
-        
-        friend class SceneManager; // only SceneManager could create light
     };
+    
+    // make shared light simple
+    using LightPtr = std::shared_ptr<Light>;
 }
 
 #endif /* PEACH3D_LIGHT_H */
