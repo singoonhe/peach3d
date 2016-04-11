@@ -191,7 +191,7 @@ namespace Peach3D
             
             // bind gobal uniforms when GL3 support
             if (PD_RENDERLEVEL_GL3()) {
-                bindUniformsBuffer("GlobalUnifroms", (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId,
+                bindUniformsBuffer("GlobalUniforms", (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId,
                                    (mVertexType & VertexType::Point3) ? &mObjectUBOSize : &mWidgetUBOSize,
                                    (mVertexType & VertexType::Point3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms,
                                    GLOBAL_UBO_BINDING_POINT);
@@ -224,7 +224,7 @@ namespace Peach3D
                 // set object lights UBO uniforms
                 mLightsUBOUniforms = ShaderCode::mLightUniforms;
                 // bind lights UBO
-                bindUniformsBuffer("LightsUnifroms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
+                bindUniformsBuffer("LightsUniforms", &mLightsUBOId, &mLightsUBOSize, &mLightsUBOUniforms, LIGHTS_UBO_BINDING_POINT);
             }
         }
     }
@@ -233,12 +233,12 @@ namespace Peach3D
     {
         // get global uniform from program, so every program must include uName
         GLuint globalIndex = glGetUniformBlockIndex(mProgram, uName);
-        Peach3DAssert(globalIndex != GL_INVALID_INDEX, "block GlobalUnifroms must include in vertex shader");
+        Peach3DAssert(globalIndex != GL_INVALID_INDEX, "block Uniforms must include in vertex shader");
         
         if (globalIndex != GL_INVALID_INDEX) {
             // create global UBO if it not exist
             if ((*UBOId) == GL_INVALID_INDEX) {
-                // get global unifrom size, may different on platforms
+                // get global uniform size, may different on platforms
                 glGetActiveUniformBlockiv(mProgram, globalIndex, GL_UNIFORM_BLOCK_DATA_SIZE, UBOSize);
                 
                 glGenBuffers(1, UBOId);
@@ -285,6 +285,7 @@ namespace Peach3D
                             auto spotExt = lights[i]->getSpotExtend();
                             lData[i * 4 + 1] = spotExt.x;
                             lData[i * 4 + 2] = spotExt.y;
+                            lData[i * 4 + 3] = lights[i]->getShadowTexture() ? 1.f: 0.f;
                         }
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
@@ -354,7 +355,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateGlobalObjectUnifroms()
+    void ProgramGL::updateGlobalObjectUniforms()
     {
         if (mObjectUBOId != GL_INVALID_INDEX) {
             glBindBuffer(GL_UNIFORM_BUFFER, mObjectUBOId);
@@ -382,7 +383,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateGlobalWidgetUnifroms()
+    void ProgramGL::updateGlobalWidgetUniforms()
     {
         if (mWidgetUBOId != GL_INVALID_INDEX) {
             glBindBuffer(GL_UNIFORM_BUFFER, mWidgetUBOId);
@@ -478,13 +479,13 @@ namespace Peach3D
             glActiveTexture(GL_TEXTURE0 + index);
             glBindTexture(GL_TEXTURE_2D, texId);
             std::string pdName = Utils::formatString("pd_texture%d", index);
-            setUnifromLocationValue(pdName.c_str(), [&index](GLint location) {
+            setUniformLocationValue(pdName.c_str(), [&index](GLint location) {
                 glUniform1i(location, index);
             });
         }
     }
     
-    void ProgramGL::setUnifromLocationValue(const std::string& name, std::function<void(GLint)> valueFunc)
+    void ProgramGL::setUniformLocationValue(const std::string& name, std::function<void(GLint)> valueFunc)
     {
         GLint uniformLocation = -1;
         if (mUniformLocateMap.find(name) == mUniformLocateMap.end()) {
@@ -503,12 +504,12 @@ namespace Peach3D
         }
     }
 
-    void ProgramGL::updateRenderNodeUnifroms(RenderNode* node)
+    void ProgramGL::updateRenderNodeUniforms(RenderNode* node)
     {
         SceneManager* sgr = SceneManager::getSingletonPtr();
         const Material& objMat = node->getMaterial();
         // lights attribute
-        float lData[3 * SceneManager::getSingleton().getLightMax()];
+        float lData[4 * SceneManager::getSingleton().getLightMax()];
         // set lighting unfo
         std::vector<LightPtr> validLights;
         if (!node->isRenderShadow()) {
@@ -518,32 +519,32 @@ namespace Peach3D
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eProjMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Matrix4& projMatrix = sgr->getProjectionMatrix();
                         glUniformMatrix4fv(location, 1, false, projMatrix.mat);
                     });
                     break;
                 case UniformNameType::eViewMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
                         glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
                     });
                     break;
                 case UniformNameType::eModelMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Matrix4& modelMat = node->getModelMatrix();
                         glUniformMatrix4fv(location, 1, false, modelMat.mat);
                     });
                     break;
                 case UniformNameType::eDiffuse:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
                         glUniform4fv(location, 1, color);
                     });
                     break;
                     // material uniforms
                 case UniformNameType::eNormalMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         Matrix4 modelMat = node->getModelMatrix();
                         Matrix4 invmat;
                         modelMat.getInverse(&invmat);
@@ -551,38 +552,39 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eMatAmbient:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
                         glUniform3fv(location, 1, color);
                     });
                     break;
                 case UniformNameType::eMatSpecular:
                     // also pass shininess
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
                         glUniform4fv(location, 1, color);
                     });
                     break;
                 case UniformNameType::eMatEmissive:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
                         glUniform3fv(location, 1, color);
                     });
                     break;
                     // lights uniforms
                 case UniformNameType::eLightTypeSpot:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
                             auto spotExt = validLights[i]->getSpotExtend();
-                            lData[i * 3] = (float)validLights[i]->getType();
-                            lData[i * 3 + 1] = spotExt.x;
-                            lData[i * 3 + 2] = spotExt.y;
+                            lData[i * 4] = (float)validLights[i]->getType();
+                            lData[i * 4 + 1] = spotExt.x;
+                            lData[i * 4 + 2] = spotExt.y;
+                            lData[i * 4 + 3] = validLights[i]->getShadowTexture() ? 1.f: 0.f;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform4fv(location, (GLsizei)validLights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightPos:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
                             auto pos = validLights[i]->getPosition();
                             lData[i * 3] = pos.x;
@@ -593,7 +595,7 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eLightDir:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
                             auto dir = validLights[i]->getDirection();
                             lData[i * 3] = dir.x;
@@ -604,7 +606,7 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eLightAtten:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
                             auto attenuate = validLights[i]->getAttenuate();
                             lData[i * 3] = attenuate.x;
@@ -615,7 +617,7 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eLightAmbient:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
                             auto ambient = validLights[i]->getAmbient();
                             lData[i * 3] = ambient.r;
@@ -626,7 +628,7 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eLightColor:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<validLights.size(); ++i) {
                             auto color = validLights[i]->getColor();
                             lData[i * 3] = color.r;
@@ -637,7 +639,7 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eEyeDir:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
                         lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
                         glUniform3fv(location, 1, lData);
@@ -649,7 +651,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList)
+    void ProgramGL::updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList)
     {
         // map insanced attribute buffer
         float *data = beginMapInstanceUniformBuffer((uint)renderList.size());
@@ -713,7 +715,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateOBBUnifroms(OBB* obb)
+    void ProgramGL::updateOBBUniforms(OBB* obb)
     {
         SceneManager* sgr = SceneManager::getSingletonPtr();
         Color4 OBBColor = IRender::getSingleton().getRenderOBBColor();
@@ -721,25 +723,25 @@ namespace Peach3D
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eProjMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Matrix4& projMatrix = sgr->getProjectionMatrix();
                         glUniformMatrix4fv(location, 1, false, projMatrix.mat);
                     });
                     break;
                 case UniformNameType::eViewMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
                         glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
                     });
                     break;
                 case UniformNameType::eModelMatrix:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Matrix4& modelMat = obb->getModelMatrix();
                         glUniformMatrix4fv(location, 1, false, modelMat.mat);
                     });
                     break;
                 case UniformNameType::eDiffuse:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         float color[] = {OBBColor.r, OBBColor.g, OBBColor.b, OBBColor.a};
                         glUniform4fv(location, 1, color);
                     });
@@ -750,7 +752,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList)
+    void ProgramGL::updateInstancedOBBUniforms(const std::vector<OBB*>& renderList)
     {
         // map insanced attribute buffer
         float *data = beginMapInstanceUniformBuffer((uint)renderList.size());
@@ -786,20 +788,20 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateWidgetUnifroms(Widget* widget)
+    void ProgramGL::updateWidgetUniforms(Widget* widget)
     {
         const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
         // update widget uniforms in list
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eViewRect:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         float viewRect[] = {0.0f, 0.0f, winSize.x, winSize.y};
                         glUniform4fv(location, 1, viewRect);
                     });
                     break;
                 case UniformNameType::eShowRect:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Vector2& pos = widget->getPosition(TranslateRelative::eWorld);
                         const Vector2& size = widget->getContentSize(TranslateRelative::eWorld);
                         float rect[] = {pos.x, pos.y, size.x, size.y};
@@ -807,14 +809,14 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eAnRot:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Vector2& anchor = widget->getAnchorPoint();
                         float anRot[] = {anchor.x, anchor.y, widget->getRotation(TranslateRelative::eWorld)};
                         glUniform3fv(location, 1, anRot);
                     });
                     break;
                 case UniformNameType::ePatShowRect:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         Vector2 pos;
                         Vector2 size = winSize;
                         Widget* patWidget = static_cast<Widget*>(widget->getParentNode());
@@ -827,7 +829,7 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::ePatAnRot:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         Vector2 anchor;
                         float rotate = 0.0f;
                         Widget* patWidget = static_cast<Widget*>(widget->getParentNode());
@@ -840,21 +842,21 @@ namespace Peach3D
                     });
                     break;
                 case UniformNameType::eDiffuse:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         auto color = widget->getColor();
                         float colour[] = {color.r, color.g, color.b, widget->getAlpha()};
                         glUniform4fv(location, 1, colour);
                     });
                     break;
                 case UniformNameType::eUVRect:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Rect& texCoord = static_cast<Sprite*>(widget)->getTextureFrame().rc;
                         float coord[] = {texCoord.pos.x, texCoord.pos.y, texCoord.size.x, texCoord.size.y};
                         glUniform4fv(location, 1, coord);
                     });
                     break;
                 case UniformNameType::eTexEffect:
-                    setUnifromLocationValue(uniform.name, [&](GLint location) {
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
                         const Vector2& scale = widget->getScale();
                         float gray = static_cast<Sprite*>(widget)->isGrayscaleEnabled() ? 1.f : 0.f;
                         float effect[] = {scale.x > 0.f ? 1.f : -1.f, scale.y > 0.f ? 1.f : -1.f, gray};
@@ -867,7 +869,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList)
+    void ProgramGL::updateInstancedWidgetUniforms(const std::vector<Widget*>& renderList)
     {
         // map insanced attribute buffer
         float *data = beginMapInstanceUniformBuffer((uint)renderList.size());

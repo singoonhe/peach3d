@@ -51,7 +51,7 @@ namespace Peach3D
     // vertex shader
     const char* gVerShaderCode2D = STRINGIFY(\
     #ifdef PD_LEVEL_GL3\n
-        uniform GlobalUnifroms {
+        uniform GlobalUniforms {
             vec4 pd_viewRect;
         };
         in vec2 pd_vertex;

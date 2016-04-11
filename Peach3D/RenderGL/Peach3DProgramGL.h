@@ -41,22 +41,22 @@ namespace Peach3D
         /** Active textures, index from 0. */
         void activeTextures(GLuint texId, uint index);
         
-        /** Update RenderNode unifroms for 3d object material. */
-        virtual void updateRenderNodeUnifroms(RenderNode* node);
+        /** Update RenderNode uniforms for 3d object material. */
+        virtual void updateRenderNodeUniforms(RenderNode* node);
         /** Update lights uniform buffer for 3d object. */
         void updateObjectLightsUniforms(const std::vector<LightPtr>& lights);
-        /** Update instanced RenderNode unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
+        /** Update instanced RenderNode uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList);
         
-        /** Update widget unifroms for 2d object, include matrix/textures... */
-        virtual void updateWidgetUnifroms(Widget* widget);
-        /** Update instanced widgets unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList);
+        /** Update widget uniforms for 2d object, include matrix/textures... */
+        virtual void updateWidgetUniforms(Widget* widget);
+        /** Update instanced widgets uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedWidgetUniforms(const std::vector<Widget*>& renderList);
         
-        /** Update OBB unifroms for GL2. */
-        virtual void updateOBBUnifroms(OBB* obb);
-        /** Update instanced OBB unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList);
+        /** Update OBB uniforms for GL2. */
+        virtual void updateOBBUniforms(OBB* obb);
+        /** Update instanced OBB uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedOBBUniforms(const std::vector<OBB*>& renderList);
         
     protected:
         /** Compile program, this will be called automatically. */
@@ -74,14 +74,14 @@ namespace Peach3D
         void bindUniformsBuffer(const char* uName, GLuint* UBOId, GLint* UBOSize, std::vector<ProgramUniform>* uniforms, GLint index);
         
         /** Update object global uniform buffer, only RenderGL call it for GL3. */
-        static void updateGlobalObjectUnifroms();
+        static void updateGlobalObjectUniforms();
         /** Update widget global uniform buffer, only RenderGL call it for GL3. */
-        static void updateGlobalWidgetUnifroms();
+        static void updateGlobalWidgetUniforms();
         /** Delete all global uniform buffer, only RenderGL call it for GL3. */
         static void deleteGlobalUBO();
         
         //! set uniform value in shader, used for GL2 and GL3
-        void setUnifromLocationValue(const std::string& name, std::function<void(GLint)> valueFunc);
+        void setUniformLocationValue(const std::string& name, std::function<void(GLint)> valueFunc);
         
     protected:
         GLuint  mVSShader;

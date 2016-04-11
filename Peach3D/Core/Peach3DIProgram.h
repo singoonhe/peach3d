@@ -58,20 +58,20 @@ namespace Peach3D
         virtual void setShadowCount(uint count) { mShadowCount = count; }
         int getShadowCount() { return mShadowCount; }
         
-        /** Update RenderNode unifroms for 3d GL2 object material. */
-		virtual void updateRenderNodeUnifroms(RenderNode* node) {}
-        /** Update instanced RenderNodes unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList) = 0;
+        /** Update RenderNode uniforms for 3d GL2 object material. */
+		virtual void updateRenderNodeUniforms(RenderNode* node) {}
+        /** Update instanced RenderNodes uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList) = 0;
         
-        /** Update widget unifroms for 2d GL2 object, include matrix/textures... */
-		virtual void updateWidgetUnifroms(Widget* widget) {}
-        /** Update instanced widgets unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList) = 0;
+        /** Update widget uniforms for 2d GL2 object, include matrix/textures... */
+		virtual void updateWidgetUniforms(Widget* widget) {}
+        /** Update instanced widgets uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedWidgetUniforms(const std::vector<Widget*>& renderList) = 0;
         
-        /** Update OBB unifroms for GL2. */
-        virtual void updateOBBUnifroms(OBB* obb) {};
-        /** Update instanced OBB unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList) = 0;
+        /** Update OBB uniforms for GL2. */
+        virtual void updateOBBUniforms(OBB* obb) {};
+        /** Update instanced OBB uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedOBBUniforms(const std::vector<OBB*>& renderList) = 0;
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;

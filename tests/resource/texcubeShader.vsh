@@ -7,7 +7,7 @@
 #ifdef PD_LEVEL_GL3
 // global uniform block, include proj/view matrix and abiment
 // this will effect all object
-uniform GlobalUnifroms
+uniform GlobalUniforms
 {
     mat4 pd_projMatrix;
     mat4 pd_viewMatrix;
@@ -16,7 +16,7 @@ uniform GlobalUnifroms
 
 // object uniform block, include model matrix and other attrs
 // such as light, diffuse, spherical
-uniform ObjectUnifroms
+uniform ObjectUniforms
 {
     mat4 pd_modelMatrix;
 };

@@ -25,6 +25,10 @@ namespace Peach3D
             if (feature.lightsCount > 0) {
                 shaderPreStr += "#define PD_ENABLE_LIGHT\n";
                 shaderPreStr += Utils::formatString("#define PD_LIGHT_COUNT %d\n", feature.lightsCount);
+                
+                if (feature.shadowCount > 0) {
+                    shaderPreStr += Utils::formatString("#define PD_SHADOW_COUNT %d\n", feature.shadowCount);
+                }
             }
             if (feature.isPoint3) {
                 // choose 3D node program
@@ -56,6 +60,9 @@ namespace Peach3D
                     uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
                     if (feature.lightsCount > 0) {
                         uniforms.insert(uniforms.end(), ShaderCode::mLightUniforms.begin(), ShaderCode::mLightUniforms.end());
+                        if (feature.shadowCount > 0) {
+                            uniforms.push_back(ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4));
+                        }
                     }
                 }
                 uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));

@@ -134,7 +134,7 @@ namespace Peach3D
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
-                usedProgram->updateInstancedRenderNodeUnifroms(renderList);
+                usedProgram->updateInstancedRenderNodeUniforms(renderList);
                 // set lighting unfo when render color
                 auto lights = firstNode->getRenderLights();
                 if (!isRenderShadow && lights.size() > 0) {
@@ -174,7 +174,7 @@ namespace Peach3D
             else {
                 for (size_t i = 0; i < listSize; ++i) {
                     // update current widget uniforms
-                    usedProgram->updateRenderNodeUnifroms(renderList[i]);
+                    usedProgram->updateRenderNodeUniforms(renderList[i]);
                     // draw one widget
                     glDrawElements(glDrawMode, indexCount, indexType, 0);
                     PD_ADD_DRAWCALL(1);
@@ -207,7 +207,7 @@ namespace Peach3D
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
-                usedProgram->updateInstancedWidgetUnifroms(renderList);
+                usedProgram->updateInstancedWidgetUniforms(renderList);
             }
             
             // bind vertex and index
@@ -240,7 +240,7 @@ namespace Peach3D
             else {
                 for (size_t i = 0; i < listSize; ++i) {
                     // update current widget uniforms
-                    usedProgram->updateWidgetUnifroms(renderList[i]);
+                    usedProgram->updateWidgetUniforms(renderList[i]);
                     // draw one widget
                     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
                     PD_ADD_DRAWCALL(1);
@@ -271,7 +271,7 @@ namespace Peach3D
             IF_BREAK(!mBaseProgram || !mBaseProgram->useAsRenderProgram(), nullptr);
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
-                mBaseProgram->updateInstancedOBBUnifroms(renderList);
+                mBaseProgram->updateInstancedOBBUniforms(renderList);
             }
             
             // bind vertex and index
@@ -294,7 +294,7 @@ namespace Peach3D
             else {
                 for (size_t i = 0; i < listSize; ++i) {
                     // update current OBB uniforms
-                    mBaseProgram->updateOBBUnifroms(renderList[i]);
+                    mBaseProgram->updateOBBUniforms(renderList[i]);
                     // draw one OBB
                     glDrawElements(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
                     PD_ADD_DRAWCALL(1);

@@ -385,7 +385,7 @@ namespace Peach3D
             mGlobalObjectAttrs.modelMatrix = &objAttrs;
             // set program
             rayProgram->useAsRenderProgram();
-            rayProgram->updateObjectUnifroms(&mGlobalObjectAttrs, nullptr, 0.0f);
+            rayProgram->updateObjectUniforms(&mGlobalObjectAttrs, nullptr, 0.0f);
             // draw ray
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1, 0);

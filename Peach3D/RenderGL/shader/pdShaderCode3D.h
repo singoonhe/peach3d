@@ -19,8 +19,8 @@ namespace Peach3D
         \n#define PD_LIGHT_DOT          2.5
         \n#define PD_LIGHT_SPOT         3.5
         /* Use std140 to make unify same offset for vec3, some verder maybe different. */
-        \nlayout (std140) uniform LightsUnifroms {
-            vec3 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate. */
+        \nlayout (std140) uniform LightsUniforms {
+            vec4 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate, shadow enabled(1.0) or 0.0. */
             vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
             vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
             vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
@@ -28,8 +28,14 @@ namespace Peach3D
             vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
             vec3 pd_eyeDir;
         };
+        \n#ifdef PD_SHADOW_COUNT
+            /* Define shadow uniforms when light enabled. */
+            \nlayout uniform ShadowUniforms {
+                mat4 pd_shadowMatrix[PD_SHADOW_COUNT];
+            };
+        \n#endif
     \n#endif\n
-    uniform GlobalUnifroms {
+    uniform GlobalUniforms {
         mat4 pd_projMatrix;
         mat4 pd_viewMatrix;
     };
@@ -53,6 +59,10 @@ namespace Peach3D
         out vec4 f_lHalfAtten[PD_LIGHT_COUNT];
         out vec3 f_lAmbient[PD_LIGHT_COUNT];
         out vec3 f_lColor[PD_LIGHT_COUNT];
+        \n#ifdef PD_SHADOW_COUNT\n
+            out vec4 f_shadowCoord[PD_SHADOW_COUNT];
+            out bool f_shadowEnable[PD_LIGHT_COUNT];
+        \n#endif
     \n#endif\n
     out vec4 f_diffuse;
     \n#ifdef PD_ENABLE_TEXUV\n
@@ -61,8 +71,9 @@ namespace Peach3D
 
     void main(void)
     {
-        mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix;
-        gl_Position = mvpMatrix * vec4(pd_vertex, 1.0);
+        vec4 worldPos = pd_modelMatrix * vec4(pd_vertex, 1.0);
+        mat4 vpMatrix = pd_projMatrix * pd_viewMatrix;
+        gl_Position = vpMatrix * worldPos;
         f_diffuse = pd_diffuse;
         \n#ifdef PD_ENABLE_TEXUV\n
             f_uv = pd_uv;
@@ -71,16 +82,17 @@ namespace Peach3D
             /* Convert normal to world space. */
             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
             f_normal = normalize(tnormal.xyz);
-            /* Convert vertex to world space. */
-            vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);\n
             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
                 /* Out light ambient and color. */
                 f_lAmbient[i] = pd_lAmbient[i];
                 f_lColor[i] = pd_lColor[i];
+                \n#ifdef PD_SHADOW_COUNT\n
+                    f_shadowEnable = pd_lTypeSpot[i].w > 0.5;
+                \n#endif\n
 
                 float lType = pd_lTypeSpot[i].x;
                 if (lType > PD_LIGHT_DIRECTION) {
-                    f_lVertexDir[i] = pd_lPosition[i] - convertVertex.xyz;
+                    f_lVertexDir[i] = pd_lPosition[i] - worldPos.xyz;
                     float lightDis = length(f_lVertexDir[i]); /* Light to vertex distance. */
                     f_lVertexDir[i] = f_lVertexDir[i] / lightDis; /* Normalize light direction. */
 
@@ -104,6 +116,11 @@ namespace Peach3D
             f_matAmbient = pd_ambient;
             f_matSpecular = pd_specular;
             f_matEmissive = pd_emissive;
+            \n#ifdef PD_SHADOW_COUNT\n
+                for (int i = 0; i < PD_SHADOW_COUNT; ++i) {
+                    f_shadowCoord = pd_shadowMatrix * worldPos;
+                }
+            \n#endif
         \n#endif\n
     });
 
@@ -122,6 +139,11 @@ namespace Peach3D
         in vec4 f_lHalfAtten[PD_LIGHT_COUNT];
         in vec3 f_lAmbient[PD_LIGHT_COUNT];
         in vec3 f_lColor[PD_LIGHT_COUNT];
+        \n#ifdef PD_SHADOW_COUNT\n
+            in vec4 f_shadowCoord[PD_SHADOW_COUNT];
+            in bool f_shadowEnable[PD_LIGHT_COUNT];
+            uniform sampler2DShadow pd_shadowTexture[PD_SHADOW_COUNT];
+        \n#endif
     \n#endif\n
     out vec4 out_FragColor;\n
 
@@ -135,7 +157,10 @@ namespace Peach3D
         /* Calc lighting effect. */
         \n#ifdef PD_ENABLE_LIGHT\n
             vec3 scatteredLight = vec3(0.0);
-            vec3 reflectedLight = vec3(0.0);\n
+            vec3 reflectedLight = vec3(0.0);
+            \n#ifdef PD_SHADOW_COUNT\n
+                int shadowIndex = 0;
+            \n#endif\n
             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
                 float diffuse = max(0.0, dot(f_normal, f_lVertexDir[i]));
                 float specular = max(0.0, dot(f_normal, f_lHalfAtten[i].xyz));
@@ -143,10 +168,18 @@ namespace Peach3D
                     specular = 0.0;
                 else
                     specular = pow(specular, f_matSpecular.a);
+
+                float shadowAtten = 1.0;    // shadow attenuation
+                \n#ifdef PD_SHADOW_COUNT\n
+                    if (f_shadowEnable[i]) {
+                        shadowAtten = textureProj(pd_shadowTexture[shadowIndex], f_shadowCoord[shadowIndex]);
+                        shadowIndex = shadowIndex + 1;
+                    }
+                \n#endif\n
                 // accumulate diffuse and specular color
                 float verAtten = f_lHalfAtten[i].w;
-                scatteredLight += f_lAmbient[i] * f_matAmbient * verAtten + f_lColor[i] * f_diffuse.rgb * diffuse * verAtten;
-                reflectedLight += f_lColor[i] * f_matSpecular.rgb * specular * verAtten;
+                scatteredLight += f_lAmbient[i] * f_matAmbient * verAtten + f_lColor[i] * f_diffuse.rgb * diffuse * verAtten * shadowAtten;
+                reflectedLight += f_lColor[i] * f_matSpecular.rgb * specular * verAtten * shadowAtten;
             }
             vec3 rgb = min(f_matEmissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
             fragColor = vec4(rgb, fragColor.a);
@@ -184,8 +217,9 @@ namespace Peach3D
 
     void main(void)
     {
-        mat4 mvpMatrix = pd_projMatrix * pd_viewMatrix * pd_modelMatrix;
-        gl_Position = mvpMatrix * vec4(pd_vertex, 1.0);
+        vec4 worldPos = pd_modelMatrix * vec4(pd_vertex, 1.0);
+        mat4 vpMatrix = pd_projMatrix * pd_viewMatrix;
+        gl_Position = vpMatrix * worldPos;
         f_diffuse = pd_diffuse;
         \n#ifdef PD_ENABLE_TEXUV\n
             f_uv = pd_uv;
@@ -194,9 +228,7 @@ namespace Peach3D
             /* Convert normal to world space. */
             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
             f_normal = normalize(tnormal.xyz);
-            /* Convert vertex to world space. */
-            vec4 convertVertex = pd_modelMatrix * vec4(pd_vertex, 1.0);
-            f_worldVertex = convertVertex.xyz;
+            f_worldVertex = worldPos.xyz;
         \n#endif\n
     });
 

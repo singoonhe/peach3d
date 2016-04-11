@@ -118,7 +118,7 @@ namespace Peach3D
         
         // update object global uniforms for GL3
         if (PD_RENDERLEVEL_GL3()) {
-            ProgramGL::updateGlobalObjectUnifroms();
+            ProgramGL::updateGlobalObjectUniforms();
         }
     }
     
@@ -129,7 +129,7 @@ namespace Peach3D
         
         // update widget global uniforms for GL3
         if (PD_RENDERLEVEL_GL3()) {
-            ProgramGL::updateGlobalWidgetUnifroms();
+            ProgramGL::updateGlobalWidgetUniforms();
         }
     }
     
