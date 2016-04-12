@@ -142,6 +142,9 @@ namespace Peach3D
         \n#ifdef PD_SHADOW_COUNT\n
             in float f_shadowEnable[PD_LIGHT_COUNT];
             in vec4 f_shadowCoord[PD_SHADOW_COUNT];
+            \n#ifdef GL_ES\n
+                precision highp sampler2DShadow;
+            \n#endif\n
             uniform sampler2DShadow pd_shadowTexture[PD_SHADOW_COUNT];
         \n#endif
     \n#endif\n
@@ -172,7 +175,30 @@ namespace Peach3D
                 float shadowAtten = 1.0;    // shadow attenuation
                 \n#ifdef PD_SHADOW_COUNT\n
                     if (f_shadowEnable[i] > 0.5) {
-                        shadowAtten = textureProj(pd_shadowTexture[shadowIndex], f_shadowCoord[shadowIndex]);
+                        // Dynamic indexing of sampler types is not allowed on GLES3
+                        if (shadowIndex == 0) {
+                            shadowAtten = textureProj(pd_shadowTexture[0], f_shadowCoord[0]);
+                        }
+                    \n#if PD_SHADOW_COUNT > 1 \n
+                        else if (shadowIndex == 1) {
+                            shadowAtten = textureProj(pd_shadowTexture[1], f_shadowCoord[1]);
+                        }
+                    \n#endif
+                    \n#if PD_SHADOW_COUNT > 2 \n
+                        else if (shadowIndex == 2) {
+                            shadowAtten = textureProj(pd_shadowTexture[2], f_shadowCoord[2]);
+                        }
+                    \n#endif
+                    \n#if PD_SHADOW_COUNT > 3 \n
+                        else if (shadowIndex == 3) {
+                            shadowAtten = textureProj(pd_shadowTexture[3], f_shadowCoord[3]);
+                        }
+                    \n#endif
+                    \n#if PD_SHADOW_COUNT > 4 \n
+                        else if (shadowIndex == 4) {
+                            shadowAtten = textureProj(pd_shadowTexture[4], f_shadowCoord[4]);
+                        }
+                    \n#endif\n
                         shadowIndex = shadowIndex + 1;
                     }
                 \n#endif\n
