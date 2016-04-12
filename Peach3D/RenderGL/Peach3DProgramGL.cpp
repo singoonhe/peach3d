@@ -377,7 +377,7 @@ namespace Peach3D
             glBindBuffer(GL_UNIFORM_BUFFER, mShadowUBOId);
             // map shadow buffer and copy memory on GL3
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mShadowUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-            for (auto uniform : mLightsUBOUniforms) {
+            for (auto uniform : mShadowUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eShadowMatrix: {
                         for (auto i=0; i<shadows.size(); ++i) {

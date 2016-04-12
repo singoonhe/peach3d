@@ -89,7 +89,7 @@ void ShadowSample::init(Widget* parentWidget)
     mRotate = 0.f;
     // only set title here
     mTitle = "shadow sample";
-    mDesc = "render 3D world to texture, used on sprite";
+    mDesc = "click button to enable or disable shadow";
     
     // add a dot light
     Vector3 initPos(5.f, 5.f, 0.f);

@@ -165,16 +165,20 @@ namespace Peach3D
                 auto firMat = firstNode->getMaterial();
                 auto mTexCount = firMat.getTextureCount();
                 for (auto i = 0; i < mTexCount; i++) {
-                    GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i].get())->getGLTextureId();
-                    usedProgramGL->activeTextures(glTextureId, i);
-                    isTextureUsed = true;
+                    auto texGL = static_cast<TextureGL*>(firMat.textureList[i].get());
+                    if (texGL) {
+                        usedProgramGL->activeTextures(texGL->getGLTextureId(), i);
+                        isTextureUsed = true;
+                    }
                 }
                 // active shadow texture if need
                 auto shadows = firstNode->getShadowLights();
                 for (auto i = 0; i < shadows.size(); i++) {
-                    GLuint glTextureId = static_cast<TextureGL*>(shadows[i]->getShadowTexture().get())->getGLTextureId();
-                    usedProgramGL->activeTextures(glTextureId, mTexCount + i, Utils::formatString("pd_shadowTexture[%d]", i));
-                    isTextureUsed = true;
+                    auto texGL = static_cast<TextureGL*>(shadows[i]->getShadowTexture().get());
+                    if (texGL) {
+                        usedProgramGL->activeTextures(texGL->getGLTextureId(), mTexCount + i, Utils::formatString("pd_shadowTexture[%d]", i));
+                        isTextureUsed = true;
+                    }
                 }
             }
             

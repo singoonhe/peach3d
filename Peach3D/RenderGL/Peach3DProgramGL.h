@@ -20,7 +20,8 @@ namespace Peach3D
     public:
         //! Create program by IRender, user can't call constructor function.
         ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0),
-            mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0) {}
+            mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0),
+            mShadowUBOId(GL_INVALID_INDEX), mShadowUBOSize(0) {}
         virtual ~ProgramGL();
         
         // set vertex shader, program will valid when vs and ps all is set
