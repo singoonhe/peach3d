@@ -209,6 +209,11 @@ namespace Peach3D
         uniform mat4 pd_normalMatrix;
         varying vec3 f_normal;
         varying vec3 f_worldVertex;
+        \n#ifdef PD_SHADOW_COUNT\n
+            /* Define shadow uniforms when light enabled. */
+            uniform mat4 pd_shadowMatrix[PD_SHADOW_COUNT];
+            varying vec4 f_shadowCoord[PD_SHADOW_COUNT];
+        \n#endif
     \n#endif\n
     varying vec4 f_diffuse;
     \n#ifdef PD_ENABLE_TEXUV\n
@@ -229,6 +234,11 @@ namespace Peach3D
             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
             f_normal = normalize(tnormal.xyz);
             f_worldVertex = worldPos.xyz;
+            \n#ifdef PD_SHADOW_COUNT\n
+                for (int i = 0; i < PD_SHADOW_COUNT; ++i) {
+                    f_shadowCoord[i] = pd_shadowMatrix[i] * worldPos;
+                }
+            \n#endif
         \n#endif\n
     });
 
@@ -244,7 +254,7 @@ namespace Peach3D
         uniform sampler2D pd_texture0;
     \n#endif
     \n#ifdef PD_ENABLE_LIGHT\n
-        uniform vec3 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate. */
+        uniform vec4 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate, shadow enabled(1.0) or 0.0. */
         uniform vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
         uniform vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
         uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
@@ -256,6 +266,10 @@ namespace Peach3D
         uniform vec3 pd_emissive;
         varying vec3 f_normal;
         varying vec3 f_worldVertex;
+        \n#ifdef PD_SHADOW_COUNT\n
+            varying vec4 f_shadowCoord[PD_SHADOW_COUNT];
+            uniform sampler2D pd_shadowTexture[PD_SHADOW_COUNT];
+        \n#endif
     \n#endif\n
 
     void main(void)
@@ -270,7 +284,10 @@ namespace Peach3D
             vec3 scatteredLight = vec3(0.0);
             vec3 reflectedLight = vec3(0.0);
             vec3 lightDir = vec3(0.0);
-            vec3 halfVec = vec3(0.0);\n
+            vec3 halfVec = vec3(0.0);
+            \n#ifdef PD_SHADOW_COUNT\n
+                int shadowIndex = 0;
+            \n#endif\n
             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
                 float curAttenuate = 1.0;
                 float lType = pd_lTypeSpot[i].x;
@@ -300,8 +317,19 @@ namespace Peach3D
                     specular = 0.0;
                 else
                     specular = pow(specular, pd_specular.a);
-                scatteredLight += pd_lAmbient[i] * pd_ambient * curAttenuate + pd_lColor[i] * f_diffuse.rgb * diffuse * curAttenuate;
-                reflectedLight += pd_lColor[i] * pd_specular.rgb * specular * curAttenuate;
+
+                float shadowAtten = 1.0;    // shadow attenuation
+                \n#ifdef PD_SHADOW_COUNT\n
+                    if (pd_lTypeSpot[i].w > 0.5) {
+                        // convert shadow pos to (0-1), can't move to vertex shader (lerp will made error)
+                        vec4 shadowMapPosition = f_shadowCoord[shadowIndex] / f_shadowCoord[shadowIndex].w;
+                        float distanceFromLight = texture2D(pd_shadowTexture[shadowIndex], shadowMapPosition.st).z;
+                        shadowAtten = float(distanceFromLight > shadowMapPosition.z);
+                        shadowIndex = shadowIndex + 1;
+                    }
+                \n#endif\n
+                scatteredLight += pd_lAmbient[i] * pd_ambient * curAttenuate + pd_lColor[i] * f_diffuse.rgb * diffuse * curAttenuate * shadowAtten;
+                reflectedLight += pd_lColor[i] * pd_specular.rgb * specular * curAttenuate * shadowAtten;
             }
             vec3 rgb = min(pd_emissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
             fragColor = vec4(rgb, fragColor.a);

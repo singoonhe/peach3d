@@ -27,11 +27,13 @@ class RTTSample : public BaseSample
 class ShadowSample : public BaseSample
 {
     void init(Widget* parentWidget);
+    void update(float lastFrameTime);
     virtual ~ShadowSample();
     
 private:
     LightPtr    mDotLight;
     SceneNode*  mDotNode;
+    float       mRotate;
 };
 
 #endif /* RTTSHADOW_SCENE_H */

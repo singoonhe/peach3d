@@ -231,11 +231,11 @@ namespace Peach3D
     
     bool SceneNode::isLightShineNode(const LightPtr& l)
     {
-        bool isShine = false;
+        bool isShine = true;
         // light can't be ignored
         for (auto igL : mIgnoreLights) {
             if (igL == l) {
-                return isShine;
+                return false;
             }
         }
         if (l->getType() != LightType::eDirection) {
@@ -244,12 +244,9 @@ namespace Peach3D
             float calLen = lenVector.length();
             auto attenV = l->getAttenuate();
             float accuAtten = attenV.x + attenV.y * calLen + attenV.z * calLen * calLen;
-            if (accuAtten < 100.f) {
-                isShine = true;
+            if (accuAtten > 100.f) {
+                isShine = false;
             }
-        }
-        else {
-            isShine = true;
         }
         return isShine;
     }
@@ -313,7 +310,7 @@ namespace Peach3D
                     if (isLightShineNode(l)) {
                         validLights.push_back(l);
                         // is shadow valid
-                        if (l->getShadowTexture()) {
+                        if (isAcceptShadow() && l->getShadowTexture()) {
                             shadowLights.push_back(l);
                         }
                     }

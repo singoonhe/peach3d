@@ -86,6 +86,7 @@ void RTTSample::init(Widget* parentWidget)
 
 void ShadowSample::init(Widget* parentWidget)
 {
+    mRotate = 0.f;
     // only set title here
     mTitle = "shadow sample";
     mDesc = "render 3D world to texture, used on sprite";
@@ -101,29 +102,62 @@ void ShadowSample::init(Widget* parentWidget)
     mDotNode->attachMesh(cubeMesh);
     mDotNode->setScale(Vector3(0.2f));
     mDotNode->setLightingEnabled(false);
+    
     // enable shadow
     mDotLight->setShadowEnabled(true);
+    // create enable/disable shadow button
+    auto screenSize = LayoutManager::getSingleton().getScreenSize();
+    Button* ncButton = Button::create("press_normal.png");
+    ncButton->setAnchorPoint(Vector2(1.f, 0.5f));
+    ncButton->setPosition(Vector2(screenSize.x, screenSize.y / 2.f));
+    ncButton->setTitleText("Disable");
+    ncButton->setClickedAction([&, ncButton](const Vector2&){
+        auto sTex = mDotLight->getShadowTexture();
+        if (sTex) {
+            ncButton->setTitleText("Disable");
+            mDotLight->setShadowEnabled(false);
+        }
+        else {
+            ncButton->setTitleText("Enable");
+            mDotLight->setShadowEnabled(true);
+        }
+    });
+    parentWidget->addChild(ncButton);
     
     // create a girl
     auto girlMesh = ResourceManager::getSingleton().addMesh("girl.pmt");
-    auto texNode1 = rootNode->createChild(Vector3(0.f, -5.f, 0.f));
-    texNode1->attachMesh(girlMesh);
-    texNode1->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
-    // set girl bring shadow and accept shadow
-    texNode1->setBringShadow(true);
-    texNode1->setAcceptShadow(true);
+    for (auto i=0; i<2; ++i) {
+        for (auto j=0; j<2; ++j) {
+            auto girlNode = rootNode->createChild(Vector3(i * 5.f - 2.5f, -5.f, j * 5.f - 2.5f));
+            girlNode->attachMesh(girlMesh);
+            girlNode->setScale(Vector3(0.2f));
+            // set girl bring shadow and accept shadow
+            girlNode->setBringShadow(true);
+            girlNode->setAcceptShadow(true);
+        }
+    }
     // create a plane using cube
-    auto cubeMesh1 = ResourceManager::getSingleton().addMesh("texcube.obj");
+    auto cubeMesh1 = ResourceManager::getSingleton().addMesh("Cube.obj");
     auto cubeNode = rootNode->createChild(Vector3(0.f, -10.f, 0.f));
     cubeNode->attachMesh(cubeMesh1);
-    cubeNode->setScale(Vector3(5.f));
+    cubeNode->setScale(Vector3(10.f, 5.f, 5.f));
     // cube just accept shadow, not bring shadow
     cubeNode->setAcceptShadow(true);
     // just for test texture
-    auto cubeObj = cubeNode->getRenderNode("Cube");
+    /*auto cubeObj = cubeNode->getRenderNode("Cube");
     if (cubeObj) {
         cubeObj->resetTextureByIndex(0, mDotLight->getShadowTexture());
-    }
+    }*/
+}
+
+void ShadowSample::update(float lastFrameTime)
+{
+    mRotate += lastFrameTime;
+    Vector4 calcPos(5.f, 5.f, 0.f, 1.f);
+    const Matrix4 rotateMat = Matrix4::createRotationY(mRotate * 0.5f);
+    calcPos = calcPos * rotateMat;
+    mDotNode->setPosition(calcPos.xyz());
+    mDotLight->setPosition(calcPos.xyz());
 }
 
 ShadowSample::~ShadowSample()
