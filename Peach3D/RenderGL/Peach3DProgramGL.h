@@ -31,20 +31,24 @@ namespace Peach3D
         virtual void setVertexType(uint type);
         //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList);
-        /** Set program lights count, auto enable lighting. */
+        /** Set program lights count, generate light UBO. */
         virtual void setLightsCount(uint count);
+        /** Set program lights count, generate shadow UBO. */
+        virtual void setShadowCount(uint count);
         
         /** Bind instance vertex attrib, used for GL3. */
         void bindProgramVertexAttrib();
         //! Set current object use this program.
         virtual bool useAsRenderProgram();
-        /** Active textures, index from 0. */
-        void activeTextures(GLuint texId, uint index);
+        /** Active textures, index from 0, uniform name. */
+        void activeTextures(GLuint texId, uint index, const std::string& uName = "");
         
         /** Update RenderNode uniforms for 3d object material. */
         virtual void updateRenderNodeUniforms(RenderNode* node);
         /** Update lights uniform buffer for 3d object. */
         void updateObjectLightsUniforms(const std::vector<LightPtr>& lights);
+        /** Update shadow uniform buffer for 3d object. */
+        void updateObjectShadowsUniforms(const std::vector<LightPtr>& shadows);
         /** Update instanced RenderNode uniforms depend on mProgramUniformList. */
         virtual void updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList);
         
@@ -97,6 +101,9 @@ namespace Peach3D
         GLuint  mLightsUBOId;           // object lights uniform buffer id for GL3
         GLint   mLightsUBOSize;         // object lights uniform buffer size for GL3
         std::vector<ProgramUniform>     mLightsUBOUniforms;
+        GLuint  mShadowUBOId;           // object shadow uniform buffer id for GL3
+        GLint   mShadowUBOSize;         // object shadow uniform buffer size for GL3
+        std::vector<ProgramUniform>     mShadowUBOUniforms;
 
         
         static GLuint   mWidgetUBOId;   // widget global uniform buffer id for GL3

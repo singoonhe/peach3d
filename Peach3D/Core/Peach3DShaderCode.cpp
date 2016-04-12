@@ -61,13 +61,16 @@ namespace Peach3D
             mUniformsNamesMap["pd_lAmbient"] = UniformNameType::eLightAmbient;
             mUniformsNamesMap["pd_lColor"] = UniformNameType::eLightColor;
             mUniformsNamesMap["pd_eyeDir"] = UniformNameType::eEyeDir;
+            
+            mUniformsNamesMap["pd_shadowMatrix"] = UniformNameType::eShadowMatrix;
         }
         return mUniformsNamesMap[name];
     }
         
     std::string ShaderCode::getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature)
     {
-        return Utils::formatString("V%d|PT%d|TUV%d|LC%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount);
+        // is vertex shader | is point3 | texture UV | light count | shadow count
+        return Utils::formatString("V%d|PT%d|TUV%d|LC%d|SC%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount, feature.shadowCount);
     }
     
     uint ShaderCode::getVerTypeOfProgramFeature(const PresetProgramFeatures& feature)

@@ -312,6 +312,7 @@ namespace Peach3D
                 SceneManager::getSingleton().tranverseLights([&](const std::string& name, const LightPtr& l){
                     if (isLightShineNode(l)) {
                         validLights.push_back(l);
+                        // is shadow valid
                         if (l->getShadowTexture()) {
                             shadowLights.push_back(l);
                         }

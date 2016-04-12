@@ -25,6 +25,12 @@ namespace Peach3D
         {
             memcpy(mat, identityMat, sizeof(float)*16);
         }
+        Matrix4(const std::vector<float> _mat)
+        {
+            if (_mat.size() >= 16) {
+                memcpy(mat, &_mat[0], sizeof(float)*16);
+            }
+        }
         Matrix4(const Matrix4& other)
         {
             memcpy(mat, other.mat, sizeof(float)*16);

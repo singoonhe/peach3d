@@ -27,6 +27,8 @@ namespace Peach3D
     #define GLOBAL_UBO_BINDING_POINT        0
     // define lights UBO binding point
     #define LIGHTS_UBO_BINDING_POINT        1
+    // define shadow UBO binding point
+    #define SHADOW_UBO_BINDING_POINT        2
     
     // defined widget global UBO info
     GLuint ProgramGL::mWidgetUBOId = GL_INVALID_INDEX;
@@ -229,6 +231,19 @@ namespace Peach3D
         }
     }
     
+    void ProgramGL::setShadowCount(uint count)
+    {
+        if (count > 0 && (mVertexType & VertexType::Point3)) {
+            IProgram::setShadowCount(count);
+            if (PD_RENDERLEVEL_GL3()) {
+                // set object lights UBO uniforms
+                mShadowUBOUniforms = {ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4)};
+                // bind lights UBO
+                bindUniformsBuffer("ShadowUniforms", &mShadowUBOId, &mShadowUBOSize, &mShadowUBOUniforms, SHADOW_UBO_BINDING_POINT);
+            }
+        }
+    }
+    
     void ProgramGL::bindUniformsBuffer(const char* uName, GLuint* UBOId, GLint* UBOSize, std::vector<ProgramUniform>* uniforms, GLint index)
     {
         // get global uniform from program, so every program must include uName
@@ -344,6 +359,30 @@ namespace Peach3D
                         auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
                         lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
                         memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3);
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            glUnmapBuffer(GL_UNIFORM_BUFFER);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        }
+    }
+    
+    void ProgramGL::updateObjectShadowsUniforms(const std::vector<LightPtr>& shadows)
+    {
+        Peach3DAssert(shadows.size() == mShadowCount, "Shadow list must equal to program count!");
+        if (mShadowUBOId != GL_INVALID_INDEX && mShadowCount > 0) {
+            glBindBuffer(GL_UNIFORM_BUFFER, mShadowUBOId);
+            // map shadow buffer and copy memory on GL3
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mShadowUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            for (auto uniform : mLightsUBOUniforms) {
+                switch (ShaderCode::getUniformNameType(uniform.name)) {
+                    case UniformNameType::eShadowMatrix: {
+                        for (auto i=0; i<shadows.size(); ++i) {
+                            memcpy(data + i * 16, shadows[i]->getShadowMatrix().mat, 16 * sizeof(float));
+                        }
                     }
                         break;
                     default:
@@ -472,14 +511,17 @@ namespace Peach3D
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     
-    void ProgramGL::activeTextures(GLuint texId, uint index)
+    void ProgramGL::activeTextures(GLuint texId, uint index, const std::string& uName)
     {
         if (texId > 0) {
             // bind one texture
             glActiveTexture(GL_TEXTURE0 + index);
             glBindTexture(GL_TEXTURE_2D, texId);
-            std::string pdName = Utils::formatString("pd_texture%d", index);
-            setUniformLocationValue(pdName.c_str(), [&index](GLint location) {
+            auto usedName = uName;
+            if (usedName.empty()) {
+                usedName = Utils::formatString("pd_texture%d", index);
+            }
+            setUniformLocationValue(usedName.c_str(), [&index](GLint location) {
                 glUniform1i(location, index);
             });
         }
@@ -509,11 +551,12 @@ namespace Peach3D
         SceneManager* sgr = SceneManager::getSingletonPtr();
         const Material& objMat = node->getMaterial();
         // lights attribute
-        float lData[4 * SceneManager::getSingleton().getLightMax()];
+        float lData[16 * SceneManager::getSingleton().getLightMax()];
         // set lighting unfo
-        std::vector<LightPtr> validLights;
+        std::vector<LightPtr> lights, shadows;
         if (!node->isRenderShadow()) {
-            validLights = node->getRenderLights();
+            lights = node->getRenderLights();
+            shadows = node->getShadowLights();
         }
         // update object uniforms in list
         for (auto uniform : mProgramUniformList) {
@@ -573,69 +616,69 @@ namespace Peach3D
                     // lights uniforms
                 case UniformNameType::eLightTypeSpot:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            auto spotExt = validLights[i]->getSpotExtend();
-                            lData[i * 4] = (float)validLights[i]->getType();
+                        for (auto i=0; i<lights.size(); ++i) {
+                            auto spotExt = lights[i]->getSpotExtend();
+                            lData[i * 4] = (float)lights[i]->getType();
                             lData[i * 4 + 1] = spotExt.x;
                             lData[i * 4 + 2] = spotExt.y;
-                            lData[i * 4 + 3] = validLights[i]->getShadowTexture() ? 1.f: 0.f;
+                            lData[i * 4 + 3] = lights[i]->getShadowTexture() ? 1.f: 0.f;
                         }
-                        glUniform4fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform4fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightPos:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            auto pos = validLights[i]->getPosition();
+                        for (auto i=0; i<lights.size(); ++i) {
+                            auto pos = lights[i]->getPosition();
                             lData[i * 3] = pos.x;
                             lData[i * 3 + 1] = pos.y;
                             lData[i * 3 + 2] = pos.z;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightDir:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            auto dir = validLights[i]->getDirection();
+                        for (auto i=0; i<lights.size(); ++i) {
+                            auto dir = lights[i]->getDirection();
                             lData[i * 3] = dir.x;
                             lData[i * 3 + 1] = dir.y;
                             lData[i * 3 + 2] = dir.z;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightAtten:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            auto attenuate = validLights[i]->getAttenuate();
+                        for (auto i=0; i<lights.size(); ++i) {
+                            auto attenuate = lights[i]->getAttenuate();
                             lData[i * 3] = attenuate.x;
                             lData[i * 3 + 1] = attenuate.y;
                             lData[i * 3 + 2] = attenuate.z;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightAmbient:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            auto ambient = validLights[i]->getAmbient();
+                        for (auto i=0; i<lights.size(); ++i) {
+                            auto ambient = lights[i]->getAmbient();
                             lData[i * 3] = ambient.r;
                             lData[i * 3 + 1] = ambient.g;
                             lData[i * 3 + 2] = ambient.b;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
                 case UniformNameType::eLightColor:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<validLights.size(); ++i) {
-                            auto color = validLights[i]->getColor();
+                        for (auto i=0; i<lights.size(); ++i) {
+                            auto color = lights[i]->getColor();
                             lData[i * 3] = color.r;
                             lData[i * 3 + 1] = color.g;
                             lData[i * 3 + 2] = color.b;
                         }
-                        glUniform3fv(location, (GLsizei)validLights.size(), lData);
+                        glUniform3fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
                 case UniformNameType::eEyeDir:
@@ -643,6 +686,16 @@ namespace Peach3D
                         auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
                         lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
                         glUniform3fv(location, 1, lData);
+                    });
+                    break;
+                    // shadow uniforms
+                case UniformNameType::eShadowMatrix:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        for (auto i=0; i<shadows.size(); ++i) {
+                            auto sm = shadows[i]->getShadowMatrix();
+                            memcpy(lData + i * 16, sm.mat, sizeof(float) * 16);
+                        }
+                        glUniformMatrix4fv(location, (GLsizei)shadows.size(), false, lData);
                     });
                     break;
                 default:
@@ -968,6 +1021,9 @@ namespace Peach3D
                                  (mVertexType & VertexType::Point3) ? mObjectUBOId: mWidgetUBOId);
                 if (mLightsCount > 0) {
                     glBindBufferBase(GL_UNIFORM_BUFFER, LIGHTS_UBO_BINDING_POINT, mLightsUBOId);
+                    if (mShadowCount > 0) {
+                        glBindBufferBase(GL_UNIFORM_BUFFER, SHADOW_UBO_BINDING_POINT, mShadowUBOId);
+                    }
                 }
             }
             return true;

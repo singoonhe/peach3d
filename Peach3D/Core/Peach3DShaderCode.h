@@ -49,7 +49,9 @@ namespace Peach3D
         eLightAtten,    // light attenute
         eLightAmbient,  // light ambient
         eLightColor,    // light color
-        eEyeDir,       // camera direction
+        eEyeDir,        // camera direction
+        
+        eShadowMatrix,  // shadow matrix
     };
     
     // defined object render uniform desc

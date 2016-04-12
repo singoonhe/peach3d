@@ -13,6 +13,7 @@
 #include "Peach3DRenderGL.h"
 #include "Peach3DTextureGL.h"
 #include "Peach3DSprite.h"
+#include "Peach3DUtils.h"
 #include "Peach3DRenderNode.h"
 #include "Peach3DSceneManager.h"
 #include "Peach3DResourceManager.h"
@@ -132,13 +133,19 @@ namespace Peach3D
             auto isRenderShadow = firstNode->isRenderShadow();
             ProgramPtr usedProgram = isRenderShadow ? mBaseProgram : firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
+            ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
             if (PD_RENDERLEVEL_GL3()) {
                 // update instanced uniforms
                 usedProgram->updateInstancedRenderNodeUniforms(renderList);
                 // set lighting unfo when render color
                 auto lights = firstNode->getRenderLights();
                 if (!isRenderShadow && lights.size() > 0) {
-                    ((ProgramGL*)usedProgram.get())->updateObjectLightsUniforms(lights);
+                    usedProgramGL->updateObjectLightsUniforms(lights);
+                    // set shadow if need
+                    auto shadows = firstNode->getShadowLights();
+                    if (shadows.size() > 0) {
+                        usedProgramGL->updateObjectShadowsUniforms(shadows);
+                    }
                 }
             }
             
@@ -153,11 +160,21 @@ namespace Peach3D
             }
             
             // enable render state, flip using shader
-            auto firMat = firstNode->getMaterial();
+            bool isTextureUsed = false;
             if (!isRenderShadow) {
-                for (auto i = 0; i < firMat.getTextureCount(); i++) {
+                auto firMat = firstNode->getMaterial();
+                auto mTexCount = firMat.getTextureCount();
+                for (auto i = 0; i < mTexCount; i++) {
                     GLuint glTextureId = static_cast<TextureGL*>(firMat.textureList[i].get())->getGLTextureId();
-                    static_cast<ProgramGL*>(usedProgram.get())->activeTextures(glTextureId, i);
+                    usedProgramGL->activeTextures(glTextureId, i);
+                    isTextureUsed = true;
+                }
+                // active shadow texture if need
+                auto shadows = firstNode->getShadowLights();
+                for (auto i = 0; i < shadows.size(); i++) {
+                    GLuint glTextureId = static_cast<TextureGL*>(shadows[i]->getShadowTexture().get())->getGLTextureId();
+                    usedProgramGL->activeTextures(glTextureId, mTexCount + i, Utils::formatString("pd_shadowTexture[%d]", i));
+                    isTextureUsed = true;
                 }
             }
             
@@ -182,7 +199,7 @@ namespace Peach3D
                 }
             }
             // disable render state
-            if (!isRenderShadow && firMat.getTextureCount() > 0) {
+            if (!isRenderShadow && isTextureUsed) {
                 glBindTexture(GL_TEXTURE_2D, 0);
             }
             

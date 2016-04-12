@@ -45,6 +45,8 @@ namespace Peach3D
         void setShadowEnabled(bool enable, float factor = 1.f);
         /** Return RTT texture or judge is shadow enabled. */
         TexturePtr getShadowTexture() { return mShadowTexture; }
+        /** Shadow matrix saved in shadow RTT pass, used in main pass. */
+        const Matrix4& getShadowMatrix() { return mShadowMatrix; }
         /** Set shadow focus position. */
         void setShadowFocusPos(const Vector3& pos) { mShadowFocus = pos; }
         
@@ -76,6 +78,7 @@ namespace Peach3D
         Vector3     mAttenuate;  // light const/line/quadratic attenuate, for Dot and Spot
         Vector2     mSpotExt;    // extent spot and cut cos attenuate, for Spot
         
+        Matrix4     mShadowMatrix;  // shadow bias matrix
         TexturePtr  mShadowTexture; // world shadow texture
         Vector3     mShadowFocus;   // current shadow/view focus position
         static CameraState mLastCameraState; // cache camera state

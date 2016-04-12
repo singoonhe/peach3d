@@ -30,7 +30,7 @@ namespace Peach3D
         };
         \n#ifdef PD_SHADOW_COUNT
             /* Define shadow uniforms when light enabled. */
-            \nlayout uniform ShadowUniforms {
+            \nuniform ShadowUniforms {
                 mat4 pd_shadowMatrix[PD_SHADOW_COUNT];
             };
         \n#endif
@@ -61,7 +61,7 @@ namespace Peach3D
         out vec3 f_lColor[PD_LIGHT_COUNT];
         \n#ifdef PD_SHADOW_COUNT\n
             out vec4 f_shadowCoord[PD_SHADOW_COUNT];
-            out bool f_shadowEnable[PD_LIGHT_COUNT];
+            out float f_shadowEnable[PD_LIGHT_COUNT];
         \n#endif
     \n#endif\n
     out vec4 f_diffuse;
@@ -87,7 +87,7 @@ namespace Peach3D
                 f_lAmbient[i] = pd_lAmbient[i];
                 f_lColor[i] = pd_lColor[i];
                 \n#ifdef PD_SHADOW_COUNT\n
-                    f_shadowEnable = pd_lTypeSpot[i].w > 0.5;
+                    f_shadowEnable[i] = pd_lTypeSpot[i].w;
                 \n#endif\n
 
                 float lType = pd_lTypeSpot[i].x;
@@ -118,7 +118,7 @@ namespace Peach3D
             f_matEmissive = pd_emissive;
             \n#ifdef PD_SHADOW_COUNT\n
                 for (int i = 0; i < PD_SHADOW_COUNT; ++i) {
-                    f_shadowCoord = pd_shadowMatrix * worldPos;
+                    f_shadowCoord[i] = pd_shadowMatrix[i] * worldPos;
                 }
             \n#endif
         \n#endif\n
@@ -140,8 +140,8 @@ namespace Peach3D
         in vec3 f_lAmbient[PD_LIGHT_COUNT];
         in vec3 f_lColor[PD_LIGHT_COUNT];
         \n#ifdef PD_SHADOW_COUNT\n
+            in float f_shadowEnable[PD_LIGHT_COUNT];
             in vec4 f_shadowCoord[PD_SHADOW_COUNT];
-            in bool f_shadowEnable[PD_LIGHT_COUNT];
             uniform sampler2DShadow pd_shadowTexture[PD_SHADOW_COUNT];
         \n#endif
     \n#endif\n
@@ -171,7 +171,7 @@ namespace Peach3D
 
                 float shadowAtten = 1.0;    // shadow attenuation
                 \n#ifdef PD_SHADOW_COUNT\n
-                    if (f_shadowEnable[i]) {
+                    if (f_shadowEnable[i] > 0.5) {
                         shadowAtten = textureProj(pd_shadowTexture[shadowIndex], f_shadowCoord[shadowIndex]);
                         shadowIndex = shadowIndex + 1;
                     }

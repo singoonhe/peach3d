@@ -86,6 +86,10 @@ namespace Peach3D
                     camera->setPosition(mPos);
                 }
                 camera->lockToPosition(mShadowFocus);
+                
+                const Matrix4 biasMatrix({0.5f, 0.f, 0.f, 0.f,  0.f, 0.5f, 0.f, 0.f,  0.f, 0.f, 0.5f, 0.f,  0.5f, 0.5f, 0.5f, 1.f});
+                // save shadow matrix
+                mShadowMatrix = biasMatrix * smger->getProjectionMatrix() * camera->getViewMatrix();
             });
             mShadowTexture->setAfterRenderingFunc([&]{
                 auto smger = SceneManager::getSingletonPtr();
