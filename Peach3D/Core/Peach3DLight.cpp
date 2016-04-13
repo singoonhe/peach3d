@@ -66,11 +66,12 @@ namespace Peach3D
                 auto smger = SceneManager::getSingletonPtr();
                 // save camera state
                 auto camera = smger->getActiveCamera();
+                auto forward = camera->getForward();
                 mLastCameraState = camera->getState();
                 // save projection matrix
                 mIsRestoreProj = smger->isOrthoProjection() != (mType == LightType::eDirection);
+                mLastProjMatrix = smger->getProjectionMatrix();
                 if (mIsRestoreProj) {
-                    mLastProjMatrix = smger->getProjectionMatrix();
                     if (mType == LightType::eDirection) {
                         smger->setOrthoProjection(-shadowSize.x, shadowSize.x, -shadowSize.y, shadowSize.y, 1.f, 1000.f);
                     }
@@ -80,16 +81,19 @@ namespace Peach3D
                 }
                 // move camera to light pos
                 if (mType == LightType::eDirection) {
-                    camera->setPosition(mShadowFocus - mDir);
+                    // camera->setPosition(mShadowFocus - mDir);
                 }
                 else {
+                    // calc light focus position
+                    auto direction = mPos - mLastCameraState.pos;
+                    auto curPos = direction.projective(forward) + mLastCameraState.pos;
                     camera->setPosition(mPos);
+                    camera->lockToPosition(curPos);
                 }
-                camera->lockToPosition(mShadowFocus);
                 
                 const Matrix4 biasMatrix({0.5f, 0.f, 0.f, 0.f,  0.f, 0.5f, 0.f, 0.f,  0.f, 0.f, 0.5f, 0.f,  0.5f, 0.5f, 0.5f, 1.f});
                 // save shadow matrix
-                mShadowMatrix = biasMatrix * smger->getProjectionMatrix() * camera->getViewMatrix();
+                mShadowMatrix = biasMatrix * mLastProjMatrix * camera->getViewMatrix();
             });
             mShadowTexture->setAfterRenderingFunc([&]{
                 auto smger = SceneManager::getSingletonPtr();
