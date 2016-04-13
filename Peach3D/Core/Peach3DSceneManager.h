@@ -27,13 +27,6 @@ namespace Peach3D
         void clear() { nodeMap.clear(); OBBList.clear(); }
     };
     
-    enum class PEACH3D_DLL PassDrawType
-    {
-        eColor, // default draw colors
-        eDepth, // draw depth in shadow
-        eNone,  // just update node, draw nothing
-    };
-    
     class PEACH3D_DLL SceneManager : public Singleton < SceneManager >
     {
         //! declare class IPlatform is friend class, so IRender can call destructor function.
@@ -88,9 +81,10 @@ namespace Peach3D
         void init();
         /** Render one frame, executing all pass. */
         virtual void render(float lastFrameTime);
-        /** Render once pass, update-draw. */
-        virtual void renderOncePass(float lastFrameTime, PassDrawType type, bool pickEnabled = false);
-        virtual void renderForRTT(float lastFrameTime, PassDrawType type, const TexturePtr& rtt);
+        /** Render once pass. */
+        virtual void renderOncePass(Render3DPassContent* content);
+        /** Render once pass for RTT, generate new content if content is nullptr. */
+        virtual void renderForRTT(const TexturePtr& rtt, Render3DPassContent* content);
         
         /** Create draw stats node. */
         void createDrawStatsNode();
@@ -100,7 +94,7 @@ namespace Peach3D
          * @params content where node and obb list saved.
          * @params pickEnabled pass will cache clicked node list.
          */
-        void addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, PassDrawType type, bool pickEnabled);
+        void addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, bool pickEnabled);
         /** Add render widget to cache list, also prepare for render. */
         void addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime);
 

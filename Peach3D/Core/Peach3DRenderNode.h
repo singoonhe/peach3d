@@ -57,10 +57,10 @@ namespace Peach3D
         OBB* getRenderOBB() const { return mRenderOBB; }
         /** Check is ray intersect to current node. */
         bool isRayIntersect(const Ray& ray) { generateOBB(); return mRenderOBB->isRayIntersect(ray); }
-        /** Set node will rendering for shadow, using special program. */
+        /** Set node will rendering for shadow now, using special program. */
         void setRenderShadow(bool shadow) { mIsRenderShadow = shadow; }
         bool isRenderShadow() { return mIsRenderShadow; }
-        /** Is show shadow when rendering, modify by SceneNode. */
+        bool isBringShadow() { return mNodeState.isBringShadow; }
         bool isAcceptShadow() { return mNodeState.isAcceptShadow; }
         
         void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }

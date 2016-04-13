@@ -274,48 +274,49 @@ namespace Peach3D
     }
      */
     
-    void SceneManager::renderOncePass(float lastFrameTime, PassDrawType type, bool pickEnabled)
+    void SceneManager::renderOncePass(Render3DPassContent* content)
     {
-        // get render content first
-        Render3DPassContent content;
-        mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
-            this->addSceneNodeToCacheList(childNode, lastFrameTime, type == PassDrawType::eNone ? nullptr : &content, type, pickEnabled);
-        });
+        Render3DPassContent newContent;
+        if (!content) {
+            // get render content first
+            mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
+                this->addSceneNodeToCacheList(childNode, 0.f, &newContent, false);
+            });
+            content = &newContent;
+        }
         
-        if (type != PassDrawType::eNone) {
-            // reupdate global uniforms for GL3, befor rendering may modify camera
-            IRender::getSingleton().prepareForObjectRender();
-            // draw all scene node
-            RenderNode* lastRenderNode = nullptr;
-            std::vector<RenderNode*> curNodeList;
-            for (auto iter : content.nodeMap) {
-                RenderNode* curNode = iter.second;
-                if (lastRenderNode && lastRenderNode->getRenderHash() != curNode->getRenderHash()){
-                    // render current objects
-                    lastRenderNode->getObject()->render(curNodeList);
-                    curNodeList.clear();
-                }
-                // add object to cache list for next rendering
-                curNodeList.push_back(curNode);
-                lastRenderNode = curNode;
-            }
-            if (curNodeList.size() > 0) {
-                // render last objects
+        // reupdate global uniforms for GL3, befor rendering may modify camera
+        IRender::getSingleton().prepareForObjectRender();
+        // draw all scene node
+        RenderNode* lastRenderNode = nullptr;
+        std::vector<RenderNode*> curNodeList;
+        for (auto iter : content->nodeMap) {
+            RenderNode* curNode = iter.second;
+            if (lastRenderNode && lastRenderNode->getRenderHash() != curNode->getRenderHash()){
+                // render current objects
                 lastRenderNode->getObject()->render(curNodeList);
+                curNodeList.clear();
             }
-            // draw all OBB
-            if (content.OBBList.size() > 0) {
-                mOBBObject->render(content.OBBList);
-            }
+            // add object to cache list for next rendering
+            curNodeList.push_back(curNode);
+            lastRenderNode = curNode;
+        }
+        if (curNodeList.size() > 0) {
+            // render last objects
+            lastRenderNode->getObject()->render(curNodeList);
+        }
+        // draw all OBB
+        if (content->OBBList.size() > 0) {
+            mOBBObject->render(content->OBBList);
         }
     }
     
-    void SceneManager::renderForRTT(float lastFrameTime, PassDrawType type, const TexturePtr& rtt)
+    void SceneManager::renderForRTT(const TexturePtr& rtt, Render3DPassContent* content)
     {
         // clean frame before render
         rtt->beforeRendering();
         // render RTT pass, not cache click list
-        renderOncePass(lastFrameTime, type, false);
+        renderOncePass(content);
         // restore render state
         rtt->afterRendering();
     }
@@ -332,24 +333,49 @@ namespace Peach3D
         mRootSceneNode->prepareForRender(lastFrameTime);
         // make all RTT inactive first
         ResourceManager::getSingleton().inactiveRenderTextures();
-        
-        bool isDelayUpdate = true;
-        // render shadow if need, also active RTT
-        for (auto l : mLightList) {
-            auto shadowTex = l.second->getShadowTexture();
-            if (shadowTex) {
-                renderForRTT(isDelayUpdate ? lastFrameTime : 0.f, PassDrawType::eDepth, shadowTex);
-                isDelayUpdate = false; // node just update once frame time
-            }
-        }
-        if (isDelayUpdate) {
-            // just update node to active RTT if shadow disabled
-            renderOncePass(lastFrameTime, PassDrawType::eNone);
-        }
+        // active RTT, calc main content and cache clicked node
+        Render3DPassContent mainContent;
+        mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
+            addSceneNodeToCacheList(childNode, lastFrameTime, &mainContent, true);
+        });
         // sort widgets, activate used RTT
         mRenderWidgetList.clear();
         int currentZOrder = 0;
         addWidgetToCacheList(&currentZOrder, mRootWidget, lastFrameTime);
+        
+        // is node render shadow
+        bool isUpdateDepth = false;
+        if (mLightList.size() > 0) {
+            Render3DPassContent depthContent = mainContent;
+            for (auto l : mLightList) {
+                auto shadowTex = l.second->getShadowTexture();
+                if (shadowTex) {
+                    if (!isUpdateDepth) {
+                        // erase can't bring shadow node
+                        for (auto iter=depthContent.nodeMap.begin(); iter!=depthContent.nodeMap.end();) {
+                            if (!iter->second->isBringShadow()) {
+                                iter = depthContent.nodeMap.erase(iter);
+                            }
+                            else {
+                                // mark render shadow now
+                                iter->second->setRenderShadow(true);
+                                ++iter;
+                            }
+                        }
+                        // depth not need render OBB
+                        depthContent.OBBList.clear();
+                        isUpdateDepth = true;
+                    }
+                    renderForRTT(shadowTex, &depthContent);
+                }
+            }
+        }
+        // if shadow rendering, mark render color now
+        if (isUpdateDepth) {
+            for (auto nodeIter : mainContent.nodeMap) {
+                nodeIter.second->setRenderShadow(false);
+            }
+        }
         
         // we can update global uniforms here, OBB programe had generate
         IRender* mainRender = IRender::getSingletonPtr();
@@ -357,13 +383,14 @@ namespace Peach3D
         auto rttList = ResourceManager::getSingleton().getRenderTextureList();
         for (auto tex : rttList) {
             if (tex->isActived() && tex->getFormat() != TextureFormat::eDepth) {
-                renderForRTT(0.f, PassDrawType::eColor, tex);
+                // generate new content to render, because RTT may update node state
+                renderForRTT(tex, nullptr);
             }
         }
         // clean frame before render
         mainRender->prepareForMainRender();
-        // render RTT pass, not cache click list
-        renderOncePass(0.f, PassDrawType::eColor, true);
+        // render main pass
+        renderOncePass(&mainContent);
         // present after draw over
         mainRender->finishForMainRender();
         
@@ -415,17 +442,15 @@ namespace Peach3D
         }
     }
     
-    void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, PassDrawType type, bool pickEnabled)
+    void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, bool pickEnabled)
     {
         SceneNode* rNode = static_cast<SceneNode*>(node);
         // prepare render first for update "NeedRender"
         rNode->prepareForRender(lastFrameTime);
-        // add node to render list. If node can't bring shadow when render shadow, discard it.
-        auto shadowNeed = !(type == PassDrawType::eDepth && !rNode->isBringShadow());
-        if (node->isNeedRender() && content && shadowNeed) {
+        // add node to render list.
+        if (node->isNeedRender() && content) {
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
                 content->nodeMap.insert(std::make_pair(node->getRenderHash(), node));
-                node->setRenderShadow(type == PassDrawType::eDepth);
             });
         }
         
@@ -438,7 +463,7 @@ namespace Peach3D
         }
         
         // cache OBB node
-        if (type == PassDrawType::eColor && rNode->getOBBEnabled() && content) {
+        if (rNode->getOBBEnabled() && content) {
             rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
                 if (node->getOBBEnabled()) {
                     content->OBBList.push_back(node->getRenderOBB());
@@ -448,7 +473,7 @@ namespace Peach3D
         
         node->tranverseChildNode([&](size_t, Node* child) {
             // add all children scene node
-            this->addSceneNodeToCacheList(child, lastFrameTime, content, type, pickEnabled);
+            this->addSceneNodeToCacheList(child, lastFrameTime, content, pickEnabled);
         });
     }
     
