@@ -102,9 +102,13 @@ void ShadowSample::init(Widget* parentWidget)
     mDotNode->attachMesh(cubeMesh);
     mDotNode->setScale(Vector3(0.2f));
     mDotNode->setLightingEnabled(false);
+    // add a direction light
+    mDirLight = SceneManager::getSingleton().addNewLight();
+    mDirLight->usingAsDirection(Vector3(-2.f, -1.f, 0.f));
     
     // enable shadow
     mDotLight->setShadowEnabled(true);
+    mDirLight->setShadowEnabled(true);
     // create enable/disable shadow button
     auto screenSize = LayoutManager::getSingleton().getScreenSize();
     Button* ncButton = Button::create("press_normal.png");
@@ -146,7 +150,7 @@ void ShadowSample::init(Widget* parentWidget)
     // just for test texture
     /*auto cubeObj = cubeNode->getRenderNode("Cube");
     if (cubeObj) {
-        cubeObj->resetTextureByIndex(0, mDotLight->getShadowTexture());
+        cubeObj->resetTextureByIndex(0, mDirLight->getShadowTexture());
     }*/
 }
 

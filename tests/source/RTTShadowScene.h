@@ -31,6 +31,7 @@ class ShadowSample : public BaseSample
     virtual ~ShadowSample();
     
 private:
+    LightPtr    mDirLight;
     LightPtr    mDotLight;
     SceneNode*  mDotNode;
     float       mRotate;

@@ -62,7 +62,7 @@ namespace Peach3D
             auto shadowSize = LayoutManager::getSingleton().getScreenSize() * factor;
             // create shadow depth texture
             mShadowTexture = ResourceManager::getSingleton().createRenderTexture(int(shadowSize.x), int(shadowSize.y), true);
-            mShadowTexture->setBeforeRenderingFunc([&]{
+            mShadowTexture->setBeforeRenderingFunc([&, shadowSize]{
                 auto smger = SceneManager::getSingletonPtr();
                 // save camera state
                 auto camera = smger->getActiveCamera();
@@ -70,10 +70,11 @@ namespace Peach3D
                 mLastCameraState = camera->getState();
                 // save projection matrix
                 mIsRestoreProj = smger->isOrthoProjection() != (mType == LightType::eDirection);
-                mLastProjMatrix = smger->getProjectionMatrix();
                 if (mIsRestoreProj) {
+                    mLastProjMatrix = smger->getProjectionMatrix();
                     if (mType == LightType::eDirection) {
-                        smger->setOrthoProjection(-shadowSize.x, shadowSize.x, -shadowSize.y, shadowSize.y, 1.f, 1000.f);
+                        float length = mLastCameraState.pos.length();
+                        smger->setOrthoProjection(-length, length, -length, length, 1.f, 1000.f);
                     }
                     else {
                         smger->setPerspectiveProjection(180, shadowSize.x/shadowSize.y);
@@ -81,7 +82,8 @@ namespace Peach3D
                 }
                 // move camera to light pos
                 if (mType == LightType::eDirection) {
-                    // camera->setPosition(mShadowFocus - mDir);
+                    camera->setPosition(-mDir);
+                    camera->lockToPosition(Vector3Zero);
                 }
                 else {
                     // calc light focus position
@@ -91,9 +93,10 @@ namespace Peach3D
                     camera->lockToPosition(curPos);
                 }
                 
+                // bias matrix convert z-value to UV range(0, 1) from (-1, 1)
                 const Matrix4 biasMatrix({0.5f, 0.f, 0.f, 0.f,  0.f, 0.5f, 0.f, 0.f,  0.f, 0.f, 0.5f, 0.f,  0.5f, 0.5f, 0.5f, 1.f});
                 // save shadow matrix
-                mShadowMatrix = biasMatrix * mLastProjMatrix * camera->getViewMatrix();
+                mShadowMatrix = biasMatrix * smger->getProjectionMatrix() * camera->getViewMatrix();
             });
             mShadowTexture->setAfterRenderingFunc([&]{
                 auto smger = SceneManager::getSingletonPtr();

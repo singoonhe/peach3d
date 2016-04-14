@@ -344,8 +344,7 @@ namespace Peach3D
         float s = sin(r);
         
         Matrix4 mm;
-        if (deltaZ == 0 || s == 0 || asPect == 0)
-        {
+        if (deltaZ == 0 || s == 0 || asPect == 0) {
             return mm;
         }
         

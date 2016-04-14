@@ -186,13 +186,11 @@ namespace Peach3D
     void SceneManager::setPerspectiveProjection(float fovY, float asPect, float zNear, float zFar)
     {
         Peach3DAssert(zNear > FLT_EPSILON, "zNear must bigger than 0!");
-        mIsOrthoProj = false;
         mProjectionMatrix = Matrix4::createPerspectiveProjection(fovY, asPect, zNear, zFar);
     }
     
     void SceneManager::setOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal)
     {
-        mIsOrthoProj = true;
         mProjectionMatrix = Matrix4::createOrthoProjection(left, right, bottom, top, nearVal, farVal);
     }
     

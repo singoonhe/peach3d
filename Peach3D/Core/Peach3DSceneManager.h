@@ -59,7 +59,8 @@ namespace Peach3D
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);
         /** Set ortho projection. */
         void setOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal);
-        bool isOrthoProjection() { return mIsOrthoProj; }
+        /** Return current projection type, perspective mat[11] always is -1. */
+        bool isOrthoProjection() { return mProjectionMatrix.mat[11] > -0.5f; }
         void setProjectionMatrix(const Matrix4& proj) { mProjectionMatrix = proj; }
         const Matrix4& getProjectionMatrix() {return mProjectionMatrix;}
         
@@ -102,7 +103,6 @@ namespace Peach3D
         SceneNode*              mRootSceneNode;     // root scene node
         Widget*                 mRootWidget;        // root Widget
         Matrix4                 mProjectionMatrix;  // used projective matrix for object
-        bool                    mIsOrthoProj;       // is ortho projection matrix used
         int                     mLightMax;          // lighting  max supported count
         
         Scheduler*              mDrawUpdateSchedule;// draw stats update schedule
