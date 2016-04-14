@@ -45,7 +45,7 @@ namespace Peach3D
         //! set camera lock to look at position
         void lockToPosition(const Vector3& pos);
         //! get locked position
-        Vector3 getLockedPosition() {return mState.isLocked;}
+        Vector3 getLockedPosition() {return mState.lockPos;}
         //! is camera locked
         bool isLocked() {return mState.isLocked;}
         //! unlock camera from mState.isLocked
