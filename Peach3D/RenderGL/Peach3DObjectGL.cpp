@@ -162,13 +162,12 @@ namespace Peach3D
             // enable render state, flip using shader
             bool isTextureUsed = false;
             if (!isRenderShadow) {
+                int usedTexCount = 0;
                 auto firMat = firstNode->getMaterial();
-                auto mTexCount = firMat.getTextureCount();
-                for (auto i = 0; i < mTexCount; i++) {
+                for (auto i = 0; i < firMat.getTextureCount(); i++) {
                     auto texGL = static_cast<TextureGL*>(firMat.textureList[i].get());
                     if (texGL) {
-                        usedProgramGL->activeTextures(texGL->getGLTextureId(), i);
-                        isTextureUsed = true;
+                        usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++);
                     }
                 }
                 // active shadow texture if need
@@ -176,10 +175,11 @@ namespace Peach3D
                 for (auto i = 0; i < shadows.size(); i++) {
                     auto texGL = static_cast<TextureGL*>(shadows[i]->getShadowTexture().get());
                     if (texGL) {
-                        usedProgramGL->activeTextures(texGL->getGLTextureId(), mTexCount + i, Utils::formatString("pd_shadowTexture[%d]", i));
-                        isTextureUsed = true;
+                        usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++, Utils::formatString("pd_shadowTexture[%d]", i));
                     }
                 }
+                // signed texture used
+                isTextureUsed = usedTexCount > 0;
             }
             
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;

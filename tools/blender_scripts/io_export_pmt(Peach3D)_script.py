@@ -285,7 +285,7 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
     # default rotate 90 degree
     rot_x90 = BoolProperty(name="Convert to Y-up",
                             description="Rotate 90 degrees around X to convert to y-up",
-                            default=True)
+                            default=False)
     # not need transform object to world space
     world_space = BoolProperty(name="Export into Worldspace",
                             description="Transform the Vertexcoordinates into Worldspace",

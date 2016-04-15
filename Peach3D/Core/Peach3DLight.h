@@ -35,7 +35,7 @@ namespace Peach3D
         /** Direction light only need direction. */
         void usingAsDirection(const Vector3& dir, const Color3& color = Color3Gray, const Color3& ambient = Color3Gray);
         /** Dot light need light position and attenuate(const/line/square). */
-        void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
+        void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(0.f, 0.05f, 0.f), const Color3& color = Color3White, const Color3& ambient = Color3White);
         /** Spot light need light position and direction, add spot angle cos and transverse attenuate(pow) based on the Dot. */
         void usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Vector2& ext = Vector2(0.5f, 2.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
         

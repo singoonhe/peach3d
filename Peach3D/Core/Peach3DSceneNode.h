@@ -45,7 +45,7 @@ namespace Peach3D
         void setBringShadow(bool enable) { mNodeState.isBringShadow = enable; updateRenderState(); }
         bool isBringShadow() { return mNodeState.isBringShadow; }
         /** Set is node will show shadow. */
-        void setAcceptShadow(bool enable) { mNodeState.isAcceptShadow = enable; updateRenderState(); }
+        void setAcceptShadow(bool enable);
         bool isAcceptShadow() { return mNodeState.isAcceptShadow; }
         /** Auto set child RenderNode lighting enable. */
         void setLightingEnabled(bool enable);

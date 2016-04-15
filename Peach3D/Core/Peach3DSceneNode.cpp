@@ -71,6 +71,15 @@ namespace Peach3D
         }
     }
     
+    void SceneNode::setAcceptShadow(bool enable)
+    {
+        if (enable) {
+            Peach3DAssert((mAttachedMesh->getAnyVertexType() & VertexType::Normal) && mLightEnable, "Vertex must contain normal and light should be open");
+        }
+        mNodeState.isAcceptShadow = enable;
+        updateRenderState();
+    }
+    
     void SceneNode::setLightingEnabled(bool enable)
     {
         mLightEnable = enable;
