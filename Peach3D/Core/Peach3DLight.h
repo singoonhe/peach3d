@@ -45,6 +45,9 @@ namespace Peach3D
         void setShadowEnabled(bool enable, float factor = 1.f);
         /** Return RTT texture or judge is shadow enabled. */
         TexturePtr getShadowTexture() { return mShadowTexture; }
+        /** Set shadow locked pos for dot light or camera pos for direction light. */
+        void setShadowPos(const Vector3& pos) { mShadowPos = pos; }
+        const Vector3& getShadowPos() { return mShadowPos; }
         /** Shadow matrix saved in shadow RTT pass, used in main pass. */
         const Matrix4& getShadowMatrix() { return mShadowMatrix; }
         
@@ -78,6 +81,7 @@ namespace Peach3D
         
         Matrix4     mShadowMatrix;  // shadow bias matrix
         TexturePtr  mShadowTexture; // world shadow texture
+        Vector3     mShadowPos;     // locked pos or pos for shadow camera
         static CameraState mLastCameraState; // cache camera state
         static Matrix4     mLastProjMatrix;  // cache projective matrix
         static bool        mIsRestoreProj;   // is projection matrix need restore

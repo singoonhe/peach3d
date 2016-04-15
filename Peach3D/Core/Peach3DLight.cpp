@@ -66,7 +66,6 @@ namespace Peach3D
                 auto smger = SceneManager::getSingletonPtr();
                 // save camera state
                 auto camera = smger->getActiveCamera();
-                auto forward = camera->getForward();
                 mLastCameraState = camera->getState();
                 // save projection matrix
                 mIsRestoreProj = smger->isOrthoProjection() != (mType == LightType::eDirection);
@@ -82,15 +81,12 @@ namespace Peach3D
                 }
                 // move camera to light pos
                 if (mType == LightType::eDirection) {
-                    camera->setPosition(-mDir);
-                    camera->lockToPosition(Vector3Zero);
+                    camera->setPosition(mShadowPos);
+                    camera->lockToPosition(mShadowPos + mDir);
                 }
                 else {
-                    // calc light focus position
-                    auto direction = mPos - mLastCameraState.pos;
-                    auto curPos = direction.projective(forward) + mLastCameraState.pos;
                     camera->setPosition(mPos);
-                    camera->lockToPosition(curPos);
+                    camera->lockToPosition(mShadowPos);
                 }
                 
                 // bias matrix convert z-value to UV range(0, 1) from (-1, 1)
