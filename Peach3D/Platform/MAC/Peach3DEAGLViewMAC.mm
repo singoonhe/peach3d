@@ -13,6 +13,9 @@
 using namespace Peach3D;
 @implementation EAGLViewMAC
 
+// create a global mutex for rendering and event threads
+pthread_mutex_t     mEventMutex;
+
 // This is the renderer output callback function
 static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
 {
@@ -25,8 +28,10 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 {
     mLastFrameTime = 0.0;
     mDisplayLink = NULL;
-    self = [super initWithFrame:frameRect pixelFormat:format];
+    // click event and render are not same thread
+    pthread_mutex_init(&mEventMutex,NULL);
     
+    self = [super initWithFrame:frameRect pixelFormat:format];
     // add mouse move event
     NSTrackingAreaOptions options = (NSTrackingActiveAlways | NSTrackingInVisibleRect |
                                      NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved);
@@ -75,6 +80,7 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 
 - (void)drawView:(float)currentTime
 {
+    pthread_mutex_lock(&mEventMutex);
     // This method will be called on both the main thread (through -drawRect:) and a secondary thread (through the display link rendering loop)
     // Also, when resizing the view, -reshape is called on the main thread, but we may be drawing on a secondary thread
     // Add a mutex around to avoid the threads accessing the context simultaneously
@@ -87,6 +93,7 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
     [[self openGLContext] flushBuffer];
     
     CGLUnlockContext([[self openGLContext] CGLContextObj]);
+    pthread_mutex_unlock(&mEventMutex);
 }
 
 - (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
@@ -155,6 +162,8 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 
 - (void)triggerEvent:(NSEvent *)theEvent withType:(ClickEvent)type
 {
+    // make render thread waiting for click event
+    pthread_mutex_lock(&mEventMutex);
     // get current position and trigger event
     CGPoint point = [theEvent locationInWindow];
     if (type == ClickEvent::eScrollWheel) {
@@ -163,6 +172,7 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
     std::vector<uint> clickIds = {1};
     std::vector<Vector2> poss = {Vector2(point.x, point.y)};
     EventDispatcher::getSingletonPtr()->triggerClickEvent(type, clickIds, poss);
+    pthread_mutex_unlock(&mEventMutex);
 }
 
 - (void)pause
@@ -200,12 +210,18 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 
 - (void)keyDown:(NSEvent *)theEvent
 {
+    // make render thread waiting for keyboard event
+    pthread_mutex_lock(&mEventMutex);
     EventDispatcher::getSingletonPtr()->triggerKeyboardEvent(KeyboardEvent::eKeyDown, (KeyCode)theEvent.keyCode);
+    pthread_mutex_unlock(&mEventMutex);
 }
 
 - (void)keyUp:(NSEvent *)theEvent
 {
+    // make render thread waiting for keyboard event
+    pthread_mutex_lock(&mEventMutex);
     EventDispatcher::getSingletonPtr()->triggerKeyboardEvent(KeyboardEvent::eKeyUp, (KeyCode)theEvent.keyCode);
+    pthread_mutex_unlock(&mEventMutex);
 }
 
 - (BOOL)canBecomeKeyWindow

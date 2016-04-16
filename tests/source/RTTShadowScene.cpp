@@ -105,6 +105,8 @@ void ShadowSample::init(Widget* parentWidget)
     // add a direction light
     mDirLight = SceneManager::getSingleton().addNewLight();
     mDirLight->usingAsDirection(Vector3(-2.f, -1.f, 0.f));
+    // manual setting camera pos when render shadow
+    mDirLight->setShadowPos(Vector3(2.f, 1.f, 0.f));
     
     // enable shadow
     mDotLight->setShadowEnabled(true);
