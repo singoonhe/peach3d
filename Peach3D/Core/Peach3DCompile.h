@@ -22,7 +22,7 @@
 #include <string>
 #include <assert.h>
 // Peach3D current version
-#define PEACH3D_SDK_VERSION "0.1rc2"
+#define PEACH3D_SDK_VERSION "0.1rc3"
 
 ///////////////////////////////////////////////////////
 //////////////////////   Platform   ///////////////////
