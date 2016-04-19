@@ -312,7 +312,7 @@ namespace Peach3D
         if (mIsLightingDirty && mAttachedMesh) {
             std::vector<LightPtr> validLights, shadowLights;
             // is attached mesh contain vertex normal
-            bool isNormal = mAttachedMesh->getAnyVertexType() & VertexType::Normal;
+            bool isNormal = bool(mAttachedMesh->getAnyVertexType() & VertexType::Normal);
             if (mLightEnable && isNormal) {
                 // save enabled lights name
                 SceneManager::getSingleton().tranverseLights([&](const std::string& name, const LightPtr& l){

@@ -118,6 +118,18 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DOBB.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DCursorManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DLight.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DPmbLoader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DPmtLoader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Peach3D\Core\Peach3DResourceManager.h">
@@ -273,6 +285,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Peach3D\RenderDX\shader\pdPosColorShader2D.h">
       <Filter>RenderDX\shader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DCursorManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DLight.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DPmbLoader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DPmtLoader.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

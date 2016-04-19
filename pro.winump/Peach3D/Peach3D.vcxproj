@@ -212,6 +212,7 @@
     <ClInclude Include="..\..\Peach3D\Core\Peach3DCamera.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DColor4.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DCompile.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DCursorManager.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DEventDispatcher.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DIAppDelegate.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DIObject.h" />
@@ -222,6 +223,7 @@
     <ClInclude Include="..\..\Peach3D\Core\Peach3DITexture.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DKeyCode.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DLayoutManager.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DLight.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DLogPrinter.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DMaterial.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DMatrix4.h" />
@@ -229,6 +231,8 @@
     <ClInclude Include="..\..\Peach3D\Core\Peach3DNode.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DOBB.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DObjLoader.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DPmbLoader.h" />
+    <ClInclude Include="..\..\Peach3D\Core\Peach3DPmtLoader.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DQuaternion.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DRect.h" />
     <ClInclude Include="..\..\Peach3D\Core\Peach3DRenderNode.h" />
@@ -264,6 +268,7 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DAction.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DActionImplement.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DCamera.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DCursorManager.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DEventDispatcher.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DIObject.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DIPlatform.cpp" />
@@ -271,12 +276,15 @@
     <ClCompile Include="..\..\Peach3D\Core\Peach3DIScene.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DITexture.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DLayoutManager.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DLight.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DLogPrinter.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DMatrix4.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DMesh.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DNode.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DOBB.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DObjLoader.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DPmbLoader.cpp" />
+    <ClCompile Include="..\..\Peach3D\Core\Peach3DPmtLoader.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DQuaternion.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DRenderNode.cpp" />
     <ClCompile Include="..\..\Peach3D\Core\Peach3DResourceManager.cpp" />

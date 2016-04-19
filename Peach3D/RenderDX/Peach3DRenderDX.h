@@ -21,7 +21,7 @@ namespace Peach3D
         // init render, will create window dependent handlers
         bool initRender(const Vector2& size, DXGI_MODE_ROTATION rotation);
         // clear old frame before render
-        virtual void prepareForRender();
+        virtual void prepareForMainRender();
         // open depth test...
         virtual void prepareForObjectRender();
         // close depth test...
@@ -32,7 +32,7 @@ namespace Peach3D
         //! Create renderable object.
         /** \params the name of new renderable object.
             \retuan retuan the new object pointer, return nullptr if create failed. */
-        virtual IObject* createObject(const char* objectName);
+        virtual ObjectPtr createObject(const char* objectName);
 
         //! Create texture with data
         virtual TexturePtr createTexture(const char* name);
@@ -40,7 +40,7 @@ namespace Peach3D
         //! Create render program with name. Program include vertex and pixel shader for render.
         /** \params the name of new OpenGL ES program.
         \return pointer of new program, return nullptr if create failed. */
-        virtual IProgram* createProgram(uint pId);
+        virtual ProgramPtr createProgram(uint pId);
 
         //! get Direct2D factory
         ID2D1Factory1* getD2DFactory() { return mD2DFactory; }

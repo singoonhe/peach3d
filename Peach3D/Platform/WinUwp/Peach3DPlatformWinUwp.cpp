@@ -207,9 +207,9 @@ namespace Peach3D
         static uint texAutoCount = 0;
         sprintf(pName, "pd_DXTexture%d", texAutoCount++);
         // create texture with inner name
-        TextureDX *texture = static_cast<TextureDX*>(IRender::getSingleton().createTexture(pName));
-        if (!texture->createTextTexture(textList, defined, clicksRect)) {
-            ResourceManager::getSingleton().deleteTexture(texture);
+        TexturePtr texture = IRender::getSingleton().createTexture(pName);
+        TextureDX* originTex = static_cast<TextureDX*>(texture.get());
+        if (!originTex->createTextTexture(textList, defined, clicksRect)) {
             texture = nullptr;
         }
         return texture;

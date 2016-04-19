@@ -239,8 +239,12 @@
     <ClInclude Include="..\..\source\ActionScene.h" />
     <ClInclude Include="..\..\source\BaseSample.h" />
     <ClInclude Include="..\..\source\BaseScene.h" />
+    <ClInclude Include="..\..\source\CostumeScene.h" />
+    <ClInclude Include="..\..\source\DeviceScene.h" />
+    <ClInclude Include="..\..\source\LightScene.h" />
     <ClInclude Include="..\..\source\MeshScene.h" />
     <ClInclude Include="..\..\source\PlatformDelegate.h" />
+    <ClInclude Include="..\..\source\RTTShadowScene.h" />
     <ClInclude Include="..\..\source\TestScene.h" />
     <ClInclude Include="..\..\source\TouchScene.h" />
     <ClInclude Include="..\..\source\UIScene.h" />
@@ -249,8 +253,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\ActionScene.cpp" />
     <ClCompile Include="..\..\source\BaseScene.cpp" />
+    <ClCompile Include="..\..\source\CostumeScene.cpp" />
+    <ClCompile Include="..\..\source\DeviceScene.cpp" />
+    <ClCompile Include="..\..\source\LightScene.cpp" />
     <ClCompile Include="..\..\source\MeshScene.cpp" />
     <ClCompile Include="..\..\source\PlatformDelegate.cpp" />
+    <ClCompile Include="..\..\source\RTTShadowScene.cpp" />
     <ClCompile Include="..\..\source\TestScene.cpp" />
     <ClCompile Include="..\..\source\TouchScene.cpp" />
     <ClCompile Include="..\..\source\UIScene.cpp" />

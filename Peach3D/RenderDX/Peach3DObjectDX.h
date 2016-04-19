@@ -8,9 +8,11 @@ namespace Peach3D
 {
     class ObjectDX : public IObject
     {
-        //! declare class RenderDX is friend class, so RenderDX can call constructor function.
-        friend class RenderDX;
     public:
+        ObjectDX(ComPtr<ID3D12Device> device, const char* name)
+            : IObject(name), mD3DDevice(device), mRenderState(nullptr),
+            mVertexBuffer(nullptr), mIndexBuffer(nullptr), mDrawMode(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {}
+        virtual ~ObjectDX();
         /**
          * See IObject::setVertexBuffer. 
          */
@@ -32,13 +34,17 @@ namespace Peach3D
         * @brief Render OBB list, called by SceneManager.
         */
         virtual void render(const std::vector<OBB*>& renderList);
+        /**
+        * @brief Render a AABB using object matrix, object AABB data use to scale global AABB.
+        * @params attrs Object rendering attr, include matrixes.
+        */
+        //void renderAABB(RenderObjectAttr* attrs);
+        /**
+        * Delete AABB vertex buffers, it could be called by RenderDX.
+        */
+        static void deleteAABBBuffers();
 
     protected:
-        ObjectDX(ComPtr<ID3D12Device> device, const char* name)
-            : IObject(name), mD3DDevice(device), mRenderState(nullptr),
-            mVertexBuffer(nullptr), mIndexBuffer(nullptr), mDrawMode(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST) {}
-        virtual ~ObjectDX();
-
         /**
         * Delete dx object vertex buffer.
         */
@@ -51,15 +57,6 @@ namespace Peach3D
         * Generate AABB vertex buffers if SceneNode needed.
         */
         static void generateAABBBuffers(ComPtr<ID3D12Device> device, ComPtr<ID3D11DeviceContext2> context);
-        /**
-        * @brief Render a AABB using object matrix, object AABB data use to scale global AABB.
-        * @params attrs Object rendering attr, include matrixes.
-        */
-        //void renderAABB(RenderObjectAttr* attrs);
-        /**
-        * Delete AABB vertex buffers, it could be called by RenderDX.
-        */
-        static void deleteAABBBuffers();
 
     private:
         ComPtr<ID3D12Device>          mD3DDevice;

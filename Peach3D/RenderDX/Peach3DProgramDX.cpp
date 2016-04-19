@@ -215,15 +215,15 @@ namespace Peach3D
         //mD3DDevice->CreateBuffer(&constantBufferDesc, nullptr, &mOUniformBuffer);
     }
 
-	void ProgramDX::updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList)
-	{
-	}
+    void ProgramDX::updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList)
+    {
+    }
 
-	void ProgramDX::updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList)
-	{
-	}
+    void ProgramDX::updateInstancedWidgetUniforms(const std::vector<Widget*>& renderList)
+    {
+    }
 
-    void ProgramDX::updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList)
+    void ProgramDX::updateInstancedOBBUniforms(const std::vector<OBB*>& renderList)
     {
     }
 

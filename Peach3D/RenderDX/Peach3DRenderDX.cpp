@@ -295,7 +295,7 @@ namespace Peach3D
         return true;
     }
 
-    void RenderDX::prepareForRender()
+    void RenderDX::prepareForMainRender()
     {
         mCommandAllocators[mCurrentFrame]->Reset();
         // The command list can be reset anytime after ExecuteCommandList() is called.
@@ -375,19 +375,20 @@ namespace Peach3D
     TexturePtr RenderDX::createTexture(const char* name)
     {
         Peach3DAssert(strlen(name)>0, "The texture name can't be null");
-        TextureDX* texture = new TextureDX(mD3DDevice, name);
+        TexturePtr texture(new TextureDX(mD3DDevice, name));
         return texture;
     }
 
-    IProgram* RenderDX::createProgram(uint pId)
+    ProgramPtr RenderDX::createProgram(uint pId)
     {
-        ProgramDX* program = new ProgramDX(mD3DDevice, pId);
+        ProgramPtr program(new ProgramDX(mD3DDevice, pId));
         return program;
     }
 
-    IObject* RenderDX::createObject(const char* objectName)
+    ObjectPtr RenderDX::createObject(const char* objectName)
     {
-        ObjectDX* object = new ObjectDX(mD3DDevice, objectName);
+        Peach3DAssert(strlen(objectName)>0, "The object name can't be null");
+        ObjectPtr object(new ObjectDX(mD3DDevice, objectName));
         return object;
     }
 

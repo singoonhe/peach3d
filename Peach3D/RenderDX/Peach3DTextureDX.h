@@ -34,6 +34,9 @@ namespace Peach3D
     class TextureDX : public ITexture
     {
     public:
+        TextureDX(ComPtr<ID3D12Device> device, const char* name) : ITexture(name),
+            mD3DDevice(device), mTextureRV(nullptr), mTexState(nullptr) {}
+        virtual ~TextureDX();
         /** Set texture data and init texture, format and size must set before. */
         virtual bool setTextureData(void* data, uint size, TextureDataStatus status = TextureDataStatus::eDecoded);
         /** Set texture data and init texture for cube texture, format and size must set before. */
@@ -53,10 +56,6 @@ namespace Peach3D
             std::map<std::string, std::vector<Rect>>& clicksRect);
 
     protected:
-        TextureDX(ComPtr<ID3D12Device> device, const char* name) : ITexture(name),
-            mD3DDevice(device), mTextureRV(nullptr), mTexState(nullptr) {}
-        virtual ~TextureDX();
-
         // recreated sampler state
         bool recreatedSamplerState();
         // get text render size
@@ -72,7 +71,6 @@ namespace Peach3D
         ID3D11SamplerState*            mTexState;             // texture render state
 
         static std::map<std::wstring, std::string> mClickedStrMap;  // clicked string list, used for text texture
-        friend class RenderDX;
     };
 }
 

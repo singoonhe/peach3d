@@ -8,9 +8,9 @@ namespace Peach3D
 {
     class ProgramDX : public IProgram
     {
-        //! Declare class RenderDX is friend class, so RenderDX can call constructor function.
-        friend class RenderDX;
     public:
+        ProgramDX(ComPtr<ID3D12Device> device, uint pId);
+        virtual ~ProgramDX();
         // set vertex shader, program will valid when vs and ps all is set
         virtual bool setVertexShader(const char* data, int size, bool isCompiled = false);
         // set pixel shader, program will valid when vs and ps all is set
@@ -24,16 +24,16 @@ namespace Peach3D
         virtual bool useAsRenderProgram();
 
         /** Update instanced RenderNode unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedRenderNodeUnifroms(const std::vector<RenderNode*>& renderList);
+        virtual void updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList);
         /** Update instanced widgets unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedWidgetUnifroms(const std::vector<Widget*>& renderList);
+        virtual void updateInstancedWidgetUniforms(const std::vector<Widget*>& renderList);
         /** Update instanced OBB unifroms depend on mProgramUniformList. */
-        virtual void updateInstancedOBBUnifroms(const std::vector<OBB*>& renderList);
+        virtual void updateInstancedOBBUniforms(const std::vector<OBB*>& renderList);
+
+        //! delete global uniform buffer
+        static void deleteGlobalUBO();
 
     protected:
-        ProgramDX(ComPtr<ID3D12Device> device, uint pId);
-        virtual ~ProgramDX();
-
         /** Compile vertex shader or pixel shader. */
         ID3DBlob* compileShader(const char* data, int size, const char* entryName, const char* targetName, bool isCompiled);
         //! Set vertex data stride.
@@ -44,8 +44,6 @@ namespace Peach3D
         static void updateGlobalObjectUnifroms();
         /** Update widget global uniform buffer. */
         static void updateGlobalWidgetUnifroms();
-        //! delete global uniform buffer
-        static void deleteGlobalUBO();
 
     protected:
         ID3DBlob*   mVertexBlob;    // vertex compiled shader
