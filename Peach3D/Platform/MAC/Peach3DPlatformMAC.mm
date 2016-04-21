@@ -173,16 +173,14 @@ namespace Peach3D
     
     void PlatformMAC::terminate()
     {
-        // notify system terminate, "applicationWillTerminate" will be called, then exit game engine
-        [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];
-    }
-    
-    void PlatformMAC::exitEngine()
-    {
-        // exit render loop first
-        [mGLView exit];
-        // sign terminate and delete render
-        IPlatform::terminate();
+        if (!mTerminating) {
+            // exit render loop first
+            [mGLView exit];
+            // sign terminate and delete render
+            IPlatform::terminate();
+            // notify system terminate, "applicationWillTerminate" will be called, then exit game engine
+            [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];
+        }
     }
     
     bool PlatformMAC::isFlagKeyDown(KeyCode flagKey)

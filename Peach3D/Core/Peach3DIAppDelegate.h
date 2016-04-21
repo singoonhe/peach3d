@@ -9,6 +9,8 @@
 #ifndef PEACH3D_IAPPDELEGAET_H
 #define PEACH3D_IAPPDELEGAET_H
 
+#include "Peach3DVector2.h"
+
 namespace Peach3D
 {
     class IAppDelegate
@@ -24,7 +26,7 @@ namespace Peach3D
         virtual void appWillEnterForeground() = 0;
         
         //! be called after window size changed(not include oritation change)
-        virtual void appWindowSizeChanged() {};
+        virtual void appWindowSizeChanged(const Peach3D::Vector2& size) {};
         
         //! user need delete delegate himself
     };
