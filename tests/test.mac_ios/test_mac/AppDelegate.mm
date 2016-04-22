@@ -43,7 +43,7 @@ PlatformDelegate      gGameDelegate;
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // exit game engine here
-    gPlatform.exitEngine();
+    gPlatform.terminate();
 }
 
 - (BOOL)windowShouldClose:(id)sender

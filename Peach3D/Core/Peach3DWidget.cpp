@@ -29,7 +29,7 @@ namespace Peach3D
         return widget;
     }
     
-    Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true), mBindAnchor(Vector2LeftBottom)
+    Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true), mBindCorner(Vector2LeftBottom)
     {
         // set default diffuse color, not show widget
         mDiffColor.r = mDiffColor.g = mDiffColor.b = 1.f;
@@ -239,7 +239,7 @@ namespace Peach3D
                 // convert pos to parent left-bottom pos (0, 0)
                 auto parentSize = parentWidget->getContentSize(TranslateRelative::eWorld);
                 auto offsetPos = mDesignPos * Vector2(getAutoScaleTypeValue(mScaleTypeX), getAutoScaleTypeValue(mScaleTypeY));
-                mWorldPos = parentSize * mBindAnchor + offsetPos;
+                mWorldPos = parentSize * mBindCorner + offsetPos;
                 
                 // cumulative parent offset, convert to world coordinate
                 const Vector2 worldAnchorPos = parentSize * parentWidget->getAnchorPoint();

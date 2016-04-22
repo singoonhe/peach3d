@@ -142,12 +142,13 @@ namespace Peach3D
             mTitleLabel->setFillColor(color);
         }
     }
-    
+
     void Button::setTitleOffset(const Vector2& offset)
     {
         mTitleOffset = offset;
         if (mTitleLabel) {
-            mTitleLabel->setPosition(mTitleOffset * mDesignSize);
+            Vector2 autoScale(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
+            mTitleLabel->setPosition(mTitleOffset * mDesignSize * autoScale);
         }
     }
     

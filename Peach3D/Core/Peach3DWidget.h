@@ -79,6 +79,18 @@ namespace Peach3D
         const ProgramPtr& getProgramForRender() {return mRenderProgram;}
         virtual void setColor(const Color3& color) { mDiffColor = color; }
         const Color3& getColor()const { return mDiffColor; }
+        virtual void setMinSize(const Vector2& size) { mMinSize = size; }
+        const Vector2& getMinSize()const { return mMinSize; }
+        virtual void setMaxSize(const Vector2& size) { mMaxSize = size; }
+        const Vector2& getMaxSize()const { return mMaxSize; }
+        virtual void setBindCorner(const Vector2& corner) { mBindCorner = corner; }
+        const Vector2& getBindCorner()const { return mBindCorner; }
+        virtual void setPosScaleType(AutoScaleType typeX, AutoScaleType typeY) { mScaleTypeX = typeX; mScaleTypeY = typeY; }
+        AutoScaleType getPosScaleTypeX() { return mScaleTypeX; }
+        AutoScaleType getPosScaleTypeY() { return mScaleTypeY; }
+        virtual void setSizeScaleType(AutoScaleType typeW, AutoScaleType typeH) { mScaleTypeWidth = typeW; mScaleTypeHeight = typeH; }
+        AutoScaleType getPosScaleTypeWidth() { return mScaleTypeWidth; }
+        AutoScaleType getPosScaleTypeHeight() { return mScaleTypeHeight; }
         
         /** Set clip enabled by parent. */
         void setClipEnabled(bool enable) {mClipEnabled = enable;}
@@ -123,7 +135,7 @@ namespace Peach3D
         Vector2     mWorldSize;         // cache world rendering rect, pos with anchor
         
         Vector2     mDesignPos;         // user designed position
-        Vector2     mBindAnchor;        // bind parent corner for position, default is left-bottom
+        Vector2     mBindCorner;        // bind parent corner for position, default is left-bottom
         AutoScaleType mScaleTypeX;      // widget position auto scale type
         AutoScaleType mScaleTypeY;      // widget position auto scale type
         
