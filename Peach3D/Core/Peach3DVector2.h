@@ -56,6 +56,17 @@ namespace Peach3D
     };
     //! Define zero vector2.
     const Vector2 Vector2Zero;
+    
+    /** Define 9 corner for widget. */
+    const Vector2 Vector2LeftBottom;
+    const Vector2 Vector2LeftCenter(0.f, 0.5f);
+    const Vector2 Vector2LeftTop(0.f, 1.f);
+    const Vector2 Vector2CenterBottom(0.5f, 0.f);
+    const Vector2 Vector2Center(0.5f);
+    const Vector2 Vector2CenterTop(0.5f, 1.f);
+    const Vector2 Vector2RightBottom(1.f, 0.f);
+    const Vector2 Vector2RightCenter(1.f, 0.5f);
+    const Vector2 Vector2RightTop(1.f, 1.f);
 }
 
 #endif // PEACH3D_VECTOR2_H

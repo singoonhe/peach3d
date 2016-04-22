@@ -21,6 +21,15 @@ namespace Peach3D
     // bigger than this zorder widget will not be clear when SceneManager::reset.
 #define NOT_CLEAR_WIDGET_ZORDER (std::numeric_limits<int>::max() - 100)
     
+    enum class PEACH3D_DLL AutoScaleType
+    {
+        eFix,   // no scale always
+        eWidth,	// width scale
+        eHeight,// height scale
+        eMin,   // min(width, height) scale
+        eMax,   // max(width, height) scale
+    };
+    
     class PEACH3D_DLL Widget : public Node
     {
     public:
@@ -51,9 +60,9 @@ namespace Peach3D
         /** Get scaling, default pos relative to parent. */
         const Vector2& getScale(TranslateRelative type = TranslateRelative::eLocal);
         
-        /** Set content size, this will not effect children. */
+        /** Set content size, the last size need multiply auto scale. */
         virtual void setContentSize(const Vector2& size);
-        /** Get content size. */
+        /** Get content size, design size or world size. */
         const Vector2& getContentSize(TranslateRelative type = TranslateRelative::eLocal);
         
         /** Set anchor point value must be (0-1). */
@@ -98,17 +107,31 @@ namespace Peach3D
         /** Update rendering state, preset program and calculate hash code. */
         virtual void updateRenderingState(const std::string& extState="");
         
+        /** Convert scale type to value. */
+        float getAutoScaleTypeValue(AutoScaleType type);
+        
     protected:
         Vector2     mScale;     // scaling
         float       mRotate;    // rotation value, z axis
-        Rect        mRect;      // pos and size
         Vector2     mAnchor;    // anchor point, it will effect position/rotation/scaling
         Color3      mDiffColor; // widget diffuse color, Node have alpha attribute
         bool        mClipEnabled;       // is widget will auto be cliped by parent
         
         Vector2     mWorldScale;        // cache world scaling
         float       mWorldRotate;       // cache world rotate
-        Rect        mWorldAnchorRect;   // cache world rendering rect, pos with anchor
+        Vector2     mWorldPos;          // cache world rendering rect, pos with anchor
+        Vector2     mWorldSize;         // cache world rendering rect, pos with anchor
+        
+        Vector2     mDesignPos;         // user designed position
+        Vector2     mBindAnchor;        // bind parent corner for position, default is left-bottom
+        AutoScaleType mScaleTypeX;      // widget position auto scale type
+        AutoScaleType mScaleTypeY;      // widget position auto scale type
+        
+        Vector2     mDesignSize;        // user designed size
+        Vector2     mMinSize;           // min size for widget auto scaling
+        Vector2     mMaxSize;           // max size for widget auto scaling
+        AutoScaleType mScaleTypeWidth;  // widget size auto scale type
+        AutoScaleType mScaleTypeHeight; // widget size auto scale type
         
         ProgramPtr  mRenderProgram;     // render program
         uint        mRenderStateHash;   // render state hash, used for instancing render

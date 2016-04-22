@@ -92,6 +92,7 @@ namespace Peach3D
         float getWidthScale() { return mWidthScale; }
         float getHeightScale() { return mHeightScale; }
         float getMinScale() { return mMinScale; }
+        float getMaxScale() { return mMaxScale; }
         
     protected:
         LayoutManager();
@@ -110,6 +111,7 @@ namespace Peach3D
         float       mWidthScale;        // screen-width / design-width
         float       mHeightScale;       // screen-height / design-height
         float       mMinScale;          // min(mWidthScale, mHeightScale)
+        float       mMaxScale;          // max(mWidthScale, mHeightScale)
         Vector2     mInnerPoss[LAYOUT_INNER_POSITION_COUNT];    // inner positions
         LayoutTextLocalizedFunction mLocalizedFunc; // localize layout text
         std::map<std::string, LayoutAttrType>   mLoadAttrMap;   // layout load attribure map

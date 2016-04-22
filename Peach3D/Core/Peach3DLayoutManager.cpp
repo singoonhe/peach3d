@@ -406,6 +406,7 @@ namespace Peach3D
         mWidthScale = mScreenSize.x / (mIsLandscape ? maxSize : minSize);
         mHeightScale = mScreenSize.y / (mIsLandscape ? minSize : maxSize);
         mMinScale = std::min(mWidthScale, mHeightScale);
+        mMaxScale = std::max(mWidthScale, mHeightScale);
         
         Peach3DInfoLog("Set design size:(%.1fx%.1f), width:%.2f, height:%.2f",
                        mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
@@ -419,7 +420,7 @@ namespace Peach3D
         // reset design size and scales
         if (oldWidth < FLT_EPSILON || oldHeight < FLT_EPSILON) {
             mDesignScreenSize = mScreenSize;
-            mWidthScale = mHeightScale = mMinScale = 1.0f;
+            mWidthScale = mHeightScale = mMinScale = mMaxScale = 1.0f;
         }
         
         // format inner positions

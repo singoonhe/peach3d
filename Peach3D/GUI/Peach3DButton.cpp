@@ -115,7 +115,7 @@ namespace Peach3D
             mTitleLabel = Label::create(title);
             this->addChild(mTitleLabel);
             // init title position
-            mTitleLabel->setPosition(mTitleOffset * mRect.size);
+            mTitleLabel->setPosition(mTitleOffset * mDesignSize);
         }
         else if (mTitleLabel) {
             mTitleLabel->setText(title);
@@ -147,7 +147,7 @@ namespace Peach3D
     {
         mTitleOffset = offset;
         if (mTitleLabel) {
-            mTitleLabel->setPosition(mTitleOffset * mRect.size);
+            mTitleLabel->setPosition(mTitleOffset * mDesignSize);
         }
     }
     

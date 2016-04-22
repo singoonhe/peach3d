@@ -185,19 +185,19 @@ namespace Peach3D
                 auto texWidth = mRenderFrame.tex->getWidth() * mRenderFrame.rc.size.x;
                 auto texHeight = mRenderFrame.tex->getHeight() * mRenderFrame.rc.size.y;
                 // ratio scale if content size is too small
-                if (texWidth > mRect.size.x || texHeight > mRect.size.y) {
-                    texWidth = mRect.size.x;
-                    texHeight = mRect.size.y;
+                if (texWidth > mDesignSize.x || texHeight > mDesignSize.y) {
+                    texWidth = mDesignSize.x;
+                    texHeight = mDesignSize.y;
                 }
                 // calc children size
                 auto rSizeV = Vector2(1.f) - (mCenterRect.pos + mCenterRect.size);
                 float xSizeV[] = {texWidth * mCenterRect.pos.x, 0.f, texWidth * rSizeV.x};
-                xSizeV[1] = mRect.size.x - xSizeV[0] - xSizeV[2];
+                xSizeV[1] = mDesignSize.x - xSizeV[0] - xSizeV[2];
                 float ySizeV[] = {texHeight * mCenterRect.pos.y, 0.f, texHeight * rSizeV.y};
-                ySizeV[1] = mRect.size.y - ySizeV[0] - ySizeV[2];
+                ySizeV[1] = mDesignSize.y - ySizeV[0] - ySizeV[2];
                 // calc children start pos
-                float xPosV[] = {0.f, xSizeV[0], mRect.size.x - xSizeV[2]};
-                float yPosV[] = {0.f, ySizeV[0], mRect.size.y - ySizeV[2]};
+                float xPosV[] = {0.f, xSizeV[0], mDesignSize.x - xSizeV[2]};
+                float yPosV[] = {0.f, ySizeV[0], mDesignSize.y - ySizeV[2]};
                 // update all children position and content
                 for (auto i=0; i<9; ++i) {
                     int xIndex = i % 3;
