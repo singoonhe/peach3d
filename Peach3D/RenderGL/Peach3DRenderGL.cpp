@@ -43,10 +43,16 @@ namespace Peach3D
         glEnable(GL_BLEND);
         glEnable(GL_CULL_FACE);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-        glViewport(0, 0, (int)lroundf(size.x), (int)lroundf(size.y));
-        Peach3DLog(LogLevel::eInfo, "Render window's width %.0f, height %.0f", size.x, size.y);
+        // set initial window size
+        setRenderSize(size);
         
         return true;
+    }
+    
+    void RenderGL::setRenderSize(const Peach3D::Vector2& size)
+    {
+        glViewport(0, 0, (int)lroundf(size.x), (int)lroundf(size.y));
+        Peach3DLog(LogLevel::eInfo, "Render window's width %.0f, height %.0f", size.x, size.y);
     }
 
     void RenderGL::filterGLExtensions(const char* version, const char* extension)

@@ -69,4 +69,10 @@ PlatformDelegate      gGameDelegate;
     gGameDelegate.appWillEnterForeground();
 }
 
+- (void)windowDidEndLiveResize:(NSNotification *)notification
+{
+    NSSize contentSize = [[_window contentView] frame].size;
+    gGameDelegate.appWindowSizeChanged(Peach3D::Vector2(contentSize.width, contentSize.height));
+}
+
 @end

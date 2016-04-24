@@ -80,7 +80,9 @@ namespace Peach3D
         bool loadLayout(const uchar* content, ulong len, Widget* parent = nullptr, const LayoutVarBindFunction& bindFunc = nullptr,
                         const LayoutLoadOverFunction& overFunc = nullptr);
         /** Set design size, it will calc scale, auto landscape. */
-        void setDesignSize(float width, float height);
+        void setDesignSize(const Vector2& dSize);
+        /** Set screen size. */
+        void setScreenSize(const Vector2& size);
         
         /** Set text localized func, return localized text from key. */
         void setTextLocalizedFunc(const LayoutTextLocalizedFunction& func) { mLocalizedFunc = func; }
@@ -96,8 +98,8 @@ namespace Peach3D
     protected:
         LayoutManager();
         ~LayoutManager() {}
-        /** Set screen size. */
-        void setScreenSize(const Vector2& size);
+        /** Calc screen scales. */
+        void calcAutoScales();
         /** Load widget data and children. */
         void loadWidgetData(Widget* newNode, const XMLElement* nodeEle, Widget* parentNode, const LayoutVarBindFunction& bindFunc);
         /** Create new widget for type name. */

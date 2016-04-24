@@ -392,19 +392,10 @@ namespace Peach3D
         }
     }
 
-    void LayoutManager::setDesignSize(float width, float height)
+    void LayoutManager::setDesignSize(const Vector2& dSize)
     {
-        mDesignScreenSize = Vector2(width, height);
-        
-        // calc min scale, width scale, height scale
-        float minSize = std::min(mDesignScreenSize.x, mDesignScreenSize.y), maxSize = std::max(mDesignScreenSize.x, mDesignScreenSize.y);
-        mWidthScale = mScreenSize.x / (mIsLandscape ? maxSize : minSize);
-        mHeightScale = mScreenSize.y / (mIsLandscape ? minSize : maxSize);
-        mMinScale = std::min(mWidthScale, mHeightScale);
-        mMaxScale = std::max(mWidthScale, mHeightScale);
-        
-        Peach3DInfoLog("Set design size:(%.1fx%.1f), width:%.2f, height:%.2f",
-                       mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
+        mDesignScreenSize = dSize;
+        calcAutoScales();
     }
     
     void LayoutManager::setScreenSize(const Vector2& size)
@@ -416,6 +407,24 @@ namespace Peach3D
         if (oldWidth < FLT_EPSILON || oldHeight < FLT_EPSILON) {
             mDesignScreenSize = mScreenSize;
             mWidthScale = mHeightScale = mMinScale = mMaxScale = 1.0f;
+        }
+        else {
+            calcAutoScales();
+        }
+    }
+    
+    void LayoutManager::calcAutoScales()
+    {
+        if (mDesignScreenSize.x > FLT_EPSILON && mDesignScreenSize.y > FLT_EPSILON) {
+            // calc min scale, width scale, height scale
+            float minSize = std::min(mDesignScreenSize.x, mDesignScreenSize.y), maxSize = std::max(mDesignScreenSize.x, mDesignScreenSize.y);
+            mWidthScale = mScreenSize.x / (mIsLandscape ? maxSize : minSize);
+            mHeightScale = mScreenSize.y / (mIsLandscape ? minSize : maxSize);
+            mMinScale = std::min(mWidthScale, mHeightScale);
+            mMaxScale = std::max(mWidthScale, mHeightScale);
+            
+            Peach3DInfoLog("Set design size:(%.1fx%.1f), width:%.2f, height:%.2f",
+                           mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
         }
     }
 }

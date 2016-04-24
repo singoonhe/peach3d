@@ -71,15 +71,16 @@ namespace Peach3D
         uint getChildrenCount() { return (uint)mChildNodeList.size(); }
         const std::vector<Node*>& getChildrenList() {return mChildNodeList;}
         
+        /** Set Node rendering attribute need update (pos, size, rotate...). */
+        void setNeedUpdateRenderingAttributes();
         /** Judge is need render. */
         void prepareForRender(float lastFrameTime);
+        
     protected:
         //! user can't call constructor function.
         Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mAlpha(1.f), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true) {}
         //! clean node and all child node, user can't call destructor function.
         virtual ~Node();
-        /** Set Node rendering attribute need update (pos, size, rotate...). */
-        void setNeedUpdateRenderingAttributes();
         /** Set parent node, only called for addChildNode */
         virtual void setParentNode(Node* pNode) { mParentNode = pNode; }
         
