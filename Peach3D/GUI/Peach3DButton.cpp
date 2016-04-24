@@ -147,8 +147,7 @@ namespace Peach3D
     {
         mTitleOffset = offset;
         if (mTitleLabel) {
-            Vector2 autoScale(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
-            mTitleLabel->setPosition(mTitleOffset * mDesignSize * autoScale);
+            mTitleLabel->setPosition(mTitleOffset * mDesignSize);
         }
     }
     

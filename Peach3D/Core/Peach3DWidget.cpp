@@ -209,7 +209,7 @@ namespace Peach3D
             // update world position, world scale and world rotation
             mWorldSize = mDesignSize;
             mWorldRotate = mRotate;
-            mWorldScale = mScale;
+            mWorldScale = mScale * Vector2(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
             Widget* parentWidget = static_cast<Widget*>(mParentNode);
             if (parentWidget) {
                 Widget* rootWidget = SceneManager::getSingletonPtr()->getRootWidget();
@@ -220,8 +220,7 @@ namespace Peach3D
                     mWorldRotate = mWorldRotate + parentWidget->getRotation(TranslateRelative::eWorld);
                 }
                 // update world size
-                Vector2 autoScaleV(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
-                mWorldSize = mWorldSize * Vector2(fabsf(mWorldScale.x), fabsf(mWorldScale.y)) * autoScaleV;
+                mWorldSize = mWorldSize * Vector2(fabsf(mWorldScale.x), fabsf(mWorldScale.y));
                 // clamp widget size
                 if (mMinSize.x > FLT_EPSILON && mWorldSize.x < mMinSize.x) {
                     mWorldSize.x = mMinSize.x;
