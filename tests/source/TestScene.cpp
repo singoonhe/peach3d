@@ -43,6 +43,7 @@ bool TestScene::init()
         Label* testLabel = Label::create(gTestSceneList[i].title.c_str(), labelHeight);
         testLabel->setAnchorPoint(Vector2(0.5f, 1.0f));
         testLabel->setPosition(Vector2(screenSize.x / 2.0f, screenSize.y - labelHeight * i));
+        testLabel->setPosScaleType(AutoScaleType::eWidth, AutoScaleType::eHeight);
         testLabel->setClickedAction([i](const Vector2&){
             IPlatform::getSingleton().replaceWithNewScene(gTestSceneList[i].callback());
         });

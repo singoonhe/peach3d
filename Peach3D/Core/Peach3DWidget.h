@@ -24,6 +24,7 @@ namespace Peach3D
     enum class PEACH3D_DLL AutoScaleType
     {
         eFix,   // no scale always
+        eFullScreen,    // same as eFix, auto set size to window size
         eWidth,	// width scale
         eHeight,// height scale
         eMin,   // min(width, height) scale

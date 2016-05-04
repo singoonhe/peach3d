@@ -25,6 +25,7 @@ namespace Peach3D
             // default to set win size
             const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
             widget->setContentSize(winSize);
+            widget->setSizeScaleType(AutoScaleType::eFullScreen, AutoScaleType::eFullScreen);
         }
         return widget;
     }
@@ -206,6 +207,11 @@ namespace Peach3D
         }
         
         if (mIsRenderDirty) {
+            // reset no size widget size
+            if (mScaleTypeWidth == AutoScaleType::eFullScreen && mScaleTypeHeight == AutoScaleType::eFullScreen) {
+                mDesignSize = LayoutManager::getSingleton().getScreenSize();
+            }
+            
             // update world position, world scale and world rotation
             mWorldSize = mDesignSize;
             mWorldRotate = mRotate;
