@@ -500,7 +500,10 @@ namespace Peach3D
     {
         mRootWidget->setContentSize(size);
         mRootWidget->setNeedUpdateRenderingAttributes();
-        setPerspectiveProjection(90, size.x/size.y);
+        // modify projective aspect
+        if (mProjectionMatrix.mat[11] < -0.5f) {
+            mProjectionMatrix.mat[0] = mProjectionMatrix.mat[5] / (size.x/size.y);
+        }
     }
     
     SceneNode* SceneManager::getWindowClickedNode(const Vector2& clickedPos, RenderNode** outNode)
