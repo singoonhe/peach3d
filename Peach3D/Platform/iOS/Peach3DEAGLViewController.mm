@@ -8,6 +8,7 @@
 
 #import "Peach3DEAGLViewController.h"
 #import "Peach3DLogPrinter.h"
+#import "Peach3DLayoutManager.h"
 
 using namespace Peach3D;
 @implementation EAGLViewController
