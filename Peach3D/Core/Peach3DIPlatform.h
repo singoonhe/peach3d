@@ -107,10 +107,12 @@ namespace Peach3D
         virtual TexturePtr getTextTexture(const std::vector<LabelStageTextInfo>& textList, const LabelTextDefined& defined,
                                          std::map<std::string, std::vector<Rect>>& clicksRect) {return nullptr;}
 
-        //! pause animating
+        /** Enter background, need pause animating. */
         virtual void pauseAnimating() { mAnimating = false; }
-        //! resume animating
+        /** Enter foreground, need resume animating. */
         virtual void resumeAnimating() { mAnimating = true; }
+        /** Update all UI and opengl view, if window size changed. */
+        virtual void changeWindowSize(const Peach3D::Vector2& size);
         /** Notify terminate application, also delete render resource. */
         virtual void terminate();
 

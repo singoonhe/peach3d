@@ -8,6 +8,7 @@
 
 #include "Peach3DWidget.h"
 #include "Peach3DIPlatform.h"
+#include "Peach3DLayoutManager.h"
 #include "Peach3DSceneManager.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DUtils.h"
@@ -22,23 +23,27 @@ namespace Peach3D
         widget->setContentSize(size);
         if (size==Vector2Zero) {
             // default to set win size
-            const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+            const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
             widget->setContentSize(winSize);
+            widget->setSizeScaleType(AutoScaleType::eFullScreen, AutoScaleType::eFullScreen);
         }
         return widget;
     }
     
-    Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true)
+    Widget::Widget() : mScale(1.0f, 1.0f), mClipEnabled(false), mAnchor(0.5f, 0.5f), mGlobalZOrder(0), mRotate(0.0f), mLocalZOrder(0), mChildNeedSort(false), mRenderProgram(nullptr), mRenderStateHash(0), mIsRenderHashDirty(true), mBindCorner(Vector2LeftBottom)
     {
         // set default diffuse color, not show widget
         mDiffColor.r = mDiffColor.g = mDiffColor.b = 1.f;
         mAlpha = 0.f;
+        // set default auto scale
+        mScaleTypeX = mScaleTypeY = AutoScaleType::eFix;
+        mScaleTypeWidth = mScaleTypeHeight = AutoScaleType::eFix;
     }
     
     void Widget::setPosition(const Vector2& pos)
     {
-        if (pos != mRect.pos) {
-            mRect.pos = pos;
+        if (pos != mDesignPos) {
+            mDesignPos = pos;
             // set children need update attributes
             setNeedUpdateRenderingAttributes();
         }
@@ -48,10 +53,10 @@ namespace Peach3D
     {
         if (type == TranslateRelative::eWorld) {
             updateRenderingAttributes(0.0f);
-            return mWorldAnchorRect.pos;
+            return mWorldPos;
         }
         else {
-            return mRect.pos;
+            return mDesignPos;
         }
     }
     
@@ -96,8 +101,8 @@ namespace Peach3D
     
     void Widget::setContentSize(const Vector2& size)
     {
-        if (size != mRect.size) {
-            mRect.size = size;
+        if (size != mDesignSize) {
+            mDesignSize = size;
             // set children need update attributes
             setNeedUpdateRenderingAttributes();
         }
@@ -107,10 +112,10 @@ namespace Peach3D
     {
         if (type == TranslateRelative::eWorld) {
             updateRenderingAttributes(0.0f);
-            return mWorldAnchorRect.size;
+            return mWorldSize;
         }
         else {
-            return mRect.size;
+            return mDesignSize;
         }
     }
     
@@ -148,24 +153,24 @@ namespace Peach3D
     {
         bool inZoom = Node::isPointInZone(point);
         if (inZoom) {
-            Vector2 anchorSize(mAnchor.x * mWorldAnchorRect.size.x, mAnchor.y * mWorldAnchorRect.size.y);
+            Vector2 anchorSize(mAnchor.x * mWorldSize.x, mAnchor.y * mWorldSize.y);
             if (mWorldRotate > FLT_EPSILON) {
                 // Calc point offset to widget anchor position.
-                Vector2 offset(point.x - mWorldAnchorRect.pos.x, point.y - mWorldAnchorRect.pos.y);
+                Vector2 offset(point.x - mWorldPos.x, point.y - mWorldPos.y);
                 // convert nevgative world rotate
                 float sinTheta = cosf(mWorldRotate), cosTheta = cosf(mWorldRotate);
                 Vector2 rotaOffset(offset.x * cosTheta - offset.y * sinTheta, offset.x * sinTheta + offset.y * cosTheta);
                 rotaOffset = rotaOffset + anchorSize;
-                if (rotaOffset.x < 0 || rotaOffset.y < 0 || rotaOffset.x > mWorldAnchorRect.size.x ||
-                    rotaOffset.y > mWorldAnchorRect.size.y) {
+                if (rotaOffset.x < 0 || rotaOffset.y < 0 || rotaOffset.x > mWorldSize.x ||
+                    rotaOffset.y > mWorldSize.y) {
                     inZoom = false;
                 }
             }
             else {
-                Vector2 startPos(mWorldAnchorRect.pos.x - mAnchor.x * mWorldAnchorRect.size.x,
-                                 mWorldAnchorRect.pos.y - mAnchor.y * mWorldAnchorRect.size.y);
-                if (point.x < startPos.x || point.y < startPos.y || point.x > (startPos.x + mWorldAnchorRect.size.x) ||
-                    point.y > (startPos.y  + mWorldAnchorRect.size.y)) {
+                Vector2 startPos(mWorldPos.x - mAnchor.x * mWorldSize.x,
+                                 mWorldPos.y - mAnchor.y * mWorldSize.y);
+                if (point.x < startPos.x || point.y < startPos.y || point.x > (startPos.x + mWorldSize.x) ||
+                    point.y > (startPos.y  + mWorldSize.y)) {
                     inZoom = false;
                 }
             }
@@ -202,10 +207,15 @@ namespace Peach3D
         }
         
         if (mIsRenderDirty) {
+            // reset no size widget size
+            if (mScaleTypeWidth == AutoScaleType::eFullScreen && mScaleTypeHeight == AutoScaleType::eFullScreen) {
+                mDesignSize = LayoutManager::getSingleton().getScreenSize();
+            }
+            
             // update world position, world scale and world rotation
-            mWorldAnchorRect = mRect;
+            mWorldSize = mDesignSize;
             mWorldRotate = mRotate;
-            mWorldScale = mScale;
+            mWorldScale = mScale * Vector2(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
             Widget* parentWidget = static_cast<Widget*>(mParentNode);
             if (parentWidget) {
                 Widget* rootWidget = SceneManager::getSingletonPtr()->getRootWidget();
@@ -216,18 +226,36 @@ namespace Peach3D
                     mWorldRotate = mWorldRotate + parentWidget->getRotation(TranslateRelative::eWorld);
                 }
                 // update world size
-                mWorldAnchorRect.size = mWorldAnchorRect.size * Vector2(fabsf(mWorldScale.x), fabsf(mWorldScale.y));
+                mWorldSize = mWorldSize * Vector2(fabsf(mWorldScale.x), fabsf(mWorldScale.y));
+                // clamp widget size
+                if (mMinSize.x > FLT_EPSILON && mWorldSize.x < mMinSize.x) {
+                    mWorldSize.x = mMinSize.x;
+                }
+                if (mMinSize.y > FLT_EPSILON && mWorldSize.y < mMinSize.y) {
+                    mWorldSize.y = mMinSize.y;
+                }
+                if (mMaxSize.x > FLT_EPSILON && mWorldSize.x > mMaxSize.x) {
+                    mWorldSize.x = mMaxSize.x;
+                }
+                if (mMaxSize.y > FLT_EPSILON && mWorldSize.y > mMaxSize.y) {
+                    mWorldSize.y = mMaxSize.y;
+                }
                 
-                // cumulative parent offset
-                const Vector2 worldAnchorPos = parentWidget->getContentSize(TranslateRelative::eWorld) * parentWidget->getAnchorPoint();
-                Vector2 rotateOffset = mWorldAnchorRect.pos * parentWidget->getScale(TranslateRelative::eWorld) - worldAnchorPos;
+                // convert pos to parent left-bottom pos (0, 0)
+                auto parentSize = parentWidget->getContentSize(TranslateRelative::eWorld);
+                auto offsetPos = mDesignPos * Vector2(getAutoScaleTypeValue(mScaleTypeX), getAutoScaleTypeValue(mScaleTypeY));
+                mWorldPos = parentSize * mBindCorner + offsetPos;
+                
+                // cumulative parent offset, convert to world coordinate
+                const Vector2 worldAnchorPos = parentSize * parentWidget->getAnchorPoint();
+                Vector2 rotateOffset = mWorldPos * parentWidget->getScale(TranslateRelative::eWorld) - worldAnchorPos;
                 float worldRotate = parentWidget->getRotation(TranslateRelative::eWorld);
                 if (worldRotate > FLT_EPSILON) {
                     float sinRot = sinf(worldRotate), cosRot = cosf(worldRotate);
                     rotateOffset = Vector2(cosRot * rotateOffset.x - sinRot * rotateOffset.y,
                                            sinRot * rotateOffset.x + cosRot * rotateOffset.y);
                 }
-                mWorldAnchorRect.pos = parentWidget->getPosition(TranslateRelative::eWorld) + rotateOffset;
+                mWorldPos = parentWidget->getPosition(TranslateRelative::eWorld) + rotateOffset;
             }
             
             mIsRenderDirty = false;
@@ -235,5 +263,23 @@ namespace Peach3D
         
         // update render state
         updateRenderingState();
+    }
+    
+    float Widget::getAutoScaleTypeValue(AutoScaleType type)
+    {
+        float retV = 1.f;
+        if (type == AutoScaleType::eWidth) {
+            retV = LayoutManager::getSingleton().getWidthScale();
+        }
+        else if (type == AutoScaleType::eHeight) {
+            retV = LayoutManager::getSingleton().getHeightScale();
+        }
+        else if (type == AutoScaleType::eMin) {
+            retV = LayoutManager::getSingleton().getMinScale();
+        }
+        else if (type == AutoScaleType::eMax) {
+            retV = LayoutManager::getSingleton().getMaxScale();
+        }
+        return retV;
     }
 }

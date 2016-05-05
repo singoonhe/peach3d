@@ -47,6 +47,17 @@ namespace Peach3D
         mLogPrinter = nullptr;
     }
     
+    void IPlatform::changeWindowSize(const Peach3D::Vector2& size)
+    {
+        // update layout manager scale size
+        mCreationParams.winSize = size;
+        mLayoutManager->setScreenSize(size);
+        // update render size
+        mRender->setRenderSize(size);
+        // set all UI and projective need update
+        mSceneManager->updateSceneSize(size);
+    }
+    
     void IPlatform::terminate()
     {
         mTerminating = true;

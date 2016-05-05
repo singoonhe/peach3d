@@ -42,6 +42,8 @@ namespace Peach3D
          * OpenGL have do nothing after render, buffer will swap in PlatformXXX.
          */
         virtual void finishForMainRender() {}
+        /** Update render view size if window changed. */
+        virtual void setRenderSize(const Peach3D::Vector2& size) = 0;
 
         virtual void setRenderClearColor(const Color4& newColor) { mRenderClearColor = newColor;}
         Color4 getRenderClearColor()const { return mRenderClearColor; }

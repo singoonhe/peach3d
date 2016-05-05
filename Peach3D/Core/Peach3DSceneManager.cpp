@@ -11,6 +11,7 @@
 #include "Peach3DLabel.h"
 #include "Peach3DVector4.h"
 #include "Peach3DUtils.h"
+#include "Peach3DLayoutManager.h"
 #include "Peach3DResourceManager.h"
 
 namespace Peach3D
@@ -34,7 +35,7 @@ namespace Peach3D
         // make base object (size 1.f) in camera's field
         mActiveCamera->setPosition(Vector3(0.f, 0.f, 10.f));
         
-        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+        const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
         // init object render projection
         setPerspectiveProjection(90.0f, winSize.x/winSize.y);
         
@@ -495,13 +496,20 @@ namespace Peach3D
         }
     }
     
+    void SceneManager::updateSceneSize(const Vector2& size)
+    {
+        mRootWidget->setContentSize(size);
+        mRootWidget->setNeedUpdateRenderingAttributes();
+        setPerspectiveProjection(90, size.x/size.y);
+    }
+    
     SceneNode* SceneManager::getWindowClickedNode(const Vector2& clickedPos, RenderNode** outNode)
     {
         if (mActiveCamera) {
             Ray clickedRay;
             clickedRay.startPos = mActiveCamera->getPosition();
             // convert to NDZ coord
-            const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+            const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
             float x = (2.0f * clickedPos.x) / winSize.x - 1.0f;
             float y = (2.0f * clickedPos.y) / winSize.y - 1.0f;
             // use zFar to calc ray

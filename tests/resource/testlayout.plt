@@ -13,9 +13,9 @@
         <Sprite name="LogoSprite">
             <Texture>peach3d_icon.png</Texture>
             <!-- Using screen center as orign position. -->
-            <BindPosition>Center</BindPosition>
+            <BindCorner>Center</BindCorner>
             <!-- Using min value between (screen size / design size) width and height. -->
-            <AutoScale>Min, Min</AutoScale>
+            <AutoSize>Min, Min</AutoSize>
             <Scale>0.2, 0.2</Scale>
             <!-- Using min scale to zoom "Position". -->
             <AutoPosition>Min, Min</AutoPosition>
@@ -25,7 +25,7 @@
             <Text>Logo show normal!</Text>
             <FontSize>30</FontSize>
             <!-- Using screen center as orign position. -->
-            <BindPosition>Center</BindPosition>
+            <BindCorner>Center</BindCorner>
         </Label>
         <Button name="ChangeButton" frame="peach3d_ui.xml">
             <NormalTexture>#common_normal.png</NormalTexture>
@@ -34,7 +34,7 @@
             <!-- FillColor just used for text color, Color for mix with texture. -->
             <FillColor>0, 1, 0</FillColor>
             <!-- Using screen center as orign position. -->
-            <BindPosition>Center</BindPosition>
+            <BindCorner>Center</BindCorner>
             <!-- Using min scale to zoom "Position". -->
             <AutoPosition>Min, Min</AutoPosition>
             <Position>0, -150</Position>

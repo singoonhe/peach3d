@@ -16,6 +16,7 @@
 #include "Peach3DSprite.h"
 #include "Peach3DUtils.h"
 #include "Peach3DOBB.h"
+#include "Peach3DLayoutManager.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DSceneManager.h"
 
@@ -431,7 +432,7 @@ namespace Peach3D
             for (auto uniform : mWidgetUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eViewRect: {
-                        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+                        const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
                         float viewRect[] = {0.0f, 0.0f, winSize.x, winSize.y};
                         memcpy(data + uniform.offset/sizeof(float), viewRect, sizeof(float) * 4);
                     }
@@ -843,7 +844,7 @@ namespace Peach3D
     
     void ProgramGL::updateWidgetUniforms(Widget* widget)
     {
-        const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+        const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
         // update widget uniforms in list
         for (auto uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
@@ -928,7 +929,7 @@ namespace Peach3D
         float *data = beginMapInstanceUniformBuffer((uint)renderList.size());
         
         if (data) {
-            const Vector2& winSize = IPlatform::getSingleton().getCreationParams().winSize;
+            const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
             // set widget params to data
             for (auto i = 0; i < renderList.size(); ++i) {
                 int startOffset = 0;

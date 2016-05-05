@@ -35,6 +35,8 @@ namespace Peach3D
         virtual void prepareForWidgetRender();
         /** Clear old frame before render. */
         virtual void prepareForMainRender();
+        /** Update render view size if window changed. */
+        virtual void setRenderSize(const Peach3D::Vector2& size);
         //! return is support type gl extersion
         bool isTypeExtersionSupport(GLExtensionType type)
         {

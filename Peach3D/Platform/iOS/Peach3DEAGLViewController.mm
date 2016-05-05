@@ -8,6 +8,7 @@
 
 #import "Peach3DEAGLViewController.h"
 #import "Peach3DLogPrinter.h"
+#import "Peach3DLayoutManager.h"
 
 using namespace Peach3D;
 @implementation EAGLViewController
@@ -145,7 +146,7 @@ using namespace Peach3D;
     if ([touches count] < 1) return;
     
     const float screenScale = self.view.contentScaleFactor;
-    const float screenHeight = IPlatform::getSingleton().getCreationParams().winSize.y;
+    const float screenHeight = LayoutManager::getSingleton().getScreenSize().y;
     std::vector<uint> clickIds;
     std::vector<Vector2> poss;
     for (UITouch* touch in touches)

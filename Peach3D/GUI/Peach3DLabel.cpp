@@ -39,7 +39,7 @@ namespace Peach3D
     
     void Label::setContentSize(const Vector2& size)
     {
-        if (size != mRect.size) {
+        if (size != mDesignSize) {
             Sprite::setContentSize(size);
             mIsTexDirty = true;
             // text texture will use this size allways
@@ -193,7 +193,7 @@ namespace Peach3D
             defined.imageVAlign = mImageVAlign;
             // if content size not set, system will set size automatically
             if (mIsDimUserAssigned) {
-                defined.dim = mWorldAnchorRect.size;
+                defined.dim = mWorldSize;
             }
             
             size_t oldClickedCount = mClickRectMap.size();

@@ -35,3 +35,9 @@ void PlatformDelegate::appWillEnterForeground()
     // resume platform render loop
     IPlatform::getSingletonPtr()->resumeAnimating();
 }
+
+void PlatformDelegate::appWindowSizeChanged(const Peach3D::Vector2& size)
+{
+    // update UI, render view
+    IPlatform::getSingleton().changeWindowSize(size);
+}

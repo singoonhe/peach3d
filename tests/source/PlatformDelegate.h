@@ -22,6 +22,9 @@ public:
     
     //! be called when app enter foreground
     virtual void appWillEnterForeground();
+    
+    //! be called after window size changed(not include oritation change)
+    virtual void appWindowSizeChanged(const Peach3D::Vector2& size);
 };
 
 #endif // PLATFORM_DELEGATE_H

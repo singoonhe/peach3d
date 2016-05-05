@@ -23,8 +23,8 @@ namespace Peach3D
     LayoutManager::LayoutManager() : mIsLandscape(false), mLocalizedFunc(nullptr)
     {
         const char* attrStrList[] = {"Widget", "Sprite", "Label", "Button", "Layout", "NormalTexture", "DownTexture", "HighlightTexture",
-            "DisableTexture", "NormalCoord", "DownCoord", "HighlightCoord", "DisableCoord", "Anchor", "BindPosition", "AutoPosition",
-            "Position", "AutoScale", "Scale", "Text", "FontSize", "AutoFontSize", "HAlignment", "VAlignment", "TitleOffset",
+            "DisableTexture", "NormalCoord", "DownCoord", "HighlightCoord", "DisableCoord", "Anchor", "BindCorner", "AutoPosition",
+            "Position", "AutoSize", "Scale", "Text", "FontSize", "HAlignment", "VAlignment", "TitleOffset",
             "SwallowEvents", "FillColor", "Alpha", "Color", "Texture", "Coord", "Visible" };
         for (auto i = 0; i < static_cast<int>(LayoutAttrType::eCount); ++i) {
             mLoadAttrMap.insert(std::pair<std::string, LayoutAttrType>(attrStrList[i], static_cast<LayoutAttrType>(i)));
@@ -126,17 +126,13 @@ namespace Peach3D
             ResourceManager::getSingleton().addTextureFrames(frameName, nullptr);
         }
         // define const type and names
-        const static std::vector<std::string> bindPosNameV = {"LeftBottom", "LeftCenter", "LeftTop", "CenterBottom", "Center", "CenterTop", "RightBottom", "RightCenter", "RightTop"};
-        const static std::vector<std::string> bindScaleNameV = {"Min", "Width", "Height", "Fixed"};
-        const float bindScaleV[] = {mMinScale, mWidthScale, mHeightScale, 1.0f};
+        const static std::string bindPosNameKeys[] = {"LeftBottom", "LeftCenter", "LeftTop", "CenterBottom", "Center", "CenterTop", "RightBottom", "RightCenter", "RightTop"};
+        const static Vector2 bindPosNameValues[] = {Vector2LeftBottom, Vector2LeftCenter, Vector2LeftTop, Vector2CenterBottom, Vector2Center, Vector2CenterTop, Vector2RightBottom, Vector2RightCenter, Vector2RightTop};
+        const static std::string bindScaleNames[] = {"Fix", "Min", "Width", "Height", "Max"};
+        const static AutoScaleType bindScaleValues[] = {AutoScaleType::eFix, AutoScaleType::eMin, AutoScaleType::eWidth, AutoScaleType::eHeight, AutoScaleType::eMax};
         static std::map<std::string, TextHAlignment> bindHAlignMap = {std::pair<std::string, TextHAlignment>("Left", TextHAlignment::eLeft), std::pair<std::string, TextHAlignment>("Center", TextHAlignment::eCenter), std::pair<std::string, TextHAlignment>("Right", TextHAlignment::eRight)};
         static std::map<std::string, TextVAlignment> bindVAlignMap = {std::pair<std::string, TextVAlignment>("Top", TextVAlignment::eTop), std::pair<std::string, TextVAlignment>("Center", TextVAlignment::eCenter), std::pair<std::string, TextVAlignment>("Bottom", TextVAlignment::eBottom)};
-        // set init value
-        Vector2 bindPos, bindPosScale(1.0f, 1.0f), bindScale(1.0f, 1.0f);
-        Vector2 readPos, readScale(1.0f, 1.0f);
-        float fontSizeScale = 1.0f, readFontSize = 20.0f;
-        bool isManualPos = false, isManualScale = false, isManualFontSize = false;
-        
+
         // read attrs element
         const XMLElement* attrEle = nodeEle->FirstChildElement();
         while (attrEle) {
@@ -217,61 +213,77 @@ namespace Peach3D
                     newNode->setAnchorPoint(attrAnchor);
                 }
                     break;
-                case LayoutAttrType::eBindPosition:
-                    for (size_t i = 0; i < bindPosNameV.size(); ++i) {
-                        if (bindPosNameV[i].compare(attrText) == 0) {
-                            bindPos = mInnerPoss[i];
-                            isManualPos = true;
-                            break;
+                case LayoutAttrType::eBindCorner:
+                    // <BindCorner>0, 0.5</BindCorner>
+                    if (strchr(attrText, ',')) {
+                        Vector2 corner;
+                        sscanf(attrText, "%f,%f", &corner.x, &corner.y);
+                        newNode->setBindCorner(corner);
+                    }
+                    else {
+                        // <BindCorner>Center</BindCorner>
+                        for (size_t i = 0; i < LAYOUT_INNER_POSITION_COUNT; ++i) {
+                            if (bindPosNameKeys[i].compare(attrText) == 0) {
+                                newNode->setBindCorner(bindPosNameValues[i]);
+                                break;
+                            }
                         }
                     }
                     break;
                 case LayoutAttrType::eAutoPosition: {
                     std::vector<std::string> attrList = Utils::split(attrText, ',');
-                    for (size_t i = 0; i < attrList.size(); ++i) {
-                        std::string termAttr = Utils::trim(attrList[i]);
-                        for (size_t j = 0; j < bindScaleNameV.size(); ++j) {
-                            if (bindScaleNameV[j] == termAttr) {
-                                if (i == 0) {
-                                    bindPosScale.x = bindScaleV[j];
+                    if (attrList.size() >= 2) {
+                        AutoScaleType scaleX = AutoScaleType::eFix, scaleY = AutoScaleType::eFix;
+                        for (size_t i = 0; i < 2; ++i) {
+                            std::string termAttr = Utils::trim(attrList[i]);
+                            for (size_t j = 0; j < LAYOUT_SCALE_TYPE_COUNT; ++j) {
+                                if (bindScaleNames[j] == termAttr) {
+                                    if (i == 0) {
+                                        scaleX = bindScaleValues[j];
+                                    }
+                                    else if (i == 1) {
+                                        scaleY = bindScaleValues[j];
+                                    }
+                                    break;
                                 }
-                                else if (i == 1) {
-                                    bindPosScale.y = bindScaleV[j];
-                                }
-                                isManualPos = true;
-                                break;
                             }
                         }
+                        newNode->setPosScaleType(scaleX, scaleY);
                     }
                 }
                     break;
                 case LayoutAttrType::ePosition: {
-                    sscanf(attrText, "%f,%f", &readPos.x, &readPos.y);
-                    isManualPos = true;
+                    Vector2 pos;
+                    sscanf(attrText, "%f,%f", &pos.x, &pos.y);
+                    newNode->setPosition(pos);
                 }
                     break;
-                case LayoutAttrType::eAutoScale: {
+                case LayoutAttrType::eAutoSize: {
                     std::vector<std::string> attrList = Utils::split(attrText, ',');
-                    for (size_t i = 0; i < attrList.size(); ++i) {
-                        std::string termAttr = Utils::trim(attrList[i]);
-                        for (size_t j = 0; j < bindScaleNameV.size(); ++j) {
-                            if (bindScaleNameV[j] == termAttr) {
-                                if (i == 0) {
-                                    bindScale.x = bindScaleV[j];
+                    if (attrList.size() >= 2) {
+                        AutoScaleType scaleX = AutoScaleType::eFix, scaleY = AutoScaleType::eFix;
+                        for (size_t i = 0; i < 2; ++i) {
+                            std::string termAttr = Utils::trim(attrList[i]);
+                            for (size_t j = 0; j < LAYOUT_SCALE_TYPE_COUNT; ++j) {
+                                if (bindScaleNames[j] == termAttr) {
+                                    if (i == 0) {
+                                        scaleX = bindScaleValues[j];
+                                    }
+                                    else if (i == 1) {
+                                        scaleY = bindScaleValues[j];
+                                    }
+                                    break;
                                 }
-                                else if (i == 1) {
-                                    bindScale.y = bindScaleV[j];
-                                }
-                                isManualScale = true;
-                                break;
                             }
                         }
+                        newNode->setSizeScaleType(scaleX, scaleY);
                     }
                 }
                     break;
                 case LayoutAttrType::eScale: {
-                    sscanf(attrText, "%f,%f", &readScale.x, &readScale.y);
-                    isManualScale = true;
+                    Vector2 scale;
+                    sscanf(attrText, "%f,%f", &scale.x, &scale.y);
+                    newNode->setScale(scale);
                 }
                     break;
                 case LayoutAttrType::eText: {
@@ -288,18 +300,15 @@ namespace Peach3D
                 }
                     break;
                 case LayoutAttrType::eFontSize: {
-                    sscanf(attrText, "%f", &readFontSize);
-                    isManualFontSize = true;
-                }
-                    break;
-                case LayoutAttrType::eAutoFontSize:
-                    for (size_t j = 0; j < bindScaleNameV.size(); ++j) {
-                        if (bindScaleNameV[j].compare(attrText) == 0) {
-                            fontSizeScale = bindScaleV[j];
-                            isManualFontSize = true;
-                            break;
-                        }
+                    float fontSize = 0.f;
+                    sscanf(attrText, "%f", &fontSize);
+                    if (dynamic_cast<Label*>(newNode)) {
+                        dynamic_cast<Label*>(newNode)->setFontSize(fontSize);
                     }
+                    else if (dynamic_cast<Button*>(newNode)) {
+                        dynamic_cast<Button*>(newNode)->setTitleFontSize(fontSize);
+                    }
+                }
                     break;
                 case LayoutAttrType::eHAlignment:
                     if (dynamic_cast<Label*>(newNode) && bindHAlignMap.find(attrText) != bindHAlignMap.end()) {
@@ -371,20 +380,6 @@ namespace Peach3D
             
             attrEle = attrEle->NextSiblingElement();
         }
-        
-        // set position and scale
-        if (isManualPos) {
-            newNode->setPosition(bindPos + readPos * bindPosScale);
-        }
-        if (isManualScale) {
-            newNode->setScale(readScale * bindScale);
-        }
-        if (isManualFontSize && dynamic_cast<Label*>(newNode)) {
-            dynamic_cast<Label*>(newNode)->setFontSize(fontSizeScale * readFontSize);
-        }
-        else if (isManualFontSize && dynamic_cast<Button*>(newNode)) {
-            dynamic_cast<Button*>(newNode)->setTitleFontSize(fontSizeScale * readFontSize);
-        }
         // add new widget to parent
         parentNode->addChild(newNode);
         
@@ -397,18 +392,10 @@ namespace Peach3D
         }
     }
 
-    void LayoutManager::setDesignSize(float width, float height)
+    void LayoutManager::setDesignSize(const Vector2& dSize)
     {
-        mDesignScreenSize = Vector2(width, height);
-        
-        // calc min scale, width scale, height scale
-        float minSize = std::min(mDesignScreenSize.x, mDesignScreenSize.y), maxSize = std::max(mDesignScreenSize.x, mDesignScreenSize.y);
-        mWidthScale = mScreenSize.x / (mIsLandscape ? maxSize : minSize);
-        mHeightScale = mScreenSize.y / (mIsLandscape ? minSize : maxSize);
-        mMinScale = std::min(mWidthScale, mHeightScale);
-        
-        Peach3DInfoLog("Set design size:(%.1fx%.1f), width:%.2f, height:%.2f",
-                       mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
+        mDesignScreenSize = dSize;
+        calcAutoScales();
     }
     
     void LayoutManager::setScreenSize(const Vector2& size)
@@ -419,17 +406,25 @@ namespace Peach3D
         // reset design size and scales
         if (oldWidth < FLT_EPSILON || oldHeight < FLT_EPSILON) {
             mDesignScreenSize = mScreenSize;
-            mWidthScale = mHeightScale = mMinScale = 1.0f;
+            mWidthScale = mHeightScale = mMinScale = mMaxScale = 1.0f;
         }
-        
-        // format inner positions
-        mInnerPoss[1] = Vector2(0.0f, mScreenSize.y / 2.0f);
-        mInnerPoss[2] = Vector2(0.0f, mScreenSize.y);
-        mInnerPoss[3] = Vector2(mScreenSize.x / 2.0f, 0.0f);
-        mInnerPoss[4] = Vector2(mScreenSize.x / 2.0f, mScreenSize.y / 2.0f);
-        mInnerPoss[5] = Vector2(mScreenSize.x / 2.0f, mScreenSize.y);
-        mInnerPoss[6] = Vector2(mScreenSize.x, 0.0f);
-        mInnerPoss[7] = Vector2(mScreenSize.x, mScreenSize.y / 2.0f);
-        mInnerPoss[8] = Vector2(mScreenSize.x, mScreenSize.y);
+        else {
+            calcAutoScales();
+        }
+    }
+    
+    void LayoutManager::calcAutoScales()
+    {
+        if (mDesignScreenSize.x > FLT_EPSILON && mDesignScreenSize.y > FLT_EPSILON) {
+            // calc min scale, width scale, height scale
+            float minSize = std::min(mDesignScreenSize.x, mDesignScreenSize.y), maxSize = std::max(mDesignScreenSize.x, mDesignScreenSize.y);
+            mWidthScale = mScreenSize.x / (mIsLandscape ? maxSize : minSize);
+            mHeightScale = mScreenSize.y / (mIsLandscape ? minSize : maxSize);
+            mMinScale = std::min(mWidthScale, mHeightScale);
+            mMaxScale = std::max(mWidthScale, mHeightScale);
+            
+            Peach3DInfoLog("Set design size:(%.1fx%.1f), width:%.2f, height:%.2f",
+                           mDesignScreenSize.x, mDesignScreenSize.y, mWidthScale, mHeightScale);
+        }
     }
 }

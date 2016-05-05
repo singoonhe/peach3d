@@ -43,7 +43,7 @@ PlatformDelegate      gGameDelegate;
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // exit game engine here
-    gPlatform.exitEngine();
+    gPlatform.terminate();
 }
 
 - (BOOL)windowShouldClose:(id)sender
@@ -67,6 +67,12 @@ PlatformDelegate      gGameDelegate;
 {
     // There is not willDeminiaturize, use didDeminiaturize is all right
     gGameDelegate.appWillEnterForeground();
+}
+
+- (void)windowDidEndLiveResize:(NSNotification *)notification
+{
+    NSSize contentSize = [[_window contentView] frame].size;
+    gGameDelegate.appWindowSizeChanged(Peach3D::Vector2(contentSize.width, contentSize.height));
 }
 
 @end

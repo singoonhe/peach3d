@@ -64,6 +64,8 @@ namespace Peach3D
         void setProjectionMatrix(const Matrix4& proj) { mProjectionMatrix = proj; }
         const Matrix4& getProjectionMatrix() {return mProjectionMatrix;}
         
+        /** Update UI size and projection size. */
+        void updateSceneSize(const Vector2& size);
         /**
          * @brief Get clicked SceneNode, this will use a ray(camera ray) to check crossing with SceneNodes.
          * @params clickedPos The clicked point.

@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/system_properties.h>
 #include "Peach3DUtils.h"
+#include "Peach3DLayoutManager.h"
 #include "Peach3DEventDispatcher.h"
 #include "Peach3DPlatformAndroid.h"
 #include "Peach3DRenderGL.h"
@@ -378,7 +379,7 @@ namespace Peach3D
             }
             std::vector<uint> clickIds;
             std::vector<Vector2> poss;
-            const float screenHeight = mCreationParams.winSize.y;
+            const float screenHeight = LayoutManager::getSingleton().getScreenSize().y;
             if (pointerIndex >= 0 && (cEvent==ClickEvent::eDown || cEvent==ClickEvent::eUp)) {
                 int32_t clickId = AMotionEvent_getPointerId(event, pointerIndex);
                 float posx = AMotionEvent_getX(event, pointerIndex);
