@@ -23,9 +23,9 @@ namespace Peach3D
         widget->setContentSize(size);
         if (size==Vector2Zero) {
             // default to set win size
-            const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
-            widget->setContentSize(winSize);
-            widget->setSizeScaleType(AutoScaleType::eFullScreen, AutoScaleType::eFullScreen);
+            const Vector2& designSize = LayoutManager::getSingleton().getDesignSize();
+            widget->setContentSize(designSize);
+            widget->setSizeScaleType(AutoScaleType::eWidth, AutoScaleType::eHeight);
         }
         return widget;
     }
@@ -34,7 +34,9 @@ namespace Peach3D
     {
         // set default diffuse color, not show widget
         mDiffColor.r = mDiffColor.g = mDiffColor.b = 1.f;
-        mAlpha = 0.f;
+        mAlpha = mWorldAlpha = 0.f;
+        // widget not pass attributes to children
+        mInheritAttri = 0;
         // set default auto scale
         mScaleTypeX = mScaleTypeY = AutoScaleType::eFix;
         mScaleTypeWidth = mScaleTypeHeight = AutoScaleType::eFix;
@@ -130,6 +132,15 @@ namespace Peach3D
         }
     }
     
+    void Widget::setAlpha(float alpha)
+    {
+        Node::setAlpha(alpha);
+        // set children need update if alpha need pass
+        if (mInheritAttri & InheritAttriType::Alpha) {
+            setNeedUpdateRenderingAttributes();
+        }
+    }
+    
     void Widget::useProgramForRender(const ProgramPtr& program)
     {
         Peach3DAssert(program, "Object could not use a null program!");
@@ -207,15 +218,17 @@ namespace Peach3D
         }
         
         if (mIsRenderDirty) {
-            // reset no size widget size
-            if (mScaleTypeWidth == AutoScaleType::eFullScreen && mScaleTypeHeight == AutoScaleType::eFullScreen) {
-                mDesignSize = LayoutManager::getSingleton().getScreenSize();
-            }
-            
             // update world position, world scale and world rotation
             mWorldSize = mDesignSize;
             mWorldRotate = mRotate;
-            mWorldScale = mScale * Vector2(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
+            mWorldScale = mScale;
+            mWorldAlpha = mAlpha;
+            // add autoscale to worldscale if need
+            Vector2 autoScaleV(getAutoScaleTypeValue(mScaleTypeWidth), getAutoScaleTypeValue(mScaleTypeHeight));
+            bool isInhertAutoScale = (mInheritAttri & InheritAttriType::AutoScale);
+            if (isInhertAutoScale) {
+                mWorldScale = mWorldScale * autoScaleV;
+            }
             Widget* parentWidget = static_cast<Widget*>(mParentNode);
             if (parentWidget) {
                 Widget* rootWidget = SceneManager::getSingletonPtr()->getRootWidget();
@@ -224,9 +237,16 @@ namespace Peach3D
                     mWorldScale = mWorldScale * parentWidget->getScale(TranslateRelative::eWorld);
                     // cumulative parent rotation
                     mWorldRotate = mWorldRotate + parentWidget->getRotation(TranslateRelative::eWorld);
+                    // cumulative prent alpha
+                    if (parentWidget->getInheritAttri() & InheritAttriType::Alpha) {
+                        mWorldAlpha = mWorldAlpha * parentWidget->getRenderAlpha();
+                    }
                 }
                 // update world size
                 mWorldSize = mWorldSize * Vector2(fabsf(mWorldScale.x), fabsf(mWorldScale.y));
+                if (!isInhertAutoScale) {
+                    mWorldSize = mWorldSize * autoScaleV;
+                }
                 // clamp widget size
                 if (mMinSize.x > FLT_EPSILON && mWorldSize.x < mMinSize.x) {
                     mWorldSize.x = mMinSize.x;

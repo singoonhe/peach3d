@@ -898,7 +898,7 @@ namespace Peach3D
                 case UniformNameType::eDiffuse:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
                         auto color = widget->getColor();
-                        float colour[] = {color.r, color.g, color.b, widget->getAlpha()};
+                        float colour[] = {color.r, color.g, color.b, widget->getRenderAlpha()};
                         glUniform4fv(location, 1, colour);
                     });
                     break;
@@ -979,7 +979,7 @@ namespace Peach3D
                             break;
                         case UniformNameType::eDiffuse: {
                             auto color = renderList[i]->getColor();
-                            float colour[] = {color.r, color.g, color.b, renderList[i]->getAlpha()};
+                            float colour[] = {color.r, color.g, color.b, renderList[i]->getRenderAlpha()};
                             memcpy(data + uniformOffset + startOffset, colour, 4 * sizeof(float));
                             startOffset += 4;
                         }

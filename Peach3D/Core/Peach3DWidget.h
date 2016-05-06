@@ -21,10 +21,16 @@ namespace Peach3D
     // bigger than this zorder widget will not be clear when SceneManager::reset.
 #define NOT_CLEAR_WIDGET_ZORDER (std::numeric_limits<int>::max() - 100)
     
+    // inherit enabled widget attribute type
+    namespace InheritAttriType
+    {
+        const uint Alpha = 0x0001;      // pass alpha to children
+        const uint AutoScale = 0x0002;  // pass auto scale to children
+    }
+    
     enum class PEACH3D_DLL AutoScaleType
     {
         eFix,   // no scale always
-        eFullScreen,    // same as eFix, auto set size to window size
         eWidth,	// width scale
         eHeight,// height scale
         eMin,   // min(width, height) scale
@@ -71,8 +77,12 @@ namespace Peach3D
         /** Get anchor point. */
         const Vector2& getAnchorPoint()const {return mAnchor;}
         
-        /** get is need rendering */
-        virtual bool isNeedRender() {return Node::isNeedRender() && mRenderProgram;}
+        /** Get is need rendering */
+        virtual bool isNeedRender() {return Node::isNeedRender() && mRenderProgram && (mWorldAlpha > FLT_EPSILON);}
+        /** Need update children alpha if inherit alpha type. */
+        virtual void setAlpha(float alpha);
+        /** Get render alpha, it maybe effect by parent. */
+        float getRenderAlpha() { return mWorldAlpha; }
         /** Get render hash. */
         uint getRenderStateHash()const {return mRenderStateHash;}
         
@@ -93,13 +103,11 @@ namespace Peach3D
         AutoScaleType getPosScaleTypeWidth() { return mScaleTypeWidth; }
         AutoScaleType getPosScaleTypeHeight() { return mScaleTypeHeight; }
         
-        /** Set clip enabled by parent. */
         void setClipEnabled(bool enable) {mClipEnabled = enable;}
-        /** Get clip enabled by parent. */
         bool isClipEnabled() {return mClipEnabled;}
-        /** Set local ZOrder, it's used for user. */
+        void setInheritAttri(uint type) { mInheritAttri = type; mIsRenderDirty = true; }
+        uint getInheritAttri() { return mInheritAttri; }
         void setLocalZOrder(int order);
-        /** Get local ZOrder, it's used for user. */
         int getLocalZOrder() {return mLocalZOrder;}
         
         /** Is point in widget rect. */
@@ -129,7 +137,9 @@ namespace Peach3D
         Vector2     mAnchor;    // anchor point, it will effect position/rotation/scaling
         Color3      mDiffColor; // widget diffuse color, Node have alpha attribute
         bool        mClipEnabled;       // is widget will auto be cliped by parent
+        uint        mInheritAttri;      // pass some attribute to children
         
+        float       mWorldAlpha;        // cache world alpha
         Vector2     mWorldScale;        // cache world scaling
         float       mWorldRotate;       // cache world rotate
         Vector2     mWorldPos;          // cache world rendering rect, pos with anchor

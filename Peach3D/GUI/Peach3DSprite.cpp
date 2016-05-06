@@ -46,6 +46,7 @@ namespace Peach3D
     {
         // default to set alpha 1.0f for texture UI
         setAlpha(1.0f);
+        setInheritAttri(InheritAttriType::Alpha | InheritAttriType::AutoScale);
         // init child sprites for scale 9 type
         for (auto i=0; i<9; ++i) {
             m9Child[i] = nullptr;
@@ -85,6 +86,7 @@ namespace Peach3D
         if (mIsUse9Scale) {
             // hide self, show children
             setAlpha(0.f);
+            setInheritAttri(getInheritAttri() & (0xFFFFFFFF ^ InheritAttriType::Alpha));
             // create scale9 children widgets if enable
             if (!m9Child[0] && mRenderFrame.tex) {
                 for (auto i=0; i<9; ++i) {
@@ -104,6 +106,7 @@ namespace Peach3D
             }
             // show self
             setAlpha(1.f);
+            setInheritAttri(getInheritAttri() | InheritAttriType::Alpha);
         }
     }
     

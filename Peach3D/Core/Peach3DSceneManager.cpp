@@ -502,7 +502,7 @@ namespace Peach3D
         mRootWidget->setNeedUpdateRenderingAttributes();
         // modify projective aspect
         if (mProjectionMatrix.mat[11] < -0.5f) {
-            mProjectionMatrix.mat[0] = mProjectionMatrix.mat[5] / (size.x/size.y);
+            mProjectionMatrix.mat[0] = (mProjectionMatrix.mat[5] * size.y) / size.x;
         }
     }
     
