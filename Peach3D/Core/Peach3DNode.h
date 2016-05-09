@@ -53,7 +53,7 @@ namespace Peach3D
         bool getVisible() {return mVisible;}
         
         void setName(const std::string& name) { mName = name; }
-        std::string getName() { return mName; }
+        const std::string& getName() { return mName; }
         
         virtual void setAlpha(float alpha) { mAlpha = alpha; }
         float getAlpha() { return mAlpha; }

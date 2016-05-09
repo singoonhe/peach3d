@@ -69,13 +69,10 @@ namespace Peach3D
     Node* Node::findChildByName(const std::string& name)
     {
         Node* findChild = nullptr;
-        if (name.size() > 0 && mChildNodeList.size() > 0)
-        {
+        if (name.size() > 0 && mChildNodeList.size() > 0) {
             // find node in children
-            for (auto child : mChildNodeList) 
-            {
-                if (child->getName() == name)
-                {
+            for (auto child : mChildNodeList) {
+                if (child->getName() == name) {
                     findChild = child;
                     break;
                 }
