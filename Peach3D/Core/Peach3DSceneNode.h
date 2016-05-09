@@ -21,14 +21,28 @@ namespace Peach3D
     class PEACH3D_DLL SceneNode : public Node
     {
     public:
-        //! attach Object and save object materials
+        //! attach Object, save object materials and skeleton
         void attachMesh(const MeshPtr& mesh);
-        //! get attached mesh
         const MeshPtr& getAttachedMesh() { return mAttachedMesh; }
-        //! detach mesh
         void detachMesh() { mAttachedMesh = nullptr; }
-        //! is attached mesh
-        bool isAttachedMesh() {return mAttachedMesh!=nullptr;}
+        bool isAttachedMesh() {return mAttachedMesh != nullptr;}
+        
+        void bindSkeleton(const SkeletonPtr& skel) { mBindSkeleton = skel; }
+        const SkeletonPtr getBindSkeleton() { return mBindSkeleton; }
+        void unbindSkeleton() { mBindSkeleton = nullptr; }
+        bool isBindSkeleton() { return mBindSkeleton != nullptr; }
+        
+        /** Run animation, repeat forever if repeat is true. */
+        void runAnimate(const char* name, bool loop = true);
+        const std::string& getRunningAnimate() { return mAnimateName; }
+        void setAnimateLoop(bool loop) { mAnimateLoop = loop; }
+        bool getIsAnimateLoop() { return mAnimateLoop; }
+        /** Set animate run speed, default is 1.f. */
+        void setAnimateSpeed(float speed) { mAnimateSpeed = speed; }
+        float getAnimateSpeed() { return mAnimateSpeed; }
+        /** Called after animate over, only valid if loop is false. */
+        void setAnimateOverFunc(const std::function<void()>& func) { mAnimateFunc = func; }
+        
         
         /** Get named RenderNode, this must call after attchMesh. */
         RenderNode* getRenderNode(const char* name);
@@ -133,6 +147,13 @@ namespace Peach3D
         Vector3         mWorldRotation; // cache scene node world rotation
         float           mDepthBias;     // rendering depth bias, valid if bigger than 0.0f
         NodeRenderState mNodeState;     // include OBB, shadow, mode state
+        
+        SkeletonPtr     mBindSkeleton;  // mesh bind skeleton
+        std::string     mAnimateName;   // current running animate name
+        float           mAnimateTime;   // current running animate time
+        bool            mAnimateLoop;   // is animate loop
+        float           mAnimateSpeed;  // run animate speed, default 1.f
+        std::function<void()>   mAnimateFunc;   // animate over called function
         
         bool            mLightEnable;   // is lighting enabled, default is true
         bool            mIsLightingDirty;       // is lighting state need update

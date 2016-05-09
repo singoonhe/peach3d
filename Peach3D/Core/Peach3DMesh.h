@@ -11,6 +11,7 @@
 
 #include "Peach3DCompile.h"
 #include "Peach3DIObject.h"
+#include "Peach3DSkeleton.h"
 
 namespace Peach3D
 {
@@ -18,11 +19,13 @@ namespace Peach3D
     {
     public:
         // constructor and destructor must be public, because shared_ptr need call them
-        Mesh(const char* name) : mMeshName(name) {}
+        Mesh(const char* name) : mMeshName(name), mBindSkeleton(nullptr) {}
         ~Mesh();
         
         const char* getName() { return mMeshName.c_str(); }
         ObjectPtr getObjectByName(const char* name);
+        void bindSkeleton(const SkeletonPtr& skel) { mBindSkeleton = skel; }
+        const SkeletonPtr getBindSkeleton() { return mBindSkeleton; }
         /* Create a object with name. If name is nullptr, system will named it. */
         ObjectPtr createObject(const char* name = nullptr);
         /**
@@ -35,6 +38,7 @@ namespace Peach3D
         
     protected:
         std::string     mMeshName;      // mesh name
+        SkeletonPtr     mBindSkeleton;  // mesh bind skeleton
         std::map<std::string, ObjectPtr> mObjectMap; // all object list
     };
     

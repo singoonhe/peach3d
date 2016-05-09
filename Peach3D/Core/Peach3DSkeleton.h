@@ -22,10 +22,18 @@ namespace Peach3D
         void setRootBone(Bone* root) { mRootBone = root; }
         Bone* getRootBone() { return mRootBone; }
         
+        /** If skeleton have named animation. */
+        bool isAnimateValid(const std::string& name) { return mAnimations.find(name) != mAnimations.end(); }
+        
     private:
         std::string mName;
         Bone*       mRootBone;
+        
+        std::map<std::string, float> mAnimations;
     };
+    
+    // make shared mesh simple
+    using SkeletonPtr = std::shared_ptr<Skeleton>;
 }
 
 #endif /* PEACH3D_SKELETON_H */

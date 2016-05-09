@@ -33,6 +33,11 @@ namespace Peach3D
         // set default lighting enabled
         mLightEnable = true;
         mIsLightingDirty = true;
+        // init skeleton values
+        mAnimateTime = 0.f;
+        mAnimateLoop = true;
+        mAnimateSpeed = 1.f;
+        mAnimateFunc = nullptr;
     }
     
     void SceneNode::attachMesh(const MeshPtr& mesh)
@@ -44,12 +49,23 @@ namespace Peach3D
         mesh->tranverseObjects([&](const char* name, const ObjectPtr& object) {
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
+        bindSkeleton(mesh->getBindSkeleton());
         // init RenderNode render status, so functions can called after attachMesh
         updateRenderState();
         setPickingEnabled(mPickEnabled, mPickAlways);
         setAlpha(mAlpha);
         // default enable lighting
         setLightingEnabled(mLightEnable);
+    }
+    
+    void SceneNode::runAnimate(const char* name, bool loop)
+    {
+        Peach3DAssert(mBindSkeleton, "No skeleton bind");
+        if (mBindSkeleton && mBindSkeleton->isAnimateValid(name)) {
+            mAnimateName = name;
+            mAnimateLoop = loop;
+            mAnimateTime = 0.f;
+        }
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)

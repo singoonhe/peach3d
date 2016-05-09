@@ -11,9 +11,18 @@
 
 #include "Peach3DVector3.h"
 #include "Peach3DMatrix4.h"
+#include "Peach3DQuaternion.h"
 
 namespace Peach3D
 {
+    struct PEACH3D_DLL BoneKeyFrame
+    {
+        float       time;
+        Quaternion  rotate;
+        Vector3     scale;
+        Vector3     translate;
+    };
+    
     class SceneNode;
     class PEACH3D_DLL Bone
     {
@@ -37,6 +46,7 @@ namespace Peach3D
         SceneNode*  mAttachedNode;
         
         std::vector<Bone*> mChildren;
+        std::map<std::string, std::vector<BoneKeyFrame>> mAnimationFrames;
     };
 }
 
