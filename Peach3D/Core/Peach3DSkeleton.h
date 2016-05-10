@@ -22,8 +22,8 @@ namespace Peach3D
         void setRootBone(Bone* root) { mRootBone = root; }
         Bone* getRootBone() { return mRootBone; }
         
-        /** If skeleton have named animation. */
-        bool isAnimateValid(const std::string& name) { return mAnimations.find(name) != mAnimations.end(); }
+        /** Return named animation time. */
+        float getAnimateTime(const std::string& name);
         
     private:
         std::string mName;

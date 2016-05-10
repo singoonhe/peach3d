@@ -37,6 +37,7 @@ namespace Peach3D
         mAnimateTime = 0.f;
         mAnimateLoop = true;
         mAnimateSpeed = 1.f;
+        mAnimateTotalTime = 0.f;
         mAnimateFunc = nullptr;
     }
     
@@ -61,7 +62,8 @@ namespace Peach3D
     void SceneNode::runAnimate(const char* name, bool loop)
     {
         Peach3DAssert(mBindSkeleton, "No skeleton bind");
-        if (mBindSkeleton && mBindSkeleton->isAnimateValid(name)) {
+        mAnimateTotalTime = mBindSkeleton->getAnimateTime(name);
+        if (mBindSkeleton && mAnimateTotalTime > FLT_EPSILON) {
             mAnimateName = name;
             mAnimateLoop = loop;
             mAnimateTime = 0.f;
@@ -280,10 +282,30 @@ namespace Peach3D
     {
         Node::prepareForRender(lastFrameTime);
         
+        // update animate time
+        bool isAnimate = (mAnimateName.length() > 0 && lastFrameTime > FLT_EPSILON);
+        if (isAnimate) {
+            // calc current animate running time
+            mAnimateTime += lastFrameTime * mAnimateSpeed;
+            // repeat animate or call over function
+            if (mAnimateTime > mAnimateTotalTime) {
+                if (mAnimateLoop) {
+                    mAnimateTime -= mAnimateTotalTime;
+                }
+                else if (mAnimateFunc) {
+                    stopActions();
+                    mAnimateFunc();
+                }
+            }
+        }
+        
         // update all RenderNode
         if (isNeedRender()) {
             for (auto node : mRenderNodeMap) {
                 node.second->prepareForRender(lastFrameTime);
+                if (isAnimate) {
+                    //node.second->setAnimateTime(mAnimateTime);
+                }
             }
         }
     }

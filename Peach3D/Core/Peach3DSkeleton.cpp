@@ -10,4 +10,11 @@
 
 namespace Peach3D
 {
+    float Skeleton::getAnimateTime(const std::string& name)
+    {
+        if (mAnimations.find(name) != mAnimations.end()) {
+            return mAnimations[name];
+        }
+        return 0.f;
+    }
 }

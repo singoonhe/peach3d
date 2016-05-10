@@ -34,6 +34,7 @@ namespace Peach3D
         
         /** Run animation, repeat forever if repeat is true. */
         void runAnimate(const char* name, bool loop = true);
+        void stopAnimate() { mAnimateName = ""; mAnimateTime = mAnimateTotalTime = 0.f; }
         const std::string& getRunningAnimate() { return mAnimateName; }
         void setAnimateLoop(bool loop) { mAnimateLoop = loop; }
         bool getIsAnimateLoop() { return mAnimateLoop; }
@@ -153,6 +154,7 @@ namespace Peach3D
         float           mAnimateTime;   // current running animate time
         bool            mAnimateLoop;   // is animate loop
         float           mAnimateSpeed;  // run animate speed, default 1.f
+        float           mAnimateTotalTime;      // current animate total time
         std::function<void()>   mAnimateFunc;   // animate over called function
         
         bool            mLightEnable;   // is lighting enabled, default is true

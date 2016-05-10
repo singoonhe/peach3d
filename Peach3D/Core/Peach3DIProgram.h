@@ -23,6 +23,8 @@ namespace Peach3D
     const char pdShaderPSizeAttribName[]      = "pd_pSize";
     // define the common shader texture coord name
     const char pdShaderUVAttribName[]         = "pd_uv";
+    // define the common shader skeleton name
+    const char pdShaderSkeletonAttribName[]   = "pd_skeleton";
     
     // enum attrs bind location for GL3
     enum class PEACH3D_DLL DefaultAttrLocation
@@ -31,6 +33,7 @@ namespace Peach3D
         eNormal,    // normal attr in vertex
         ePSize,     // PSize attr in vertex
         eUV,        // uv attr in vertex
+        eSkeleton,  // skeleton attr in vertex
     };
     
     class OBB;

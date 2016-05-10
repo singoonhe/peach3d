@@ -30,6 +30,9 @@ namespace Peach3D
                     shaderPreStr += Utils::formatString("#define PD_SHADOW_COUNT %d\n", feature.shadowCount);
                 }
             }
+            if (feature.isSkeleton) {
+                shaderPreStr += "#define PD_ENABLE_SKELETON\n";
+            }
             if (feature.isPoint3) {
                 // choose 3D node program
                 if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {

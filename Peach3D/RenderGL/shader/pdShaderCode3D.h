@@ -42,6 +42,10 @@ namespace Peach3D
     in vec3 pd_vertex;
     \n#ifdef PD_ENABLE_TEXUV\n
         in vec2 pd_uv;
+    \n#endif
+    \n#ifdef PD_ENABLE_SKELETON\n
+        in vec4 pd_skeleton;
+        uniform samplerBuffer pd_boneTex;
     \n#endif\n
     in mat4 pd_modelMatrix;
     in vec4 pd_diffuse;
@@ -71,7 +75,23 @@ namespace Peach3D
 
     void main(void)
     {
-        vec4 worldPos = pd_modelMatrix * vec4(pd_vertex, 1.0);
+        vec4 attribPos = vec4(pd_vertex, 1.0);
+        \n#ifdef PD_ENABLE_SKELETON\n
+            mat4 mtRes = mat4(0.0);
+            for (int i = 0; i < 2; ++i){
+                float boneIndex = pd_skeleton[i + 2];
+                if (pd_skeleton[i] > 0.0) {
+                    mtRes[0] += texelFetch(pd_boneTex, int(3 * boneIndex)    ) * pd_skeleton[i];
+                    mtRes[1] += texelFetch(pd_boneTex, int(3 * boneIndex) + 1) * pd_skeleton[i];
+                    mtRes[2] += texelFetch(pd_boneTex, int(3 * boneIndex) + 2) * pd_skeleton[i];
+                }
+                mtRes[3] = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+            mat4 mtInvRes = transpose(mtRes);
+            vec4 resPos = mtInvRes * attribPos;
+            attribPos = resPos / resPos.w;
+        \n#endif\n
+        vec4 worldPos = pd_modelMatrix * attribPos;
         mat4 vpMatrix = pd_projMatrix * pd_viewMatrix;
         gl_Position = vpMatrix * worldPos;
         f_diffuse = pd_diffuse;
@@ -225,6 +245,10 @@ namespace Peach3D
     attribute vec3 pd_vertex;
     \n#ifdef PD_ENABLE_TEXUV\n
         attribute vec2 pd_uv;
+    \n#endif
+    \n#ifdef PD_ENABLE_SKELETON\n
+        attribute vec4 pd_skeleton;
+        uniform samplerBuffer pd_boneTex;
     \n#endif\n
     uniform mat4 pd_projMatrix;
     uniform mat4 pd_viewMatrix;
@@ -248,7 +272,23 @@ namespace Peach3D
 
     void main(void)
     {
-        vec4 worldPos = pd_modelMatrix * vec4(pd_vertex, 1.0);
+        vec4 attribPos = vec4(pd_vertex, 1.0);
+        \n#ifdef PD_ENABLE_SKELETON\n
+            mat4 mtRes = mat4(0.0);
+            for (int i = 0; i < 2; ++i){
+                float boneIndex = pd_skeleton[i + 2];
+                if (pd_skeleton[i] > 0.0) {
+                    mtRes[0] += texelFetch(pd_boneTex, int(3 * boneIndex)    ) * pd_skeleton[i];
+                    mtRes[1] += texelFetch(pd_boneTex, int(3 * boneIndex) + 1) * pd_skeleton[i];
+                    mtRes[2] += texelFetch(pd_boneTex, int(3 * boneIndex) + 2) * pd_skeleton[i];
+                }
+                mtRes[3] = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+            mat4 mtInvRes = transpose(mtRes);
+            vec4 resPos = mtInvRes * attribPos;
+            attribPos = resPos / resPos.w;
+        \n#endif\n
+        vec4 worldPos = pd_modelMatrix * attribPos;
         mat4 vpMatrix = pd_projMatrix * pd_viewMatrix;
         gl_Position = vpMatrix * worldPos;
         f_diffuse = pd_diffuse;
