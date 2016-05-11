@@ -69,6 +69,9 @@ namespace Peach3D
         /** \params the name of new OpenGL ES program.
          \return pointer of new program, return nullptr if create failed. */
         virtual ProgramPtr createProgram(uint pId);
+        
+        /** Create skeleton with name, each need generate a TBO. */
+        virtual SkeletonPtr createSkeleton(const char* name);
 
     protected:
         //! filter which extension gpu supported

@@ -12,6 +12,7 @@
 #include "Peach3DObjectGL.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DTextureGL.h"
+#include "Peach3DSkeletonGL.h"
 #include "Peach3DIPlatform.h"
 
 namespace Peach3D
@@ -157,5 +158,12 @@ namespace Peach3D
         Peach3DAssert(strlen(objectName)>0, "The object name can't be null");
         ObjectPtr object(new ObjectGL(objectName));
         return object;
+    }
+    
+    SkeletonPtr RenderGL::createSkeleton(const char* name)
+    {
+        Peach3DAssert(strlen(name)>0, "The skeleton name can't be null");
+        SkeletonPtr ske(new SkeletonGL(name));
+        return ske;
     }
 }
