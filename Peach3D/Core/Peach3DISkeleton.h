@@ -21,13 +21,19 @@ namespace Peach3D
         
         void setRootBone(Bone* root) { mRootBone = root; }
         Bone* getRootBone() { return mRootBone; }
+        /** Make adding bone over, calc bones count and generate bones buffer. */
+        virtual void addBonesOver();
         
         /** Return named animation time. */
         float getAnimateTime(const std::string& name);
         
     private:
+        void cacheBonesList(Bone* parent);
+        
+    protected:
         std::string mName;
         Bone*       mRootBone;
+        std::vector<Bone*> mCacheBones;
         
         std::map<std::string, float> mAnimations;
     };

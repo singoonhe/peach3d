@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Skeleton version="0.1">
+	<Bone name="root">
+		<Transform>0.257833, -0.965926, 0.022557, 0.000000, 0.962250, 0.258818, 0.084186, 0.000000, -0.087156, 0.000000, 0.996195, 0.000000, 0.350998, -0.000000, -4.011928, 1.000000</Transform>
+	</Bone>
+	<Animation name="rotate" length=3.0>
+		<Bone name="root">
+			<Keyframes time=0.0>
+				<Rotation>-0.036070, 0.446516, -0.271785, 0.851736</Rotation>
+				<Scale>1.000000, 1.000000, 1.000000</Scale>
+				<Translation>0.930716, 0.000000, 0.000000</Translation>
+			</Keyframes>
+			<Keyframes time=1.0>
+				<Rotation>-0.037798, 0.441940, -0.260280, 0.857621</Rotation>
+				<Scale>1.000000, 1.000000, 1.000000</Scale>
+				<Translation>0.930716, 0.000000, 0.000000</Translation>
+			</Keyframes>
+			<Keyframes time=3.0>
+				<Rotation>-0.039693, 0.437096, -0.247960, 0.863647</Rotation>
+				<Scale>1.000000, 1.000000, 1.000000</Scale>
+				<Translation>0.930716, 0.000000, 0.000000</Translation>
+			</Keyframes>
+		</Bone>
+	</Animation>
+</Skeleton>

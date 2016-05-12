@@ -14,6 +14,7 @@
 #include "Peach3DIObject.h"
 #include "Peach3DNode.h"
 #include "Peach3DLight.h"
+#include "Peach3DISkeleton.h"
 
 namespace Peach3D
 {
@@ -63,6 +64,11 @@ namespace Peach3D
         bool isBringShadow() { return mNodeState.isBringShadow; }
         bool isAcceptShadow() { return mNodeState.isAcceptShadow; }
         
+        /** Set object used skeleton. */
+        void bindSkeleton(const SkeletonPtr& skel) { mAnimateSkeleton = skel; }
+        const SkeletonPtr getBindSkeleton() { return mAnimateSkeleton; }
+        void unbindSkeleton() { mAnimateSkeleton = nullptr; }
+        
         void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }
         void setSpecular(const Color3& specular) { mMaterial.specular = specular; }
@@ -91,6 +97,8 @@ namespace Peach3D
         ObjectPtr       mRenderObj;     // render object
         ProgramPtr      mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
+        
+        SkeletonPtr     mAnimateSkeleton;       // object bind skeleton
         
         std::vector<LightPtr>   mRenderLights;  // valid lights, setting by parent
         std::vector<LightPtr>   mShadowLights;  // valid shadow lights, setting by parent

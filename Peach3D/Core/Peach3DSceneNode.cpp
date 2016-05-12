@@ -59,6 +59,23 @@ namespace Peach3D
         setLightingEnabled(mLightEnable);
     }
     
+    void SceneNode::bindSkeleton(const SkeletonPtr& skel)
+    {
+        Peach3DAssert(skel, "Can't bind a null skeleton to Node");
+        mBindSkeleton = skel;
+        for (auto node : mRenderNodeMap) {
+            node.second->bindSkeleton(skel);
+        }
+    }
+    
+    void SceneNode::unbindSkeleton()
+    {
+        mBindSkeleton = nullptr;
+        for (auto node : mRenderNodeMap) {
+            node.second->unbindSkeleton();
+        }
+    }
+    
     void SceneNode::runAnimate(const char* name, bool loop)
     {
         Peach3DAssert(mBindSkeleton, "No skeleton bind");

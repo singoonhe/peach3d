@@ -27,9 +27,9 @@ namespace Peach3D
         void detachMesh() { mAttachedMesh = nullptr; }
         bool isAttachedMesh() {return mAttachedMesh != nullptr;}
         
-        void bindSkeleton(const SkeletonPtr& skel) { mBindSkeleton = skel; }
+        void bindSkeleton(const SkeletonPtr& skel);
+        void unbindSkeleton();
         const SkeletonPtr getBindSkeleton() { return mBindSkeleton; }
-        void unbindSkeleton() { mBindSkeleton = nullptr; }
         bool isBindSkeleton() { return mBindSkeleton != nullptr; }
         
         /** Run animation, repeat forever if repeat is true. */

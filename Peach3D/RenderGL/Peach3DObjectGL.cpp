@@ -12,6 +12,7 @@
 #include "Peach3DProgramGL.h"
 #include "Peach3DRenderGL.h"
 #include "Peach3DTextureGL.h"
+#include "Peach3DSkeletonGL.h"
 #include "Peach3DSprite.h"
 #include "Peach3DUtils.h"
 #include "Peach3DRenderNode.h"
@@ -163,6 +164,12 @@ namespace Peach3D
             bool isTextureUsed = false;
             if (!isRenderShadow) {
                 int usedTexCount = 0;
+                // active skeleton texture if need
+                auto skelGL = static_cast<SkeletonGL*>(firstNode->getBindSkeleton().get());
+                if (skelGL && skelGL->getBonesTBO()) {
+                    usedProgramGL->activeTextures(skelGL->getBonesTBO(), usedTexCount++, "pd_boneTex");
+                }
+                // active UV texture if need
                 auto firMat = firstNode->getMaterial();
                 for (auto i = 0; i < firMat.getTextureCount(); i++) {
                     auto texGL = static_cast<TextureGL*>(firMat.textureList[i].get());
