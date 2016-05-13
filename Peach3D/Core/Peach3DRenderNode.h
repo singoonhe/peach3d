@@ -68,6 +68,10 @@ namespace Peach3D
         void bindSkeleton(const SkeletonPtr& skel) { mAnimateSkeleton = skel; }
         const SkeletonPtr getBindSkeleton() { return mAnimateSkeleton; }
         void unbindSkeleton() { mAnimateSkeleton = nullptr; }
+        /** Set render skeleton animate info. */
+        void setRenderSkeletonAnimate(const std::string& name, float time) { mAnimateName = name; mAnimateTime = time; }
+        const std::string& getRenderSkeletongName() { return mAnimateName; }
+        void updateSkeletonAnimate();
         
         void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }
         void setDiffuse(const Color3& diffuse) { mMaterial.diffuse = diffuse; }
@@ -98,7 +102,9 @@ namespace Peach3D
         ProgramPtr      mRenderProgram; // render program
         OBB*            mRenderOBB;     // render OBB, only init when used(ray check or need show)
         
-        SkeletonPtr     mAnimateSkeleton;       // object bind skeleton
+        SkeletonPtr     mAnimateSkeleton;   // object bind skeleton
+        std::string     mAnimateName;       // current running animate name
+        float           mAnimateTime;       // current running animate time
         
         std::vector<LightPtr>   mRenderLights;  // valid lights, setting by parent
         std::vector<LightPtr>   mShadowLights;  // valid shadow lights, setting by parent

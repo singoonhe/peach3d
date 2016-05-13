@@ -160,13 +160,19 @@ namespace Peach3D
                 bindObjectVertexAttrib();
             }
             
+            // update bind skeleton info
+            auto isSkeleton = firstNode->getRenderSkeletongName().length() > 0;
+            if (isSkeleton) {
+                firstNode->updateSkeletonAnimate();
+            }
+            
             // enable render state, flip using shader
             bool isTextureUsed = false;
             if (!isRenderShadow) {
                 int usedTexCount = 0;
                 // active skeleton texture if need
                 auto skelGL = static_cast<SkeletonGL*>(firstNode->getBindSkeleton().get());
-                if (skelGL && skelGL->getBonesTBO()) {
+                if (skelGL && isSkeleton) {
                     usedProgramGL->activeTextures(skelGL->getBonesTBO(), usedTexCount++, "pd_boneTex");
                 }
                 // active UV texture if need

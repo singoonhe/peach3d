@@ -17,23 +17,28 @@ namespace Peach3D
     {
     public:
         ISkeleton(const char* name) : mName(name), mRootBone(nullptr) {}
+        virtual ~ISkeleton();
         const std::string& getName() { return mName; }
         
         void setRootBone(Bone* root) { mRootBone = root; }
         Bone* getRootBone() { return mRootBone; }
         /** Make adding bone over, calc bones count and generate bones buffer. */
         virtual void addBonesOver();
+        /** Update bone current matrix and fill buffer. */
+        virtual void fillAnimateBuffer(const std::string& name, float time);
         
         /** Return named animation time. */
         float getAnimateTime(const std::string& name);
         
     private:
-        void cacheBonesList(Bone* parent);
+        void cacheChildrenBonesList(Bone* parent);
+        void cacheChildrenBonesMatrix(Bone* parent, const std::string& name, float time);
         
     protected:
         std::string mName;
         Bone*       mRootBone;
         std::vector<Bone*> mCacheBones;
+        std::vector<Matrix4> mCacheBoneMats;
         
         std::map<std::string, float> mAnimations;
     };

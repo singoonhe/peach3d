@@ -19,8 +19,8 @@ namespace Peach3D
     {
         Vector3 size = Vector3(max.x - min.x, max.y - min.y, max.z - min.z);
         Vector3 center = Vector3((max.x + min.x) / 2.0f, (max.y + min.y) / 2.0f, (max.z + min.z) / 2.0f);
-        auto translateMat = Matrix4::createTranslation(center.x, center.y, center.z);
-        auto scaleMat = Matrix4::createScaling(size.x, size.y, size.z);
+        auto translateMat = Matrix4::createTranslation(center);
+        auto scaleMat = Matrix4::createScaling(size);
         mLocalMat = translateMat * scaleMat;
     }
     

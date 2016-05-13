@@ -18,16 +18,18 @@ namespace Peach3D
     {
     public:
         // constructor and destructor must be public, because shared_ptr need call them
-        SkeletonGL(const char* name) : ISkeleton(name), mSTexId(0), mBufferId(0) {}
+        SkeletonGL(const char* name) : ISkeleton(name), mSTexId(0), mSTexData(nullptr) {}
         virtual ~SkeletonGL();
         
-        /** Generate bones texture buffer. */
+        /** Generate bones texture. */
         virtual void addBonesOver();
+        /** Using bones current matrixs to fill texture. */
+        virtual void fillAnimateBuffer(const std::string& name, float time);
         GLuint getBonesTBO() { return mSTexId; }
         
     private:
         GLuint      mSTexId;
-        GLuint      mBufferId;
+        float*      mSTexData;
     };
 }
 

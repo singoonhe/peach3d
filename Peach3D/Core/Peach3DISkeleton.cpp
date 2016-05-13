@@ -10,22 +10,49 @@
 
 namespace Peach3D
 {
+    ISkeleton::~ISkeleton()
+    {
+        mCacheBones.clear();
+        if (mRootBone) {
+            delete mRootBone;
+            mRootBone = nullptr;
+        }
+    }
+    
     void ISkeleton::addBonesOver()
     {
         mCacheBones.clear();
         if (mRootBone) {
             mCacheBones.push_back(mRootBone);
             // cache all bones and clac count
-            cacheBonesList(mRootBone);
+            cacheChildrenBonesList(mRootBone);
         }
     }
     
-    void ISkeleton::cacheBonesList(Bone* parent)
+    void ISkeleton::cacheChildrenBonesList(Bone* parent)
     {
         auto children = parent->getChildren();
         for (auto child : children) {
             mCacheBones.push_back(child);
-            cacheBonesList(child);
+            cacheChildrenBonesList(child);
+        }
+    }
+    
+    void ISkeleton::fillAnimateBuffer(const std::string& name, float time)
+    {
+        mCacheBoneMats.clear();
+        if (mRootBone) {
+            mCacheBoneMats.push_back(mRootBone->calcBoneMatrix(name, time));
+            cacheChildrenBonesMatrix(mRootBone, name, time);
+        }
+    }
+    
+    void ISkeleton::cacheChildrenBonesMatrix(Bone* parent, const std::string& name, float time)
+    {
+        auto children = parent->getChildren();
+        for (auto child : children) {
+            mCacheBoneMats.push_back(child->calcBoneMatrix(name, time));
+            cacheChildrenBonesMatrix(child, name, time);
         }
     }
     

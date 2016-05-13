@@ -54,7 +54,7 @@ namespace Peach3D
         void normalize();
         //! Calculate the Quaternion's pow.
         Quaternion pow(float exponent);
-        //! Slerp with another Quaternion by t.
+        //! Slerp with another Quaternion by t, rang is (0-1).
         Quaternion slerp(const Quaternion& dist, float t);
 
         //! Init with rotation.

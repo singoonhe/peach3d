@@ -49,8 +49,10 @@ namespace Peach3D
             }
             else {
                 // free camera, z is default to downward(I don't know why?)
-                Matrix4 totate = Matrix4::createRotationPitchYawRoll(mState.rotation.x, mState.rotation.y, PD_PI + mState.rotation.z);
-                Matrix4 trans = Matrix4::createTranslation(-mState.pos.x, -mState.pos.y, -mState.pos.z);
+                auto rotation = mState.rotation;
+                rotation.z += PD_PI;
+                Matrix4 totate = Matrix4::createRotationPitchYawRoll(rotation);
+                Matrix4 trans = Matrix4::createTranslation(-mState.pos);
                 mViewMatrix = totate * trans;
                 // update forward and up
                 mState.up = Vector3(0, 1, 0) * totate;

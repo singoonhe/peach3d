@@ -248,14 +248,14 @@ namespace Peach3D
         return mm;
     }
     
-    Matrix4 Matrix4::createRotationPitchYawRoll(float pitch, float yaw, float roll)
+    Matrix4 Matrix4::createRotationPitchYawRoll(const Vector3& pyr)
     {
-        double cr = cos(pitch);
-        double sr = sin(pitch);
-        double cp = cos(yaw);
-        double sp = sin(yaw);
-        double cy = cos(roll);
-        double sy = sin(roll);
+        double cr = cos(pyr.x);
+        double sr = sin(pyr.x);
+        double cp = cos(pyr.y);
+        double sp = sin(pyr.y);
+        double cy = cos(pyr.z);
+        double sy = sin(pyr.z);
         double srsp = sr * sp;
         double crsp = cr * sp;
         
@@ -319,21 +319,21 @@ namespace Peach3D
         return mm;
     }
     
-    Matrix4 Matrix4::createScaling(float x, float y, float z)
+    Matrix4 Matrix4::createScaling(const Vector3& scale)
     {
         Matrix4 mm;
-        mm.mat[0] = x;
-        mm.mat[5] = y;
-        mm.mat[10] = z;
+        mm.mat[0] = scale.x;
+        mm.mat[5] = scale.y;
+        mm.mat[10] = scale.z;
         return mm;
     }
     
-    Matrix4 Matrix4::createTranslation(float x, float y, float z)
+    Matrix4 Matrix4::createTranslation(const Vector3& translate)
     {
         Matrix4 mm;
-        mm.mat[12] = x;
-        mm.mat[13] = y;
-        mm.mat[14] = z;
+        mm.mat[12] = translate.x;
+        mm.mat[13] = translate.y;
+        mm.mat[14] = translate.z;
         return mm;
     }
     
@@ -400,7 +400,7 @@ namespace Peach3D
         outMat.mat[6] = -fov.y;
         outMat.mat[10] = -fov.z;
         
-        Matrix4 translateM = Matrix4::createTranslation(-eye.x, -eye.y, -eye.z);
+        Matrix4 translateM = Matrix4::createTranslation(-eye);
         return outMat * translateM;
     }
 }

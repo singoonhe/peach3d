@@ -321,7 +321,7 @@ namespace Peach3D
             for (auto node : mRenderNodeMap) {
                 node.second->prepareForRender(lastFrameTime);
                 if (isAnimate) {
-                    //node.second->setAnimateTime(mAnimateTime);
+                    node.second->setRenderSkeletonAnimate(mAnimateName, mAnimateTime);
                 }
             }
         }
@@ -343,10 +343,10 @@ namespace Peach3D
             
             Matrix4 rotateMatrix;
             // update matrix. Sequence: scale, rotation, translation
-            Matrix4 scaleMat = Matrix4::createScaling(mWorldScale.x, mWorldScale.y, mWorldScale.z);
-            Matrix4 translateMat = Matrix4::createTranslation(mWorldPosition.x, mWorldPosition.y, mWorldPosition.z);
+            Matrix4 scaleMat = Matrix4::createScaling(mWorldScale);
+            Matrix4 translateMat = Matrix4::createTranslation(mWorldPosition);
             if (mRotateUseVec) {
-                rotateMatrix = Matrix4::createRotationPitchYawRoll(mRotation.x, mRotation.y, mRotation.z);
+                rotateMatrix = Matrix4::createRotationPitchYawRoll(mRotation);
             }
             else {
                 rotateMatrix = Matrix4::createRotationQuaternion(mRotateQuat);

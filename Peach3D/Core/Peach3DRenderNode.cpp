@@ -70,6 +70,13 @@ namespace Peach3D
         }
     }
     
+    void RenderNode::updateSkeletonAnimate()
+    {
+        if (mAnimateSkeleton) {
+            mAnimateSkeleton->fillAnimateBuffer(mAnimateName, mAnimateTime);
+        }
+    }
+    
     void RenderNode::prepareForRender(float lastFrameTime)
     {
         if (mIsRenderCodeDirty) {
@@ -77,7 +84,7 @@ namespace Peach3D
             auto lCount = (int)mRenderLights.size();
             auto sCount = (int)mShadowLights.size();
             if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount) || (mRenderProgram->getShadowCount() != sCount)) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount, sCount, mAnimateSkeleton != nullptr));
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount, sCount, mAnimateName.size() > 0));
             }
             // calc render unique hash code(Name:Program:DrawMode)
             std::string renderState = Utils::formatString("N:%sP:%uDM:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
@@ -94,8 +101,9 @@ namespace Peach3D
                 renderState = renderState + l->getName();
             }
             // animate skeleton
-            if (mAnimateSkeleton) {
-                renderState = renderState + mAnimateSkeleton->getName();
+            if (mAnimateName.size() > 0) {
+                renderState += "SK"; // Skeleton
+                renderState = renderState + Utils::formatString("%s%s%.4f", mAnimateSkeleton->getName().c_str(), mAnimateName.c_str(), mAnimateTime);
             }
             mRenderHash = XXH32((void*)renderState.c_str(), (int)renderState.size(), 0);
             

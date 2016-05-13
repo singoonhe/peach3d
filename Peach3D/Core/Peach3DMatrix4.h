@@ -107,12 +107,12 @@ namespace Peach3D
         static Matrix4 createRotationX(float radians);
         static Matrix4 createRotationY(float radians);
         static Matrix4 createRotationZ(float radians);
-        static Matrix4 createRotationPitchYawRoll(float pitch, float yaw, float roll);
+        static Matrix4 createRotationPitchYawRoll(const Vector3& pyr);
         static Matrix4 createRotation2D(const Vector3& radianV, float asPect);
         /** Quickly than createRotationPitchYawRoll. */
         static Matrix4 createRotationQuaternion(const Quaternion& q);
-        static Matrix4 createScaling(float x, float y, float z);
-        static Matrix4 createTranslation(float x, float y, float z);
+        static Matrix4 createScaling(const Vector3& scale);
+        static Matrix4 createTranslation(const Vector3& translate);
         static Matrix4 createPerspectiveProjection(float fovY, float asPect, float zNear, float zFar);
         static Matrix4 createOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal);
         static Matrix4 createLookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
