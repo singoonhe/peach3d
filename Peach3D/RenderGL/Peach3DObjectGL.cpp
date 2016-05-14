@@ -161,7 +161,7 @@ namespace Peach3D
             }
             
             // update bind skeleton info
-            auto isSkeleton = firstNode->getRenderSkeletongName().length() > 0;
+            auto isSkeleton = firstNode->getAnimateName().length() > 0;
             if (isSkeleton) {
                 firstNode->updateSkeletonAnimate();
             }
@@ -170,11 +170,6 @@ namespace Peach3D
             bool isTextureUsed = false;
             if (!isRenderShadow) {
                 int usedTexCount = 0;
-                // active skeleton texture if need
-                auto skelGL = static_cast<SkeletonGL*>(firstNode->getBindSkeleton().get());
-                if (skelGL && isSkeleton) {
-                    usedProgramGL->activeTextures(skelGL->getBonesTBO(), usedTexCount++, "pd_boneTex");
-                }
                 // active UV texture if need
                 auto firMat = firstNode->getMaterial();
                 for (auto i = 0; i < firMat.getTextureCount(); i++) {
@@ -182,6 +177,11 @@ namespace Peach3D
                     if (texGL) {
                         usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++);
                     }
+                }
+                // active skeleton texture if need
+                auto skelGL = static_cast<SkeletonGL*>(firstNode->getBindSkeleton().get());
+                if (skelGL && isSkeleton) {
+                    usedProgramGL->activeTextures(skelGL->getBonesTBO(), usedTexCount++, "pd_boneTex");
                 }
                 // active shadow texture if need
                 auto shadows = firstNode->getShadowLights();

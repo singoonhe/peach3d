@@ -41,6 +41,9 @@ namespace Peach3D
     Bone* Bone::findChildByName(const char* name)
     {
         Peach3DAssert(strlen(name) > 0, "Can't find child bone without name");
+        if (mName.compare(name) == 0) {
+            return this;
+        }
         Bone* findChild = nullptr;
         if (mChildren.size() > 0) {
             // find bone in children

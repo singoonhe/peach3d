@@ -69,14 +69,13 @@ namespace Peach3D
         auto rootBone = sk->getRootBone();
         do {
             IF_BREAK(!rootBone, "Root bone must be set before reading animations");
-            std::vector<BoneKeyFrame> frames;
             auto animName = animEle->Attribute("name");
             IF_BREAK(!animName, "Animation name must be valid");
             sk->addAnimateTime(animName, atof(animEle->Attribute("length")));
             // read all bones
             auto boneEle = animEle->FirstChildElement();
             while (boneEle) {
-                auto curBone = rootBone->findChildByName(boneEle->GetText());
+                auto curBone = rootBone->findChildByName(boneEle->Attribute("name"));
                 // read all keyframes
                 auto frameEle = boneEle->FirstChildElement();
                 while (frameEle) {

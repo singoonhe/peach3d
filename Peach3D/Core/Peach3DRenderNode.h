@@ -69,8 +69,9 @@ namespace Peach3D
         const SkeletonPtr getBindSkeleton() { return mAnimateSkeleton; }
         void unbindSkeleton() { mAnimateSkeleton = nullptr; }
         /** Set render skeleton animate info. */
-        void setRenderSkeletonAnimate(const std::string& name, float time) { mAnimateName = name; mAnimateTime = time; }
-        const std::string& getRenderSkeletongName() { return mAnimateName; }
+        void runAnimate(const std::string& name) { mAnimateName = name; mIsRenderCodeDirty = true; };
+        const std::string& getAnimateName() { return mAnimateName; }
+        void updateAnimateTime(float time) { mAnimateTime = time; }
         void updateSkeletonAnimate();
         
         void setAmbient(const Color3& ambient) { mMaterial.ambient = ambient; }

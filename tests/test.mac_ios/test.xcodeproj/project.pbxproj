@@ -102,6 +102,10 @@
 		189B0F5E19EE56C60080C7A6 /* widgetShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 189B0F5B19EE56C60080C7A6 /* widgetShader.fsh */; };
 		189B0F5F19EE56C60080C7A6 /* widgetShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 189B0F5C19EE56C60080C7A6 /* widgetShader.vsh */; };
 		189B0F6019EE56C60080C7A6 /* widgetShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 189B0F5C19EE56C60080C7A6 /* widgetShader.vsh */; };
+		189FCC1F1CE730BE0091F4E4 /* skcube.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 189FCC1D1CE730BE0091F4E4 /* skcube.pmt */; };
+		189FCC201CE730BE0091F4E4 /* skcube.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 189FCC1D1CE730BE0091F4E4 /* skcube.pmt */; };
+		189FCC211CE730BE0091F4E4 /* skcube.pst in Resources */ = {isa = PBXBuildFile; fileRef = 189FCC1E1CE730BE0091F4E4 /* skcube.pst */; };
+		189FCC221CE730BE0091F4E4 /* skcube.pst in Resources */ = {isa = PBXBuildFile; fileRef = 189FCC1E1CE730BE0091F4E4 /* skcube.pst */; };
 		18A272D819E5434500145FDB /* Cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 18A272D619E5434500145FDB /* Cube.mtl */; };
 		18A272D919E5434500145FDB /* Cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 18A272D619E5434500145FDB /* Cube.mtl */; };
 		18A272DA19E5434500145FDB /* Cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = 18A272D719E5434500145FDB /* Cube.obj */; };
@@ -229,6 +233,8 @@
 		1899802619B9B7FB003FBA2D /* demoShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = demoShader.vsh; sourceTree = "<group>"; };
 		189B0F5B19EE56C60080C7A6 /* widgetShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = widgetShader.fsh; sourceTree = "<group>"; };
 		189B0F5C19EE56C60080C7A6 /* widgetShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = widgetShader.vsh; sourceTree = "<group>"; };
+		189FCC1D1CE730BE0091F4E4 /* skcube.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = skcube.pmt; sourceTree = "<group>"; };
+		189FCC1E1CE730BE0091F4E4 /* skcube.pst */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = skcube.pst; sourceTree = "<group>"; };
 		18A272D619E5434500145FDB /* Cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.mtl; sourceTree = "<group>"; };
 		18A272D719E5434500145FDB /* Cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.obj; sourceTree = "<group>"; };
 		18B2AB6219E7AD910041AC1E /* texcube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = texcube.mtl; sourceTree = "<group>"; };
@@ -417,6 +423,8 @@
 				185ED1C61B70E10A0012667B /* press_highlight.png */,
 				185ED1C71B70E10A0012667B /* press_normal.png */,
 				1813BB731B78F23300023159 /* restart_normal.png */,
+				189FCC1D1CE730BE0091F4E4 /* skcube.pmt */,
+				189FCC1E1CE730BE0091F4E4 /* skcube.pst */,
 				187D77221C8F0B7E00F5D161 /* sphere.pmt */,
 				18B4F4771C925FC10075ED58 /* sphere.mtl */,
 				18B4F4781C925FC10075ED58 /* sphere.obj */,
@@ -590,6 +598,7 @@
 				18432DFD1C6251C5007B36EC /* peach3d_5.png in Resources */,
 				18B4EE521CA03C53005642A5 /* peach.pmt in Resources */,
 				184532A81C72D8A1000B8F66 /* peach3d_ui.png in Resources */,
+				189FCC211CE730BE0091F4E4 /* skcube.pst in Resources */,
 				18B2AB6619E7AD910041AC1E /* texcube.obj in Resources */,
 				185ED1CA1B70E10A0012667B /* press_highlight.png in Resources */,
 				189B0F5F19EE56C60080C7A6 /* widgetShader.vsh in Resources */,
@@ -605,6 +614,7 @@
 				184962CE1C4A42B100304991 /* peach.obj in Resources */,
 				18432DFB1C6251C5007B36EC /* peach3d_4.png in Resources */,
 				185ED1CC1B70E10A0012667B /* press_normal.png in Resources */,
+				189FCC1F1CE730BE0091F4E4 /* skcube.pmt in Resources */,
 				18432DF71C6251C5007B36EC /* peach3d_2.png in Resources */,
 				184107091B6CAE94005133E2 /* exit_normal.png in Resources */,
 				1841070F1B6CBB65005133E2 /* next_normal.png in Resources */,
@@ -645,10 +655,12 @@
 				187D77261C8F0B8900F5D161 /* sphere.pmt in Resources */,
 				18432DF81C6251C5007B36EC /* peach3d_2.png in Resources */,
 				18B2AB6719E7AD910041AC1E /* texcube.obj in Resources */,
+				189FCC221CE730BE0091F4E4 /* skcube.pst in Resources */,
 				18B4F47C1C925FC10075ED58 /* sphere.obj in Resources */,
 				18432DFE1C6251C5007B36EC /* peach3d_5.png in Resources */,
 				187CF60419C7019000C8094C /* InfoPlist.strings in Resources */,
 				18432DFA1C6251C5007B36EC /* peach3d_3.png in Resources */,
+				189FCC201CE730BE0091F4E4 /* skcube.pmt in Resources */,
 				185ED1D31B70EE440012667B /* peach3d_icon.png in Resources */,
 				18B4EE531CA03C53005642A5 /* peach.pmt in Resources */,
 				187CF60C19C7019000C8094C /* Images.xcassets in Resources */,

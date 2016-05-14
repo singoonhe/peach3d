@@ -50,7 +50,9 @@ namespace Peach3D
         mesh->tranverseObjects([&](const char* name, const ObjectPtr& object) {
             mRenderNodeMap[name] = new RenderNode(mesh->getName(), object);
         });
-        bindSkeleton(mesh->getBindSkeleton());
+        if (mesh->getBindSkeleton()) {
+            bindSkeleton(mesh->getBindSkeleton());
+        }
         // init RenderNode render status, so functions can called after attachMesh
         updateRenderState();
         setPickingEnabled(mPickEnabled, mPickAlways);
@@ -84,6 +86,9 @@ namespace Peach3D
             mAnimateName = name;
             mAnimateLoop = loop;
             mAnimateTime = 0.f;
+            for (auto node : mRenderNodeMap) {
+                node.second->runAnimate(name);
+            }
         }
     }
     
@@ -321,7 +326,7 @@ namespace Peach3D
             for (auto node : mRenderNodeMap) {
                 node.second->prepareForRender(lastFrameTime);
                 if (isAnimate) {
-                    node.second->setRenderSkeletonAnimate(mAnimateName, mAnimateTime);
+                    node.second->updateAnimateTime(mAnimateTime);
                 }
             }
         }
