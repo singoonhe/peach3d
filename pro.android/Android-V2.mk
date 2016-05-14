@@ -9,6 +9,7 @@ LOCAL_MODULE_FILENAME := libpeach3d
 LOCAL_SRC_FILES := \
 Core/Peach3DAction.cpp \
 Core/Peach3DActionImplement.cpp \
+Core/Peach3DBone.cpp \
 Core/Peach3DCamera.cpp \
 Core/Peach3DCursorManager.cpp \
 Core/Peach3DEventDispatcher.cpp \
@@ -16,6 +17,7 @@ Core/Peach3DIObject.cpp \
 Core/Peach3DIPlatform.cpp \
 Core/Peach3DIRender.cpp \
 Core/Peach3DIScene.cpp \
+Core/Peach3DISkeleton.cpp \
 Core/Peach3DITexture.cpp \
 Core/Peach3DLayoutManager.cpp \
 Core/Peach3DLight.cpp \
@@ -27,6 +29,7 @@ Core/Peach3DOBB.cpp \
 Core/Peach3DObjLoader.cpp \
 Core/Peach3DPmbLoader.cpp \
 Core/Peach3DPmtLoader.cpp \
+Core/Peach3DPstLoader.cpp \
 Core/Peach3DQuaternion.cpp \
 Core/Peach3DRenderNode.cpp \
 Core/Peach3DResourceManager.cpp \
@@ -40,6 +43,7 @@ RenderGL/Peach3DCommonGL.cpp \
 RenderGL/Peach3DObjectGL.cpp \
 RenderGL/Peach3DProgramGL.cpp \
 RenderGL/Peach3DRenderGL.cpp \
+RenderGL/Peach3DSkeletonGL.cpp \
 RenderGL/Peach3DShaderCodeGL.cpp \
 RenderGL/Peach3DTextureGL.cpp \
 RenderGL/Peach3DImageParse.cpp \

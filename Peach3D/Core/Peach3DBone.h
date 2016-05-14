@@ -17,6 +17,7 @@ namespace Peach3D
 {
     struct PEACH3D_DLL BoneKeyFrame
     {
+        BoneKeyFrame(float _time, const Quaternion& _rotate, const Vector3& _scale, const Vector3& _translate) : time(_time), rotate(_rotate), scale(_scale), translate(_translate) {}
         float       time;
         Quaternion  rotate;
         Vector3     scale;
@@ -29,6 +30,8 @@ namespace Peach3D
     public:
         Bone(const char* name) : mName(name), mAttachedNode(nullptr), mParentBone(nullptr) {}
         ~Bone();
+        void setOriginTransform(const Matrix4& transform) { mTransform = transform; }
+        void addKeyFrame(const char* name, const BoneKeyFrame& frame) { mAnimationFrames[name].push_back(frame); }
         const std::string& getName() { return mName; }
         Bone* getParentBone() { return mParentBone; }
         

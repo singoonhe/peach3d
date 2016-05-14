@@ -13,6 +13,7 @@
 #include "Peach3DObjLoader.h"
 #include "Peach3DPmtLoader.h"
 #include "Peach3DPmbLoader.h"
+#include "Peach3DPstLoader.h"
 #include "Peach3DShaderCode.h"
 #include "xxhash/xxhash.h"
 #include "tinyxml2/tinyxml2.h"
@@ -51,6 +52,8 @@ namespace Peach3D
         mRTTList.clear();
         // mesh will auto release, they are shared_ptr.
         mMeshMap.clear();
+        // skeleton will auto release, they are shared_ptr.
+        mSkeletonMap.clear();
         // program will auto release, they are shared_ptr.
         mProgramMap.clear();
         delete mPresetShader;
@@ -70,6 +73,15 @@ namespace Peach3D
         for (auto it = mTextureMap.begin(); it != mTextureMap.end();) {
             if (it->second.use_count() <= 1) {
                 it = mTextureMap.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        // release unhand skeleton
+        for (auto it = mSkeletonMap.begin(); it != mSkeletonMap.end();) {
+            if (it->second.use_count() <= 1) {
+                it = mSkeletonMap.erase(it);
             }
             else {
                 it++;
@@ -418,8 +430,7 @@ namespace Peach3D
         if (mMeshMap.find(file) != mMeshMap.end()) {
             return mMeshMap[file];
         }
-        else
-        {
+        else {
             MeshPtr fileMesh = nullptr;
             ulong fileLength = 0;
             // get texture file data
@@ -488,6 +499,77 @@ namespace Peach3D
             // mesh will auto release, so just erase from cache
             if (nameIter != mMeshMap.end()) {
                 mMeshMap.erase(nameIter);
+            }
+        }
+    }
+    
+    SkeletonPtr ResourceManager::addSkeleton(const char* file)
+    {
+        if (mSkeletonMap.find(file) != mSkeletonMap.end()) {
+            return mSkeletonMap[file];
+        }
+        else {
+            SkeletonPtr fileSkeleton = nullptr;
+            ulong fileLength = 0;
+            // get skeleton file data
+            uchar *fileData = getFileData(file, &fileLength);
+            if (fileLength > 0 && fileData) {
+                // use file name to skeleton
+                fileSkeleton = createSkeleton(file);
+                // get file name suffix
+                std::string fileName = file;
+                std::string ext = fileName.substr(fileName.rfind('.') == std::string::npos ? fileName.length() : fileName.rfind('.') + 1);
+                for (size_t i=0; i<ext.size(); ++i) {
+                    ext[i] = tolower(ext[i]);
+                }
+                // load file data, add to map
+                bool loadResult = false;
+                if (ext.compare("pst") == 0) {
+                    loadResult = PstLoader::pstSkeletonDataParse(fileData, fileLength, fileSkeleton);
+                }
+                else if (ext.compare("psb") == 0) {
+                    //loadResult = PstLoader::pstSkeletonDataParse(fileData, fileLength, fileSkeleton);
+                }
+                if (loadResult) {
+                    Peach3DLog(LogLevel::eInfo, "Load skeleton from file \"%s\" success", file);
+                }
+                // release memory data
+                free(fileData);
+            }
+            
+            return fileSkeleton;
+        }
+    }
+    
+    SkeletonPtr ResourceManager::createSkeleton(const char* name)
+    {
+        if (name && (mSkeletonMap.find(name) != mSkeletonMap.end())) {
+            return mSkeletonMap[name];
+        }
+        else {
+            const char* skName = name;
+            if (!skName) {
+                // generate skeleton name if name==nullptr
+                char pName[100] = { 0 };
+                static uint skAutoCount = 0;
+                sprintf(pName, "pd_Skeleton%d", skAutoCount++);
+                skName = pName;
+                Peach3DLog(LogLevel::eInfo, "Create skeleton with default name \"%s\"", skName);
+            }
+            auto newSk = IRender::getSingletonPtr()->createSkeleton(skName);
+            mSkeletonMap[skName] = newSk;
+            return newSk;
+        }
+    }
+
+    void ResourceManager::deleteSkeleton(const SkeletonPtr& sk)
+    {
+        Peach3DAssert(sk, "Can't delete a null skeleton!");
+        if (sk) {
+            auto nameIter = mSkeletonMap.find(sk->getName());
+            // skeleton will auto release, so just erase from cache
+            if (nameIter != mSkeletonMap.end()) {
+                mSkeletonMap.erase(nameIter);
             }
         }
     }

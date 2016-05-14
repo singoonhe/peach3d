@@ -27,6 +27,7 @@
 #include "gl3stub/glandroidext3.h"
 #endif
 #elif (PEACH3D_CURRENT_PLATFORM==PEACH3D_PLATFORM_MAC)
+#include <OpenGL/glext.h>
 #include <OpenGL/gl3.h>
 #include <OpenGL/gl3ext.h>
 #endif

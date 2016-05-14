@@ -27,6 +27,8 @@ namespace Peach3D
         /** Update bone current matrix and fill buffer. */
         virtual void fillAnimateBuffer(const std::string& name, float time);
         
+        /** Add new animation name and time. */
+        void addAnimateTime(const char* name, float time) { Peach3DAssert(name && time > 0.f, "Animatie name or time not valid"); mAnimations[name] = time; }
         /** Return named animation time. */
         float getAnimateTime(const std::string& name);
         

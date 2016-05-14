@@ -7,6 +7,7 @@
 //
 
 #include <sstream>
+#include "Peach3DUtils.h"
 #include "Peach3DPmtLoader.h"
 #include "Peach3DLogPrinter.h"
 #include "Peach3DResourceManager.h"
@@ -24,6 +25,12 @@ namespace Peach3D
                 
                 // read scene node element
                 XMLElement* nodeEle = meshEle->FirstChildElement();
+                if (nodeEle && strcmp(nodeEle->Name(), "Skeleton") == 0) {
+                    // load skeleton if exist
+                    auto ske = ResourceManager::getSingleton().addSkeleton(nodeEle->GetText());
+                    dMesh->bindSkeleton(ske);
+                    nodeEle = nodeEle->NextSiblingElement();
+                }
                 while (nodeEle) {
                     PmtLoader::objDataParse(nodeEle, dir, dMesh);
                     nodeEle = nodeEle->NextSiblingElement();
@@ -67,6 +74,9 @@ namespace Peach3D
         if (verType & VertexType::UV) {
             floatCount += 2;
         }
+        if (verType & VertexType::Skeleton) {
+            floatCount += 4;
+        }
         // malloc vertex data
         uint verDataSize = verCount * sizeof(float) * floatCount;
         float* verData = (float*)malloc(verDataSize);
@@ -81,17 +91,11 @@ namespace Peach3D
                 line = line.substr(0, line.size() - 1);
             }
             if (line.size() > 4) {
-                if ((verType & VertexType::UV) && (verType & VertexType::Normal)) {
-                    sscanf(line.c_str(), "%f,%f,%f,%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4, verOrignData + 5, verOrignData + 6, verOrignData + 7);
-                }
-                else if (verType & VertexType::UV) {
-                    sscanf(line.c_str(), "%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4);
-                }
-                else if (verType & VertexType::Normal) {
-                    sscanf(line.c_str(), "%f,%f,%f,%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2, verOrignData + 3, verOrignData + 4, verOrignData + 5);
-                }
-                else {
-                    sscanf(line.c_str(), "%f,%f,%f,", verOrignData, verOrignData + 1, verOrignData + 2);
+                auto floatStrList = Utils::split(line, ',');
+                if (floatStrList.size() >= floatCount) {
+                    for (auto i=0; i<floatCount; ++i) {
+                        *(verOrignData + i) = atof(floatStrList[i].c_str());
+                    }
                 }
                 verOrignData = verOrignData + floatCount;
             }

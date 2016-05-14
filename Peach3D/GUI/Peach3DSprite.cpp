@@ -118,7 +118,6 @@ namespace Peach3D
             auto rtSize = mCenterRect.pos + mCenterRect.size;
             float xSizeV[] = {0.f, mCenterRect.pos.x, rtSize.x, 1.f};
             float ySizeV[] = {0.f, mCenterRect.pos.y, rtSize.y, 1.f};
-            float anchorV[] = {0.f, 0.5f, 1.f};
             for (auto i=0; i<9; ++i) {
                 auto curFrame = mRenderFrame;
                 int xIndex = i % 3;
