@@ -43,7 +43,7 @@ namespace Peach3D
     {
     public:
         //! Create program by IRender, user can't call constructor function.
-        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0), mShadowCount(0) {}
+        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0), mShadowCount(0), mBoneCount(0) {}
         virtual ~IProgram() {}
         
         /** Set vertex shader, program will valid when vs and ps all is set. */
@@ -60,6 +60,9 @@ namespace Peach3D
         /** Set program shadow count. */
         virtual void setShadowCount(uint count) { mShadowCount = count; }
         int getShadowCount() { return mShadowCount; }
+        /** Set program bones count. */
+        virtual void setBoneCount(uint count) { mBoneCount = count; }
+        int getBoneCount() { return mBoneCount; }
         
         /** Update RenderNode uniforms for 3d GL2 object material. */
 		virtual void updateRenderNodeUniforms(RenderNode* node) {}
@@ -89,6 +92,7 @@ namespace Peach3D
         uint        mVertexType;    // vertex data type
         int         mLightsCount;   // lights count
         int         mShadowCount;   // lights shadow count
+        int         mBoneCount;     // skeleton bone count
         
         std::vector<ProgramUniform>  mProgramUniformList; // all the program uniforms in shader
     };

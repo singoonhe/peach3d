@@ -663,6 +663,10 @@ namespace Peach3D
                     // generate shaodw uniforms for GL3 if have lights
                     program->setShadowCount(feature.shadowCount);
                 }
+                if (feature.boneCount > 0) {
+                    // generate bone uniforms for GL3
+                    program->setBoneCount(feature.boneCount);
+                }
                 
                 if (program->isProgramValid()) {
                     Peach3DLog(LogLevel::eInfo, "Create new preset program \"%s\" success", name.c_str());

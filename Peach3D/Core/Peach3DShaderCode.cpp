@@ -63,6 +63,7 @@ namespace Peach3D
             mUniformsNamesMap["pd_eyeDir"] = UniformNameType::eEyeDir;
             
             mUniformsNamesMap["pd_shadowMatrix"] = UniformNameType::eShadowMatrix;
+            mUniformsNamesMap["pd_boneMatrix"] = UniformNameType::eBoneMatrix;
         }
         return mUniformsNamesMap[name];
     }
@@ -70,7 +71,7 @@ namespace Peach3D
     std::string ShaderCode::getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature)
     {
         // is vertex shader | is point3 | texture UV | light count | shadow count
-        return Utils::formatString("V%d|PT%d|TUV%d|LC%d|SC%d|SK%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount, feature.shadowCount, feature.isSkeleton);
+        return Utils::formatString("V%d|PT%d|TUV%d|LC%d|SC%d|SK%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount, feature.shadowCount, feature.boneCount);
     }
     
     uint ShaderCode::getVerTypeOfProgramFeature(const PresetProgramFeatures& feature)
@@ -88,7 +89,7 @@ namespace Peach3D
         if (feature.lightsCount > 0) {
             verType = verType | VertexType::Normal;
         }
-        if (feature.isSkeleton) {
+        if (feature.boneCount > 0) {
             verType = verType | VertexType::Skeleton;
         }
         return verType;

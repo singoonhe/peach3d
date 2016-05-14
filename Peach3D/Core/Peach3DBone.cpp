@@ -87,8 +87,8 @@ namespace Peach3D
                 auto interval = time - baseFrame.time, frameInterval = nextFrame.time - baseFrame.time;
                 auto calcInterval = interval/frameInterval;
                 calcR = calcR.slerp(nextFrame.rotate, calcInterval);
-                calcS = (nextFrame.scale - baseFrame.scale) * calcInterval;
-                calcT = (nextFrame.translate - baseFrame.translate) * calcInterval;
+                calcS = (nextFrame.scale - baseFrame.scale) * calcInterval + baseFrame.scale;
+                calcT = (nextFrame.translate - baseFrame.translate) * calcInterval + baseFrame.translate;
             }
             auto rotateM = Matrix4::createRotationQuaternion(calcR);
             auto scaleM = Matrix4::createScaling(calcS);

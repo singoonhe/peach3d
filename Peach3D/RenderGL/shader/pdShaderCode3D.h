@@ -34,6 +34,11 @@ namespace Peach3D
                 mat4 pd_shadowMatrix[PD_SHADOW_COUNT];
             };
         \n#endif
+    \n#endif
+    \n#ifdef PD_ENABLE_SKELETON\n
+        uniform BoneUniforms {
+            vec4 pd_boneMatrix[PD_ENABLE_SKELETON * 3];
+        };
     \n#endif\n
     uniform GlobalUniforms {
         mat4 pd_projMatrix;
@@ -45,7 +50,6 @@ namespace Peach3D
     \n#endif
     \n#ifdef PD_ENABLE_SKELETON\n
         in vec4 pd_skeleton;
-        uniform sampler2D pd_boneTex;
     \n#endif\n
     in mat4 pd_modelMatrix;
     in vec4 pd_diffuse;
@@ -77,25 +81,21 @@ namespace Peach3D
     {
         vec4 attribPos = vec4(pd_vertex, 1.0);
         \n#ifdef PD_ENABLE_SKELETON\n
-            ivec2 jointTexSize = textureSize(pd_boneTex, 0);
-            float fTexcoordStepU = 1.0 / 3.0;
-            float fTexcoordStepV = 1.0 / jointTexSize.y;
             vec4 vMtX = vec4(0.0);
             vec4 vMtY = vec4(0.0);
             vec4 vMtZ = vec4(0.0);
             for (int i = 0; i < 2; ++i){
-                float boneIndex = pd_skeleton[i + 2];
                 if (pd_skeleton[i] > 0.0) {
-                    vMtX += texture2D(pd_boneTex, vec2(fTexcoordStepU * 0.5, (boneIndex + 0.5) * fTexcoordStepV)) * pd_skeleton[i];
-                    vMtY += texture2D(pd_boneTex, vec2(fTexcoordStepU * 1.5, (boneIndex + 0.5) * fTexcoordStepV)) * pd_skeleton[i];
-                    vMtZ += texture2D(pd_boneTex, vec2(fTexcoordStepU * 2.5, (boneIndex + 0.5) * fTexcoordStepV)) * pd_skeleton[i];
+                    int boneIndex = int(pd_skeleton[i + 2]) * 3;
+                    vMtX += pd_boneMatrix[boneIndex] * pd_skeleton[i];
+                    vMtY += pd_boneMatrix[boneIndex + 1] * pd_skeleton[i];
+                    vMtZ += pd_boneMatrix[boneIndex + 2] * pd_skeleton[i];
                 }
             }
-            vec4 resPos;
-            resPos.x = dot(vMtX, attribPos);
-            resPos.y = dot(vMtY, attribPos);
-            resPos.z = dot(vMtZ, attribPos);
-            resPos.w = 1.0;
+            vec4 resPos = attribPos;
+            resPos.x = dot(attribPos, vMtX);
+            resPos.y = dot(attribPos, vMtY);
+            resPos.z = dot(attribPos, vMtZ);
             attribPos = resPos;
         \n#endif\n
         vec4 worldPos = pd_modelMatrix * attribPos;
@@ -255,7 +255,7 @@ namespace Peach3D
     \n#endif
     \n#ifdef PD_ENABLE_SKELETON\n
         attribute vec4 pd_skeleton;
-        uniform samplerBuffer pd_boneTex;
+        uniform vec4 pd_boneMatrix[PD_ENABLE_SKELETON * 3];
     \n#endif\n
     uniform mat4 pd_projMatrix;
     uniform mat4 pd_viewMatrix;
@@ -281,19 +281,22 @@ namespace Peach3D
     {
         vec4 attribPos = vec4(pd_vertex, 1.0);
         \n#ifdef PD_ENABLE_SKELETON\n
-            mat4 mtRes = mat4(0.0);
+            vec4 vMtX = vec4(0.0);
+            vec4 vMtY = vec4(0.0);
+            vec4 vMtZ = vec4(0.0);
             for (int i = 0; i < 2; ++i){
-                float boneIndex = pd_skeleton[i + 2];
                 if (pd_skeleton[i] > 0.0) {
-                    mtRes[0] += texelFetch(pd_boneTex, int(3 * boneIndex)    ) * pd_skeleton[i];
-                    mtRes[1] += texelFetch(pd_boneTex, int(3 * boneIndex) + 1) * pd_skeleton[i];
-                    mtRes[2] += texelFetch(pd_boneTex, int(3 * boneIndex) + 2) * pd_skeleton[i];
+                    int boneIndex = int(pd_skeleton[i + 2]) * 3;
+                    vMtX += pd_boneMatrix[boneIndex] * pd_skeleton[i];
+                    vMtY += pd_boneMatrix[boneIndex + 1] * pd_skeleton[i];
+                    vMtZ += pd_boneMatrix[boneIndex + 2] * pd_skeleton[i];
                 }
-                mtRes[3] = vec4(0.0, 0.0, 0.0, 1.0);
             }
-            mat4 mtInvRes = transpose(mtRes);
-            vec4 resPos = mtInvRes * attribPos;
-            attribPos = resPos / resPos.w;
+            vec4 resPos = attribPos;
+            resPos.x = dot(attribPos, vMtX);
+            resPos.y = dot(attribPos, vMtY);
+            resPos.z = dot(attribPos, vMtZ);
+            attribPos = resPos;
         \n#endif\n
         vec4 worldPos = pd_modelMatrix * attribPos;
         mat4 vpMatrix = pd_projMatrix * pd_viewMatrix;

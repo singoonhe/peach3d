@@ -83,11 +83,18 @@ void EngineMeshSample::init(Widget* parentWidget)
     // set title and desc
     mTitle = "Peach3D Mesh File Sample";
     mDesc = "load *.pmt(Peach3D Mesh Text) and *.pmb(Peach3D Mesh Binary) file";
+    auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     auto texMesh = ResourceManager::getSingleton().addMesh("texcube.pmt");
-    auto texNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, 3.f, 0.f));
+    auto texNode = rootNode->createChild(Vector3(-6.f, 3.f, 0.f));
     texNode->attachMesh(texMesh);
     // rotate repeat
     texNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
+    
+    // create skeleton mesh
+    auto skMesh = ResourceManager::getSingleton().addMesh("skcube.pmt");
+    auto skNode = rootNode->createChild(Vector3(0.f, 3.f, 0.f));
+    skNode->attachMesh(skMesh);
+    skNode->runAnimate("rotate");
 }
 
 void DrawModeSample::init(Widget* parentWidget)

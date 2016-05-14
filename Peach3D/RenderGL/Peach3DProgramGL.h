@@ -12,6 +12,7 @@
 #include "Peach3DCommonGL.h"
 #include "Peach3DIProgram.h"
 #include "Peach3DLight.h"
+#include "Peach3DISkeleton.h"
 
 namespace Peach3D
 {
@@ -21,7 +22,7 @@ namespace Peach3D
         //! Create program by IRender, user can't call constructor function.
         ProgramGL(uint pId) : IProgram(pId), mVSShader(0), mPSShader(0), mProgram(0), mAttriBuffer(0),
             mInstancedCount(0), mUniformsSize(0), mLightsUBOId(GL_INVALID_INDEX), mLightsUBOSize(0),
-            mShadowUBOId(GL_INVALID_INDEX), mShadowUBOSize(0) {}
+            mShadowUBOId(GL_INVALID_INDEX), mShadowUBOSize(0), mBoneUBOId(GL_INVALID_INDEX), mBoneUBOSize(0) {}
         virtual ~ProgramGL();
         
         // set vertex shader, program will valid when vs and ps all is set
@@ -36,6 +37,8 @@ namespace Peach3D
         virtual void setLightsCount(uint count);
         /** Set program lights count, generate shadow UBO. */
         virtual void setShadowCount(uint count);
+        /** Set program bones count, generate bone UBO. */
+        virtual void setBoneCount(uint count);
         
         /** Bind instance vertex attrib, used for GL3. */
         void bindProgramVertexAttrib();
@@ -46,12 +49,14 @@ namespace Peach3D
         
         /** Update RenderNode uniforms for 3d object material. */
         virtual void updateRenderNodeUniforms(RenderNode* node);
+        /** Update instanced RenderNode uniforms depend on mProgramUniformList. */
+        virtual void updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList);
         /** Update lights uniform buffer for 3d object. */
         void updateObjectLightsUniforms(const std::vector<LightPtr>& lights);
         /** Update shadow uniform buffer for 3d object. */
         void updateObjectShadowsUniforms(const std::vector<LightPtr>& shadows);
-        /** Update instanced RenderNode uniforms depend on mProgramUniformList. */
-        virtual void updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList);
+        /** Update bone uniform buffer for 3d object. */
+        void updateObjectBoneUniforms(const SkeletonPtr& sk);
         
         /** Update widget uniforms for 2d object, include matrix/textures... */
         virtual void updateWidgetUniforms(Widget* widget);
@@ -105,6 +110,9 @@ namespace Peach3D
         GLuint  mShadowUBOId;           // object shadow uniform buffer id for GL3
         GLint   mShadowUBOSize;         // object shadow uniform buffer size for GL3
         std::vector<ProgramUniform>     mShadowUBOUniforms;
+        GLuint  mBoneUBOId;           // object bones uniform buffer id for GL3
+        GLint   mBoneUBOSize;         // object bones uniform buffer size for GL3
+        std::vector<ProgramUniform>     mBoneUBOUniforms;
 
         
         static GLuint   mWidgetUBOId;   // widget global uniform buffer id for GL3

@@ -30,6 +30,8 @@ namespace Peach3D
     #define LIGHTS_UBO_BINDING_POINT        1
     // define shadow UBO binding point
     #define SHADOW_UBO_BINDING_POINT        2
+    // define bones UBO binding point
+    #define BONES_UBO_BINDING_POINT         3
     
     // defined widget global UBO info
     GLuint ProgramGL::mWidgetUBOId = GL_INVALID_INDEX;
@@ -237,10 +239,23 @@ namespace Peach3D
         if (count > 0 && (mVertexType & VertexType::Point3)) {
             IProgram::setShadowCount(count);
             if (PD_RENDERLEVEL_GL3()) {
-                // set object lights UBO uniforms
+                // set object shadow UBO uniforms
                 mShadowUBOUniforms = {ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4)};
-                // bind lights UBO
+                // bind shadow UBO
                 bindUniformsBuffer("ShadowUniforms", &mShadowUBOId, &mShadowUBOSize, &mShadowUBOUniforms, SHADOW_UBO_BINDING_POINT);
+            }
+        }
+    }
+    
+    void ProgramGL::setBoneCount(uint count)
+    {
+        if (count > 0 && (mVertexType & VertexType::Point3)) {
+            IProgram::setBoneCount(count);
+            if (PD_RENDERLEVEL_GL3()) {
+                // set bone lights UBO uniforms
+                mBoneUBOUniforms = {ProgramUniform("pd_boneMatrix", UniformDataType::eVector4)};
+                // bind bone UBO
+                bindUniformsBuffer("BoneUniforms", &mBoneUBOId, &mBoneUBOSize, &mBoneUBOUniforms, BONES_UBO_BINDING_POINT);
             }
         }
     }
@@ -395,6 +410,45 @@ namespace Peach3D
         }
     }
     
+    void ProgramGL::updateObjectBoneUniforms(const SkeletonPtr& sk)
+    {
+        Peach3DAssert(sk->getBoneCount() == mBoneCount, "Bone count must equal to program count!");
+        if (mBoneUBOId != GL_INVALID_INDEX && mBoneUBOSize > 0) {
+            glBindBuffer(GL_UNIFORM_BUFFER, mBoneUBOId);
+            // map shadow buffer and copy memory on GL3
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mBoneUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            for (auto uniform : mBoneUBOUniforms) {
+                switch (ShaderCode::getUniformNameType(uniform.name)) {
+                    case UniformNameType::eBoneMatrix: {
+                        auto matrixList = sk->getBonesMatrix();
+                        for (auto i=0; i<sk->getBoneCount(); ++i) {
+                            float* originData = matrixList[i].mat;
+                            data[i * 12 + 0] = originData[0];
+                            data[i * 12 + 1] = originData[4];
+                            data[i * 12 + 2] = originData[8];
+                            data[i * 12 + 3] = originData[12];
+                            
+                            data[i * 12 + 4] = originData[1];
+                            data[i * 12 + 5] = originData[5];
+                            data[i * 12 + 6] = originData[9];
+                            data[i * 12 + 7] = originData[13];
+                            
+                            data[i * 12 + 8] = originData[2];
+                            data[i * 12 + 9] = originData[6];
+                            data[i * 12 + 10] = originData[10];
+                            data[i * 12 + 11] = originData[14];
+                        }
+                    }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            glUnmapBuffer(GL_UNIFORM_BUFFER);
+            glBindBuffer(GL_UNIFORM_BUFFER, 0);
+        }
+    }
+    
     void ProgramGL::updateGlobalObjectUniforms()
     {
         if (mObjectUBOId != GL_INVALID_INDEX) {
@@ -534,7 +588,7 @@ namespace Peach3D
         if (mUniformLocateMap.find(name) == mUniformLocateMap.end()) {
             uniformLocation = glGetUniformLocation(mProgram, name.c_str());
             if (uniformLocation < 0) {
-                Peach3DLog(LogLevel::eError, "Program %u can't find the attribute name %s", mProgramId, name.c_str());
+                Peach3DLog(LogLevel::eError, "Program %u can't find the uniform name %s", mProgramId, name.c_str());
             }
             mUniformLocateMap[name] = uniformLocation;
         }
@@ -697,6 +751,32 @@ namespace Peach3D
                             memcpy(lData + i * 16, sm.mat, sizeof(float) * 16);
                         }
                         glUniformMatrix4fv(location, (GLsizei)shadows.size(), false, lData);
+                    });
+                    break;
+                    // bone uniforms
+                case UniformNameType::eBoneMatrix:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        auto sk = node->getBindSkeleton();
+                        auto matrixList = sk->getBonesMatrix();
+                        float mData[12 * matrixList.size()];
+                        for (auto i=0; i<matrixList.size(); ++i) {
+                            float* originData = matrixList[i].mat;
+                            mData[i * 12 + 0] = originData[0];
+                            mData[i * 12 + 1] = originData[4];
+                            mData[i * 12 + 2] = originData[8];
+                            mData[i * 12 + 3] = originData[12];
+                            
+                            mData[i * 12 + 4] = originData[1];
+                            mData[i * 12 + 5] = originData[5];
+                            mData[i * 12 + 6] = originData[9];
+                            mData[i * 12 + 7] = originData[13];
+                            
+                            mData[i * 12 + 8] = originData[2];
+                            mData[i * 12 + 9] = originData[6];
+                            mData[i * 12 + 10] = originData[10];
+                            mData[i * 12 + 11] = originData[14];
+                        }
+                        glUniform4fv(location, (GLsizei)matrixList.size() * 3, mData);
                     });
                     break;
                 default:
@@ -1025,6 +1105,9 @@ namespace Peach3D
                     if (mShadowCount > 0) {
                         glBindBufferBase(GL_UNIFORM_BUFFER, SHADOW_UBO_BINDING_POINT, mShadowUBOId);
                     }
+                }
+                if (mBoneCount > 0) {
+                    glBindBufferBase(GL_UNIFORM_BUFFER, BONES_UBO_BINDING_POINT, mBoneUBOId);
                 }
             }
             return true;

@@ -24,8 +24,12 @@ namespace Peach3D
         Bone* getRootBone() { return mRootBone; }
         /** Make adding bone over, calc bones count and generate bones buffer. */
         virtual void addBonesOver();
+        /** Return all bone count, must called after addBonesOver. */
+        int getBoneCount() { return (int)mCacheBones.size(); }
         /** Update bone current matrix and fill buffer. */
         virtual void fillAnimateBuffer(const std::string& name, float time);
+        /** Return all bone matrix, must called after fillAnimateBuffer. */
+        const std::vector<Matrix4>& getBonesMatrix() { return mCacheBoneMats; }
         
         /** Add new animation name and time. */
         void addAnimateTime(const char* name, float time) { Peach3DAssert(name && time > 0.f, "Animatie name or time not valid"); mAnimations[name] = time; }

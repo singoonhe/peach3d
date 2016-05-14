@@ -30,8 +30,8 @@ namespace Peach3D
                     shaderPreStr += Utils::formatString("#define PD_SHADOW_COUNT %d\n", feature.shadowCount);
                 }
             }
-            if (feature.isSkeleton) {
-                shaderPreStr += "#define PD_ENABLE_SKELETON\n";
+            if (feature.boneCount > 0) {
+                shaderPreStr += Utils::formatString("#define PD_ENABLE_SKELETON %d\n", feature.boneCount);
             }
             if (feature.isPoint3) {
                 // choose 3D node program
@@ -67,6 +67,9 @@ namespace Peach3D
                         if (feature.shadowCount > 0) {
                             uniforms.push_back(ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4));
                         }
+                    }
+                    if (feature.boneCount > 0) {
+                        uniforms.push_back(ProgramUniform("pd_boneMatrix", UniformDataType::eVector4));
                     }
                 }
                 uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));

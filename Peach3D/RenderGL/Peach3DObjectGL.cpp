@@ -164,6 +164,10 @@ namespace Peach3D
             auto isSkeleton = firstNode->getAnimateName().length() > 0;
             if (isSkeleton) {
                 firstNode->updateSkeletonAnimate();
+                // update bone UBO
+                if (PD_RENDERLEVEL_GL3()) {
+                    usedProgramGL->updateObjectBoneUniforms(firstNode->getBindSkeleton());
+                }
             }
             
             // enable render state, flip using shader
@@ -177,11 +181,6 @@ namespace Peach3D
                     if (texGL) {
                         usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++);
                     }
-                }
-                // active skeleton texture if need
-                auto skelGL = static_cast<SkeletonGL*>(firstNode->getBindSkeleton().get());
-                if (skelGL && isSkeleton) {
-                    usedProgramGL->activeTextures(skelGL->getBonesTBO(), usedTexCount++, "pd_boneTex");
                 }
                 // active shadow texture if need
                 auto shadows = firstNode->getShadowLights();
