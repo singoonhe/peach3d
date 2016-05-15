@@ -27,8 +27,10 @@ Core/Peach3DMesh.cpp \
 Core/Peach3DNode.cpp \
 Core/Peach3DOBB.cpp \
 Core/Peach3DObjLoader.cpp \
+Core/Peach3DParticle.cpp \
 Core/Peach3DPmbLoader.cpp \
 Core/Peach3DPmtLoader.cpp \
+Core/Peach3DPptLoader.cpp \
 Core/Peach3DPstLoader.cpp \
 Core/Peach3DQuaternion.cpp \
 Core/Peach3DRenderNode.cpp \

@@ -14,6 +14,7 @@
 #include "Peach3DPmtLoader.h"
 #include "Peach3DPmbLoader.h"
 #include "Peach3DPstLoader.h"
+#include "Peach3DPptLoader.h"
 #include "Peach3DShaderCode.h"
 #include "xxhash/xxhash.h"
 #include "tinyxml2/tinyxml2.h"
@@ -54,6 +55,8 @@ namespace Peach3D
         mMeshMap.clear();
         // skeleton will auto release, they are shared_ptr.
         mSkeletonMap.clear();
+        // particle will auto release, they are shared_ptr.
+        mParticleMap.clear();
         // program will auto release, they are shared_ptr.
         mProgramMap.clear();
         delete mPresetShader;
@@ -82,6 +85,15 @@ namespace Peach3D
         for (auto it = mSkeletonMap.begin(); it != mSkeletonMap.end();) {
             if (it->second.use_count() <= 1) {
                 it = mSkeletonMap.erase(it);
+            }
+            else {
+                it++;
+            }
+        }
+        // release unhand particle
+        for (auto it = mParticleMap.begin(); it != mParticleMap.end();) {
+            if (it->second.use_count() <= 1) {
+                it = mParticleMap.erase(it);
             }
             else {
                 it++;
@@ -570,6 +582,78 @@ namespace Peach3D
             // skeleton will auto release, so just erase from cache
             if (nameIter != mSkeletonMap.end()) {
                 mSkeletonMap.erase(nameIter);
+            }
+        }
+    }
+    
+    ParticlePtr ResourceManager::addParticle(const char* file)
+    {
+        if (mParticleMap.find(file) != mParticleMap.end()) {
+            return mParticleMap[file];
+        }
+        else {
+            ParticlePtr fileParticle = nullptr;
+            ulong fileLength = 0;
+            // get particle file data
+            uchar *fileData = getFileData(file, &fileLength);
+            if (fileLength > 0 && fileData) {
+                // use file name to particle
+                fileParticle = createParticle(file);
+                // get file name suffix
+                std::string fileName = file;
+                std::string ext = fileName.substr(fileName.rfind('.') == std::string::npos ? fileName.length() : fileName.rfind('.') + 1);
+                for (size_t i=0; i<ext.size(); ++i) {
+                    ext[i] = tolower(ext[i]);
+                }
+                // load file data, add to map
+                bool loadResult = false;
+                std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
+                if (ext.compare("ppt") == 0) {
+                    loadResult = PptLoader::pptParticleDataParse(fileData, fileLength, fileDir.c_str(), fileParticle);
+                }
+                else if (ext.compare("ppb") == 0) {
+                    //loadResult = PstLoader::pstParticleDataParse(fileData, fileLength, fileParticle);
+                }
+                if (loadResult) {
+                    Peach3DLog(LogLevel::eInfo, "Load particle from file \"%s\" success", file);
+                }
+                // release memory data
+                free(fileData);
+            }
+            
+            return fileParticle;
+        }
+    }
+    
+    ParticlePtr ResourceManager::createParticle(const char* name)
+    {
+        if (name && (mParticleMap.find(name) != mParticleMap.end())) {
+            return mParticleMap[name];
+        }
+        else {
+            const char* spName = name;
+            if (!spName) {
+                // generate particle name if name==nullptr
+                char pName[100] = { 0 };
+                static uint spAutoCount = 0;
+                sprintf(pName, "pd_Particle%d", spAutoCount++);
+                spName = pName;
+                Peach3DLog(LogLevel::eInfo, "Create particle with default name \"%s\"", spName);
+            }
+            ParticlePtr newSp(new Particle(spName));
+            mParticleMap[spName] = newSp;
+            return newSp;
+        }
+    }
+    
+    void ResourceManager::deleteParticle(const ParticlePtr& sp)
+    {
+        Peach3DAssert(sp, "Can't delete a null particle!");
+        if (sp) {
+            auto nameIter = mParticleMap.find(sp->getName());
+            // particle will auto release, so just erase from cache
+            if (nameIter != mParticleMap.end()) {
+                mParticleMap.erase(nameIter);
             }
         }
     }
