@@ -94,7 +94,10 @@ void EngineMeshSample::init(Widget* parentWidget)
     auto skMesh = ResourceManager::getSingleton().addMesh("skcube.pmt");
     auto skNode = rootNode->createChild(Vector3(0.f, 3.f, 0.f));
     skNode->attachMesh(skMesh);
-    skNode->runAnimate("rotate");
+    skNode->runAnimate("translate");
+    auto skNode1 = rootNode->createChild(Vector3(6.f, 3.f, 0.f));
+    skNode1->attachMesh(skMesh);
+    skNode1->runAnimate("scale");
 }
 
 void DrawModeSample::init(Widget* parentWidget)

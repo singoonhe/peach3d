@@ -12,7 +12,7 @@
 			<Transform>0.257833, -0.965926, 0.022557, 0.000000, 0.962250, 0.258818, 0.084186, 0.000000, -0.087156, 0.000000, 0.996195, 0.000000, 0.350998, -0.000000, -4.011928, 1.000000</Transform>
 		</Bone> -->
 	</Bone>
-	<Animation name="rotate" length="3.0">
+	<Animation name="translate" length="3.0">
 		<Bone name="root">
 			<Keyframes time="0.0">
 				<Rotation>0, 0, 0, 1</Rotation>
@@ -28,6 +28,25 @@
 				<Rotation>0, 0, 0, 1</Rotation>
 				<Scale>1.000000, 1.000000, 1.000000</Scale>
 				<Translation>2, 0.000000, 0.000000</Translation>
+			</Keyframes>
+		</Bone>
+	</Animation>
+	<Animation name="scale" length="3.0">
+		<Bone name="root">
+			<Keyframes time="0.0">
+				<Rotation>0, 0, 0, 1</Rotation>
+				<Scale>1.000000, 1.000000, 1.000000</Scale>
+				<Translation>0, 0.000000, 0.000000</Translation>
+			</Keyframes>
+			<Keyframes time="2.0">
+				<Rotation>0, 0, 0, 1</Rotation>
+				<Scale>1.300000, 1.300000, 1.300000</Scale>
+				<Translation>0, 0.000000, 0.000000</Translation>
+			</Keyframes>
+			<Keyframes time="3.0">
+				<Rotation>0, 0, 0, 1</Rotation>
+				<Scale>2.000000, 2.000000, 2.000000</Scale>
+				<Translation>0, 0.000000, 0.000000</Translation>
 			</Keyframes>
 		</Bone>
 	</Animation>
