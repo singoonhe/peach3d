@@ -7,3 +7,10 @@
 //
 
 #include "Peach3DParticle.h"
+
+namespace Peach3D
+{
+    void Particle::updateRenderingAttributes(float lastFrameTime)
+    {
+    }
+}

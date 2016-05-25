@@ -9,21 +9,25 @@
 #ifndef PEACH3D_PARTICLE_H
 #define PEACH3D_PARTICLE_H
 
-#include "Peach3DCompile.h"
-#include "Peach3DVector2.h"
-#include "Peach3DVector3.h"
+#include "Peach3DParticleEmitter.h"
+#include "Peach3DNode.h"
 
 namespace Peach3D
 {
-    class Particle
+    class PEACH3D_DLL Particle : public Node
     {
     public:
         Particle(const char* name) : mName(name) {}
         ~Particle() {}
         const std::string& getName() { return mName; }
         
+    protected:
+        /* Update rendering attributes. */
+        virtual void updateRenderingAttributes(float lastFrameTime);
+        
     private:
         std::string mName;
+        std::vector<Emitter>    mEmitters;
     };
     
     // make shared particle simple
