@@ -16,19 +16,36 @@
 
 namespace Peach3D
 {
-    struct PEACH3D_DLL ParticlePoint
+    struct PEACH3D_DLL ParticlePoint2
     {
-        Vector3 pos;    // point render pos
-        Color4  colour; // point color and alpha
-        float   size;   // point size
-        bool    valid;  // is point valid
+        ParticlePoint2() : rotate(0.f), endRotate(0.f), size(0.f), endSize(0.f), time(0.f), lifeTime(0.f) {}
+        ParticlePoint2 &operator=(const ParticlePoint2& other){ pos = other.pos; dir = other.dir; color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        Vector2 pos;        // point render pos
+        Vector2 dir;        // point moving direction
+        Color4  color;      // point color and alpha
+        Color4  endColor;   // point end color and alpha
+        float   rotate;     // point rotation
+        float   endRotate;  // point end rotation
+        float   size;       // point size
+        float   endSize;    // point end size
+        float   time;       // point current time
+        float   lifeTime;   // point life time
     };
     
     class PEACH3D_DLL Emitter
     {
     public:
-        Emitter() {}
+        Emitter() : mValidCount(0), mRunningTime(0.f), isRunning(false) {}
         ~Emitter() {}
+        
+    public:
+        void start();
+        void update(float lastFrameTime);
+        void end();
+        
+    protected:
+        void generatePaticles(int number);
+        ParticlePoint2 generateRandPaticles();
         
     public:
         uint    maxCount;
@@ -62,8 +79,11 @@ namespace Peach3D
         Vector2 accelerate;     // radial and tangential accelerate
         Vector2 accelerateVariance; // radial and tangential accelerate variance
         
-    private:
-        std::vector<ParticlePoint> mPoints;
+    protected:
+        std::vector<ParticlePoint2> mPoints;
+        int     mValidCount;
+        float   mRunningTime;
+        bool    isRunning;
     };
 }
 

@@ -23,6 +23,8 @@ namespace Peach3D
     mResourceMgr(nullptr), mFeatureLevel(RenderFeatureLevel::eUnkonw), mSceneManager(nullptr), mEventDispatcher(nullptr),
     mActiveScene(nullptr), mIsDrawStats(false), mLocalLanguage(LanguageType::eUnknow), mLayoutManager(nullptr), mCursorManager(nullptr)
     {
+        // init rand with time
+        srand((unsigned)time(NULL));
     }
 
     IPlatform::~IPlatform()

@@ -17,6 +17,7 @@
 #include "Peach3DSingleton.h"
 #include "Peach3DScheduler.h"
 #include "Peach3DLight.h"
+#include "Peach3DParticle.h"
 
 namespace Peach3D
 {
@@ -118,6 +119,8 @@ namespace Peach3D
         std::map<std::string, LightPtr>     mLightList;         // scene light list
         std::vector<Widget*>                mRenderWidgetList;  // cache widget list
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
+        std::vector<ParticlePtr>            mParticle3DList;    // cache 3d particle node list
+        std::vector<ParticlePtr>            mParticle2DList;    // cache 2d particle node list
     };
 }
 

@@ -30,6 +30,7 @@ namespace Peach3D
         Color4 operator-=(const Color4& other) { r -= other.r; g -= other.g; b -= other.b; a -= other.a; return *this; }
         Color4 operator*(const Color4& other) const { return Color4(r*other.r, g*other.g, b*other.b, a*other.a); }
         Color4 operator*=(const Color4& other) { r *= other.r; g *= other.g; b *= other.b; a *= other.a; return *this; }
+        Color4 operator/(float value) const { return Color4(r/value, g/value, b/value, a/value); }
         bool operator==(const Color4& other) const
         {
             return FLOAT_EQUAL(r, other.r) && FLOAT_EQUAL(g, other.g) && FLOAT_EQUAL(b, other.b) && FLOAT_EQUAL(a, other.a);

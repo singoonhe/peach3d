@@ -21,12 +21,23 @@ namespace Peach3D
         ~Particle() {}
         const std::string& getName() { return mName; }
         
+        void start();
+        void end();
+        
+        /** Set current relative position. */
+        void setPosition(const Vector2& pos);
+        /** Get relative position or world position. */
+        const Vector2& getPosition(TranslateRelative type = TranslateRelative::eLocal);
+        
     protected:
         /* Update rendering attributes. */
         virtual void updateRenderingAttributes(float lastFrameTime);
         
     private:
         std::string mName;
+        Vector2     mPos;
+        Vector2     mWorldPos;
+        
         std::vector<Emitter>    mEmitters;
     };
     

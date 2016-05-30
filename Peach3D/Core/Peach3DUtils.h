@@ -24,6 +24,8 @@ namespace Peach3D
         static std::vector<std::string> split(const std::string& str, char seg);
         /** Return format string, default buffer size 512. */
         static std::string formatString(const char* format, ...);
+        
+        static float rand(float min, float max);
     };
 }
 

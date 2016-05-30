@@ -64,4 +64,10 @@ namespace Peach3D
         va_end(arg_ptr);
         return fatStr;
     }
+    
+    float Utils::rand(float min, float max)
+    {
+        int range = int(max-min+1);
+        return (::rand()%(range * 100)) / 100.f + min;
+    }
 }
