@@ -21,6 +21,9 @@ namespace Peach3D
     
     void Emitter::update(float lastFrameTime)
     {
+        if (lastFrameTime < FLT_EPSILON) {
+            return;
+        }
         if (!mIsRunning && mValidCount == 0) {
             return;
         }

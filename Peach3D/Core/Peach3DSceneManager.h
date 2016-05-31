@@ -23,9 +23,10 @@ namespace Peach3D
 {
     struct PEACH3D_DLL Render3DPassContent
     {
-        std::multimap<uint, RenderNode*> nodeMap; // cache 3d render node map, using "multimap" to reduce sort
-        std::vector<OBB*> OBBList; // cache OBB render node list
-        void clear() { nodeMap.clear(); OBBList.clear(); }
+        std::multimap<uint, RenderNode*> nodeMap;   // cache 3d render node map, using "multimap" to reduce sort
+        std::vector<OBB*>               OBBList;    // cache OBB render node list
+        std::vector<Particle3D*>        particles;  // cache render particles
+        void clear() { nodeMap.clear(); OBBList.clear(); particles.clear(); }
     };
     
     class PEACH3D_DLL SceneManager : public Singleton < SceneManager >
@@ -119,8 +120,6 @@ namespace Peach3D
         std::map<std::string, LightPtr>     mLightList;         // scene light list
         std::vector<Node*>                  mRenderWidgetList;  // cache widget list
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
-        std::vector<ParticlePtr>            mParticle3DList;    // cache 3d particle node list
-        std::vector<ParticlePtr>            mParticle2DList;    // cache 2d particle node list
     };
 }
 

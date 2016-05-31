@@ -37,6 +37,9 @@ namespace Peach3D
     
     void Particle2D::render()
     {
+        for (auto emitter : mEmitters) {
+            // render emitter points
+        }
     }
     
     void Particle2D::setPosition(const Vector2& pos)

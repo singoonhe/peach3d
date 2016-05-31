@@ -308,6 +308,10 @@ namespace Peach3D
         if (content->OBBList.size() > 0) {
             mOBBObject->render(content->OBBList);
         }
+        // draw all particles
+        for (auto particle : content->particles) {
+            particle->render();
+        }
     }
     
     void SceneManager::renderForRTT(const TexturePtr& rtt, Render3DPassContent* content)
@@ -456,31 +460,40 @@ namespace Peach3D
     
     void SceneManager::addSceneNodeToCacheList(Node* node, float lastFrameTime, Render3DPassContent* content, bool pickEnabled)
     {
-        SceneNode* rNode = static_cast<SceneNode*>(node);
         // prepare render first for update "NeedRender"
-        rNode->prepareForRender(lastFrameTime);
-        // add node to render list.
-        if (node->isNeedRender() && content) {
-            rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
-                content->nodeMap.insert(std::make_pair(node->getRenderHash(), node));
-            });
+        node->prepareForRender(lastFrameTime);
+        
+        SceneNode* rNode = static_cast<SceneNode*>(node);
+        if (content) {
+            Particle3D* pNode = static_cast<Particle3D*>(node);
+            if (rNode) {
+                // add node to render list.
+                if (rNode->isNeedRender()) {
+                    rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
+                        content->nodeMap.insert(std::make_pair(node->getRenderHash(), node));
+                    });
+                }
+                // cache OBB node
+                if (rNode->getOBBEnabled()) {
+                    rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
+                        if (node->getOBBEnabled()) {
+                            content->OBBList.push_back(node->getRenderOBB());
+                        }
+                    });
+                }
+            }
+            else if (pNode) {
+                // cache particle list
+                content->particles.push_back(pNode);
+            }
         }
         
         // cache pick node in main pass, just update once for each frame
-        if (pickEnabled) {
+        if (pickEnabled && rNode) {
             bool pickEnabled = rNode->isPickingEnabled();
             if (pickEnabled && (node->isNeedRender() || rNode->isPickingAlways())) {
                 mPickSceneNodeList.push_back(rNode);
             }
-        }
-        
-        // cache OBB node
-        if (rNode->getOBBEnabled() && content) {
-            rNode->tranverseRenderNode([&](const char*, RenderNode* node) {
-                if (node->getOBBEnabled()) {
-                    content->OBBList.push_back(node->getRenderOBB());
-                }
-            });
         }
         
         node->tranverseChildNode([&](size_t, Node* child) {
@@ -506,7 +519,7 @@ namespace Peach3D
         if (child->getChildrenCount() > 0) {
             child->tranverseChildNode([&](size_t, Node* node) {
                 // deal with children
-                this->addWidgetToCacheList(zOrder, child, lastFrameTime);
+                this->addWidgetToCacheList(zOrder, node, lastFrameTime);
             });
         }
     }
