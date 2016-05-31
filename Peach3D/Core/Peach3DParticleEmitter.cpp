@@ -16,12 +16,12 @@ namespace Peach3D
         mValidCount = 0;
         mRunningTime = 0.f;
         mPoints.clear();
-        isRunning = true;
+        mIsRunning = true;
     }
     
     void Emitter::update(float lastFrameTime)
     {
-        if (!isRunning && mValidCount == 0) {
+        if (!mIsRunning && mValidCount == 0) {
             return;
         }
         
@@ -31,7 +31,7 @@ namespace Peach3D
             end();
         }
         // update particles, some points may be alive
-        for (ParticlePoint2& point : mPoints) {
+        for (ParticlePoint& point : mPoints) {
             point.time += lastFrameTime;
             if (point.time > point.lifeTime) {
                 // set current point not valid
@@ -39,8 +39,6 @@ namespace Peach3D
                 mValidCount--;
                 continue;
             }
-            // position
-            point.pos = point.pos + point.dir * lastFrameTime;
             // color
             float timeInterval = point.lifeTime - point.time;
             auto disColor = (point.endColor - point.color) / timeInterval;
@@ -51,9 +49,11 @@ namespace Peach3D
             // rotation
             auto disRotate = (point.endRotate - point.rotate) / timeInterval;
             point.rotate += disRotate * lastFrameTime;
+            
+            updatePointAttributes(point, lastFrameTime);
         }
         // if need add points
-        if (isRunning && mValidCount < maxCount) {
+        if (mIsRunning && mValidCount < maxCount) {
             if (mRunningTime > 1.f) {
                 generatePaticles(maxCount - mValidCount);
             }
@@ -66,13 +66,13 @@ namespace Peach3D
     void Emitter::end()
     {
         // stop emitter
-        isRunning = false;
+        mIsRunning = false;
     }
     
     void Emitter::generatePaticles(int number)
     {
         int remainNum = number;
-        for (ParticlePoint2& point : mPoints) {
+        for (ParticlePoint& point : mPoints) {
             if (remainNum == 0) {
                 break;
             }
@@ -88,18 +88,15 @@ namespace Peach3D
         }
     }
     
-    ParticlePoint2 Emitter::generateRandPaticles()
+    ParticlePoint Emitter::generateRandPaticles()
     {
         mValidCount++;
         
-        ParticlePoint2 point;
-        // position
-        point.pos = emitPos;
-        if (emitPosVariance.x > FLT_EPSILON) {
-            point.pos.x += Utils::rand(-emitPosVariance.x, emitPosVariance.x);
-        }
-        if (emitPosVariance.y > FLT_EPSILON) {
-            point.pos.y += Utils::rand(-emitPosVariance.y, emitPosVariance.y);
+        ParticlePoint point;
+        // life time
+        point.lifeTime = lifeTime;
+        if (lifeVariance > FLT_EPSILON) {
+            point.lifeTime +=  Utils::rand(-lifeVariance, lifeVariance);
         }
         // color
         point.color = startColor;
@@ -149,17 +146,34 @@ namespace Peach3D
         if (endRotateVariance > FLT_EPSILON) {
             point.endRotate +=  Utils::rand(-endRotateVariance, endRotateVariance);
         }
+        return point;
+    }
+    
+    void Emitter2D::updatePointAttributes(ParticlePoint& point, float lastFrameTime)
+    {
+        ParticlePoint2D& point2D = (ParticlePoint2D&)point;
+        // position
+        point2D.pos = point2D.pos + point2D.dir * lastFrameTime;
+    }
+    
+    ParticlePoint Emitter2D::generateRandPaticles()
+    {
+        ParticlePoint2D point;
+        point.copy(Emitter::generateRandPaticles());
+        // position
+        point.pos = emitPos;
+        if (emitPosVariance.x > FLT_EPSILON) {
+            point.pos.x += Utils::rand(-emitPosVariance.x, emitPosVariance.x);
+        }
+        if (emitPosVariance.y > FLT_EPSILON) {
+            point.pos.y += Utils::rand(-emitPosVariance.y, emitPosVariance.y);
+        }
         // direction
         float finalAngle = emitAngle;
         if (emitAngleVariance > FLT_EPSILON) {
             finalAngle +=  Utils::rand(-emitAngleVariance, emitAngleVariance);
         }
         point.dir = Vector2(cos(DEGREE_TO_RADIANS(finalAngle)), sin(DEGREE_TO_RADIANS(finalAngle)));
-        // life time
-        point.lifeTime = lifeTime;
-        if (lifeVariance > FLT_EPSILON) {
-            point.lifeTime +=  Utils::rand(-lifeVariance, lifeVariance);
-        }
         return point;
     }
 }

@@ -13,11 +13,6 @@ namespace Peach3D
 {
     void Particle::updateRenderingAttributes(float lastFrameTime)
     {
-        Widget* parent = dynamic_cast<Widget*>(mParentNode);
-        if (parent) {
-            mWorldPos = mPos + parent->getPosition(TranslateRelative::eWorld);
-        }
-        
         for (auto emitter : mEmitters) {
             emitter.update(lastFrameTime);
         }
@@ -37,7 +32,9 @@ namespace Peach3D
         }
     }
     
-    void Particle::setPosition(const Vector2& pos)
+    /************************************** 2D particle emitter ***************************************/
+    
+    void Particle2D::setPosition(const Vector2& pos)
     {
         if (pos != mPos) {
             mPos = pos;
@@ -46,7 +43,7 @@ namespace Peach3D
         }
     }
     
-    const Vector2& Particle::getPosition(TranslateRelative type)
+    const Vector2& Particle2D::getPosition(TranslateRelative type)
     {
         if (type == TranslateRelative::eWorld) {
             updateRenderingAttributes(0.0f);
@@ -55,5 +52,14 @@ namespace Peach3D
         else {
             return mPos;
         }
+    }
+    
+    void Particle2D::updateRenderingAttributes(float lastFrameTime)
+    {
+        Widget* parent = dynamic_cast<Widget*>(mParentNode);
+        if (parent) {
+            mWorldPos = mPos + parent->getPosition(TranslateRelative::eWorld);
+        }
+        Particle::updateRenderingAttributes(lastFrameTime);
     }
 }
