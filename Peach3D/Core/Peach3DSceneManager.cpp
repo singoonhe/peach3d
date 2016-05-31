@@ -425,15 +425,28 @@ namespace Peach3D
         Widget* lastRenderWidget = nullptr;
         std::vector<Widget*> curList;
         for (size_t i = 0; i < mRenderWidgetList.size(); ++i) {
-            Widget* curWidget = mRenderWidgetList[i];
-            if (lastRenderWidget && lastRenderWidget->getRenderStateHash() != curWidget->getRenderStateHash()){
-                // render current widgets
-                mWidgetObject->render(curList);
-                curList.clear();
+            Widget* curWidget = dynamic_cast<Widget*>(mRenderWidgetList[i]);
+            Particle2D* curParticle = dynamic_cast<Particle2D*>(mRenderWidgetList[i]);
+            if (curWidget) {
+                if (lastRenderWidget && lastRenderWidget->getRenderStateHash() != curWidget->getRenderStateHash()){
+                    // render current widgets
+                    mWidgetObject->render(curList);
+                    curList.clear();
+                }
+                // add widget to cache list for next rendering
+                curList.push_back(curWidget);
+                lastRenderWidget = curWidget;
             }
-            // add widget to cache list for next rendering
-            curList.push_back(curWidget);
-            lastRenderWidget = curWidget;
+            else if (curParticle) {
+                // render last widgets
+                if (curList.size() > 0) {
+                    mWidgetObject->render(curList);
+                    curList.clear();
+                    lastRenderWidget = nullptr;
+                }
+                // render particle
+                curParticle->render();
+            }
         }
         if (curList.size() > 0) {
             // render last widgets
@@ -476,22 +489,24 @@ namespace Peach3D
         });
     }
     
-    void SceneManager::addWidgetToCacheList(int* zOrder, Widget* widget, float lastFrameTime)
+    void SceneManager::addWidgetToCacheList(int* zOrder, Node* child, float lastFrameTime)
     {
         // add a widget
-        widget->prepareForRender(lastFrameTime);
-        widget->setGlobalZOrder(*zOrder);
-        if (widget->isNeedRender()) {
-            mRenderWidgetList.push_back(widget);
+        child->prepareForRender(lastFrameTime);
+        if (dynamic_cast<Widget*>(child)) {
+            dynamic_cast<Widget*>(child)->setGlobalZOrder(*zOrder);
+        }
+        if (child->isNeedRender()) {
+            mRenderWidgetList.push_back(child);
         }
         // bigger zorder, late render
         (*zOrder)++;
         
         // add all child to cache
-        if (widget->getChildrenCount() > 0) {
-            widget->tranverseChildNode([&](size_t, Node* node) {
+        if (child->getChildrenCount() > 0) {
+            child->tranverseChildNode([&](size_t, Node* node) {
                 // deal with children
-                this->addWidgetToCacheList(zOrder, static_cast<Widget*>(node), lastFrameTime);
+                this->addWidgetToCacheList(zOrder, child, lastFrameTime);
             });
         }
     }

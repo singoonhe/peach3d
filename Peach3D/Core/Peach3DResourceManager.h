@@ -93,9 +93,9 @@ namespace Peach3D
         void deleteSkeleton(const SkeletonPtr& sk);
         
         /** Create particle from file, return ParticlePtr if success. */
-        ParticlePtr addParticle(const char* file);
+        ParticlePtr createParticle(const char* file);
         /** Create empty particle. */
-        ParticlePtr createParticle(const char* name=nullptr);
+        ParticlePtr createEmptyParticle(const char* name, bool is3D);
         /** Delete particle. */
         void deleteParticle(const ParticlePtr& sp);
         
@@ -147,7 +147,7 @@ namespace Peach3D
         std::vector<std::string>            mSearchDirs;    // resource search dir list
         std::map<std::string, MeshPtr>      mMeshMap;       // mesh list
         std::map<std::string, SkeletonPtr>  mSkeletonMap;   // skeleton list
-        std::map<std::string, ParticlePtr>  mParticleMap;   // particle list
+        std::vector<ParticlePtr>            mParticleList;  // particle list
         std::map<uint, ProgramPtr>          mProgramMap;    // program list
         std::map<std::string, TexturePtr>   mTextureMap;    // texture list
         std::vector<TexturePtr>             mRTTList;       // RTT texture list, have no name

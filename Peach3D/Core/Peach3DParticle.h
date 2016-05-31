@@ -23,6 +23,7 @@ namespace Peach3D
         
         void start();
         void end();
+        virtual void render() = 0;
         
     protected:
         /* Update rendering attributes. */
@@ -36,12 +37,13 @@ namespace Peach3D
     using ParticlePtr = std::shared_ptr<Particle>;
     
     /************************************** 2D particle emitter ***************************************/
-    
     class PEACH3D_DLL Particle2D : public Particle
     {
     public:
         Particle2D(const char* name) : Particle(name) {}
         ~Particle2D() {}
+        
+        void render();
         
         /** Set current relative position. */
         void setPosition(const Vector2& pos);
@@ -55,6 +57,29 @@ namespace Peach3D
     private:
         Vector2     mPos;
         Vector2     mWorldPos;
+    };
+    
+    /************************************** 3D particle emitter ***************************************/
+    class PEACH3D_DLL Particle3D : public Particle
+    {
+    public:
+        Particle3D(const char* name) : Particle(name) {}
+        ~Particle3D() {}
+        
+        void render();
+        
+        /** Set current relative position. */
+        void setPosition(const Vector3& pos);
+        /** Get relative position or world position. */
+        const Vector3& getPosition(TranslateRelative type = TranslateRelative::eLocal);
+        
+    protected:
+        /* Update rendering attributes. */
+        virtual void updateRenderingAttributes(float lastFrameTime);
+        
+    private:
+        Vector3     mPos;
+        Vector3     mWorldPos;
     };
 }
 
