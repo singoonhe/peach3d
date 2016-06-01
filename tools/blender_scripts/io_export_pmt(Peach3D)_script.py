@@ -93,7 +93,7 @@ def do_calc_rotate_normal(isRot, normal):
         return normal
 
 # export one object, using vertex normal, rendering more smooth.
-def do_export_object(context, props, me_ob, xmlRoot, isLast):
+def do_export_object(context, props, me_ob, xmlRoot):
     # add object
     objElem = ET.SubElement(xmlRoot, "Object", name=me_ob.name)
 
@@ -253,13 +253,10 @@ def do_export_mesh(context, props, filepath):
 
     # write all selected objects
     ob_list = context.selected_objects
-    obj_count = len(ob_list)
-    obj_index = 1
     for ob in ob_list:
         # convert to triangles if need
         me_ob = triangulateNMesh(ob)
-        do_export_object(context, props, me_ob, xmlRoot, obj_index==obj_count)
-        obj_index = obj_index + 1
+        do_export_object(context, props, me_ob, xmlRoot)
     # save to file
     file = open(filepath, "wb")
     file.write(prettify(xmlRoot))

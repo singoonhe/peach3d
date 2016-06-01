@@ -13,12 +13,13 @@
 		</Bone> -->
 	</Bone>
 	<Animation name="translate" length="3.0">
-		<Bone name="root">
-			<Keyframes time="0.0">
+		<Keyframes time="0.0">
+			<Bone name="root">
 				<Rotation>0, 0, 0, 1</Rotation>
 				<Scale>1.000000, 1.000000, 1.000000</Scale>
 				<Translation>0, 0.000000, 0.000000</Translation>
-			</Keyframes>
+			</Bone>
+		</Keyframes>
 			<Keyframes time="1.0">
 				<Rotation>0, 0, 0, 1</Rotation>
 				<Scale>1.000000, 1.000000, 1.000000</Scale>
@@ -29,7 +30,6 @@
 				<Scale>1.000000, 1.000000, 1.000000</Scale>
 				<Translation>2, 0.000000, 0.000000</Translation>
 			</Keyframes>
-		</Bone>
 	</Animation>
 	<Animation name="scale" length="3.0">
 		<Bone name="root">
