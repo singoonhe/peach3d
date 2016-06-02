@@ -1,6 +1,6 @@
 bl_info = {
-    "name": "Export Peach3D Mesh Text (.pmt)",
-    "description": "Export Model to Peach3D Mesh Text file",
+    "name": "Export Peach3D Mesh/Skeleton Text (.pmt)",
+    "description": "Export Model to Peach3D Mesh/Skeleton Text file",
     "author": "singoon",
     "version": (0, 1),
     "blender": (2, 5, 7),
@@ -126,7 +126,7 @@ def do_export_object(context, props, me_ob, xmlRoot):
         index_current_count = 0
         vert_unique_count = 0
         vert_unique_dict = {}
-        for face in mesh.tessfaces:
+        for face in me_ob.data.tessfaces:
             if len(face.vertices) == 3:
                 vertex_index = face.index * 3
                 for index in face.vertices:
@@ -247,13 +247,119 @@ def do_export_object(context, props, me_ob, xmlRoot):
     return True
 
 #export mesh, maybe have more objects
-def do_export_mesh(context, props, filepath):
+def do_export_skeleton(context, thearmature, filepath):
+    context.scene.objects.active    = thearmature
+    # return null ifno armature or no data
+    if thearmature.animation_data == None:
+        print("None Actions Set! skipping...")
+        return
+
+    bpy.ops.object.mode_set(mode='OBJECT')
+    context.scene.frame_set(context.scene.frame_start)
+    # write file head
+    xmlRoot = ET.Element("Skeleton", version="0.1")
+
+    pd_bones_list = []
+    w_matrix = thearmature.matrix_world
+    def do_export_bone(bone, xmlParent, parent = None):
+        if (parent and not b.parent.name==parent.name):
+            return #only catch direct children
+
+        # format transform, add to bone
+        tsm =  mathutils.Matrix(w_matrix) * mathutils.Matrix(b.matrix_local)  #reversed order of multiplication from 2.4 to 2.5!!! ARRRGGG
+        tsmText = ''
+        for x in range(4):
+            for y in range(4):
+                tsmText = tsmText + '%.6f' % tsm[x][y]
+                if x != 3 or y != 3:
+                    tsmText = tsmText + ', '
+        pd_bones_list.append(bone)
+        boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name)
+        ET.SubElement(boneElem, "Transform").text = tsmText
+        # add children
+        if( b.children ):
+            for child in b.children: do_export_bone(child, boneElem, bone)
+
+    # export all bones
+    for b in thearmature.data.bones:
+      if( not b.parent ): #only treat root bones'
+        print( "root bone: " + b.name )
+        do_export_bone(b, xmlRoot)
+
+    # export actions
+    anim_rate  = context.scene.render.fps
+    restoreAction   = thearmature.animation_data.action    # Q: is animation_data always valid?
+    restoreFrame    = context.scene.frame_current       # we already do this in export_proxy, but we'll do it here too for now
+    for arm_action in bpy.data.actions:
+        if not len(arm_action.fcurves):
+            print("{} has no keys, skipping".format(arm_action.name))
+            continue
+        # apply action to armature and update scene
+        # note if loop all actions that is not armature it will override and will break armature animation.
+        thearmature.animation_data.action = arm_action
+        context.scene.update()
+
+        # min/max frames define range
+        framemin, framemax  = arm_action.frame_range
+        start_frame         = int(framemin)
+        end_frame           = int(framemax)
+        scene_range         = range(start_frame, end_frame + 1)
+        frame_count         = len(scene_range)
+
+        # build a list of pose bones relevant to the collated pd_bones_list
+        pose_bones_list = []
+        for b in pd_bones_list:
+            for pb in thearmature.pose.bones:
+                if b.name == pb.name:
+                    pose_bones_list.append(pb)
+                    break;
+        # export bones keyframe
+        armEle = ET.SubElement(xmlRoot, "Animation", name=arm_action.name, length='%.6f' % ((frame_count-1)/anim_rate))
+        for i in range(frame_count):
+            frame = scene_range[i]
+            # advance to frame (automatically updates the pose)
+            context.scene.frame_set(frame)
+
+            frameEle = ET.SubElement(armEle, "KeyFrame", time='%.6f' % (i/anim_rate))
+            for pose_bone in pose_bones_list:
+                pose_bone_matrix    = mathutils.Matrix(pose_bone.matrix)
+                # convert bone matrix from parent
+                if pose_bone.parent != None:
+                    pose_bone_parent_matrix = mathutils.Matrix(pose_bone.parent.matrix)
+                    pose_bone_matrix        = pose_bone_parent_matrix.inverted() * pose_bone_matrix
+
+                translate = pose_bone_matrix.to_translation()
+                rotation  = pose_bone_matrix.to_quaternion().normalized()
+                scale  = pose_bone_matrix.to_scale()
+
+                # set x,y,z to negative (rotate in other direction) if have parent
+                if pose_bone.parent != None:
+                    rotation.x  = -rotation.x
+                    rotation.y  = -rotation.y
+                    rotation.z  = -rotation.z
+                # add bones data
+                frameBoneEle = ET.SubElement(frameEle, "Bone", name=pose_bone.name)
+                ET.SubElement(frameBoneEle, "Rotation").text = '%.6f, %.6f, %.6f, %.6f' % (rotation.x, rotation.y, rotation.z, rotation.w)
+                ET.SubElement(frameBoneEle, "Scale").text = '%.6f, %.6f, %.6f' % (scale.x, scale.y, scale.z)
+                ET.SubElement(frameBoneEle, "Translation").text = '%.6f, %.6f, %.6f' % (translate.x, translate.y, translate.z)
+
+    # restore
+    thearmature.animation_data.action = restoreAction
+    context.scene.frame_set(restoreFrame)
+
+    # save to file
+    file = open(filepath, "wb")
+    file.write(prettify(xmlRoot))
+    file.close()
+    return True
+
+#export mesh, maybe have more objects
+def do_export_mesh(context, props, meshes, filepath):
     # write file head
     xmlRoot = ET.Element("Mesh", version="0.1")
 
-    # write all selected objects
-    ob_list = context.selected_objects
-    for ob in ob_list:
+    # write all objects
+    for ob in meshes:
         # convert to triangles if need
         me_ob = triangulateNMesh(ob)
         do_export_object(context, props, me_ob, xmlRoot)
@@ -261,13 +367,13 @@ def do_export_mesh(context, props, filepath):
     file = open(filepath, "wb")
     file.write(prettify(xmlRoot))
     file.close()
-
+    return True
 
 ###### EXPORT OPERATOR #######
 class Export_pmt(bpy.types.Operator, ExportHelper):
     '''Exports the active Object as an Peach3D Mesh Text File.'''
     bl_idname = "export_object.pmt"
-    bl_label = "Export Peach3D Mesh Text (.pmt)"
+    bl_label = "Export Peach3D Mesh/Skeleton Text (.pmt)"
 
     # export file extension
     filename_ext = ".pmt"
@@ -287,20 +393,21 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
     world_space = BoolProperty(name="Export into Worldspace",
                             description="Transform the Vertexcoordinates into Worldspace",
                             default=False)
+    # auto export .pst
+    export_pst = BoolProperty(name="Export animation (.pst)",
+                            description="Auto export Peach3D Skeleton text file",
+                            default=True)
 
 
     @classmethod
     def poll(cls, context):
-        if len(context.selected_objects) == 0:
-            print('No one objects is selected')
-            return False
-        # every one must vaid
-        for sob in context.selected_objects:
-            objValid = sob.type in ['MESH', 'CURVE', 'SURFACE', 'FONT']
-            if not objValid:
-                print('selected objects must all be MESH/CURVE/SURFACE/FONT')
-                return False
-        return True
+        # mesh must exist
+        objValid = False
+        for sob in context.scene.objects:
+            if sob.type in ['MESH', 'ARMATURE', 'CURVE', 'SURFACE', 'FONT']:
+                objValid = True
+                break
+        return objValid
 
     def execute(self, context):
         start_time = time.time()
@@ -311,11 +418,23 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
         filepath = self.filepath
         filepath = bpy.path.ensure_ext(filepath, self.filename_ext)
         # export file with setting properties
-        exported = do_export_mesh(context, props, filepath)
+        meshes = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
+        exported = do_export_mesh(context, props, meshes, filepath)
+        print('export mesh file:%s' % filepath)
+
+        # export skeleton text file if need
+        armature = None
+        for ob in meshes:
+            if ob.parent and ob.parent.type == 'ARMATURE':
+                armature = ob.parent
+                break;
+        if armature and props.export_pst:
+            pstpath = bpy.path.ensure_ext(filepath, ".pst")
+            exported = do_export_skeleton(context, armature, pstpath)
+            print('export skeleton file:%s' % pstpath)
 
         if exported:
             print('finished export in %s seconds' %((time.time() - start_time)))
-            print(filepath)
 
         return {'FINISHED'}
 
@@ -336,11 +455,10 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
         elif False:
             return self.execute(context)
 
-
 ### REGISTER ###
 
 def menu_func(self, context):
-    self.layout.operator(Export_pmt.bl_idname, text="Peach3D Mesh Text (.pmt)")
+    self.layout.operator(Export_pmt.bl_idname, text="Peach3D Mesh/Skeleton Text (.pmt)")
 
 def register():
     bpy.utils.register_module(__name__)
