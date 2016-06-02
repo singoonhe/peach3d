@@ -41,7 +41,7 @@ namespace Peach3D
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Normal, 3 * sizeof(float), DefaultAttrLocation::eNormal, pdShaderNormalAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::PSize, sizeof(float), DefaultAttrLocation::ePSize, pdShaderPSizeAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::UV, 2 * sizeof(float), DefaultAttrLocation::eUV, pdShaderUVAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexType::Skeleton, 4 * sizeof(float), DefaultAttrLocation::eSkeleton, pdShaderSkeletonAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::Bone, 4 * sizeof(float), DefaultAttrLocation::eSkeleton, pdShaderSkeletonAttribName));
         }
         /* add default search dir in platform instance, most platform use different dir */
     }

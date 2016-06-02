@@ -33,6 +33,9 @@ import xml.etree.cElementTree as ET
 from xml.etree import ElementTree
 from xml.dom import minidom
 
+# store armature bones
+pd_bones_list = []
+
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
     """
@@ -92,6 +95,29 @@ def do_calc_rotate_normal(isRot, normal):
     else:
         return normal
 
+def add_vertex_weight_string(vertex, mesh):
+    weight_string = ''
+    # total bones group list
+    mesh_groups_list = mesh.vertex_groups
+    for x in range(2):
+        is_have_weight = x < len(vertex.groups)
+        # store bone weight
+        vgroup_weight = is_have_weight and vertex.groups[x].weight or 0.0
+        weight_string += ' %.6f,' % vgroup_weight
+        # find bone in pst animation bones list
+        if is_have_weight:
+            weight_name = mesh_groups_list[vertex.groups[x].group].name
+            bone_index = 0
+            for bone in pd_bones_list:
+                if bone.name == weight_name:
+                    break
+                else:
+                    bone_index += 1
+            weight_string += ' %.1f,' % bone_index
+        else:
+            weight_string += ' 0.0,'
+    return weight_string
+
 # export one object, using vertex normal, rendering more smooth.
 def do_export_object(context, props, me_ob, xmlRoot):
     # add object
@@ -101,6 +127,8 @@ def do_export_object(context, props, me_ob, xmlRoot):
     current_scene = context.scene
     apply_modifiers = props.apply_modifiers
     mesh = me_ob.to_mesh(current_scene, apply_modifiers, 'PREVIEW')
+    # is vertex need export weight
+    is_export_weight = (len(me_ob.vertex_groups) > 0)
 
     # is need convert to world space
     if props.world_space:
@@ -115,12 +143,15 @@ def do_export_object(context, props, me_ob, xmlRoot):
     index_source = tail_str
     # write vertex type
     if len(mesh.uv_textures) > 0:
+        # VertexType::Point3|VertexType::UV
+        vertex_type_num = 18
         if props.export_normal:
-            # VertexType::Point3|VertexType::Normal|VertexType::UV
-            ET.SubElement(objElem, "VertexType").text="22"
-        else:
-            # VertexType::Point3|VertexType::UV
-            ET.SubElement(objElem, "VertexType").text="18"
+            # |VertexType::Normal
+            vertex_type_num += 4
+        if is_export_weight:
+            # |VertexType::Skeleton
+            vertex_type_num += 32
+        ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # record vertex and index data
         uv_layer = mesh.uv_layers.active.data
         index_current_count = 0
@@ -146,6 +177,9 @@ def do_export_object(context, props, me_ob, xmlRoot):
                             vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z, uv[0], uv[1])
                         else:
                             vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], uv[1])
+                        # add bone weight info if need
+                        if is_export_weight:
+                            vertex_source += add_vertex_weight_string(vert, me_ob)
                         vertex_source += tail_str
                         # vertex data increase once
                         vert_unique_count += 1
@@ -169,12 +203,15 @@ def do_export_object(context, props, me_ob, xmlRoot):
             index_source += tail_str[:-4]
         ET.SubElement(objElem, "Indexes").text=index_source
     else:
+        # VertexType::Point3
+        vertex_type_num = 2
         if props.export_normal:
-            # VertexType::Point3|VertexType::Normal
-            ET.SubElement(objElem, "VertexType").text="6"
-        else:
-            # VertexType::Point3
-            ET.SubElement(objElem, "VertexType").text="2"
+            # |VertexType::Normal
+            vertex_type_num += 4
+        if is_export_weight:
+            # |VertexType::Skeleton
+            vertex_type_num += 32
+        ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # write vertex count
         vertex_total_count = len(mesh.vertices)
         ET.SubElement(objElem, "VertexCount").text=str(vertex_total_count)
@@ -185,6 +222,9 @@ def do_export_object(context, props, me_ob, xmlRoot):
                 vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z)
             else:
                 vertex_source += '%.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z)
+            # add bone weight info if need
+            if is_export_weight:
+                vertex_source += add_vertex_weight_string(vert, me_ob)
             vertex_source += tail_str
         vertex_source = vertex_source[:-4]
         ET.SubElement(objElem, "Vertexes").text=vertex_source
@@ -236,13 +276,15 @@ def do_export_object(context, props, me_ob, xmlRoot):
 
         # write texture
         if len(mesh.uv_textures) > 0:
-            texEle = ET.SubElement(matEle, "Texture")
             # write texture file name
             uv_texture = mesh.uv_textures.active.data
-            tex_file_path = uv_texture[0].image.filepath
-            ET.SubElement(texEle, "File").text=os.path.basename(tex_file_path)
-            # default warp uv to TextureWrap::eClampToEdge
-            ET.SubElement(texEle, "WrapUV").text='0'
+            uv_texture_image = uv_texture[0].image
+            if uv_texture_image:
+                tex_file_path = uv_texture_image.filepath
+                texEle = ET.SubElement(matEle, "Texture")
+                ET.SubElement(texEle, "File").text=os.path.basename(tex_file_path)
+                # default warp uv to TextureWrap::eClampToEdge
+                ET.SubElement(texEle, "WrapUV").text='0'
 
     return True
 
@@ -259,26 +301,28 @@ def do_export_skeleton(context, thearmature, filepath):
     # write file head
     xmlRoot = ET.Element("Skeleton", version="0.1")
 
-    pd_bones_list = []
     w_matrix = thearmature.matrix_world
     def do_export_bone(bone, xmlParent, parent = None):
-        if (parent and not b.parent.name==parent.name):
+        if (parent and not bone.parent.name==parent.name):
             return #only catch direct children
 
         # format transform, add to bone
-        tsm =  mathutils.Matrix(w_matrix) * mathutils.Matrix(b.matrix_local)  #reversed order of multiplication from 2.4 to 2.5!!! ARRRGGG
+        tsm =  mathutils.Matrix(w_matrix) * mathutils.Matrix(bone.matrix_local)  #reversed order of multiplication from 2.4 to 2.5!!! ARRRGGG
         tsmText = ''
         for x in range(4):
             for y in range(4):
                 tsmText = tsmText + '%.6f' % tsm[x][y]
                 if x != 3 or y != 3:
                     tsmText = tsmText + ', '
-        pd_bones_list.append(bone)
-        boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name)
+        # write bone to xml
+        boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name, index='%d' % len(pd_bones_list))
         ET.SubElement(boneElem, "Transform").text = tsmText
+        # store bone to list for weight
+        pd_bones_list.append(bone)
         # add children
-        if( b.children ):
-            for child in b.children: do_export_bone(child, boneElem, bone)
+        if( bone.children ):
+            for child in bone.children:
+                do_export_bone(child, boneElem, bone)
 
     # export all bones
     for b in thearmature.data.bones:
@@ -417,21 +461,21 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
         # get full saved filepath
         filepath = self.filepath
         filepath = bpy.path.ensure_ext(filepath, self.filename_ext)
-        # export file with setting properties
+        # find all mesh and armature
         meshes = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
-        exported = do_export_mesh(context, props, meshes, filepath)
-        print('export mesh file:%s' % filepath)
-
-        # export skeleton text file if need
         armature = None
         for ob in meshes:
             if ob.parent and ob.parent.type == 'ARMATURE':
                 armature = ob.parent
                 break;
+        # export skeleton text file if need
         if armature and props.export_pst:
             pstpath = bpy.path.ensure_ext(filepath, ".pst")
             exported = do_export_skeleton(context, armature, pstpath)
             print('export skeleton file:%s' % pstpath)
+        # export mesh
+        exported = do_export_mesh(context, props, meshes, filepath)
+        print('export mesh file:%s' % filepath)
 
         if exported:
             print('finished export in %s seconds' %((time.time() - start_time)))

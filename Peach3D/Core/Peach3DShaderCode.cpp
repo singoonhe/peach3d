@@ -90,7 +90,7 @@ namespace Peach3D
             verType = verType | VertexType::Normal;
         }
         if (feature.boneCount > 0) {
-            verType = verType | VertexType::Skeleton;
+            verType = verType | VertexType::Bone;
         }
         return verType;
     }
