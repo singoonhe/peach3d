@@ -28,21 +28,24 @@ namespace Peach3D
     class PEACH3D_DLL Bone
     {
     public:
-        Bone(const char* name) : mName(name), mAttachedNode(nullptr), mParentBone(nullptr) {}
+        Bone(const char* name, int index) : mName(name), mIndex(index), mAttachedNode(nullptr), mParentBone(nullptr) {}
         ~Bone();
-        void setOriginTransform(const Matrix4& transform) { mTransform = transform; }
-        void addKeyFrame(const char* name, const BoneKeyFrame& frame) { mAnimationFrames[name].push_back(frame); }
         const std::string& getName() { return mName; }
+        int getIndex() { return mIndex; }
         Bone* getParentBone() { return mParentBone; }
+        
+        /** Set bone origin transform when import file. */
+        void setOriginTransform(const Matrix4& transform) { mTransform = transform; }
+        /** Add new frame for animation when import file. */
+        void addKeyFrame(const char* name, const BoneKeyFrame& frame) { mAnimationFrames[name].push_back(frame); }
         
         void addChild(Bone* child);
         void tranverseChildBone(std::function<void(Bone*)> callFunc);
         uint getChildrenCount() { return (uint)mChildren.size(); }
         const std::vector<Bone*>& getChildren() {return mChildren;}
-        /** Find child node by name, will iterative search children. */
-        Bone* findChildByName(const char* name);
+        
         /** Calc bone current transform matrix. */
-        Matrix4 calcBoneMatrix(const std::string& name, float time);
+        void timeBoneMatrix(const std::string& name, float time);
         const Matrix4& getCacheMatrix() { return mCacheMatrix; }
         /** Attach scene node to bone, such as weapon. */
         void attachNode(SceneNode* tn) { mAttachedNode = tn; }
@@ -53,9 +56,10 @@ namespace Peach3D
         void setParentBone(Bone* pBone) { mParentBone = pBone; }
         
     private:
+        std::string mName;
+        int         mIndex; // index of animation in all bones
         Matrix4     mTransform;
         Matrix4     mCacheMatrix;
-        std::string mName;
         Bone*       mParentBone;
         SceneNode*  mAttachedNode;
         

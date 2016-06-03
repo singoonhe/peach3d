@@ -38,35 +38,7 @@ namespace Peach3D
         }
     }
     
-    Bone* Bone::findChildByName(const char* name)
-    {
-        Peach3DAssert(strlen(name) > 0, "Can't find child bone without name");
-        if (mName.compare(name) == 0) {
-            return this;
-        }
-        Bone* findChild = nullptr;
-        if (mChildren.size() > 0) {
-            // find bone in children
-            for (auto child : mChildren) {
-                if (child->getName() == name) {
-                    findChild = child;
-                    break;
-                }
-            }
-            if (!findChild) {
-                // find bone in children of child
-                for (auto child : mChildren) {
-                    findChild = child->findChildByName(name);
-                    if (findChild) {
-                        break;
-                    }
-                }
-            }
-        }
-        return findChild;
-    }
-    
-    Matrix4 Bone::calcBoneMatrix(const std::string& name, float time)
+    void Bone::timeBoneMatrix(const std::string& name, float time)
     {
         if (mAnimationFrames.find(name) != mAnimationFrames.end()) {
             auto frameList = mAnimationFrames[name];
@@ -86,7 +58,10 @@ namespace Peach3D
                 auto nextFrame = frameList[curIndex + 1];
                 auto interval = time - baseFrame.time, frameInterval = nextFrame.time - baseFrame.time;
                 auto calcInterval = interval/frameInterval;
-                calcR = calcR.slerp(nextFrame.rotate, calcInterval);
+                // not calc if not change, slerp take much time
+                if (calcR != nextFrame.rotate) {
+                    calcR = calcR.slerp(nextFrame.rotate, calcInterval);
+                }
                 calcS = (nextFrame.scale - baseFrame.scale) * calcInterval + baseFrame.scale;
                 calcT = (nextFrame.translate - baseFrame.translate) * calcInterval + baseFrame.translate;
             }
@@ -100,6 +75,5 @@ namespace Peach3D
                 mCacheMatrix = mCacheMatrix * mParentBone->getCacheMatrix();
             }
         }
-        return mCacheMatrix;
     }
 }

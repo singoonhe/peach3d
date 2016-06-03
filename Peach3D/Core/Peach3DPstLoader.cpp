@@ -24,7 +24,7 @@ namespace Peach3D
                 XMLElement* boneEle = rootEle->FirstChildElement();
                 if (boneEle) {
                     auto rootBone = PstLoader::pstBonesDataParse(boneEle, nullptr);
-                    sk->setRootBone(rootBone);
+                    sk->addRootBone(rootBone);
                     // set bone over, cache bones list
                     sk->addBonesOver();
                     // read animation elements
@@ -45,7 +45,7 @@ namespace Peach3D
         auto transformEle = boneEle->FirstChildElement();
         if (transformEle) {
             // create new Bone
-            Bone* newBone = new Bone(boneEle->Attribute("name"));
+            Bone* newBone = new Bone(boneEle->Attribute("name"), atoi(boneEle->Attribute("index")));
             Matrix4 transform;
             sscanf(transformEle->GetText(), "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", transform.mat, transform.mat + 1, transform.mat + 2, transform.mat + 3, transform.mat + 4, transform.mat + 5, transform.mat + 6, transform.mat + 7, transform.mat + 8, transform.mat + 9, transform.mat + 10, transform.mat + 11, transform.mat + 12, transform.mat + 13, transform.mat + 14, transform.mat + 15);
             newBone->setOriginTransform(transform);
@@ -66,23 +66,24 @@ namespace Peach3D
     
     void PstLoader::pstAnimationDataParse(const XMLElement* animEle, const SkeletonPtr& sk)
     {
-        auto rootBone = sk->getRootBone();
+        auto rootBoneList = sk->getRootBoneList();
         do {
-            IF_BREAK(!rootBone, "Root bone must be set before reading animations");
+            IF_BREAK(rootBoneList.size() == 0, "Root bones must be set before reading animations");
             auto animName = animEle->Attribute("name");
             IF_BREAK(!animName, "Animation name must be valid");
             sk->addAnimateTime(animName, atof(animEle->Attribute("length")));
-            // read all bones
-            auto boneEle = animEle->FirstChildElement();
-            while (boneEle) {
-                auto curBone = rootBone->findChildByName(boneEle->Attribute("name"));
-                // read all keyframes
-                auto frameEle = boneEle->FirstChildElement();
-                while (frameEle) {
-                    float keyTime = atof(frameEle->Attribute("time"));
+            // read all animation
+            auto frameEle = animEle->FirstChildElement();
+            while (frameEle) {
+                float keyTime = atof(frameEle->Attribute("time"));
+                // read all bone state
+                auto bonesEle = frameEle->FirstChildElement();
+                while (bonesEle) {
+                    auto curBone = sk->findBone(bonesEle->Attribute("name"));
+                    IF_BREAK(!curBone, "Can't find bone in bones list");
                     // read keyframe transform
                     Quaternion rotate;
-                    auto rotateEle = frameEle->FirstChildElement();
+                    auto rotateEle = bonesEle->FirstChildElement();
                     sscanf(rotateEle->GetText(), "%f,%f,%f,%f", &rotate.x, &rotate.y, &rotate.z, &rotate.w);
                     Vector3 scale, translate;
                     auto scaleEle = rotateEle->NextSiblingElement();
@@ -92,9 +93,9 @@ namespace Peach3D
                     BoneKeyFrame frame(keyTime, rotate, scale, translate);
                     curBone->addKeyFrame(animName, frame);
                     
-                    frameEle = frameEle->NextSiblingElement();
+                    bonesEle = bonesEle->NextSiblingElement();
                 }
-                boneEle = boneEle->NextSiblingElement();
+                frameEle = frameEle->NextSiblingElement();
             }
         } while (0);
     }

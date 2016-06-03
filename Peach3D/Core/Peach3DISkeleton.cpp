@@ -12,21 +12,39 @@ namespace Peach3D
 {
     ISkeleton::~ISkeleton()
     {
-        mCacheBones.clear();
-        if (mRootBone) {
-            delete mRootBone;
-            mRootBone = nullptr;
+        // delete all root bones
+        for (auto bone : mRootBoneList) {
+            delete bone;
         }
+        mRootBoneList.clear();
+        mCacheBones.clear();
     }
     
     void ISkeleton::addBonesOver()
     {
         mCacheBones.clear();
-        if (mRootBone) {
-            mCacheBones.push_back(mRootBone);
-            // cache all bones and clac count
-            cacheChildrenBonesList(mRootBone);
+        if (mRootBoneList.size() > 0) {
+            for (auto root : mRootBoneList) {
+                mCacheBones.push_back(root);
+                // cache all bones and clac count
+                cacheChildrenBonesList(root);
+            }
+            // sort bones by index
+            std::sort(mCacheBones.begin(), mCacheBones.end(), [](Bone* a, Bone* b)->int{
+                return a->getIndex() < b->getIndex();
+            });
         }
+    }
+    
+    Bone* ISkeleton::findBone(const char* name)
+    {
+        Peach3DAssert(mCacheBones.size() > 0, "Find bone must called after \"addBonesOver\"");
+        for (auto bone : mCacheBones) {
+            if (bone->getName() == name) {
+                return bone;
+            }
+        }
+        return nullptr;
     }
     
     void ISkeleton::cacheChildrenBonesList(Bone* parent)
@@ -40,10 +58,17 @@ namespace Peach3D
     
     void ISkeleton::fillAnimateBuffer(const std::string& name, float time)
     {
+        if (mCacheBones.size() > 0) {
+            // update bones transform, cache list also update too
+            for (auto root : mRootBoneList) {
+                root->timeBoneMatrix(name, time);
+                cacheChildrenBonesMatrix(root, name, time);
+            }
+        }
+        // update all bones transform
         mCacheBoneMats.clear();
-        if (mRootBone) {
-            mCacheBoneMats.push_back(mRootBone->calcBoneMatrix(name, time));
-            cacheChildrenBonesMatrix(mRootBone, name, time);
+        for (auto bone : mCacheBones) {
+            mCacheBoneMats.push_back(bone->getCacheMatrix());
         }
     }
     
@@ -51,7 +76,7 @@ namespace Peach3D
     {
         auto children = parent->getChildren();
         for (auto child : children) {
-            mCacheBoneMats.push_back(child->calcBoneMatrix(name, time));
+            child->timeBoneMatrix(name, time);
             cacheChildrenBonesMatrix(child, name, time);
         }
     }
