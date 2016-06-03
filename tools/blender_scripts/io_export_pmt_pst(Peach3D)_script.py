@@ -64,10 +64,7 @@ def triangulateNMesh(object):
     bpy.ops.object.mode_set(mode='OBJECT')
     if bneedtri == True:
         print("Converting quad to triangle mesh...")
-        me_da = object.data.copy() #copy data
         me_ob = object.copy() #copy object
-        #note two copy two types else it will use the current data or mesh
-        me_ob.data = me_da
         bpy.context.scene.objects.link(me_ob)#link the object to the scene #current object location
         for i in scene.objects: i.select = False #deselect all objects
         me_ob.select = True
@@ -80,7 +77,11 @@ def triangulateNMesh(object):
         print("Triangulate Mesh Done!")
         print("Remove Merge tmp Mesh [ " ,object.name, " ] from scene!" )
         bpy.ops.object.mode_set(mode='OBJECT') # set it in object
+        # remove old object and rename new
+        origin_name = object.name
         bpy.context.scene.objects.unlink(object)
+        me_ob.name = origin_name
+        me_ob.data.update(calc_tessface=True)
     else:
         print("No need to convert triangle mesh.")
         me_ob = object
@@ -297,6 +298,7 @@ def do_export_skeleton(context, thearmature, filepath):
         print("None actions data Set! skipping...")
         return
 
+    pd_bones_list = [] # clear cache, may add to next export file
     bpy.ops.object.mode_set(mode='OBJECT')
     context.scene.frame_set(context.scene.frame_start)
     # write file head
