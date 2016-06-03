@@ -8,7 +8,7 @@ bl_info = {
     "location": "File > Export",
     "warning": "",
     "wiki_url": "",
-    "tracker_url": "",
+    "tracker_url": "www.peach3d.com",
     "category": "Import-Export"}
 
 '''
@@ -54,8 +54,7 @@ def triangulateNMesh(object):
     bpy.ops.object.mode_set(mode='OBJECT')
     for i in scene.objects: i.select = False #deselect all objects
     object.select = True
-    scene.objects.active = object #set the mesh object to current
-    print("Checking mesh if needs to convert quad to Tri...")
+    scene.objects.active = object #active current object
     object.data.update(calc_tessface=True)
     for face in object.data.tessfaces:
         if (len(face.vertices) > 3):
@@ -64,7 +63,7 @@ def triangulateNMesh(object):
 
     bpy.ops.object.mode_set(mode='OBJECT')
     if bneedtri == True:
-        print("Converting quad to tri mesh...")
+        print("Converting quad to triangle mesh...")
         me_da = object.data.copy() #copy data
         me_ob = object.copy() #copy object
         #note two copy two types else it will use the current data or mesh
@@ -83,7 +82,7 @@ def triangulateNMesh(object):
         bpy.ops.object.mode_set(mode='OBJECT') # set it in object
         bpy.context.scene.objects.unlink(object)
     else:
-        print("No need to convert tri mesh.")
+        print("No need to convert triangle mesh.")
         me_ob = object
     return me_ob
 
@@ -103,7 +102,7 @@ def add_vertex_weight_string(vertex, mesh):
         is_have_weight = x < len(vertex.groups)
         # store bone weight
         vgroup_weight = is_have_weight and vertex.groups[x].weight or 0.0
-        weight_string += ' %.6f,' % vgroup_weight
+        weight_string += ' %f,' % vgroup_weight
         # find bone in pst animation bones list
         if is_have_weight:
             weight_name = mesh_groups_list[vertex.groups[x].group].name
@@ -141,6 +140,9 @@ def do_export_object(context, props, me_ob, xmlRoot):
     tail_str = "\n" + 3 * "    "
     vertex_source = tail_str
     index_source = tail_str
+    vertex_total_count = 0
+    index_total_count = 0
+    vertex_type_num = 0
     # write vertex type
     if len(mesh.uv_textures) > 0:
         # VertexType::Point3|VertexType::UV
@@ -154,8 +156,6 @@ def do_export_object(context, props, me_ob, xmlRoot):
         ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # record vertex and index data
         uv_layer = mesh.uv_layers.active.data
-        index_current_count = 0
-        vert_unique_count = 0
         vert_unique_dict = {}
         for face in me_ob.data.tessfaces:
             if len(face.vertices) == 3:
@@ -167,37 +167,37 @@ def do_export_object(context, props, me_ob, xmlRoot):
                     vvalue = vert_unique_dict.get(vkey)
                     if vvalue is None:
                         # save current key
-                        vert_unique_dict[vkey] = vert_unique_count
+                        vert_unique_dict[vkey] = vertex_total_count
                         # record one index data
-                        index_source += str(vert_unique_count) + ", "
+                        index_source += str(vertex_total_count) + ", "
                         # record one vertex data
                         vert = mesh.vertices[index]
                         if props.export_normal:
                             cal_normal = do_calc_rotate_normal(props.rot_x90, vert.normal)
-                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z, uv[0], uv[1])
+                            vertex_source += '%f, %f, %f, %f, %f, %f, %f, %f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z, uv[0], uv[1])
                         else:
-                            vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], uv[1])
+                            vertex_source += '%f, %f, %f, %f, %f,' % (vert.co.x, vert.co.y, vert.co.z, uv[0], uv[1])
                         # add bone weight info if need
                         if is_export_weight:
                             vertex_source += add_vertex_weight_string(vert, me_ob)
                         vertex_source += tail_str
                         # vertex data increase once
-                        vert_unique_count += 1
+                        vertex_total_count += 1
                     else:
                         # record one exist index
                         index_source += str(vvalue) + ", "
 
                     vertex_index += 1
                     # auto newline if string too long
-                    index_current_count += 1
-                    if (index_current_count % 12 == 0):
+                    index_total_count += 1
+                    if (index_total_count % 12 == 0):
                         index_source += tail_str
         # write vertex data and index data
-        ET.SubElement(objElem, "VertexCount").text=str(vert_unique_count)
+        ET.SubElement(objElem, "VertexCount").text=str(vertex_total_count)
         vertex_source = vertex_source[:-4]
         ET.SubElement(objElem, "Vertexes").text=vertex_source
-        ET.SubElement(objElem, "IndexCount").text=str(index_current_count)
-        if index_current_count % 12 == 0:
+        ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
+        if index_total_count % 12 == 0:
             index_source = index_source[:-4]
         else:
             index_source += tail_str[:-4]
@@ -219,9 +219,9 @@ def do_export_object(context, props, me_ob, xmlRoot):
         for vert in mesh.vertices:
             if props.export_normal:
                 cal_normal = do_calc_rotate_normal(props.rot_x90, vert.normal)
-                vertex_source += '%.6f, %.6f, %.6f, %.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z)
+                vertex_source += '%f, %f, %f, %f, %f, %f,' % (vert.co.x, vert.co.y, vert.co.z, cal_normal.x, cal_normal.y, cal_normal.z)
             else:
-                vertex_source += '%.6f, %.6f, %.6f,' % (vert.co.x, vert.co.y, vert.co.z)
+                vertex_source += '%f, %f, %f,' % (vert.co.x, vert.co.y, vert.co.z)
             # add bone weight info if need
             if is_export_weight:
                 vertex_source += add_vertex_weight_string(vert, me_ob)
@@ -229,22 +229,22 @@ def do_export_object(context, props, me_ob, xmlRoot):
         vertex_source = vertex_source[:-4]
         ET.SubElement(objElem, "Vertexes").text=vertex_source
         # write index data
-        index_current_count = 0
         for face in mesh.tessfaces:
             if len(face.vertices) == 3:
                 # record index data
                 for index in face.vertices:
                     index_source += str(index) + ", "
-                    index_current_count += 1
+                    index_total_count += 1
                     # auto newline if string too long
-                if (index_current_count % 12 == 0):
+                if (index_total_count % 12 == 0):
                     index_source += tail_str
-        ET.SubElement(objElem, "IndexCount").text=str(index_current_count)
-        if index_current_count % 12 == 0:
+        ET.SubElement(objElem, "IndexCount").text=str(index_total_count)
+        if index_total_count % 12 == 0:
             index_source = index_source[:-4]
         else:
             index_source += tail_str[:-4]
         ET.SubElement(objElem, "Indexes").text=index_source
+    print('Export object "%s" , vertexes count %d, vertex type %d' % (me_ob.name, vertex_total_count, vertex_type_num))
 
     # write material info，(take the first one)
     mat_list = mesh.materials
@@ -259,20 +259,20 @@ def do_export_object(context, props, me_ob, xmlRoot):
         else:
             world_amb = Color((0.0, 0.0, 0.0))
         ambient = used_mat.ambient * world_amb
-        ET.SubElement(matEle, "Ambient").text='%.6f, %.6f, %.6f' % (ambient[0], ambient[1], ambient[2])
+        ET.SubElement(matEle, "Ambient").text='%f, %f, %f' % (ambient[0], ambient[1], ambient[2])
         # write diffuse color
         diffuse = used_mat.diffuse_intensity * used_mat.diffuse_color
-        ET.SubElement(matEle, "Diffuse").text='%.6f, %.6f, %.6f' % (diffuse[0], diffuse[1], diffuse[2])
+        ET.SubElement(matEle, "Diffuse").text='%f, %f, %f' % (diffuse[0], diffuse[1], diffuse[2])
         # write specular color
         specular = used_mat.specular_intensity * used_mat.specular_color
-        ET.SubElement(matEle, "Specular").text='%.6f, %.6f, %.6f' % (specular[0], specular[1], specular[2])
+        ET.SubElement(matEle, "Specular").text='%f, %f, %f' % (specular[0], specular[1], specular[2])
         # write shininess
-        ET.SubElement(matEle, "Shininess").text='%.6f' % (used_mat.specular_hardness / 2.0)
+        ET.SubElement(matEle, "Shininess").text='%f' % (used_mat.specular_hardness / 2.0)
         # write emissive color
         emissive = used_mat.emit * used_mat.diffuse_color
-        ET.SubElement(matEle, "Emissive").text='%.6f, %.6f, %.6f' % (emissive[0], emissive[1], emissive[2])
+        ET.SubElement(matEle, "Emissive").text='%f, %f, %f' % (emissive[0], emissive[1], emissive[2])
         # write alpha
-        ET.SubElement(matEle, "Alpha").text='%.6f' % (used_mat.alpha)
+        ET.SubElement(matEle, "Alpha").text='%f' % (used_mat.alpha)
 
         # write texture
         if len(mesh.uv_textures) > 0:
@@ -285,6 +285,7 @@ def do_export_object(context, props, me_ob, xmlRoot):
                 ET.SubElement(texEle, "File").text=os.path.basename(tex_file_path)
                 # default warp uv to TextureWrap::eClampToEdge
                 ET.SubElement(texEle, "WrapUV").text='0'
+        print('Export material for "%s"' % (me_ob.name))
 
     return True
 
@@ -293,7 +294,7 @@ def do_export_skeleton(context, thearmature, filepath):
     context.scene.objects.active    = thearmature
     # return null ifno armature or no data
     if thearmature.animation_data == None:
-        print("None Actions Set! skipping...")
+        print("None actions data Set! skipping...")
         return
 
     bpy.ops.object.mode_set(mode='OBJECT')
@@ -311,7 +312,7 @@ def do_export_skeleton(context, thearmature, filepath):
         tsmText = ''
         for x in range(4):
             for y in range(4):
-                tsmText = tsmText + '%.6f' % tsm[x][y]
+                tsmText = tsmText + '%f' % tsm[x][y]
                 if x != 3 or y != 3:
                     tsmText = tsmText + ', '
         # write bone to xml
@@ -327,8 +328,9 @@ def do_export_skeleton(context, thearmature, filepath):
     # export all bones
     for b in thearmature.data.bones:
       if( not b.parent ): #only treat root bones'
-        print( "root bone: " + b.name )
+        print( "Find root bone: " + b.name )
         do_export_bone(b, xmlRoot)
+    print("Export total %d bones" % len(pd_bones_list))
 
     # export actions
     anim_rate  = context.scene.render.fps
@@ -358,13 +360,13 @@ def do_export_skeleton(context, thearmature, filepath):
                     pose_bones_list.append(pb)
                     break;
         # export bones keyframe
-        armEle = ET.SubElement(xmlRoot, "Animation", name=arm_action.name, length='%.6f' % ((frame_count-1)/anim_rate))
+        armEle = ET.SubElement(xmlRoot, "Animation", name=arm_action.name, length='%f' % ((frame_count-1)/anim_rate))
         for i in range(frame_count):
             frame = scene_range[i]
             # advance to frame (automatically updates the pose)
             context.scene.frame_set(frame)
 
-            frameEle = ET.SubElement(armEle, "KeyFrame", time='%.6f' % (i/anim_rate))
+            frameEle = ET.SubElement(armEle, "KeyFrame", time='%f' % (i/anim_rate))
             for pose_bone in pose_bones_list:
                 pose_bone_matrix    = mathutils.Matrix(pose_bone.matrix)
                 # convert bone matrix from parent
@@ -383,9 +385,10 @@ def do_export_skeleton(context, thearmature, filepath):
                     rotation.z  = -rotation.z
                 # add bones data
                 frameBoneEle = ET.SubElement(frameEle, "Bone", name=pose_bone.name)
-                ET.SubElement(frameBoneEle, "Rotation").text = '%.6f, %.6f, %.6f, %.6f' % (rotation.x, rotation.y, rotation.z, rotation.w)
-                ET.SubElement(frameBoneEle, "Scale").text = '%.6f, %.6f, %.6f' % (scale.x, scale.y, scale.z)
-                ET.SubElement(frameBoneEle, "Translation").text = '%.6f, %.6f, %.6f' % (translate.x, translate.y, translate.z)
+                ET.SubElement(frameBoneEle, "Rotation").text = '%f, %f, %f, %f' % (rotation.x, rotation.y, rotation.z, rotation.w)
+                ET.SubElement(frameBoneEle, "Scale").text = '%f, %f, %f' % (scale.x, scale.y, scale.z)
+                ET.SubElement(frameBoneEle, "Translation").text = '%f, %f, %f' % (translate.x, translate.y, translate.z)
+        print('Export animation "%s" from range (%d-%d)' % (arm_action.name, start_frame, end_frame))
 
     # restore
     thearmature.animation_data.action = restoreAction
@@ -398,9 +401,12 @@ def do_export_skeleton(context, thearmature, filepath):
     return True
 
 #export mesh, maybe have more objects
-def do_export_mesh(context, props, meshes, filepath):
+def do_export_mesh(context, props, meshes, filepath, pstname):
     # write file head
     xmlRoot = ET.Element("Mesh", version="0.1")
+    # add skeleton file info
+    if pstname:
+        ET.SubElement(xmlRoot, "Skeleton").text = pstname
 
     # write all objects
     for ob in meshes:
@@ -468,17 +474,20 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
             if ob.parent and ob.parent.type == 'ARMATURE':
                 armature = ob.parent
                 break;
+        pstname = None
         # export skeleton text file if need
         if armature and props.export_pst:
             pstpath = bpy.path.ensure_ext(filepath, ".pst")
+            pstname = os.path.basename(pstpath)
             exported = do_export_skeleton(context, armature, pstpath)
-            print('export skeleton file:%s' % pstpath)
+            print('Export skeleton file:%s' % pstpath)
         # export mesh
-        exported = do_export_mesh(context, props, meshes, filepath)
-        print('export mesh file:%s' % filepath)
+        exported = do_export_mesh(context, props, meshes, filepath, pstname)
+        print('Export mesh file:%s' % filepath)
 
         if exported:
-            print('finished export in %s seconds' %((time.time() - start_time)))
+            print('Finished export in %s seconds' %((time.time() - start_time)))
+        print('_____END_____\n')
 
         return {'FINISHED'}
 

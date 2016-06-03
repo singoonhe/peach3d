@@ -91,13 +91,14 @@ void EngineMeshSample::init(Widget* parentWidget)
     texNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
     
     // create skeleton mesh
-    auto skMesh = ResourceManager::getSingleton().addMesh("skcube.pmt");
-    auto skNode = rootNode->createChild(Vector3(0.f, 3.f, 0.f));
+    auto skMesh = ResourceManager::getSingleton().addMesh("donghua.pmt");
+    auto skNode = rootNode->createChild(Vector3(0.f, 0.f, 0.f));
     skNode->attachMesh(skMesh);
-    skNode->runAnimate("translate");
-    auto skNode1 = rootNode->createChild(Vector3(6.f, 3.f, 0.f));
-    skNode1->attachMesh(skMesh);
-    skNode1->runAnimate("scale");
+    skNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(DEGREE_TO_RADIANS(360.0f), 0.0f, 0.0f), 5.0f)));
+    skNode->runAnimate("Armature|Take 001|BaseLayer.001");
+//    auto skNode1 = rootNode->createChild(Vector3(6.f, 3.f, 0.f));
+//    skNode1->attachMesh(skMesh);
+//    skNode1->runAnimate("scale");
 }
 
 void DrawModeSample::init(Widget* parentWidget)
