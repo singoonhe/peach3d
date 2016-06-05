@@ -1,1236 +1,168 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Skeleton version="0.1">
     <Bone index="0" name="Bone001">
-        <Transform>-0.000000, 0.025400, -0.000000, 0.006447, 0.000000, -0.000000, -0.025400, -0.000000, -0.025400, -0.000000, -0.000000, 1.765716, 0.000000, 0.000000, 0.000000, 1.000000</Transform>
+        <Transform>-0.000191, 0.009998, -0.000000, 0.001463, 0.000000, -0.000000, -0.010000, -0.040341, -0.009998, -0.000191, -0.000000, 0.303265, 0.000000, 0.000000, 0.000000, 1.000000</Transform>
+        <Bone index="1" name="Bone002">
+            <Transform>-0.000098, 0.010000, 0.000000, -0.001409, 0.000000, 0.000000, -0.010000, -0.040341, -0.010000, -0.000098, -0.000000, 0.153214, 0.000000, 0.000000, 0.000000, 1.000000</Transform>
+        </Bone>
     </Bone>
-    <Animation length="0.500000" name="Armature|Take 001|BaseLayer">
+    <Animation length="0.333333" name="Armature|Take 001|BaseLayer">
         <KeyFrame time="0.000000">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
                 <Scale>1.000000, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000001, -0.000000, -0.004687, 0.999989</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.033333">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.960085, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000490, -0.104353, -0.004662, 0.994529</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.066667">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.920169, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000991, -0.211193, -0.004582, 0.977433</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.100000">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.880254, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.001486, -0.316789, -0.004446, 0.948484</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.133333">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.840338, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.001957, -0.417411, -0.004260, 0.908706</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.166667">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.800423, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.002391, -0.509959, -0.004032, 0.860186</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.200000">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.760508, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.001957, -0.417411, -0.004260, 0.908706</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.233333">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.720592, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.001486, -0.316789, -0.004446, 0.948484</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.266667">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.680677, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000991, -0.211193, -0.004582, 0.977433</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.300000">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.640761, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000490, -0.104353, -0.004662, 0.994529</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.333333">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.600846, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
             </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.560931, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.521015, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.481100, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.441185, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.401269, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+            <Bone name="Bone002">
+                <Rotation>0.000001, -0.000000, -0.004687, 0.999989</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
     </Animation>
-    <Animation length="0.666667" name="Armature|Take 001|BaseLayer.001">
+    <Animation length="0.033333" name="Box002|Take 001|BaseLayer">
         <KeyFrame time="0.000000">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
                 <Scale>1.000000, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000001, -0.000000, -0.004687, 0.999989</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
         <KeyFrame time="0.033333">
             <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.950929, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.066667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.901857, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.100000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.852785, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.133333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.803714, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.166667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.754642, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.200000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.705571, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.233333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.656499, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.266667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.607428, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.300000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.558356, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.333333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.509284, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.554029, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.598774, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.643519, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.688264, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.733009, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.533333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.777754, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.566667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.822499, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.600000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.867244, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.633333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.911989, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.666667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-    </Animation>
-    <Animation length="4.566667" name="Plane001|Take 001|BaseLayer">
-        <KeyFrame time="0.000000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.033333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.066667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.100000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.133333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.166667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.200000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.233333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.266667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.300000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.333333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.533333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.566667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.600000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.633333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.666667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.700000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.733333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.766667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.800000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.833333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.866667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.900000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.933333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="0.966667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.000000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.033333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.066667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.100000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.133333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.166667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.200000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.233333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.266667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.300000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.333333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.533333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.566667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.600000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.633333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.666667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.700000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.733333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.766667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.800000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.833333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.866667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.900000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.933333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="1.966667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.000000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.033333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.066667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.100000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.133333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.166667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.200000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.233333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.266667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.300000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.333333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.533333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.566667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.600000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.633333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.666667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.700000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.733333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.766667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.800000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.833333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.866667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.900000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.933333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="2.966667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.000000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.033333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.066667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.100000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.133333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.166667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.200000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.233333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.266667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.300000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.333333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.533333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.566667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.600000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.633333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.666667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.700000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.733333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.766667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.800000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.833333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.866667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.900000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.933333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="3.966667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.000000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.033333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.066667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.100000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.133333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.166667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.200000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.233333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.266667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.300000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.333333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.366667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.400000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.433333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.466667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.500000">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.533333">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
-            </Bone>
-        </KeyFrame>
-        <KeyFrame time="4.566667">
-            <Bone name="Bone001">
-                <Rotation>0.000000, -0.000000, -0.707107, 0.707107</Rotation>
-                <Scale>0.956734, 1.000000, 1.000000</Scale>
-                <Translation>-0.108688, 41.435379, 0.000002</Translation>
+                <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>0.146285, 30.326490, 4.034069</Translation>
+            </Bone>
+            <Bone name="Bone002">
+                <Rotation>0.000490, -0.104353, -0.004662, 0.994529</Rotation>
+                <Scale>1.000000, 1.000000, 1.000000</Scale>
+                <Translation>15.007814, -0.000007, -0.000000</Translation>
             </Bone>
         </KeyFrame>
     </Animation>

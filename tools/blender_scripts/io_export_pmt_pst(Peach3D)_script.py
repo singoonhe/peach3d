@@ -63,7 +63,6 @@ def triangulateNMesh(object):
 
     bpy.ops.object.mode_set(mode='OBJECT')
     if bneedtri == True:
-        print("Converting quad to triangle mesh...")
         me_ob = object.copy() #copy object
         bpy.context.scene.objects.link(me_ob)#link the object to the scene #current object location
         for i in scene.objects: i.select = False #deselect all objects
@@ -74,9 +73,7 @@ def triangulateNMesh(object):
         bpy.ops.mesh.quads_convert_to_tris() #Operators
         bpy.context.scene.update()
         bpy.ops.object.mode_set(mode='OBJECT') # set it in object
-        print("Triangulate Mesh Done!")
-        print("Remove Merge tmp Mesh [ " ,object.name, " ] from scene!" )
-        bpy.ops.object.mode_set(mode='OBJECT') # set it in object
+        print("Converting quad to triangle mesh done!")
         # remove old object and rename new
         origin_name = object.name
         bpy.context.scene.objects.unlink(object)
@@ -96,14 +93,14 @@ def do_calc_rotate_normal(isRot, normal):
         return normal
 
 def add_vertex_weight_string(vertex, mesh):
-    weight_string = ''
     # total bones group list
     mesh_groups_list = mesh.vertex_groups
+    weight_vector = [0.0, 0.0, 0.0, 0.0]
     for x in range(2):
         is_have_weight = x < len(vertex.groups)
         # store bone weight
         vgroup_weight = is_have_weight and vertex.groups[x].weight or 0.0
-        weight_string += ' %f,' % vgroup_weight
+        weight_vector[x] = vgroup_weight
         # find bone in pst animation bones list
         if is_have_weight:
             weight_name = mesh_groups_list[vertex.groups[x].group].name
@@ -113,10 +110,8 @@ def add_vertex_weight_string(vertex, mesh):
                     break
                 else:
                     bone_index += 1
-            weight_string += ' %.1f,' % bone_index
-        else:
-            weight_string += ' 0.0,'
-    return weight_string
+            weight_vector[x + 2] = bone_index
+    return " %f, %f, %.1f, %.1f" % (weight_vector[0], weight_vector[1], weight_vector[2], weight_vector[3])
 
 # export one object, using vertex normal, rendering more smooth.
 def do_export_object(context, props, me_ob, xmlRoot):
@@ -291,14 +286,14 @@ def do_export_object(context, props, me_ob, xmlRoot):
     return True
 
 #export mesh, maybe have more objects
-def do_export_skeleton(context, thearmature, filepath):
+def do_export_skeleton(context, props, thearmature, filepath):
     context.scene.objects.active    = thearmature
     # return null ifno armature or no data
     if thearmature.animation_data == None:
         print("None actions data Set! skipping...")
         return
 
-    pd_bones_list = [] # clear cache, may add to next export file
+    del pd_bones_list[:] # clear cache, may add to next export file
     bpy.ops.object.mode_set(mode='OBJECT')
     context.scene.frame_set(context.scene.frame_start)
     # write file head
@@ -311,6 +306,10 @@ def do_export_skeleton(context, thearmature, filepath):
 
         # format transform, add to bone
         tsm =  mathutils.Matrix(w_matrix) * mathutils.Matrix(bone.matrix_local)  #reversed order of multiplication from 2.4 to 2.5!!! ARRRGGG
+        if props.rot_x90:
+            # if using Y - up, rotate X to reset
+            mat_x90 = mathutils.Matrix.Rotation(math.pi/2, 4, 'X')
+            tsm = tsm * mat_x90
         tsmText = ''
         for x in range(4):
             for y in range(4):
@@ -344,8 +343,9 @@ def do_export_skeleton(context, thearmature, filepath):
             continue
         # apply action to armature and update scene
         # note if loop all actions that is not armature it will override and will break armature animation.
-        thearmature.animation_data.action = arm_action
-        context.scene.update()
+        # I dont't know why add this code bleow, it will casue object error
+        # thearmature.animation_data.action = arm_action
+        # context.scene.update()
 
         # min/max frames define range
         framemin, framemax  = arm_action.frame_range
@@ -376,6 +376,10 @@ def do_export_skeleton(context, thearmature, filepath):
                     pose_bone_parent_matrix = mathutils.Matrix(pose_bone.parent.matrix)
                     pose_bone_matrix        = pose_bone_parent_matrix.inverted() * pose_bone_matrix
 
+                # if using Y - up, rotate X to reset
+                if props.rot_x90:
+                    mat_x90 = mathutils.Matrix.Rotation(math.pi/2, 4, 'X')
+                    pose_bone_matrix = pose_bone_matrix * mat_x90
                 translate = pose_bone_matrix.to_translation()
                 rotation  = pose_bone_matrix.to_quaternion().normalized()
                 scale  = pose_bone_matrix.to_scale()
@@ -481,7 +485,7 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
         if armature and props.export_pst:
             pstpath = bpy.path.ensure_ext(filepath, ".pst")
             pstname = os.path.basename(pstpath)
-            exported = do_export_skeleton(context, armature, pstpath)
+            exported = do_export_skeleton(context, props, armature, pstpath)
             print('Export skeleton file:%s' % pstpath)
         # export mesh
         exported = do_export_mesh(context, props, meshes, filepath, pstname)

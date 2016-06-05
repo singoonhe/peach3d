@@ -84,13 +84,20 @@ namespace Peach3D
             vec4 vMtX = vec4(0.0);
             vec4 vMtY = vec4(0.0);
             vec4 vMtZ = vec4(0.0);
+            bool isUsedBones = false;
             for (int i = 0; i < 2; ++i){
                 if (pd_skeleton[i] > 0.0) {
                     int boneIndex = int(pd_skeleton[i + 2]) * 3;
                     vMtX += pd_boneMatrix[boneIndex] * pd_skeleton[i];
                     vMtY += pd_boneMatrix[boneIndex + 1] * pd_skeleton[i];
                     vMtZ += pd_boneMatrix[boneIndex + 2] * pd_skeleton[i];
+                    isUsedBones = true;
                 }
+            }
+            if (!isUsedBones) {
+                vMtX.x = 1.0;
+                vMtY.y = 1.0;
+                vMtZ.z = 1.0;
             }
             vec4 resPos = attribPos;
             resPos.x = dot(attribPos, vMtX);
