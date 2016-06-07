@@ -46,9 +46,20 @@ namespace Peach3D
         if (transformEle) {
             // create new Bone
             Bone* newBone = new Bone(boneEle->Attribute("name"), atoi(boneEle->Attribute("index")));
-            Matrix4 transform;
-            sscanf(transformEle->GetText(), "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", transform.mat, transform.mat + 1, transform.mat + 2, transform.mat + 3, transform.mat + 4, transform.mat + 5, transform.mat + 6, transform.mat + 7, transform.mat + 8, transform.mat + 9, transform.mat + 10, transform.mat + 11, transform.mat + 12, transform.mat + 13, transform.mat + 14, transform.mat + 15);
-            newBone->setOriginTransform(transform);
+            Quaternion rotate;
+            sscanf(transformEle->GetText(), "%f,%f,%f,%f", &rotate.x, &rotate.y, &rotate.z, &rotate.w);
+            Vector3 translate, scale;
+            auto scaleEle = transformEle->NextSiblingElement();
+            sscanf(scaleEle->GetText(), "%f,%f,%f", &scale.x, &scale.y, &scale.z);
+            auto translateEle = scaleEle->NextSiblingElement();
+            sscanf(translateEle->GetText(), "%f,%f,%f", &translate.x, &translate.y, &translate.z);
+            // calc inverse transform
+            Matrix4 transformMat = Matrix4::createRotationQuaternion(rotate);
+            transformMat = Matrix4::createScaling(scale) * transformMat;
+            transformMat = Matrix4::createTranslation(translate) * transformMat;
+            Matrix4 outMat;
+            transformMat.getInverse(&outMat);
+            newBone->setInverseTransform(outMat);
             // add new bone to parent
             if (parent) {
                 parent->addChild(newBone);

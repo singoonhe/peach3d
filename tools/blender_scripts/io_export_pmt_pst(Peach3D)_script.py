@@ -127,7 +127,7 @@ def do_export_object(context, props, me_ob, xmlRoot):
 
     # is need convert to world space
     if props.world_space:
-        mesh.transform(ob.matrix_world)
+        mesh.transform(me_ob.matrix_world)
     # set rotate x 90 degree
     if props.rot_x90:
         mat_x90 = mathutils.Matrix.Rotation(-math.pi/2, 4, 'X')
@@ -299,32 +299,31 @@ def do_export_skeleton(context, props, thearmature, filepath):
     # write file head
     xmlRoot = ET.Element("Skeleton", version="0.1")
 
-    w_matrix = thearmature.matrix_world
-    def do_export_bone(bone, xmlParent, parent = None):
-        if (parent and not bone.parent.name==parent.name):
-            return #only catch direct children
+    def do_export_bone(bone, xmlParent):
+        # calc parented bone transform
+        if bone.parent != None:
+            rotation    = bone.matrix.to_quaternion()
+            quat_parent = bone.parent.matrix.to_quaternion().inverted()
+            parent_head = quat_parent * bone.parent.head
+            parent_tail = quat_parent * bone.parent.tail
+            translate   = (parent_tail - parent_head) + bone.head
+            scale       = bone.matrix.to_scale()
+        # calc root bone transform
+        else:
+            translate   = bone.head             # ARMATURE OBJECT Location
+            rotation    = bone.matrix.to_quaternion()
+            scale       = bone.matrix.to_scale()
 
-        # format transform, add to bone
-        tsm =  mathutils.Matrix(w_matrix) * mathutils.Matrix(bone.matrix_local)  #reversed order of multiplication from 2.4 to 2.5!!! ARRRGGG
-        if props.rot_x90:
-            # if using Y - up, rotate X to reset
-            mat_x90 = mathutils.Matrix.Rotation(math.pi/2, 4, 'X')
-            tsm = tsm * mat_x90
-        tsmText = ''
-        for x in range(4):
-            for y in range(4):
-                tsmText = tsmText + '%f' % tsm[x][y]
-                if x != 3 or y != 3:
-                    tsmText = tsmText + ', '
         # write bone to xml
         boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name, index='%d' % len(pd_bones_list))
-        ET.SubElement(boneElem, "Transform").text = tsmText
-        # store bone to list for weight
+        ET.SubElement(boneElem, "Rotation").text = '%f, %f, %f, %f' % (rotation.x, rotation.y, rotation.z, rotation.w)
+        ET.SubElement(boneElem, "Scale").text = '%f, %f, %f' % (scale.x, scale.y, scale.z)
+        ET.SubElement(boneElem, "Translation").text = '%f, %f, %f' % (translate.x, translate.y, translate.z)        # store bone to list for weight
         pd_bones_list.append(bone)
         # add children
         if( bone.children ):
             for child in bone.children:
-                do_export_bone(child, boneElem, bone)
+                do_export_bone(child, boneElem)
 
     # export all bones
     for b in thearmature.data.bones:
@@ -370,7 +369,7 @@ def do_export_skeleton(context, props, thearmature, filepath):
 
             frameEle = ET.SubElement(armEle, "KeyFrame", time='%f' % (i/anim_rate))
             for pose_bone in pose_bones_list:
-                pose_bone_matrix    = mathutils.Matrix(pose_bone.matrix)
+                pose_bone_matrix = mathutils.Matrix(pose_bone.matrix)
                 # convert bone matrix from parent
                 if pose_bone.parent != None:
                     pose_bone_parent_matrix = mathutils.Matrix(pose_bone.parent.matrix)

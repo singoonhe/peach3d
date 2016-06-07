@@ -69,6 +69,8 @@ namespace Peach3D
             auto scaleM = Matrix4::createScaling(calcS);
             auto translateM = Matrix4::createTranslation(calcT);
             mCacheMatrix = translateM * scaleM * rotateM;
+            // current matrix = transform * pose matrix, transform = current matrix * pose inverse matrix
+            mCacheMatrix = mCacheMatrix * mInvTransform;
             
             // multiply parent bone matrix
             if (mParentBone) {

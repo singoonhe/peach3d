@@ -34,8 +34,8 @@ namespace Peach3D
         int getIndex() { return mIndex; }
         Bone* getParentBone() { return mParentBone; }
         
-        /** Set bone origin transform when import file. */
-        void setOriginTransform(const Matrix4& transform) { mTransform = transform; }
+        /** Set bone pose inverse transform when import file. */
+        void setInverseTransform(const Matrix4& transform) { mInvTransform = transform; }
         /** Add new frame for animation when import file. */
         void addKeyFrame(const char* name, const BoneKeyFrame& frame) { mAnimationFrames[name].push_back(frame); }
         
@@ -58,7 +58,7 @@ namespace Peach3D
     private:
         std::string mName;
         int         mIndex; // index of animation in all bones
-        Matrix4     mTransform;
+        Matrix4     mInvTransform;  // inverse of bone transform
         Matrix4     mCacheMatrix;
         Bone*       mParentBone;
         SceneNode*  mAttachedNode;
