@@ -374,20 +374,15 @@ def do_export_skeleton(context, props, thearmature, filepath):
                 if pose_bone.parent != None:
                     pose_bone_parent_matrix = mathutils.Matrix(pose_bone.parent.matrix)
                     pose_bone_matrix        = pose_bone_parent_matrix.inverted() * pose_bone_matrix
-
-                # if using Y - up, rotate X to reset
-                if props.rot_x90:
-                    mat_x90 = mathutils.Matrix.Rotation(math.pi/2, 4, 'X')
-                    pose_bone_matrix = pose_bone_matrix * mat_x90
                 translate = pose_bone_matrix.to_translation()
                 rotation  = pose_bone_matrix.to_quaternion().normalized()
                 scale  = pose_bone_matrix.to_scale()
 
                 # set x,y,z to negative (rotate in other direction) if have parent
-                if pose_bone.parent != None:
-                    rotation.x  = -rotation.x
-                    rotation.y  = -rotation.y
-                    rotation.z  = -rotation.z
+                # if pose_bone.parent != None:
+                #     rotation.x  = -rotation.x
+                #     rotation.y  = -rotation.y
+                #     rotation.z  = -rotation.z
                 # add bones data
                 frameBoneEle = ET.SubElement(frameEle, "Bone", name=pose_bone.name)
                 ET.SubElement(frameBoneEle, "Rotation").text = '%f, %f, %f, %f' % (rotation.x, rotation.y, rotation.z, rotation.w)

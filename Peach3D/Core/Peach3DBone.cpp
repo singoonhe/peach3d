@@ -70,7 +70,7 @@ namespace Peach3D
             auto translateM = Matrix4::createTranslation(calcT);
             mCacheMatrix = translateM * scaleM * rotateM;
             // current matrix = transform * pose matrix, transform = current matrix * pose inverse matrix
-            mCacheMatrix = mCacheMatrix * mInvTransform;
+            mCacheMatrix = mInvTransform * mCacheMatrix;
             
             // multiply parent bone matrix
             if (mParentBone) {
