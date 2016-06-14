@@ -303,6 +303,9 @@ def do_export_skeleton(context, props, thearmature, filepath):
         # calc parented bone transform
         if bone.parent != None:
             rotation    = bone.matrix.to_quaternion()
+            rotation.x = -rotation.x;
+            rotation.y = -rotation.y;
+            rotation.z = -rotation.z;
             quat_parent = bone.parent.matrix.to_quaternion().inverted()
             parent_head = quat_parent * bone.parent.head
             parent_tail = quat_parent * bone.parent.tail
@@ -379,10 +382,10 @@ def do_export_skeleton(context, props, thearmature, filepath):
                 scale  = pose_bone_matrix.to_scale()
 
                 # set x,y,z to negative (rotate in other direction) if have parent
-                # if pose_bone.parent != None:
-                #     rotation.x  = -rotation.x
-                #     rotation.y  = -rotation.y
-                #     rotation.z  = -rotation.z
+                if pose_bone.parent != None:
+                    rotation.x  = -rotation.x
+                    rotation.y  = -rotation.y
+                    rotation.z  = -rotation.z
                 # add bones data
                 frameBoneEle = ET.SubElement(frameEle, "Bone", name=pose_bone.name)
                 ET.SubElement(frameBoneEle, "Rotation").text = '%f, %f, %f, %f' % (rotation.x, rotation.y, rotation.z, rotation.w)

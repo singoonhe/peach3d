@@ -54,9 +54,10 @@ namespace Peach3D
             auto translateEle = scaleEle->NextSiblingElement();
             sscanf(translateEle->GetText(), "%f,%f,%f", &translate.x, &translate.y, &translate.z);
             // calc inverse transform
-            Matrix4 transformMat = Matrix4::createRotationQuaternion(rotate);
-            transformMat = Matrix4::createScaling(scale) * transformMat;
-            transformMat = Matrix4::createTranslation(translate) * transformMat;
+            auto rotateM = Matrix4::createRotationQuaternion(rotate);
+            auto scaleM = Matrix4::createScaling(scale);
+            auto translateM = Matrix4::createTranslation(translate);
+            Matrix4 transformMat = scaleM * rotateM * translateM;
             Matrix4 outMat;
             transformMat.getInverse(&outMat);
             newBone->setInverseTransform(outMat);

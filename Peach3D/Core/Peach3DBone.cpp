@@ -68,7 +68,7 @@ namespace Peach3D
             auto rotateM = Matrix4::createRotationQuaternion(calcR);
             auto scaleM = Matrix4::createScaling(calcS);
             auto translateM = Matrix4::createTranslation(calcT);
-            mCacheMatrix = translateM * scaleM * rotateM;
+            mCacheMatrix = scaleM * rotateM * translateM;
             // current matrix = transform * pose matrix, transform = current matrix * pose inverse matrix
             mCacheMatrix = mInvTransform * mCacheMatrix;
             
