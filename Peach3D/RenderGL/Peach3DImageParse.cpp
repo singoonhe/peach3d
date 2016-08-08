@@ -8,6 +8,7 @@
 
 #include "Peach3DImageParse.h"
 #include "Peach3DLogPrinter.h"
+#include "Peach3DResourceManager.h"
 #include "libjpeg/jpeglib.h"
 #include "libpng/png.h"
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX11
@@ -36,14 +37,14 @@ namespace Peach3D
         longjmp(pderr->setjmp_buffer, 1);
     }
     
-    uchar* jpegImageDataParse(void* orignData, uint orignSize, uint* outSize, TextureFormat* format, uint* width, uint* height)
+    void* jpegImageDataParse(void* orignData, uint orignSize)
     {
         /* these are standard libjpeg structures for reading(decompression) */
         struct jpeg_decompress_struct cinfo;
         /* libjpeg data structure for storing one row, that is, scanline of an image */
         JSAMPROW row_pointer = nullptr;
         
-        uchar* outData = nullptr;
+        TextureLoaderRes* outData = new TextureLoaderRes();
         struct PdJpegErrorMgr jerr;
         do {
             /* We set up the normal JPEG error routines, then override error_exit. */
@@ -64,30 +65,30 @@ namespace Peach3D
             
             // we only support RGB or grayscale
             if (cinfo.jpeg_color_space == JCS_GRAYSCALE) {
-                *format = TextureFormat::eI8;
+                outData->format = TextureFormat::eI8;
             }
             else {
                 cinfo.out_color_space = JCS_RGB;
-                *format = TextureFormat::eRGB8;
+                outData->format = TextureFormat::eRGB8;
             }
-            IF_BREAK(*format == TextureFormat::eUnknow, "Unsupport jpeg format!!");
+            IF_BREAK(outData->format == TextureFormat::eUnknow, "Unsupport jpeg format!!");
             
             /* Start decompression jpeg here */
             jpeg_start_decompress( &cinfo );
             
             /* init image info */
-            *width  = cinfo.output_width;
-            *height = cinfo.output_height;
+            outData->width  = cinfo.output_width;
+            outData->height = cinfo.output_height;
 
             // malloc buffer to receive data
-            uint widthByte = (*width) * (cinfo.output_components);
+            uint widthByte = (outData->width) * (cinfo.output_components);
             // glTexImage2d requires rows to be 4-byte aligned
             widthByte += 3 - ((widthByte-1) % 4);
             // malloc return buffer
             row_pointer = static_cast<JSAMPROW>(malloc(sizeof(unsigned char) * widthByte));
-            *outSize = widthByte * cinfo.output_height;
-            unsigned long location = *outSize - widthByte;
-            outData = static_cast<unsigned char*>(malloc((*outSize) * sizeof(unsigned char)));
+            outData->size = widthByte * cinfo.output_height;
+            unsigned long location = outData->size - widthByte;
+            outData->buffer = static_cast<unsigned char*>(malloc((outData->size) * sizeof(unsigned char)));
             
             /* now actually read the jpeg into the raw buffer */
             /* read one scan line at a time */
@@ -133,14 +134,14 @@ namespace Peach3D
         }
     }
     
-    uchar* pngImageDataParse(void* orignData, uint orignSize, uint* outSize, TextureFormat* format, uint* width, uint* height)
+    void* pngImageDataParse(void* orignData, uint orignSize)
     {
         // length of bytes to check if it is a valid png file
 #define PNGSIGSIZE  8
         png_structp     png_ptr     =   0;
         png_infop       info_ptr    = 0;
         
-        uchar* outData = nullptr;
+        TextureLoaderRes* outData = new TextureLoaderRes();
         do {
             // init png_struct
             png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
@@ -164,8 +165,8 @@ namespace Peach3D
             // read png file info
             png_read_info(png_ptr, info_ptr);
             
-            *width = png_get_image_width(png_ptr, info_ptr);
-            *height = png_get_image_height(png_ptr, info_ptr);
+            outData->width = png_get_image_width(png_ptr, info_ptr);
+            outData->height = png_get_image_height(png_ptr, info_ptr);
             png_byte bit_depth = png_get_bit_depth(png_ptr, info_ptr);
             png_uint_32 color_type = png_get_color_type(png_ptr, info_ptr);
             
@@ -198,35 +199,35 @@ namespace Peach3D
             int pixelByte = 1;
             switch (color_type) {
                 case PNG_COLOR_TYPE_GRAY:
-                    *format = TextureFormat::eI8;
+                    outData->format = TextureFormat::eI8;
                     break;
                 case PNG_COLOR_TYPE_GRAY_ALPHA:
-                    *format = TextureFormat::eA8I8;
+                    outData->format = TextureFormat::eA8I8;
                     pixelByte = 2;
                     break;
                 case PNG_COLOR_TYPE_RGB:
                 case PNG_COLOR_TYPE_PALETTE:
-                    *format = TextureFormat::eRGB8;
+                    outData->format = TextureFormat::eRGB8;
                     pixelByte = 3;
                     break;
                 case PNG_COLOR_TYPE_RGB_ALPHA:
-                    *format = TextureFormat::eRGBA8;
+                    outData->format = TextureFormat::eRGBA8;
                     pixelByte = 4;
                     break;
                 default:
                     break;
             }
-            IF_BREAK(*format == TextureFormat::eUnknow, "Unsupport png format!!");
+            IF_BREAK(outData->format == TextureFormat::eUnknow, "Unsupport png format!!");
             
-            uint widthByte = (*width) * (pixelByte);
+            uint widthByte = (outData->width) * (pixelByte);
             // glTexImage2d requires rows to be 4-byte aligned
             widthByte += 3 - ((widthByte-1) % 4);
-            *outSize = widthByte * (*height);
+            outData->size = widthByte * (outData->height);
             // read png data
-            png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * (*height));
-            outData = static_cast<unsigned char*>(malloc((*outSize) * sizeof(unsigned char)));
-            for(int y = 0; y < *height; y++) {
-                row_pointers[y] = outData + widthByte * (*height - y - 1);
+            png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * (outData->height));
+            outData->buffer = static_cast<unsigned char*>(malloc((outData->size) * sizeof(unsigned char)));
+            for(int y = 0; y < outData->height; y++) {
+                row_pointers[y] = outData->buffer + widthByte * (outData->height - y - 1);
             }
             png_read_image(png_ptr, row_pointers);
             

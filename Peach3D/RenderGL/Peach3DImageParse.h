@@ -15,9 +15,9 @@
 namespace Peach3D
 {
     // parse jpeg data to RGB/RGBA/I8
-    uchar* jpegImageDataParse(void* orignData, uint orignSize, uint* outSize, TextureFormat* format, uint* width, uint* height);
+    void* jpegImageDataParse(void* orignData, uint orignSize);
     // parse png data to RGB/RGBA/I8/I8A8
-    uchar* pngImageDataParse(void* orignData, uint orignSize, uint* outSize, TextureFormat* format, uint* width, uint* height);
+    void* pngImageDataParse(void* orignData, uint orignSize);
 }
 
 #endif // PEACH3D_IMAGEPARSE_H

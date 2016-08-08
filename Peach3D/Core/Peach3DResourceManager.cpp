@@ -44,6 +44,12 @@ namespace Peach3D
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Bone, 4 * sizeof(float), DefaultAttrLocation::eSkeleton, pdShaderSkeletonAttribName));
         }
         /* add default search dir in platform instance, most platform use different dir */
+        
+        // registe some resource loader function
+#if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
+        registerResourceLoaderFunction("jpg", jpegImageDataParse);
+        registerResourceLoaderFunction("png", pngImageDataParse);
+#endif
     }
     
     ResourceManager::~ResourceManager()
@@ -219,21 +225,21 @@ namespace Peach3D
     }
 
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
-    uchar* ResourceManager::parseImageData(void* orignData, uint orignSize, uint* outSize, TextureFormat* format, uint* width, uint* height, TextureDataStatus* status)
+    TextureLoaderRes* ResourceManager::parseImageData(void* orignData, uint orignSize)
     {
-        uchar* texBuffer = nullptr;
+        TextureLoaderRes* res = nullptr;
         static const unsigned char JPG_SOI[] = { 0xFF, 0xD8 };
         static const unsigned char PNG_SIGNATURE[] = { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a };
         if (memcmp(orignData, JPG_SOI, 2) == 0) {
             // add jpeg texture file
-            texBuffer = jpegImageDataParse(orignData, (uint)orignSize, outSize, format, width, height);
+            res = (TextureLoaderRes*)mResourceLoaders["jpg"](orignData, orignSize);
         }
         else if (memcmp(PNG_SIGNATURE, orignData, sizeof(PNG_SIGNATURE)) == 0) {
             // add png texture file
-            texBuffer = pngImageDataParse(orignData, (uint)orignSize, outSize, format, width, height);
+            res = (TextureLoaderRes*)mResourceLoaders["png"](orignData, orignSize);
         }
         else {
-            Peach3DWarnLog("Texture size %d data format not supported!", orignSize);
+            Peach3DWarnLog("Texture size %d data format not supported!", orignData);
         }
         /*
         else if (strncmp(name, "DDS", 3) == 0)
@@ -241,7 +247,7 @@ namespace Peach3D
             texBuffer = (uchar*)orignData;
             dataStatus = TextureDataStatus::eCompressed;
         }*/
-        return texBuffer;
+        return res;
     }
 #endif
     
@@ -259,21 +265,16 @@ namespace Peach3D
         texture = IRender::getSingletonPtr()->createTexture(name);
         isTexDataValid = texture->setTextureData(data, (uint)size, TextureDataStatus::eEncoded);
 #else
-        TextureDataStatus dataStatus = TextureDataStatus::eDecoded;
-        uchar* texBuffer = nullptr;
-        TextureFormat texFormat = TextureFormat::eUnknow;
-        uint texSize = 0, texWidth = 0, texHeight = 0;
-        texBuffer = parseImageData(data, (uint)size, &texSize, &texFormat, &texWidth, &texHeight, &dataStatus);
-        
+        TextureLoaderRes* res = parseImageData(data, size);
         // create texture if parse data success
-        if (texBuffer && texSize > 0) {
+        if (res && res->size > 0) {
             texture = IRender::getSingletonPtr()->createTexture(name);
-            texture->setFormat(texFormat);
-            texture->setWidth(texWidth);
-            texture->setHeight(texHeight);
+            texture->setFormat(res->format);
+            texture->setWidth(res->width);
+            texture->setHeight(res->height);
             // create texture with buffer
-            isTexDataValid = texture->setTextureData(texBuffer, texSize, dataStatus);
-            free(texBuffer);
+            isTexDataValid = texture->setTextureData(res->buffer, res->size, res->status);
+            delete res;
         }
 #endif
         // texture will auto release if not valid
@@ -331,31 +332,31 @@ namespace Peach3D
         uint intsList[6] = { sizeList[0], sizeList[1], sizeList[2], sizeList[3], sizeList[4], sizeList[5]};
         isTexDataValid = texture->setTextureData(dataList, intsList, TextureDataStatus::eEncoded);
 #else
-        TextureDataStatus dataStatus = TextureDataStatus::eDecoded;
-        uchar* texBuffer[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+        TextureLoaderRes* texRes[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+        void* texBuffer[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
         uint texSize[6] = {0, 0, 0, 0, 0, 0};
-        TextureFormat texFormat = TextureFormat::eUnknow;
-        uint texWidth = 0, texHeight = 0;
         bool isAllValid = true;
         for (auto i = 0; i < 6; ++i) {
-            texBuffer[i] = parseImageData(dataList[i], (uint)sizeList[i], &texSize[i], &texFormat, &texWidth, &texHeight, &dataStatus);
-            if (!texBuffer[i] || !texSize[i]) {
+            texRes[i] = parseImageData(dataList[i], (uint)sizeList[i]);
+            if (!texRes[i] || !texRes[i]->size) {
                 isAllValid = false;
                 break;
             }
+            texBuffer[i] = texRes[i]->buffer;
+            texSize[i] = texRes[i]->size;
         }
         // create texture if parse all data success
         if (isAllValid) {
             texture = IRender::getSingletonPtr()->createTexture(name);
-            texture->setFormat(texFormat);
-            texture->setWidth(texWidth);
-            texture->setHeight(texHeight);
+            texture->setFormat(texRes[0]->format);
+            texture->setWidth(texRes[0]->width);
+            texture->setHeight(texRes[0]->height);
             // create texture with six chunk buffers
-            isTexDataValid = texture->setTextureData((void**)texBuffer, texSize, dataStatus);
+            isTexDataValid = texture->setTextureData((void**)texBuffer, texSize, texRes[0]->status);
         }
         for (auto i = 0; i < 6; ++i) {
-            if (texBuffer[i]) {
-                free(texBuffer[i]);
+            if (texRes[i]) {
+                delete texRes[i];
             }
         }
 #endif

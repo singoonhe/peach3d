@@ -18,6 +18,28 @@
 
 namespace Peach3D
 {
+    // redefine resource parseing function
+    /* Pass resource data and length, parse it and return type resource struct. */
+    typedef std::function<void*(void *data, ulong length)> ResourceLoaderFunction;
+
+    struct PEACH3D_DLL TextureLoaderRes {
+        TextureLoaderRes() :
+        status(TextureDataStatus::eDecoded),
+        buffer(nullptr),
+        format(TextureFormat::eUnknow),
+        size(0),
+        width(0),
+        height(0)
+        {}
+        ~TextureLoaderRes() { if (buffer) { free(buffer); } }
+        TextureDataStatus status;   // texture data status
+        TextureFormat format;       // texture format
+        uchar* buffer;              // texture data
+        uint size;                  // texture data size
+        uint width;                 // texture width
+        uint height;                // texture height
+    };
+
     // vertex attr info. Include type, shader name, vertex stride...
     struct PEACH3D_DLL VertexAttrInfo
     {
@@ -30,7 +52,7 @@ namespace Peach3D
     };
 
     class PEACH3D_DLL ResourceManager : public Singleton < ResourceManager >
-    {        
+    {
     public:
         /** Create texture from file, return texture if file loaded. */
         TexturePtr addTexture(const char* file);
@@ -57,16 +79,16 @@ namespace Peach3D
          * This function will auto check RTT and release unsed texture.
          */
         const std::vector<TexturePtr>& getRenderTextureList();
-        
+
         /** Create texture frames from file, return frame list in param.
          * Current support TexturePacker general xml export format.
          */
         bool addTextureFrames(const char* file, std::vector<TextureFrame>* outList);
-        /** Get texture frame from cache by name, return frame in param. 
+        /** Get texture frame from cache by name, return frame in param.
          * @params name Name must begin with '#', or return 'addTexture' result.
          */
         bool getTextureFrame(const char* name, TextureFrame* outFrame);
-        
+
         //! set default texture filter, this will effect textures load later.
         // anisotropic need ext in GL, linear will enabled if anisotropic not supported
         void setDefaultTextureFilter(TextureFilter filter) { mTexFilter = filter; }
@@ -76,7 +98,7 @@ namespace Peach3D
         void enableTextureMipMap(bool enabled) { mTexMipMapEnabled = enabled; }
         //! get is mipmap enabled
         bool isTextureMipMapEnabled() { return mTexMipMapEnabled; }
-        
+
         //! create mesh from file, return mesh if file loaded.
         MeshPtr addMesh(const char* file);
         //! create empty mesh
@@ -110,40 +132,45 @@ namespace Peach3D
         /** Get preset object program in Peach3D system, program will create if not find. */
         ProgramPtr getPresetProgram(const PresetProgramFeatures& feature);
         void deleteProgram(const ProgramPtr& program);
-        
+
         //! get file data and length, nullptr will return if file not exist
         //! Notice: you should free buffer after using.
         uchar* getFileData(const char* relativePath, ulong* size);
         //! set assert manager just for android
         void setAssetsManager(void* manager) { mAssetsManager=manager; }
-        /** Add a directory for file search. 
+        /** Add a directory for file search.
          * @params isBack Push new dir to back or front.
          */
         void addSearchDirectory(const char* dir, bool isBack = true);
         /** Reture all search directorys. */
         const std::vector<std::string>& getSearchDirectory() { return mSearchDirs; }
-        
+
         /** Get default vertex attr info list. */
         static const std::vector<VertexAttrInfo>& getVertexAttrInfoList() { return mVertexAttrList; }
         /** Purge texture and mesh which count is 1, no one hand it. */
         void purgeCachedData();
         
+        /** Registe resource loader function. */
+        void registerResourceLoaderFunction(const char* name, ResourceLoaderFunction func) { mResourceLoaders[name] = func; }
+        /** Unregiste resource loader function. */
+        void unregisterResourceLoaderFunction(const char* name) { mResourceLoaders[name] = nullptr; }
+
     protected:
         /** Read file data */
         uchar* readFileData(const char* fullPath, ulong* size);
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
         /** Parse image data, return decoded or compressed image info. */
-        uchar* parseImageData(void* orignData, uint orignSize, uint* outSize, TextureFormat* format, uint* width, uint* height, TextureDataStatus* status);
+        TextureLoaderRes* parseImageData(void* orignData, uint orignSize);
 #endif
         
     private:
         ResourceManager();
         ~ResourceManager();
-        
+
         ShaderCode*     mPresetShader;      // preset shader codes
         TextureFilter   mTexFilter;         // texture filter, default nearest
         bool            mTexMipMapEnabled;  // texture is mipmap enabled, default false
-        
+
         std::vector<std::string>            mSearchDirs;    // resource search dir list
         std::map<std::string, MeshPtr>      mMeshMap;       // mesh list
         std::map<std::string, SkeletonPtr>  mSkeletonMap;   // skeleton list
@@ -152,8 +179,9 @@ namespace Peach3D
         std::map<std::string, TexturePtr>   mTextureMap;    // texture list
         std::vector<TexturePtr>             mRTTList;       // RTT texture list, have no name
         std::map<std::string, std::vector<TextureFrame>> mTexFrameMap;  // texture frame cache list
-        
-        static std::vector<VertexAttrInfo> mVertexAttrList; // all vertex attr info, same in all objects
+
+        std::map<std::string, ResourceLoaderFunction>   mResourceLoaders;   // all resource loader function list
+        static std::vector<VertexAttrInfo>              mVertexAttrList;    // all vertex attr info, same in all objects
         void*   mAssetsManager; // save read android apk assert manager
         friend class IPlatform; //! IPlatform can call destructor function.
     };
