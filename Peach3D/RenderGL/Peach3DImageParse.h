@@ -11,13 +11,14 @@
 
 #include "Peach3DCompile.h"
 #include "Peach3DITexture.h"
+#include "Peach3DTypes.h"
 
 namespace Peach3D
 {
     // parse jpeg data to RGB/RGBA/I8
-    void* jpegImageDataParse(void* orignData, uint orignSize);
+    void* jpegImageDataParse(const ResourceLoaderInput& input);
     // parse png data to RGB/RGBA/I8/I8A8
-    void* pngImageDataParse(void* orignData, uint orignSize);
+    void* pngImageDataParse(const ResourceLoaderInput& input);
 }
 
 #endif // PEACH3D_IMAGEPARSE_H

@@ -10,8 +10,8 @@
 
 namespace Peach3D
 {
-    bool PmbLoader::pmbMeshDataParse(uchar* orignData, ulong length, const std::string& dir, const MeshPtr& dMesh)
+    void* PmbLoader::pmbMeshDataParse(const ResourceLoaderInput& input)
     {
-        return true;
+        return input.handler;
     }
 }

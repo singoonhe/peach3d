@@ -15,12 +15,13 @@
 #include "Peach3DMesh.h"
 #include "Peach3DParticle.h"
 #include "Peach3DShaderCode.h"
+#include "Peach3DTypes.h"
 
 namespace Peach3D
 {
     // redefine resource parseing function
     /* Pass resource data and length, parse it and return type resource struct. */
-    typedef std::function<void*(void *data, ulong length)> ResourceLoaderFunction;
+    typedef std::function<void*(const ResourceLoaderInput& input)> ResourceLoaderFunction;
 
     struct PEACH3D_DLL TextureLoaderRes {
         TextureLoaderRes() :

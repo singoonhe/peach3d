@@ -50,6 +50,9 @@ namespace Peach3D
         registerResourceLoaderFunction("jpg", jpegImageDataParse);
         registerResourceLoaderFunction("png", pngImageDataParse);
 #endif
+        registerResourceLoaderFunction("obj", ObjLoader::objMeshDataParse);
+        registerResourceLoaderFunction("pmt", PmtLoader::pmtMeshDataParse);
+        registerResourceLoaderFunction("pmb", PmbLoader::pmbMeshDataParse);
     }
     
     ResourceManager::~ResourceManager()
@@ -232,11 +235,11 @@ namespace Peach3D
         static const unsigned char PNG_SIGNATURE[] = { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a };
         if (memcmp(orignData, JPG_SOI, 2) == 0) {
             // add jpeg texture file
-            res = (TextureLoaderRes*)mResourceLoaders["jpg"](orignData, orignSize);
+            res = (TextureLoaderRes*)mResourceLoaders["jpg"](ResourceLoaderInput(orignData, orignSize));
         }
         else if (memcmp(PNG_SIGNATURE, orignData, sizeof(PNG_SIGNATURE)) == 0) {
             // add png texture file
-            res = (TextureLoaderRes*)mResourceLoaders["png"](orignData, orignSize);
+            res = (TextureLoaderRes*)mResourceLoaders["png"](ResourceLoaderInput(orignData, orignSize));
         }
         else {
             Peach3DWarnLog("Texture size %d data format not supported!", orignData);
@@ -458,21 +461,15 @@ namespace Peach3D
                     ext[i] = tolower(ext[i]);
                 }
                 // load obj file data, add to mesh
-                bool loadResult = false;
+                void* meshRes = nullptr;
                 std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
-                if (ext.compare("obj") == 0) {
-                    loadResult = ObjLoader::objMeshDataParse(fileData, fileLength, fileDir.c_str(), fileMesh);
-                }
-                else if (ext.compare("pmt") == 0) {
-                    loadResult = PmtLoader::pmtMeshDataParse(fileData, fileLength, fileDir.c_str(), fileMesh);
-                }
-                else if (ext.compare("pmb") == 0) {
-                    loadResult = PmbLoader::pmbMeshDataParse(fileData, fileLength, fileDir.c_str(), fileMesh);
+                if (mResourceLoaders[ext]) {
+                    meshRes = mResourceLoaders[ext](ResourceLoaderInput(fileData, fileLength, &fileMesh, fileDir.c_str()));
                 }
                 else {
                     Peach3DLog(LogLevel::eError, "Did't support the mesh format \"%s\"", ext.c_str());
                 }
-                if (loadResult) {
+                if (meshRes) {
                     Peach3DLog(LogLevel::eInfo, "Load mesh from file \"%s\" success", file);
                 }
                 // release memory data

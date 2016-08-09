@@ -13,6 +13,7 @@
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
 #include "Peach3DMesh.h"
+#include "Peach3DTypes.h"
 
 namespace Peach3D
 {
@@ -48,7 +49,7 @@ namespace Peach3D
         
     public:
         // parse .obj mesh data
-        static bool objMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh);
+        static void* objMeshDataParse(const ResourceLoaderInput& input);
         
     private:
         // parse .obj vertex count, objInfoMap need be modified

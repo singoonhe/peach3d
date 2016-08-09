@@ -13,6 +13,7 @@
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
 #include "Peach3DMesh.h"
+#include "Peach3DTypes.h"
 #include "tinyxml2/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -22,7 +23,7 @@ namespace Peach3D
     {
     public:
         /* *.pmb is Peach3D Mesh Text file. */
-        static bool pmtMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh);
+        static void* pmtMeshDataParse(const ResourceLoaderInput& input);
         
     private:
         /* Read object data, include vertex/index/material. */

@@ -243,17 +243,17 @@ namespace Peach3D
         }
     }
     
-    bool ObjLoader::objMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh)
+    void* ObjLoader::objMeshDataParse(const ResourceLoaderInput& input)
     {
         std::string mtlFileName;
         uint meshPosCount = 0, meshNormalCount = 0, meshUVCount = 0;
         std::map<std::string, ObjDataInfo*> objInfoMap;
         // parse pos/normal/uv counts
-        objMeshVertexCountParse(orignData, objInfoMap, mtlFileName, meshPosCount, meshNormalCount, meshUVCount);
+        objMeshVertexCountParse((uchar*)input.data, objInfoMap, mtlFileName, meshPosCount, meshNormalCount, meshUVCount);
         
         // not have object or count not valid, return false
         if (objInfoMap.size() == 0 && meshPosCount > 0 && objInfoMap[0]->pointsIndexMap.size() > 0) {
-            return false;
+            return nullptr;
         }
         
         // malloc vertex buffer and index buffer
@@ -292,14 +292,15 @@ namespace Peach3D
         }
         
         // parse pos/normal/uv data
-        objMeshVertexDataParse(orignData, objInfoMap, meshPosCount, meshNormalCount, meshUVCount, &meshPosCache, &meshNormalCache, &meshUVCache);
+        objMeshVertexDataParse((uchar*)input.data, objInfoMap, meshPosCount, meshNormalCount, meshUVCount, &meshPosCache, &meshNormalCache, &meshUVCache);
         
+        MeshPtr* dMesh = (MeshPtr*)input.handler;
         // calc vertex format and index type
         for (auto iter : objInfoMap) {
             std::map<std::string, uint>& pointsIndexMap = iter.second->pointsIndexMap;
             if (pointsIndexMap.size() > 0 && iter.second->indexCount > 0) {
                 // create IObject
-                ObjectPtr obj = dMesh->createObject(iter.first.c_str());
+                ObjectPtr obj = (*dMesh)->createObject(iter.first.c_str());
                 
                 // fill vertex buffer
                 for (auto strPoint : pointsIndexMap) {
@@ -340,7 +341,7 @@ namespace Peach3D
         
         // read mtl file
         if (mtlFileName.size() > 0) {
-            readMtlFile(mtlFileName, dir, dMesh, objInfoMap);
+            readMtlFile(mtlFileName, input.dir, *dMesh, objInfoMap);
         }
         
         // free cache memory
@@ -356,7 +357,7 @@ namespace Peach3D
         if (meshUVCache) {
             free(meshUVCache);
         }
-        return true;
+        return dMesh;
     }
     
     void ObjLoader::readMtlFile(const std::string& mtlFile, const std::string& dir, const MeshPtr& dMesh, const std::map<std::string, ObjDataInfo*>& objInfoMap)

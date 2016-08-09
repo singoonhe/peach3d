@@ -103,6 +103,17 @@ namespace Peach3D
         Vector2         dim;        // label max content size
         TextVAlignment  imageVAlign; // image vertical alignment in label
     };
+    
+    // define resource loading data info
+    struct PEACH3D_DLL ResourceLoaderInput {
+        ResourceLoaderInput(void* _data, ulong _length, void* handler = nullptr, const char* _dir = nullptr) :
+        data(_data), length(_length), dir(_dir), handler(handler) {}
+        
+        void*   data;       // resource data
+        ulong   length;     // resource data size
+        const char* dir;    // resource local directory
+        void*   handler;    // used data handler
+    };
 }
 
 #endif

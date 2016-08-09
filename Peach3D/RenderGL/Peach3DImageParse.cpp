@@ -37,7 +37,7 @@ namespace Peach3D
         longjmp(pderr->setjmp_buffer, 1);
     }
     
-    void* jpegImageDataParse(void* orignData, uint orignSize)
+    void* jpegImageDataParse(const ResourceLoaderInput& input)
     {
         /* these are standard libjpeg structures for reading(decompression) */
         struct jpeg_decompress_struct cinfo;
@@ -59,7 +59,7 @@ namespace Peach3D
             /* setup decompression process and source, then read JPEG header */
             jpeg_create_decompress( &cinfo );
             /* Step specify data source */
-            jpeg_mem_src( &cinfo, (unsigned char *)orignData, orignSize );
+            jpeg_mem_src( &cinfo, (unsigned char *)input.data, input.length );
             /* reading the image header which contains image information */
             jpeg_read_header( &cinfo, TRUE );
             
@@ -134,7 +134,7 @@ namespace Peach3D
         }
     }
     
-    void* pngImageDataParse(void* orignData, uint orignSize)
+    void* pngImageDataParse(const ResourceLoaderInput& input)
     {
         // length of bytes to check if it is a valid png file
 #define PNGSIGSIZE  8
@@ -155,8 +155,8 @@ namespace Peach3D
             
             // set the read call back function
             tImageSource imageSource;
-            imageSource.data    = (unsigned char*)orignData;
-            imageSource.size    = orignSize;
+            imageSource.data    = (unsigned char*)input.data;
+            imageSource.size    = input.length;
             imageSource.offset  = 0;
             png_set_read_fn(png_ptr, &imageSource, pngReadCallback);
             

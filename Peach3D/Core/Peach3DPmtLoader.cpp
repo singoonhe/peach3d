@@ -14,11 +14,12 @@
 
 namespace Peach3D
 {
-    bool PmtLoader::pmtMeshDataParse(uchar* orignData, ulong length, const char* dir, const MeshPtr& dMesh)
+    void* PmtLoader::pmtMeshDataParse(const ResourceLoaderInput& input)
     {
         bool loadRes = false;
         XMLDocument readDoc;
-        if (readDoc.Parse((const char*)orignData, length) == XML_SUCCESS) {
+        MeshPtr* dMesh = (MeshPtr*)input.handler;
+        if (readDoc.Parse((const char*)input.data, input.length) == XML_SUCCESS) {
             do {
                 XMLElement* meshEle = readDoc.FirstChildElement("Mesh");
                 IF_BREAK(!meshEle, "Mesh file format error");
@@ -28,17 +29,17 @@ namespace Peach3D
                 if (nodeEle && strcmp(nodeEle->Name(), "Skeleton") == 0) {
                     // load skeleton if exist
                     auto ske = ResourceManager::getSingleton().addSkeleton(nodeEle->GetText());
-                    dMesh->bindSkeleton(ske);
+                    (*dMesh)->bindSkeleton(ske);
                     nodeEle = nodeEle->NextSiblingElement();
                 }
                 while (nodeEle) {
-                    PmtLoader::objDataParse(nodeEle, dir, dMesh);
+                    PmtLoader::objDataParse(nodeEle, input.dir, *dMesh);
                     nodeEle = nodeEle->NextSiblingElement();
                 }
                 loadRes = true;
             } while (0);
         }
-        return loadRes;
+        return loadRes ? input.handler : nullptr;
     }
     
     void PmtLoader::objDataParse(const XMLElement* objEle, const char* dir, const MeshPtr& dMesh)
