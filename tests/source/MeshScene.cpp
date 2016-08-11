@@ -7,6 +7,7 @@
 //
 
 #include "MeshScene.h"
+#include "C3tLoader.h"
 
 bool MeshScene::init()
 {
@@ -18,6 +19,9 @@ bool MeshScene::init()
     
     // init base scene
     BaseScene::init();
+    
+    // registe *.c3t file loader
+    ResourceManager::getSingleton().registerResourceLoaderFunction("c3t", C3tLoader::c3tMeshDataParse);
     return true;
 }
 
