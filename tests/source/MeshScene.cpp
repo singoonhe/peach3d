@@ -11,6 +11,9 @@
 
 bool MeshScene::init()
 {
+    // registe *.c3t file loader
+    ResourceManager::getSingleton().registerResourceLoaderFunction("c3t", C3tLoader::c3tMeshDataParse);
+    
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new ObjSample();});
     mSampleList.push_back([]()->BaseSample* {return new EngineMeshSample();});
@@ -19,9 +22,6 @@ bool MeshScene::init()
     
     // init base scene
     BaseScene::init();
-    
-    // registe *.c3t file loader
-    ResourceManager::getSingleton().registerResourceLoaderFunction("c3t", C3tLoader::c3tMeshDataParse);
     return true;
 }
 

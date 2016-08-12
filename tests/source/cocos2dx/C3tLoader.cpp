@@ -35,41 +35,71 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
             ObjectPtr dObj = (*mesh)->createObject(objName.c_str());
             
             // calc vertex type and data size
-            uint floatCount = 0, c3tFCount = 0;
+            uint floatCount = 0;
             uint verType = 0;
             const Value& vTypeList = object["attributes"];
             for (SizeType j = 0; j < vTypeList.Size(); j++) {
                 auto attrString = vTypeList[j]["attribute"].GetString();
                 if (strcmp(attrString, "VERTEX_ATTRIB_POSITION") == 0) {
-                    floatCount += 3; c3tFCount += 3;
+                    floatCount += 3;
                     verType = verType | VertexType::Point3;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_NORMAL") == 0) {
-                    floatCount += 3; c3tFCount += 3;
+                    floatCount += 3;
                     verType = verType | VertexType::Normal;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_TEX_COORD") == 0) {
-                    floatCount += 2; c3tFCount += 2;
+                    floatCount += 2;
                     verType = verType | VertexType::UV;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_BLEND_WEIGHT") == 0) {
-                    floatCount += 4; c3tFCount += 8;
+                    floatCount += 4;
                     verType = verType | VertexType::Bone;
                 }
+                Peach3DAssert(strcmp(attrString, "VERTEX_ATTRIB_COLOR") != 0, "Not support vertex color");
             }
             
-            auto vertexCount = object["vertices"].Size()/c3tFCount;
+            const Value& vertexValue = object["vertices"];
+            int c3tFCount = (verType & VertexType::Bone ) ? (floatCount + 4) : floatCount;
+            auto vertexCount = vertexValue.Size()/c3tFCount;
             // malloc vertex data
             uint verDataSize = floatCount * sizeof(float) * vertexCount;
             float* verData = (float*)malloc(verDataSize);
-            
+            // read vertex data, c3t use 4 float for BONE, Peach3D use 2 float.
             for (int k = 0; k < vertexCount; k++) {
-                for (int m = 0; m < floatCount; m++) {
-                    verData[k * floatCount + m] = object["vertices"][k * c3tFCount + m].GetDouble();
+                int copyCount = (verType & VertexType::Bone) ? (floatCount - 2) : floatCount;
+                for (int m = 0; m < copyCount; m++) {
+                    verData[k * floatCount + m] = vertexValue[k * c3tFCount + m].GetDouble();
+                }
+                if (verType & VertexType::Bone) {
+                    verData[k * floatCount + copyCount] = vertexValue[k * c3tFCount + copyCount + 2].GetDouble();
+                    verData[k * floatCount + copyCount + 1] = vertexValue[k * c3tFCount + copyCount + 3].GetDouble();
                 }
             }
             dObj->setVertexBuffer(verData, verDataSize, verType);
             free(verData);
+            
+            // read index data
+            const Value& indexLists = parts[i]["indices"];
+            auto indexCount = indexLists.Size();
+            IndexType inxType = IndexType::eUShort;
+            auto inxDataSize = indexCount * sizeof(ushort);
+            if (indexCount > 65535) {
+                inxType = IndexType::eUInt;
+                inxDataSize = indexCount * sizeof(uint);
+            }
+            // malloc vertex data
+            void* inxData = malloc(inxDataSize);
+            for (int j=0; j<indexCount; j++) {
+                if (inxType == IndexType::eUShort) {
+                    ((ushort*)inxData)[j] = indexLists[j].GetInt();
+                }
+                else if (inxType == IndexType::eUInt) {
+                    ((uint*)inxData)[j] = indexLists[j].GetUint();
+                }
+            }
+            dObj->setIndexBuffer(inxData, (uint)inxDataSize, inxType);
+            free(inxData);
         }
     }
 }
@@ -80,6 +110,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     if (document.ParseInsitu((char*)input.data).HasParseError())
         return nullptr;
     
+    // find object name
     map<string, C3tObjectValue> idNameList;
     const Value& nodes = document["nodes"];
     for (SizeType i = 0; i < nodes.Size(); i++) {
@@ -89,9 +120,10 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             C3tObjectValue& nodeObj = idNameList[nodeValue["id"].GetString()];
             nodeObj.objName = nodeParts["meshpartid"].GetString();
             nodeObj.matName = nodeParts["materialid"].GetString();
-            auto objTranString = nodeValue["transform"].GetString();
-            auto transArray = nodeObj.objTran.mat;
-            sscanf(objTranString, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", transArray, transArray+1, transArray+2, transArray+3, transArray+4, transArray+5, transArray+6, transArray+7, transArray+8, transArray+9, transArray+10, transArray+11, transArray+12, transArray+13, transArray+14, transArray+15);
+            const Value& objTranValue = nodeValue["transform"];
+            for (int j=0; j<16; j++) {
+                nodeObj.objTran.mat[j] = objTranValue[j].GetDouble();
+            }
         }
     }
     
@@ -101,7 +133,6 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
         for (SizeType i = 0; i < objects.Size(); i++) {
             c3tObjectDataParse(objects[i], dMesh, idNameList);
         }
-        
     }
     return dMesh;
 }
