@@ -135,10 +135,16 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
         readMat.shininess = matV["shininess"].GetDouble();
         readMat.alpha = matV["opacity"].GetDouble();
         if (matV.HasMember("textures")) {
-            string texFile = matV["textures"][0]["filename"].GetString();
+            const Value& texValue = matV["textures"][0];
+            string texFile = texValue["filename"].GetString();
             auto loadTex = ResourceManager::getSingleton().addTexture((input.dir + texFile).c_str());\
             if (loadTex) {
                 readMat.textureList.push_back(loadTex);
+            }
+            string strWrapU = texValue["wrapModeU"].GetString();
+            string strWrapV = texValue["wrapModeV"].GetString();
+            if (strWrapU.compare("REPEAT") == 0 || strWrapV.compare("REPEAT") == 0) {
+                loadTex->setWrap(TextureWrap::eRepeat);
             }
         }
     }
