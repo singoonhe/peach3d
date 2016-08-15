@@ -7,6 +7,7 @@
 //
 
 #include "C3tLoader.h"
+#include "Peach3DResourceManager.h"
 #include "rapidjson/document.h"
 
 using namespace rapidjson;
@@ -18,15 +19,16 @@ struct C3tObjectValue {
     Matrix4 objTran;
 };
 
-static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<string, C3tObjectValue>& idNames)
+static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<string, C3tObjectValue>& idNames, const map<string, Material>& materials)
 {
     const Value& parts = object["parts"];
     for (SizeType i = 0; i < parts.Size(); i++) {
         auto partIdName = parts[i]["id"].GetString();
-        string objName;
+        string objName, materialName;
         for (auto iter = idNames.begin(); iter != idNames.end(); ++iter) {
             if (iter->second.objName.compare(partIdName) == 0) {
                 objName = iter->first;
+                materialName = iter->second.matName;
                 break;
             }
         }
@@ -100,6 +102,12 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
             }
             dObj->setIndexBuffer(inxData, (uint)inxDataSize, inxType);
             free(inxData);
+            
+            // set material
+            auto findMat = materials.find(materialName);
+            if (materialName.size() > 0 && findMat != materials.end()) {
+                dObj->setMaterial(findMat->second);
+            }
         }
     }
 }
@@ -109,6 +117,31 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     Document document;
     if (document.ParseInsitu((char*)input.data).HasParseError())
         return nullptr;
+    
+    // read all materials
+    map<string, Material> materials;
+    const Value& matValues = document["materials"];
+    for (SizeType i = 0; i < matValues.Size(); i++) {
+        const Value& matV = matValues[i];
+        Material& readMat = materials[matV["id"].GetString()];
+        const Value& ambientV = matV["ambient"];
+        readMat.ambient = Color3(ambientV[0].GetDouble(), ambientV[1].GetDouble(), ambientV[2].GetDouble());
+        const Value& diffuseV = matV["diffuse"];
+        readMat.diffuse = Color3(diffuseV[0].GetDouble(), diffuseV[1].GetDouble(), diffuseV[2].GetDouble());
+        const Value& emissiveV = matV["emissive"];
+        readMat.emissive = Color3(emissiveV[0].GetDouble(), emissiveV[1].GetDouble(), emissiveV[2].GetDouble());
+        const Value& specularV = matV["specular"];
+        readMat.specular = Color3(specularV[0].GetDouble(), specularV[1].GetDouble(), specularV[2].GetDouble());
+        readMat.shininess = matV["shininess"].GetDouble();
+        readMat.alpha = matV["opacity"].GetDouble();
+        if (matV.HasMember("textures")) {
+            string texFile = matV["textures"][0]["filename"].GetString();
+            auto loadTex = ResourceManager::getSingleton().addTexture((input.dir + texFile).c_str());\
+            if (loadTex) {
+                readMat.textureList.push_back(loadTex);
+            }
+        }
+    }
     
     // find object name
     map<string, C3tObjectValue> idNameList;
@@ -131,7 +164,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     const Value& objects = document["meshes"];
     if (objects.IsArray()) {
         for (SizeType i = 0; i < objects.Size(); i++) {
-            c3tObjectDataParse(objects[i], dMesh, idNameList);
+            c3tObjectDataParse(objects[i], dMesh, idNameList, materials);
         }
     }
     return dMesh;
