@@ -412,7 +412,7 @@ namespace Peach3D
     
     void ProgramGL::updateObjectBoneUniforms(const SkeletonPtr& sk)
     {
-        Peach3DAssert(sk->getBoneCount() == mBoneCount, "Bone count must equal to program count!");
+        Peach3DAssert(sk->getUsedBoneCount() == mBoneCount, "Bone count must equal to program count!");
         if (mBoneUBOId != GL_INVALID_INDEX && mBoneUBOSize > 0) {
             glBindBuffer(GL_UNIFORM_BUFFER, mBoneUBOId);
             // map shadow buffer and copy memory on GL3
@@ -421,7 +421,7 @@ namespace Peach3D
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eBoneMatrix: {
                         auto matrixList = sk->getBonesMatrix();
-                        for (auto i=0; i<sk->getBoneCount(); ++i) {
+                        for (auto i=0; i<sk->getUsedBoneCount(); ++i) {
                             float* originData = matrixList[i].mat;
                             data[i * 12 + 0] = originData[0];
                             data[i * 12 + 1] = originData[4];

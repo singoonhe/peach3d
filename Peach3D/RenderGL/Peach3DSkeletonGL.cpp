@@ -26,21 +26,21 @@ namespace Peach3D
     void SkeletonGL::addBonesOver()
     {
         ISkeleton::addBonesOver();
-        auto boneCount = mCacheBones.size();
-        if (!mSTexId && boneCount > 0) {
+        // malloc bone memory using texture
+        if (!mSTexId && mUsedBonesCount > 0) {
             glGenTextures(1, &mSTexId);
             glBindTexture(GL_TEXTURE_2D, mSTexId);
             if (PD_RENDERLEVEL_GL3()) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 3, mCacheBones.size(), 0, GL_RGBA, GL_FLOAT, 0);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 3, mUsedBonesCount, 0, GL_RGBA, GL_FLOAT, 0);
             }
             else {
 #if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_GLES
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, mCacheBones.size(), 0, GL_RGBA, GL_FLOAT, 0);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, mUsedBonesCount, 0, GL_RGBA, GL_FLOAT, 0);
 #else
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, 3, mCacheBones.size(), 0, GL_RGBA, GL_FLOAT, 0);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, 3, mUsedBonesCount, 0, GL_RGBA, GL_FLOAT, 0);
 #endif
             }
-            mSTexData = (float*)malloc(3 * mCacheBones.size() * 4 * sizeof(float));
+            mSTexData = (float*)malloc(3 * mUsedBonesCount * 4 * sizeof(float));
             glBindTexture(GL_TEXTURE_2D, 0);
         }
     }
@@ -70,13 +70,13 @@ namespace Peach3D
             }
             glBindTexture(GL_TEXTURE_2D, mSTexId);
             if (PD_RENDERLEVEL_GL3()) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 3, mCacheBones.size(), 0, GL_RGBA, GL_FLOAT, mSTexData);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 3, mUsedBonesCount, 0, GL_RGBA, GL_FLOAT, mSTexData);
             }
             else {
 #if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_GLES
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, mCacheBones.size(), 0, GL_RGBA, GL_FLOAT, mSTexData);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, mUsedBonesCount, 0, GL_RGBA, GL_FLOAT, mSTexData);
 #else
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, 3, mCacheBones.size(), 0, GL_RGBA, GL_FLOAT, mSTexData);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, 3, mUsedBonesCount, 0, GL_RGBA, GL_FLOAT, mSTexData);
 #endif
             }
             glBindTexture(GL_TEXTURE_2D, 0);

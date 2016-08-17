@@ -39,6 +39,7 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
             // calc vertex type and data size
             uint floatCount = 0;
             uint verType = 0;
+            uint uvIndex = 0;
             const Value& vTypeList = object["attributes"];
             for (SizeType j = 0; j < vTypeList.Size(); j++) {
                 auto attrString = vTypeList[j]["attribute"].GetString();
@@ -51,7 +52,7 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
                     verType = verType | VertexType::Normal;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_TEX_COORD") == 0) {
-                    floatCount += 2;
+                    floatCount += 2; uvIndex = floatCount;
                     verType = verType | VertexType::UV;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_BLEND_WEIGHT") == 0) {
@@ -72,6 +73,10 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
                 int copyCount = (verType & VertexType::Bone) ? (floatCount - 2) : floatCount;
                 for (int m = 0; m < copyCount; m++) {
                     verData[k * floatCount + m] = vertexValue[k * c3tFCount + m].GetDouble();
+                }
+                // Reverse coord V, cocos2dx used not same as Peach3D
+                if (uvIndex > 0) {
+                    verData[k * floatCount + uvIndex-1] = 1.f - verData[k * floatCount + uvIndex-1];
                 }
                 if (verType & VertexType::Bone) {
                     verData[k * floatCount + copyCount] = vertexValue[k * c3tFCount + copyCount + 2].GetDouble();
@@ -112,6 +117,40 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
     }
 }
 
+static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bones, Bone* parent = nullptr)
+{
+    // read bone name and index
+    auto boneName = boneValue["id"].GetString();
+    int boneIndex = -1;
+    for (auto i=0; i<bones.size(); ++i) {
+        if (bones[i].compare(boneName) == 0) {
+            boneIndex = i;
+            break;
+        }
+    }
+    // bone may not used for vertex, also need generate it
+    Bone* newBone = new Bone(boneName, boneIndex);
+    // read bone invert transform
+    Matrix4 transformM;
+    const Value& transformValue = boneValue["transform"];
+    for (auto i=0; i<transformValue.Size(); ++i) {
+        transformM.mat[i] = transformValue[i].GetDouble();
+    }
+    newBone->setInverseTransform(transformM);
+    // add new bone to parent
+    if (parent) {
+        parent->addChild(newBone);
+    }
+    // fine children
+    if (boneValue.HasMember("children")) {
+        const Value& childrenValue = boneValue["children"];
+        for (auto i=0; i<childrenValue.Size(); ++i) {
+            c3tBoneDataParse(childrenValue[i], bones, newBone);
+        }
+    }
+    return newBone;
+}
+
 void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
 {
     Document document;
@@ -149,6 +188,10 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
         }
     }
     
+    
+    MeshPtr* dMesh = (MeshPtr*)input.handler;
+    SkeletonPtr c3tSkeleton = nullptr;
+    vector<string> bonesList;
     // find object name
     map<string, C3tObjectValue> idNameList;
     const Value& nodes = document["nodes"];
@@ -159,19 +202,83 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             C3tObjectValue& nodeObj = idNameList[nodeValue["id"].GetString()];
             nodeObj.objName = nodeParts["meshpartid"].GetString();
             nodeObj.matName = nodeParts["materialid"].GetString();
+            // read object transform matrix
             const Value& objTranValue = nodeValue["transform"];
             for (int j=0; j<16; j++) {
                 nodeObj.objTran.mat[j] = objTranValue[j].GetDouble();
             }
+            // read object bones
+            const Value& bonesValue = nodeParts["bones"];
+            for (int j=0; j<bonesValue.Size(); j++) {
+                bonesList.push_back(bonesValue[j]["node"].GetString());
+            }
+        }
+        else {
+            // read skeleton and fill bones
+            c3tSkeleton = ResourceManager::getSingleton().createSkeleton((*dMesh)->getName());
+            auto rootBone = c3tBoneDataParse(nodeValue, bonesList);
+            c3tSkeleton->addRootBone(rootBone);
+            // set bone over, cache bones list
+            c3tSkeleton->addBonesOver();
         }
     }
     
-    MeshPtr* dMesh = (MeshPtr*)input.handler;
+    // read mesh data
     const Value& objects = document["meshes"];
     if (objects.IsArray()) {
         for (SizeType i = 0; i < objects.Size(); i++) {
             c3tObjectDataParse(objects[i], dMesh, idNameList, materials);
         }
+    }
+    // read animation data
+    if (c3tSkeleton && document.HasMember("animations")) {
+        const Value& animsValue = document["animations"];
+        for (auto m=0; m<animsValue.Size(); ++m) {
+            const Value& animValue = animsValue[m];
+            // add animation info
+            auto animName = animValue["id"].GetString();
+            c3tSkeleton->addAnimateTime(animName, animValue["length"].GetDouble());
+            const Value& bonesValue = animValue["bones"];
+            for (auto i=0; i<bonesValue.Size(); ++i) {
+                const Value& bValue = bonesValue[i];
+                Bone* findBone = c3tSkeleton->findBone(bValue["boneId"].GetString());
+                if (findBone) {
+                    // read all key frames
+                    const Value& framesValue = bValue["keyframes"];
+                    BoneKeyFrame firstFrame, curFrame;
+                    for (auto j=0; j<framesValue.Size(); ++j) {
+                        const Value& frameValue = framesValue[j];
+                        curFrame = firstFrame;
+                        curFrame.time = frameValue["keytime"].GetDouble();
+                        if (frameValue.HasMember("rotation")) {
+                            const Value& rotationValue = frameValue["rotation"];
+                            curFrame.rotate.x = rotationValue[0].GetDouble();
+                            curFrame.rotate.y = rotationValue[1].GetDouble();
+                            curFrame.rotate.z = rotationValue[2].GetDouble();
+                            curFrame.rotate.w = rotationValue[3].GetDouble();
+                        }
+                        if (frameValue.HasMember("scale")) {
+                            const Value& scaleValue = frameValue["scale"];
+                            curFrame.scale.x = scaleValue[0].GetDouble();
+                            curFrame.scale.y = scaleValue[1].GetDouble();
+                            curFrame.scale.z = scaleValue[2].GetDouble();
+                        }
+                        if (frameValue.HasMember("translation")) {
+                            const Value& transValue = frameValue["translation"];
+                            curFrame.translate.x = transValue[0].GetDouble();
+                            curFrame.translate.y = transValue[1].GetDouble();
+                            curFrame.translate.z = transValue[2].GetDouble();
+                        }
+                        if (j == 0) {
+                            firstFrame = curFrame;
+                        }
+                        findBone->addKeyFrame(animName, curFrame);
+                    }
+                }
+            }
+        }
+        // bind skeleton to mesh
+        (*dMesh)->bindSkeleton(c3tSkeleton);
     }
     return dMesh;
 }

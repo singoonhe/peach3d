@@ -23,6 +23,7 @@ namespace Peach3D
     void ISkeleton::addBonesOver()
     {
         mCacheBones.clear();
+        mUsedBonesCount = 0;
         if (mRootBoneList.size() > 0) {
             for (auto root : mRootBoneList) {
                 mCacheBones.push_back(root);
@@ -33,6 +34,12 @@ namespace Peach3D
             std::sort(mCacheBones.begin(), mCacheBones.end(), [](Bone* a, Bone* b)->int{
                 return a->getIndex() < b->getIndex();
             });
+            // calc valid bone count, invalid bone not need memory which index is -1
+            for (auto bone : mCacheBones) {
+                if (bone->getIndex() >= 0) {
+                    mUsedBonesCount++;
+                }
+            }
         }
     }
     
@@ -68,7 +75,10 @@ namespace Peach3D
         // update all bones transform
         mCacheBoneMats.clear();
         for (auto bone : mCacheBones) {
-            mCacheBoneMats.push_back(bone->getCacheMatrix());
+            // only add valid index for animation, -1 not used in vertex
+            if (bone->getIndex() >= 0) {
+                mCacheBoneMats.push_back(bone->getCacheMatrix());
+            }
         }
     }
     

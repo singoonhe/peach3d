@@ -37,7 +37,7 @@ namespace Peach3D
         virtual void setLightsCount(uint count);
         /** Set program lights count, generate shadow UBO. */
         virtual void setShadowCount(uint count);
-        /** Set program bones count, generate bone UBO. */
+        /** Set program used bones count, generate bone UBO. */
         virtual void setBoneCount(uint count);
         
         /** Bind instance vertex attrib, used for GL3. */
