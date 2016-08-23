@@ -117,7 +117,7 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
     }
 }
 
-static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bones, Bone* parent = nullptr)
+static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bones, const vector<Matrix4>& matrixList, Bone* parent = nullptr)
 {
     // read bone name and index
     auto boneName = boneValue["id"].GetString();
@@ -130,13 +130,17 @@ static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bone
     }
     // bone may not used for vertex, also need generate it
     Bone* newBone = new Bone(boneName, boneIndex);
-    // read bone invert transform
-    Matrix4 transformM;
+    // read bone orign transform
+    Matrix4 orignMat;
     const Value& transformValue = boneValue["transform"];
     for (auto i=0; i<transformValue.Size(); ++i) {
-        transformM.mat[i] = transformValue[i].GetDouble();
+        orignMat.mat[i] = transformValue[i].GetDouble();
     }
-    newBone->setInverseTransform(transformM);
+    newBone->setPoseTransform(orignMat);
+    // set bone animate inverse transform
+    if (boneIndex >= 0) {
+        newBone->setInverseTransform(matrixList[boneIndex]);
+    }
     // add new bone to parent
     if (parent) {
         parent->addChild(newBone);
@@ -145,7 +149,7 @@ static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bone
     if (boneValue.HasMember("children")) {
         const Value& childrenValue = boneValue["children"];
         for (auto i=0; i<childrenValue.Size(); ++i) {
-            c3tBoneDataParse(childrenValue[i], bones, newBone);
+            c3tBoneDataParse(childrenValue[i], bones, matrixList, newBone);
         }
     }
     return newBone;
@@ -179,11 +183,12 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             auto loadTex = ResourceManager::getSingleton().addTexture((input.dir + texFile).c_str());\
             if (loadTex) {
                 readMat.textureList.push_back(loadTex);
-            }
-            string strWrapU = texValue["wrapModeU"].GetString();
-            string strWrapV = texValue["wrapModeV"].GetString();
-            if (strWrapU.compare("REPEAT") == 0 || strWrapV.compare("REPEAT") == 0) {
-                loadTex->setWrap(TextureWrap::eRepeat);
+                // set texture wrap UV
+                string strWrapU = texValue["wrapModeU"].GetString();
+                string strWrapV = texValue["wrapModeV"].GetString();
+                if (strWrapU.compare("REPEAT") == 0 || strWrapV.compare("REPEAT") == 0) {
+                    loadTex->setWrap(TextureWrap::eRepeat);
+                }
             }
         }
     }
@@ -192,6 +197,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     MeshPtr* dMesh = (MeshPtr*)input.handler;
     SkeletonPtr c3tSkeleton = nullptr;
     vector<string> bonesList;
+    vector<Matrix4> bonesMatrixList;
     // find object name
     map<string, C3tObjectValue> idNameList;
     const Value& nodes = document["nodes"];
@@ -211,12 +217,18 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             const Value& bonesValue = nodeParts["bones"];
             for (int j=0; j<bonesValue.Size(); j++) {
                 bonesList.push_back(bonesValue[j]["node"].GetString());
+                const Value& boneTranValue = bonesValue[j]["transform"];
+                Matrix4 boneTransform;
+                for (int n=0; n<16; n++) {
+                    boneTransform.mat[n] = boneTranValue[n].GetDouble();
+                }
+                bonesMatrixList.push_back(boneTransform);
             }
         }
         else {
             // read skeleton and fill bones
             c3tSkeleton = ResourceManager::getSingleton().createSkeleton((*dMesh)->getName());
-            auto rootBone = c3tBoneDataParse(nodeValue, bonesList);
+            auto rootBone = c3tBoneDataParse(nodeValue, bonesList, bonesMatrixList);
             c3tSkeleton->addRootBone(rootBone);
             // set bone over, cache bones list
             c3tSkeleton->addBonesOver();
@@ -237,7 +249,8 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             const Value& animValue = animsValue[m];
             // add animation info
             auto animName = animValue["id"].GetString();
-            c3tSkeleton->addAnimateTime(animName, animValue["length"].GetDouble());
+            auto animTime = animValue["length"].GetDouble();
+            c3tSkeleton->addAnimateTime(animName, animTime);
             const Value& bonesValue = animValue["bones"];
             for (auto i=0; i<bonesValue.Size(); ++i) {
                 const Value& bValue = bonesValue[i];
@@ -249,7 +262,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
                     for (auto j=0; j<framesValue.Size(); ++j) {
                         const Value& frameValue = framesValue[j];
                         curFrame = firstFrame;
-                        curFrame.time = frameValue["keytime"].GetDouble();
+                        curFrame.time = frameValue["keytime"].GetDouble() * animTime;
                         if (frameValue.HasMember("rotation")) {
                             const Value& rotationValue = frameValue["rotation"];
                             curFrame.rotate.x = rotationValue[0].GetDouble();
