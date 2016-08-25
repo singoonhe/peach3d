@@ -29,6 +29,11 @@ class EngineMeshSample : public BaseSample
     void init(Widget* parentWidget);
 };
 
+class ExtendMeshSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+};
+
 class DrawModeSample : public BaseSample
 {
     void init(Widget* parentWidget);

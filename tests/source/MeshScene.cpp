@@ -17,6 +17,7 @@ bool MeshScene::init()
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new ObjSample();});
     mSampleList.push_back([]()->BaseSample* {return new EngineMeshSample();});
+    mSampleList.push_back([]()->BaseSample* {return new ExtendMeshSample();});
     mSampleList.push_back([]()->BaseSample* {return new DrawModeSample();});
     mSampleList.push_back([]()->BaseSample* {return new OBBSample();});
     
@@ -96,13 +97,44 @@ void EngineMeshSample::init(Widget* parentWidget)
     
     // create skeleton mesh
     auto skMesh = ResourceManager::getSingleton().addMesh("donghua.pmt");
-    auto skNode = rootNode->createChild(Vector3(0.f, 0.f, 0.f));
+    auto skNode = rootNode->createChild(Vector3(0.f, -3.f, 0.f));
     skNode->attachMesh(skMesh);
-    skNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(DEGREE_TO_RADIANS(360.0f), 0.0f, 0.0f), 5.0f)));
-    skNode->runAnimate("Armature|Take 001|BaseLayer.001");
-//    auto skNode1 = rootNode->createChild(Vector3(6.f, 3.f, 0.f));
-//    skNode1->attachMesh(skMesh);
-//    skNode1->runAnimate("scale");
+    skNode->setScale(Vector3(0.3f));
+    skNode->runAnimate("Take 001");
+    skNode->setAnimateSpeed(0.1f);
+}
+
+void ExtendMeshSample::init(Widget* parentWidget)
+{
+    // set title and desc
+    mTitle = "Extend Mesh File Sample";
+    mDesc = "load *.c3t(Cocos2D Mesh File) file and run animate";
+    // registe *.c3t file loader first
+    ResourceManager::getSingleton().registerResourceLoaderFunction("c3t", C3tLoader::c3tMeshDataParse);
+    
+    // create animate mesh with default speed
+    auto c3tMesh = ResourceManager::getSingleton().addMesh("orc_jump.c3t");
+    auto c3tNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-4.f, -3.f, 0.f));
+    c3tNode->attachMesh(c3tMesh);
+    c3tNode->setRotation(Vector3(0.f, DEGREE_TO_RADIANS(180.f), 0.f));
+    c3tNode->setScale(Vector3(0.3f));
+    // run animate whit name
+    c3tNode->runAnimate("Take 001");
+    
+    // create slow speed animate mesh
+    auto c3tNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(4.f, -3.f, 0.f));
+    c3tNode2->attachMesh(c3tMesh);
+    c3tNode2->setRotation(Vector3(0.f, DEGREE_TO_RADIANS(180.f), 0.f));
+    c3tNode2->setScale(Vector3(0.3f));
+    c3tNode2->setAnimateSpeed(0.5f);
+    // run animate whit name
+    c3tNode2->runAnimate("Take 001");
+    // create notice label
+    const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    Label* halfLabel = Label::create("half speed", 20 * LayoutManager::getSingleton().getMinScale());
+    halfLabel->setPosition(Vector2(screenSize.x * 0.65f, screenSize.y * 0.67f));
+    halfLabel->setFillColor(Color3Red);
+    parentWidget->addChild(halfLabel);
 }
 
 void DrawModeSample::init(Widget* parentWidget)

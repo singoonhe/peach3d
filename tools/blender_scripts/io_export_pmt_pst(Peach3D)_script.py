@@ -364,7 +364,11 @@ def do_export_skeleton(context, props, thearmature, filepath):
                     pose_bones_list.append(pb)
                     break;
         # export bones keyframe
-        armEle = ET.SubElement(xmlRoot, "Animation", name=arm_action.name, length='%f' % ((frame_count-1)/anim_rate))
+        action_xml_name = arm_action.name
+        origin_split_name = action_xml_name.split('|')
+        if len(origin_split_name) >= 3:
+            action_xml_name = origin_split_name[1]
+        armEle = ET.SubElement(xmlRoot, "Animation", name=action_xml_name, length='%f' % ((frame_count-1)/anim_rate))
         for i in range(frame_count):
             frame = scene_range[i]
             # advance to frame (automatically updates the pose)

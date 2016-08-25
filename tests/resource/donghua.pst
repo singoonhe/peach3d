@@ -5,12 +5,12 @@
         <Scale>1.000000, 1.000000, 1.000000</Scale>
         <Translation>0.146285, 30.326490, 4.034069</Translation>
         <Bone index="1" name="Bone002">
-            <Rotation>-0.000001, 0.000000, 0.004687, 0.999989</Rotation>
+            <Rotation>0.000001, -0.000000, -0.004687, 0.999989</Rotation>
             <Scale>1.000000, 1.000000, 1.000000</Scale>
             <Translation>15.007812, -0.000009, -0.000000</Translation>
         </Bone>
     </Bone>
-    <Animation length="0.333333" name="Armature|Take 001|BaseLayer">
+    <Animation length="0.333333" name="Take 001">
         <KeyFrame time="0.000000">
             <Bone name="Bone001">
                 <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
@@ -144,7 +144,7 @@
             </Bone>
         </KeyFrame>
     </Animation>
-    <Animation length="0.033333" name="Box002|Take 001|BaseLayer">
+    <Animation length="0.033333" name="Take 001">
         <KeyFrame time="0.000000">
             <Bone name="Bone001">
                 <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
