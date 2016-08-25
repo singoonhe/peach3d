@@ -69,7 +69,7 @@ namespace Peach3D
         Vector3 getEulerAngle();
 
     public:
-        float w, x, y, z;
+        float x, y, z, w;
     };
 
     //! Define identity quaternion.

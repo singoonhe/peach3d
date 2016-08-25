@@ -137,8 +137,6 @@ namespace Peach3D
             distTemp.z = -distTemp.z;
             cosOmega = -cosOmega;
         }
-        // blender only make six valid float
-        Peach3DAssert(cosOmega < 1.000001f, "Not valid quaternion data");
 
         // calculate slerp
         float k0, k1;

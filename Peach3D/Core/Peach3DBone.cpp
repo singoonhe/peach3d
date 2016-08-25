@@ -65,17 +65,21 @@ namespace Peach3D
                 calcS = (nextFrame.scale - baseFrame.scale) * calcInterval + baseFrame.scale;
                 calcT = (nextFrame.translate - baseFrame.translate) * calcInterval + baseFrame.translate;
             }
-            auto rotateM = Matrix4::createRotationQuaternion(calcR);
+            // TODO: rotation with quaternion need transpose, it's strange.
+            auto rotateM = Matrix4::createRotationQuaternion(calcR).getTranspose();
             auto scaleM = Matrix4::createScaling(calcS);
             auto translateM = Matrix4::createTranslation(calcT);
-            mCacheMatrix = scaleM * rotateM * translateM;
-            // current matrix = transform * pose matrix, transform = current matrix * pose inverse matrix
-            mCacheMatrix = mInvTransform * mCacheMatrix;
-            
-            // multiply parent bone matrix
-            if (mParentBone) {
-                mCacheMatrix = mCacheMatrix * mParentBone->getCacheMatrix();
-            }
+            mWorldMatrix = translateM  * scaleM * rotateM;
         }
+        else {
+            mWorldMatrix = mPoseMatrix;
+        }
+        
+        // multiply parent bone matrix
+        if (mParentBone) {
+            mWorldMatrix = mParentBone->getWorldMatrix() * mWorldMatrix;
+        }
+        // current matrix = transform * pose matrix, transform = current matrix * pose inverse matrix
+        mCacheMatrix = mWorldMatrix  *  mInvTransform;
     }
 }
