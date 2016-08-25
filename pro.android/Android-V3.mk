@@ -28,6 +28,7 @@ Core/Peach3DNode.cpp \
 Core/Peach3DOBB.cpp \
 Core/Peach3DObjLoader.cpp \
 Core/Peach3DParticle.cpp \
+Core/Peach3DParticleEmitter.cpp \
 Core/Peach3DPmbLoader.cpp \
 Core/Peach3DPmtLoader.cpp \
 Core/Peach3DPptLoader.cpp \

@@ -28,12 +28,13 @@ LOCAL_SRC_FILES := main.cpp \
 ../../source/UIScene.cpp \
 ../../source/ActionScene.cpp \
 ../../source/RTTShadowScene.cpp \
-../../source/MeshScene.cpp
+../../source/MeshScene.cpp \
+../../source/cocos2dx/C3tLoader.cpp
 
 LOCAL_LDLIBS    := -llog -landroid
 LOCAL_WHOLE_STATIC_LIBRARIES := android_native_app_glue Peach3DLib
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../source
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../source $(LOCAL_PATH)/../../source/cocos2dx
 
 include $(BUILD_SHARED_LIBRARY)
 
