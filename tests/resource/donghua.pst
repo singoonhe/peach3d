@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Skeleton version="0.1">
     <Bone index="0" name="Bone001">
-        <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>
-        <Scale>1.000000, 1.000000, 1.000000</Scale>
-        <Translation>0.146285, 30.326490, 4.034069</Translation>
+        <Transform>-0.019135, 0.999817, -0.000002, 0.0, -0.999817, -0.019135, 0.000000, 0.0, 0.000000, 0.000002, 1.000000, 0.0, 15.020709,  0.141162, -4.034070, 1.0</Transform>
         <Bone index="1" name="Bone002">
-            <Rotation>0.000001, -0.000000, -0.004687, 0.999989</Rotation>
-            <Scale>1.000000, 1.000000, 1.000000</Scale>
-            <Translation>15.007812, -0.000009, -0.000000</Translation>
+            <Transform>-0.009762, 0.999952, 0.000000, 0.0, -0.999952, -0.009762, -0.000000, 0.0, -0.000000, -0.000000, 1.000000, 0.0, 0.014220,  0.141047, -4.034069, 1.0</Transform>
         </Bone>
     </Bone>
     <Animation length="0.333333" name="Take 001">
@@ -144,7 +140,7 @@
             </Bone>
         </KeyFrame>
     </Animation>
-    <Animation length="0.033333" name="Take 001">
+    <Animation length="0.033333" name="Box002|Take 001|BaseLayer">
         <KeyFrame time="0.000000">
             <Bone name="Bone001">
                 <Rotation>0.000001, -0.000001, -0.713840, 0.700309</Rotation>

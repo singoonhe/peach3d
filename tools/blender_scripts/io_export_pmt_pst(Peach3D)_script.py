@@ -302,26 +302,17 @@ def do_export_skeleton(context, props, thearmature, filepath):
     def do_export_bone(bone, xmlParent):
         # calc parented bone transform
         if bone.parent != None:
-            rotation    = bone.matrix.to_quaternion()
-            rotation.x = -rotation.x;
-            rotation.y = -rotation.y;
-            rotation.z = -rotation.z;
-            quat_parent = bone.parent.matrix.to_quaternion().inverted()
-            parent_head = quat_parent * bone.parent.head
-            parent_tail = quat_parent * bone.parent.tail
-            translate   = (parent_tail - parent_head) + bone.head
-            scale       = bone.matrix.to_scale()
+            translate   = bone.head
+            transform33 = bone.parent.matrix * bone.matrix
         # calc root bone transform
         else:
-            translate   = bone.head             # ARMATURE OBJECT Location
-            rotation    = bone.matrix.to_quaternion()
-            scale       = bone.matrix.to_scale()
+            translate   = bone.matrix_local * bone.head             # ARMATURE OBJECT Location
+            transform33 = bone.matrix
 
         # write bone to xml
+        translate = bone.head
         boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name, index='%d' % len(pd_bones_list))
-        ET.SubElement(boneElem, "Rotation").text = '%f, %f, %f, %f' % (rotation.x, rotation.y, rotation.z, rotation.w)
-        ET.SubElement(boneElem, "Scale").text = '%f, %f, %f' % (scale.x, scale.y, scale.z)
-        ET.SubElement(boneElem, "Translation").text = '%f, %f, %f' % (translate.x, translate.y, translate.z)        # store bone to list for weight
+        ET.SubElement(boneElem, "Transform").text = '%f, %f, %f, 0.0, %f, %f, %f, 0.0, %f, %f, %f, 0.0, %f, %f, %f, 1.0' % (transform33[0][0],transform33[0][1],transform33[0][2],transform33[1][0],transform33[1][1],transform33[1][2],transform33[2][0],transform33[2][1],transform33[2][2], translate.x, translate.y, translate.z)
         pd_bones_list.append(bone)
         # add children
         if( bone.children ):
@@ -366,7 +357,7 @@ def do_export_skeleton(context, props, thearmature, filepath):
         # export bones keyframe
         action_xml_name = arm_action.name
         origin_split_name = action_xml_name.split('|')
-        if len(origin_split_name) >= 3:
+        if origin_split_name[0] == "Armature" and len(origin_split_name) >= 3:
             action_xml_name = origin_split_name[1]
         armEle = ET.SubElement(xmlRoot, "Animation", name=action_xml_name, length='%f' % ((frame_count-1)/anim_rate))
         for i in range(frame_count):
@@ -395,7 +386,7 @@ def do_export_skeleton(context, props, thearmature, filepath):
                 ET.SubElement(frameBoneEle, "Rotation").text = '%f, %f, %f, %f' % (rotation.x, rotation.y, rotation.z, rotation.w)
                 ET.SubElement(frameBoneEle, "Scale").text = '%f, %f, %f' % (scale.x, scale.y, scale.z)
                 ET.SubElement(frameBoneEle, "Translation").text = '%f, %f, %f' % (translate.x, translate.y, translate.z)
-        print('Export animation "%s" from range (%d-%d)' % (arm_action.name, start_frame, end_frame))
+        print('Export animation "%s" from range (%d-%d)' % (action_xml_name, start_frame, end_frame))
 
     # restore
     thearmature.animation_data.action = restoreAction

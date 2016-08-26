@@ -8,6 +8,7 @@
 
 #include "Peach3DPstLoader.h"
 #include "Peach3DLogPrinter.h"
+#include "Peach3DUtils.h"
 
 namespace Peach3D
 {
@@ -46,21 +47,13 @@ namespace Peach3D
         if (transformEle) {
             // create new Bone
             Bone* newBone = new Bone(boneEle->Attribute("name"), atoi(boneEle->Attribute("index")));
-            Quaternion rotate;
-            sscanf(transformEle->GetText(), "%f,%f,%f,%f", &rotate.x, &rotate.y, &rotate.z, &rotate.w);
-            Vector3 translate, scale;
-            auto scaleEle = transformEle->NextSiblingElement();
-            sscanf(scaleEle->GetText(), "%f,%f,%f", &scale.x, &scale.y, &scale.z);
-            auto translateEle = scaleEle->NextSiblingElement();
-            sscanf(translateEle->GetText(), "%f,%f,%f", &translate.x, &translate.y, &translate.z);
-            // calc inverse transform
-            auto rotateM = Matrix4::createRotationQuaternion(rotate);
-            auto scaleM = Matrix4::createScaling(scale);
-            auto translateM = Matrix4::createTranslation(translate);
-            Matrix4 transformMat = scaleM * rotateM * translateM;
-            Matrix4 outMat;
-            transformMat.getInverse(&outMat);
-            newBone->setInverseTransform(outMat);
+            std::vector<std::string> strList = Utils::split(transformEle->GetText(), ',');
+            Peach3DAssert(strList.size()>=16, "Invaid transform data in pst file");
+            Matrix4 invertMat;
+            for (auto i=0; i<16; ++i) {
+                invertMat.mat[i] = atof(strList[i].c_str());
+            }
+            newBone->setInverseTransform(invertMat);
             // add new bone to parent
             if (parent) {
                 parent->addChild(newBone);
