@@ -70,6 +70,10 @@ namespace Peach3D
         void setMaterial(const Material& mtl) { mObjectMtl = mtl; }
         const Material& getMaterial()const { return mObjectMtl; }
         
+        /** Set object used bones, used for skeleton animation. */
+        void setUsedBones(const std::vector<std::string>& list) { mUsedBones = list; }
+        const std::vector<std::string>& getUsedBones()const { return mUsedBones; }
+        
         /**
          * @brief Render widget list, called by SceneManager.
          */
@@ -101,6 +105,8 @@ namespace Peach3D
         uint           mVertexDataType;    // vertex data format type
         Vector3        mBorderMax;         // object base border max
         Vector3        mBorderMin;         // object base border min
+        
+        std::vector<std::string>    mUsedBones; // used bones name list for animation
     };
     
     // make shared object simple

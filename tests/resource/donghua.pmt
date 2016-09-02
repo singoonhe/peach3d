@@ -42,6 +42,10 @@
             25, 6, 8, 2, 9, 11, 26, 12, 14, 27, 15, 17, 
             0, 18, 1, 4, 20, 5, 9, 21, 10, 15, 22, 16, 
         </Indexes>
+        <Bones>
+            <Bone>Bone001</Bone>
+            <Bone>Bone002</Bone>
+        </Bones>
         <Material>
             <Ambient>0.000000, 0.000000, 0.000000</Ambient>
             <Diffuse>0.470588, 0.470588, 0.470588</Diffuse>

@@ -33,9 +33,6 @@ import xml.etree.cElementTree as ET
 from xml.etree import ElementTree
 from xml.dom import minidom
 
-# store armature bones
-mesh_bones_map = {}
-
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
     """
@@ -118,8 +115,6 @@ def do_export_object(context, props, me_ob, xmlRoot):
     mesh = me_ob.to_mesh(current_scene, apply_modifiers, 'PREVIEW')
     # is vertex need export weight
     is_export_weight = (len(me_ob.vertex_groups) > 0)
-    if is_export_weight:
-        mesh_bones_map[me_ob.name] = me_ob.vertex_groups
 
     # is need convert to world space
     if props.world_space:
@@ -238,6 +233,12 @@ def do_export_object(context, props, me_ob, xmlRoot):
         ET.SubElement(objElem, "Indexes").text=index_source
     print('Export object "%s" , vertexes count %d, vertex type %d' % (me_ob.name, vertex_total_count, vertex_type_num))
 
+    # write bones info, (if need)
+    if is_export_weight:
+        bonesEle = ET.SubElement(objElem, "Bones")
+        for bone in me_ob.vertex_groups:
+            ET.SubElement(bonesEle, "Bone").text = bone.name
+
     # write material info，(take the first one)
     mat_list = mesh.materials
     if len(mat_list) > 0:
@@ -289,10 +290,23 @@ def do_export_skeleton(context, props, thearmature, filepath):
         print("None actions data Set! skipping...")
         return
 
-    bpy.ops.object.mode_set(mode='POSE')
     context.scene.frame_set(context.scene.frame_start)
+    # find bones invert tranform
+    bones_inverted_list = {}
+    bpy.ops.object.mode_set(mode='OBJECT')
+    total_bones_list = thearmature.data.bones
+    for b in total_bones_list:
+        transform3 = b.matrix
+        translate = b.head
+        if b.parent:
+            transform3 = b.parent.matrix * transform3
+        transform3 = transform3.inverted()
+        transform4 = transform3.to_4x4() * mathutils.Matrix.Translation(translate)
+        bones_inverted_list[b.name] = transform4
+
     # write file head
     xmlRoot = ET.Element("Skeleton", version="0.1")
+    bpy.ops.object.mode_set(mode='POSE')
 
     def do_export_bone(bone, xmlParent):
         # convert bone matrix from parent
@@ -301,7 +315,11 @@ def do_export_skeleton(context, props, thearmature, filepath):
         else:
             transform4 = bone.matrix
         boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name)
-        ET.SubElement(boneElem, "Transform").text = '%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f' % (transform4[0][0],transform4[1][0],transform4[2][0],transform4[3][0],transform4[0][1],transform4[1][1],transform4[2][1],transform4[3][1],transform4[0][2],transform4[1][2],transform4[2][2],transform4[3][2],transform4[0][3],transform4[1][3],transform4[2][3],transform4[3][3])
+        ET.SubElement(boneElem, "Pose").text = '%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f' % (transform4[0][0],transform4[1][0],transform4[2][0],transform4[3][0],transform4[0][1],transform4[1][1],transform4[2][1],transform4[3][1],transform4[0][2],transform4[1][2],transform4[2][2],transform4[3][2],transform4[0][3],transform4[1][3],transform4[2][3],transform4[3][3])
+        for name in bones_inverted_list.keys():
+            if name == bone.name:
+                transform4 = bones_inverted_list[name]
+                ET.SubElement(boneElem, "Inverted").text = '%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f' % (transform4[0][0],transform4[1][0],transform4[2][0],transform4[3][0],transform4[0][1],transform4[1][1],transform4[2][1],transform4[3][1],transform4[0][2],transform4[1][2],transform4[2][2],transform4[3][2],transform4[0][3],transform4[1][3],transform4[2][3],transform4[3][3])
         # add children
         if( bone.children ):
             for child in bone.children:
@@ -317,25 +335,6 @@ def do_export_skeleton(context, props, thearmature, filepath):
 
     # export actions
     bpy.ops.object.mode_set(mode='OBJECT')
-    # export mesh bones
-    total_bones_list = thearmature.data.bones
-    meshElem = ET.SubElement(xmlRoot, "Mesh")
-    for k in mesh_bones_map.keys():
-        objElem = ET.SubElement(meshElem, "Object", name=k)
-        for value in mesh_bones_map[k]:
-            findBone = None
-            for bone in total_bones_list:
-                if bone.name == value.name:
-                    findBone = bone
-            if findBone:
-                boneElem = ET.SubElement(objElem, "Bone", name=value.name)
-                transform3 = findBone.matrix
-                if findBone.parent:
-                    transform3 = findBone.parent.matrix * transform3
-                transform3 = transform3.inverted()
-                translate = findBone.head
-                ET.SubElement(boneElem, "Transform").text = '%f, %f, %f, 0.0, %f, %f, %f, 0.0, %f, %f, %f, 0.0, %f, %f, %f, 1.0' % (transform3[0][0],transform3[1][0],transform3[2][0],transform3[0][1],transform3[1][1],transform3[2][1],transform3[0][2],transform3[1][2],transform3[2][2],translate.x, translate.y, translate.z)
-
     anim_rate  = context.scene.render.fps
     restoreAction   = thearmature.animation_data.action    # Q: is animation_data always valid?
     restoreFrame    = context.scene.frame_current       # we already do this in export_proxy, but we'll do it here too for now

@@ -57,6 +57,17 @@ namespace Peach3D
             auto nextEle = PmtLoader::objVertexDataParse(vTypeEle, verType, obj);
             // read index data, index data must be valid
             nextEle = PmtLoader::objIndexDataParse(nextEle, obj);
+            auto bonesEle = nextEle->NextSiblingElement("Bones");
+            // read object used bones list if exist
+            if (bonesEle) {
+                std::vector<std::string> boneNames;
+                auto boneEle = bonesEle->FirstChildElement();
+                while (boneEle) {
+                    boneNames.push_back(boneEle->GetText());
+                    boneEle = boneEle->NextSiblingElement();
+                }
+                obj->setUsedBones(boneNames);
+            }
             // read material data, could be empty
             nextEle = PmtLoader::objMaterialDataParse(nextEle, dir, obj);
         }

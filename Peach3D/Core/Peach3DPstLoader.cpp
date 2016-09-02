@@ -43,11 +43,20 @@ namespace Peach3D
     
     Bone* PstLoader::pstBonesDataParse(const XMLElement* boneEle, Bone* parent)
     {
-        auto transformEle = boneEle->FirstChildElement();
-        if (transformEle) {
+        auto poseEle = boneEle->FirstChildElement("Pose");
+        if (poseEle) {
             // create new Bone
-            Bone* newBone = new Bone(boneEle->Attribute("name"), atoi(boneEle->Attribute("index")));
-            std::vector<std::string> strList = Utils::split(transformEle->GetText(), ',');
+            Bone* newBone = new Bone(boneEle->Attribute("name"), -1);
+            std::vector<std::string> strList = Utils::split(poseEle->GetText(), ',');
+            Peach3DAssert(strList.size()>=16, "Invaid transform data in pst file");
+            Matrix4 poseMat;
+            for (auto i=0; i<16; ++i) {
+                poseMat.mat[i] = atof(strList[i].c_str());
+            }
+            newBone->setInverseTransform(poseMat);
+            
+            auto invertedEle = poseEle->NextSiblingElement("Inverted");
+            strList = Utils::split(invertedEle->GetText(), ',');
             Peach3DAssert(strList.size()>=16, "Invaid transform data in pst file");
             Matrix4 invertMat;
             for (auto i=0; i<16; ++i) {
@@ -59,7 +68,7 @@ namespace Peach3D
                 parent->addChild(newBone);
             }
             // fine children
-            auto childEle = transformEle->NextSiblingElement();
+            auto childEle = invertedEle->NextSiblingElement("Bone");
             while (childEle) {
                 PstLoader::pstBonesDataParse(childEle, newBone);
                 childEle = childEle->NextSiblingElement();

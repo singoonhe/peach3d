@@ -64,9 +64,9 @@ namespace Peach3D
         std::string mName;
         int         mIndex; // index of animation in all bones
         Matrix4     mInvTransform;  // inverse of bone transform
-        Matrix4     mCacheMatrix;
+        Matrix4     mPoseMatrix;    // bone pose transform
+        Matrix4     mCacheMatrix;   // cache bone time transform, pass to program
         Matrix4     mWorldMatrix;
-        Matrix4     mPoseMatrix;
         Bone*       mParentBone;
         SceneNode*  mAttachedNode;
         
