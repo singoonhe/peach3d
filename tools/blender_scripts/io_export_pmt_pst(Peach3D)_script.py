@@ -34,7 +34,7 @@ from xml.etree import ElementTree
 from xml.dom import minidom
 
 # store armature bones
-pd_bones_list = []
+mesh_bones_map = {}
 
 def prettify(elem):
     """Return a pretty-printed XML string for the Element.
@@ -103,13 +103,7 @@ def add_vertex_weight_string(vertex, mesh):
         weight_vector[x] = vgroup_weight
         # find bone in pst animation bones list
         if is_have_weight:
-            weight_name = mesh_groups_list[vertex.groups[x].group].name
-            bone_index = 0
-            for bone in pd_bones_list:
-                if bone.name == weight_name:
-                    break
-                else:
-                    bone_index += 1
+            bone_index = vertex.groups[x].group
             weight_vector[x + 2] = bone_index
     return " %f, %f, %.1f, %.1f" % (weight_vector[0], weight_vector[1], weight_vector[2], weight_vector[3])
 
@@ -124,6 +118,8 @@ def do_export_object(context, props, me_ob, xmlRoot):
     mesh = me_ob.to_mesh(current_scene, apply_modifiers, 'PREVIEW')
     # is vertex need export weight
     is_export_weight = (len(me_ob.vertex_groups) > 0)
+    if is_export_weight:
+        mesh_bones_map[me_ob.name] = me_ob.vertex_groups
 
     # is need convert to world space
     if props.world_space:
@@ -293,7 +289,6 @@ def do_export_skeleton(context, props, thearmature, filepath):
         print("None actions data Set! skipping...")
         return
 
-    del pd_bones_list[:] # clear cache, may add to next export file
     bpy.ops.object.mode_set(mode='POSE')
     context.scene.frame_set(context.scene.frame_start)
     # write file head
@@ -307,24 +302,44 @@ def do_export_skeleton(context, props, thearmature, filepath):
             transform4 = bone.matrix
         boneElem = ET.SubElement(xmlParent, "Bone", name=bone.name)
         ET.SubElement(boneElem, "Transform").text = '%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f' % (transform4[0][0],transform4[1][0],transform4[2][0],transform4[3][0],transform4[0][1],transform4[1][1],transform4[2][1],transform4[3][1],transform4[0][2],transform4[1][2],transform4[2][2],transform4[3][2],transform4[0][3],transform4[1][3],transform4[2][3],transform4[3][3])
-        pd_bones_list.append(bone)
         # add children
         if( bone.children ):
             for child in bone.children:
                 do_export_bone(child, boneElem)
 
     # export all bones
-    for b in thearmature.pose.bones:
+    total_bones_list = thearmature.pose.bones
+    for b in total_bones_list:
       if( not b.parent ): #only treat root bones'
-        print( "Find root bone: " + b.name )
+        rootBoneNam = b.name
         do_export_bone(b, xmlRoot)
-    print("Export total %d bones" % len(pd_bones_list))
+    print('Export root bone "%s", total %d bones' % (rootBoneNam, len(total_bones_list)))
 
     # export actions
     bpy.ops.object.mode_set(mode='OBJECT')
+    # export mesh bones
+    total_bones_list = thearmature.data.bones
+    meshElem = ET.SubElement(xmlRoot, "Mesh")
+    for k in mesh_bones_map.keys():
+        objElem = ET.SubElement(meshElem, "Object", name=k)
+        for value in mesh_bones_map[k]:
+            findBone = None
+            for bone in total_bones_list:
+                if bone.name == value.name:
+                    findBone = bone
+            if findBone:
+                boneElem = ET.SubElement(objElem, "Bone", name=value.name)
+                transform3 = findBone.matrix
+                if findBone.parent:
+                    transform3 = findBone.parent.matrix * transform3
+                transform3 = transform3.inverted()
+                translate = findBone.head
+                ET.SubElement(boneElem, "Transform").text = '%f, %f, %f, 0.0, %f, %f, %f, 0.0, %f, %f, %f, 0.0, %f, %f, %f, 1.0' % (transform3[0][0],transform3[1][0],transform3[2][0],transform3[0][1],transform3[1][1],transform3[2][1],transform3[0][2],transform3[1][2],transform3[2][2],translate.x, translate.y, translate.z)
+
     anim_rate  = context.scene.render.fps
     restoreAction   = thearmature.animation_data.action    # Q: is animation_data always valid?
     restoreFrame    = context.scene.frame_current       # we already do this in export_proxy, but we'll do it here too for now
+    total_bones_list = thearmature.pose.bones
     for arm_action in bpy.data.actions:
         if not len(arm_action.fcurves):
             print("{} has no keys, skipping".format(arm_action.name))
@@ -343,17 +358,8 @@ def do_export_skeleton(context, props, thearmature, filepath):
         frame_count         = len(scene_range)
 
         # build a list of pose bones relevant to the collated pd_bones_list
-        pose_bones_list = []
-        for b in pd_bones_list:
-            for pb in thearmature.pose.bones:
-                if b.name == pb.name:
-                    pose_bones_list.append(pb)
-                    break;
         # export bones keyframe
         action_xml_name = arm_action.name
-        origin_split_name = action_xml_name.split('|')
-        if origin_split_name[0] == "Armature" and len(origin_split_name) >= 3:
-            action_xml_name = origin_split_name[1]
         armEle = ET.SubElement(xmlRoot, "Animation", name=action_xml_name, length='%f' % ((frame_count-1)/anim_rate))
         for i in range(frame_count):
             frame = scene_range[i]
@@ -361,7 +367,7 @@ def do_export_skeleton(context, props, thearmature, filepath):
             context.scene.frame_set(frame)
 
             frameEle = ET.SubElement(armEle, "KeyFrame", time='%f' % (i/anim_rate))
-            for pose_bone in pose_bones_list:
+            for pose_bone in total_bones_list:
                 pose_bone_matrix = mathutils.Matrix(pose_bone.matrix)
                 # convert bone matrix from parent
                 if pose_bone.parent != None:
@@ -463,16 +469,18 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
         # find all mesh and armature
         meshes = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
         armatures = [arm for arm in bpy.context.scene.objects if arm.type == 'ARMATURE']
-        pstname = None
-        # export skeleton text file if need
-        if len(armatures) > 0 and props.export_pst:
+        # calc skeleton file name if need
+        isNeedPst = len(armatures) > 0 and props.export_pst
+        if isNeedPst:
             pstpath = bpy.path.ensure_ext(filepath, ".pst")
             pstname = os.path.basename(pstpath)
-            exported = do_export_skeleton(context, props, armatures[0], pstpath)
-            print('Export skeleton file:%s' % pstpath)
         # export mesh
         exported = do_export_mesh(context, props, meshes, filepath, pstname)
         print('Export mesh file:%s' % filepath)
+        # export skekelton
+        if isNeedPst:
+            exported = do_export_skeleton(context, props, armatures[0], pstpath)
+            print('Export skeleton file:%s' % pstpath)
 
         if exported:
             print('Finished export in %s seconds' %((time.time() - start_time)))
