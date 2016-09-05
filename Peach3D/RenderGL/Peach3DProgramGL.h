@@ -56,7 +56,7 @@ namespace Peach3D
         /** Update shadow uniform buffer for 3d object. */
         void updateObjectShadowsUniforms(const std::vector<LightPtr>& shadows);
         /** Update bone uniform buffer for 3d object. */
-        void updateObjectBoneUniforms(const SkeletonPtr& sk);
+        void updateObjectBoneUniforms(const SkeletonPtr& sk, const std::vector<std::string>& names);
         
         /** Update widget uniforms for 2d object, include matrix/textures... */
         virtual void updateWidgetUniforms(Widget* widget);

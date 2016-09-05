@@ -23,22 +23,11 @@ namespace Peach3D
     void ISkeleton::addBonesOver()
     {
         mCacheBones.clear();
-        mUsedBonesCount = 0;
         if (mRootBoneList.size() > 0) {
             for (auto root : mRootBoneList) {
                 mCacheBones.push_back(root);
                 // cache all bones and clac count
                 cacheChildrenBonesList(root);
-            }
-            // sort bones by index
-            std::sort(mCacheBones.begin(), mCacheBones.end(), [](Bone* a, Bone* b)->int{
-                return a->getIndex() < b->getIndex();
-            });
-            // calc valid bone count, invalid bone not need memory which index is -1
-            for (auto bone : mCacheBones) {
-                if (bone->getIndex() >= 0) {
-                    mUsedBonesCount++;
-                }
             }
         }
     }
@@ -68,16 +57,8 @@ namespace Peach3D
         if (mCacheBones.size() > 0) {
             // update bones transform, cache list also update too
             for (auto root : mRootBoneList) {
-                root->timeBoneMatrix(name, time);
+                mCacheBoneMats[root->getName()] = root->timeBoneMatrix(name, time);
                 cacheChildrenBonesMatrix(root, name, time);
-            }
-        }
-        // update all bones transform
-        mCacheBoneMats.clear();
-        for (auto bone : mCacheBones) {
-            // only add valid index for animation, -1 not used in vertex
-            if (bone->getIndex() >= 0) {
-                mCacheBoneMats.push_back(bone->getCacheMatrix());
             }
         }
     }
@@ -86,7 +67,7 @@ namespace Peach3D
     {
         auto children = parent->getChildren();
         for (auto child : children) {
-            child->timeBoneMatrix(name, time);
+            mCacheBoneMats[child->getName()] = child->timeBoneMatrix(name, time);
             cacheChildrenBonesMatrix(child, name, time);
         }
     }
@@ -97,5 +78,14 @@ namespace Peach3D
             return mAnimations[name];
         }
         return 0.f;
+    }
+    
+    std::vector<Matrix4> ISkeleton::getBonesAnimMatrix(const std::vector<std::string>& names)
+    {
+        std::vector<Matrix4> cached;
+        for (auto name : names) {
+            cached.push_back(mCacheBoneMats[name]);
+        }
+        return cached;
     }
 }

@@ -410,9 +410,9 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateObjectBoneUniforms(const SkeletonPtr& sk)
+    void ProgramGL::updateObjectBoneUniforms(const SkeletonPtr& sk, const std::vector<std::string>& names)
     {
-        Peach3DAssert(sk->getUsedBoneCount() == mBoneCount, "Bone count must equal to program count!");
+        Peach3DAssert(names.size() == mBoneCount, "Bone count must equal to program count!");
         if (mBoneUBOId != GL_INVALID_INDEX && mBoneUBOSize > 0) {
             glBindBuffer(GL_UNIFORM_BUFFER, mBoneUBOId);
             // map shadow buffer and copy memory on GL3
@@ -420,8 +420,8 @@ namespace Peach3D
             for (auto uniform : mBoneUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eBoneMatrix: {
-                        auto matrixList = sk->getBonesMatrix();
-                        for (auto i=0; i<sk->getUsedBoneCount(); ++i) {
+                        auto matrixList = sk->getBonesAnimMatrix(names);
+                        for (auto i=0; i<mBoneCount; ++i) {
                             float* originData = matrixList[i].mat;
                             data[i * 12 + 0] = originData[0];
                             data[i * 12 + 1] = originData[4];
@@ -756,8 +756,9 @@ namespace Peach3D
                     // bone uniforms
                 case UniformNameType::eBoneMatrix:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        auto sk = node->getBindSkeleton();
-                        auto matrixList = sk->getBonesMatrix();
+                        auto& sk = node->getBindSkeleton();
+                        auto& boneNames = node->getObject()->getUsedBones();
+                        auto matrixList = sk->getBonesAnimMatrix(boneNames);
                         float mData[12 * matrixList.size()];
                         for (auto i=0; i<matrixList.size(); ++i) {
                             float* originData = matrixList[i].mat;

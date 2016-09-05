@@ -16,7 +16,7 @@ namespace Peach3D
     class PEACH3D_DLL ISkeleton
     {
     public:
-        ISkeleton(const char* name) : mName(name), mUsedBonesCount(0) {}
+        ISkeleton(const char* name) : mName(name) {}
         virtual ~ISkeleton();
         const std::string& getName() { return mName; }
         
@@ -29,12 +29,10 @@ namespace Peach3D
         Bone* findBone(const char* name);
         /** Return all bone count, must called after addBonesOver. */
         int getAllBoneCount() { return (int)mCacheBones.size(); }
-        /** Return used bone count, must called after addBonesOver. See @mUsedBonesCount. */
-        int getUsedBoneCount() { return mUsedBonesCount; }
         /** Update bone current matrix and fill buffer. */
         virtual void fillAnimateBuffer(const std::string& name, float time);
         /** Return all bone matrix, must called after fillAnimateBuffer. */
-        const std::vector<Matrix4>& getBonesMatrix() { return mCacheBoneMats; }
+        std::vector<Matrix4> getBonesAnimMatrix(const std::vector<std::string>& names);
         
         /** Add new animation name and time. */
         void addAnimateTime(const char* name, float time) { Peach3DAssert(name && time > 0.f, "Animatie name or time not valid"); mAnimations[name] = time; }
@@ -51,8 +49,7 @@ namespace Peach3D
         std::string mName;
         std::vector<Bone*> mRootBoneList;   // skeleton may not have only root bone
         std::vector<Bone*> mCacheBones;     // cache all bones to list, accelerate calc transform and find
-        std::vector<Matrix4> mCacheBoneMats;// cache all bones transform each render frame
-        uint               mUsedBonesCount; // object used bone count, mCacheBones may not all used
+        std::map<std::string, Matrix4> mCacheBoneMats;// cache all bones transform each render frame
         
         std::map<std::string, float> mAnimations;
     };

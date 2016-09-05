@@ -166,7 +166,8 @@ namespace Peach3D
                 firstNode->updateSkeletonAnimate();
                 // update bone UBO
                 if (PD_RENDERLEVEL_GL3()) {
-                    usedProgramGL->updateObjectBoneUniforms(firstNode->getBindSkeleton());
+                    auto& boneNames = firstNode->getObject()->getUsedBones();
+                    usedProgramGL->updateObjectBoneUniforms(firstNode->getBindSkeleton(), boneNames);
                 }
             }
             

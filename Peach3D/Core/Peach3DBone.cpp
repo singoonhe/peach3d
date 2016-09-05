@@ -38,7 +38,7 @@ namespace Peach3D
         }
     }
     
-    void Bone::timeBoneMatrix(const std::string& name, float time)
+    const Matrix4& Bone::timeBoneMatrix(const std::string& name, float time)
     {
         if (mAnimationFrames.find(name) != mAnimationFrames.end()) {
             auto frameList = mAnimationFrames[name];
@@ -81,5 +81,6 @@ namespace Peach3D
         }
         // current matrix = transform * pose matrix, transform = current matrix * pose inverse matrix
         mCacheMatrix = mWorldMatrix  *  mInvTransform;
+        return mCacheMatrix;
     }
 }
