@@ -566,7 +566,7 @@ namespace Peach3D
                 skName = pName;
                 Peach3DLog(LogLevel::eInfo, "Create skeleton with default name \"%s\"", skName);
             }
-            auto newSk = IRender::getSingletonPtr()->createSkeleton(skName);
+            SkeletonPtr newSk(new Skeleton(skName));
             mSkeletonMap[skName] = newSk;
             return newSk;
         }

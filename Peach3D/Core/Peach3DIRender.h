@@ -15,7 +15,7 @@
 #include "Peach3DITexture.h"
 #include "Peach3DIObject.h"
 #include "Peach3DColor4.h"
-#include "Peach3DISkeleton.h"
+#include "Peach3DSkeleton.h"
 
 namespace Peach3D
 {
@@ -67,9 +67,6 @@ namespace Peach3D
          * @return pointer of new program, return nullptr if create failed.
          */
         virtual ProgramPtr createProgram(uint pId) = 0;
-        
-        /** Create skeleton with name, each have buffer object. */
-        virtual SkeletonPtr createSkeleton(const char* name) = 0;
         
     protected:
         bool        mIsRenderValid;     // render is init?

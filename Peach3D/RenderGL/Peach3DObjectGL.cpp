@@ -12,7 +12,6 @@
 #include "Peach3DProgramGL.h"
 #include "Peach3DRenderGL.h"
 #include "Peach3DTextureGL.h"
-#include "Peach3DSkeletonGL.h"
 #include "Peach3DSprite.h"
 #include "Peach3DUtils.h"
 #include "Peach3DRenderNode.h"

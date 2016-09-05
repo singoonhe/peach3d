@@ -12,7 +12,7 @@
 #include "Peach3DCompile.h"
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
-#include "Peach3DISkeleton.h"
+#include "Peach3DSkeleton.h"
 #include "tinyxml2/tinyxml2.h"
 
 using namespace tinyxml2;

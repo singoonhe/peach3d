@@ -12,7 +12,7 @@
 #include "Peach3DCommonGL.h"
 #include "Peach3DIProgram.h"
 #include "Peach3DLight.h"
-#include "Peach3DISkeleton.h"
+#include "Peach3DSkeleton.h"
 
 namespace Peach3D
 {

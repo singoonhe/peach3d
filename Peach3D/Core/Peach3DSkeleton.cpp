@@ -1,16 +1,16 @@
 //
-//  Peach3DISkeleton.cpp
+//  Peach3DSkeleton.cpp
 //  Peach3DLib
 //
 //  Created by singoon.he on 5/9/16.
 //  Copyright © 2016 singoon.he. All rights reserved.
 //
 
-#include "Peach3DISkeleton.h"
+#include "Peach3DSkeleton.h"
 
 namespace Peach3D
 {
-    ISkeleton::~ISkeleton()
+    Skeleton::~Skeleton()
     {
         // delete all root bones
         for (auto bone : mRootBoneList) {
@@ -20,7 +20,7 @@ namespace Peach3D
         mCacheBones.clear();
     }
     
-    void ISkeleton::addBonesOver()
+    void Skeleton::addBonesOver()
     {
         mCacheBones.clear();
         if (mRootBoneList.size() > 0) {
@@ -32,7 +32,7 @@ namespace Peach3D
         }
     }
     
-    Bone* ISkeleton::findBone(const char* name)
+    Bone* Skeleton::findBone(const char* name)
     {
         Peach3DAssert(mCacheBones.size() > 0, "Find bone must called after \"addBonesOver\"");
         for (auto bone : mCacheBones) {
@@ -43,7 +43,7 @@ namespace Peach3D
         return nullptr;
     }
     
-    void ISkeleton::cacheChildrenBonesList(Bone* parent)
+    void Skeleton::cacheChildrenBonesList(Bone* parent)
     {
         auto children = parent->getChildren();
         for (auto child : children) {
@@ -52,7 +52,7 @@ namespace Peach3D
         }
     }
     
-    void ISkeleton::fillAnimateBuffer(const std::string& name, float time)
+    void Skeleton::fillAnimateBuffer(const std::string& name, float time)
     {
         if (mCacheBones.size() > 0) {
             // update bones transform, cache list also update too
@@ -63,7 +63,7 @@ namespace Peach3D
         }
     }
     
-    void ISkeleton::cacheChildrenBonesMatrix(Bone* parent, const std::string& name, float time)
+    void Skeleton::cacheChildrenBonesMatrix(Bone* parent, const std::string& name, float time)
     {
         auto children = parent->getChildren();
         for (auto child : children) {
@@ -72,7 +72,7 @@ namespace Peach3D
         }
     }
     
-    float ISkeleton::getAnimateTime(const std::string& name)
+    float Skeleton::getAnimateTime(const std::string& name)
     {
         if (mAnimations.find(name) != mAnimations.end()) {
             return mAnimations[name];
@@ -80,7 +80,7 @@ namespace Peach3D
         return 0.f;
     }
     
-    std::vector<Matrix4> ISkeleton::getBonesAnimMatrix(const std::vector<std::string>& names)
+    std::vector<Matrix4> Skeleton::getBonesAnimMatrix(const std::vector<std::string>& names)
     {
         std::vector<Matrix4> cached;
         for (auto name : names) {

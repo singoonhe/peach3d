@@ -17,7 +17,7 @@ Core/Peach3DIObject.cpp \
 Core/Peach3DIPlatform.cpp \
 Core/Peach3DIRender.cpp \
 Core/Peach3DIScene.cpp \
-Core/Peach3DISkeleton.cpp \
+Core/Peach3DSkeleton.cpp \
 Core/Peach3DITexture.cpp \
 Core/Peach3DLayoutManager.cpp \
 Core/Peach3DLight.cpp \
@@ -46,7 +46,6 @@ RenderGL/Peach3DCommonGL.cpp \
 RenderGL/Peach3DObjectGL.cpp \
 RenderGL/Peach3DProgramGL.cpp \
 RenderGL/Peach3DRenderGL.cpp \
-RenderGL/Peach3DSkeletonGL.cpp \
 RenderGL/Peach3DShaderCodeGL.cpp \
 RenderGL/Peach3DTextureGL.cpp \
 RenderGL/Peach3DImageParse.cpp \

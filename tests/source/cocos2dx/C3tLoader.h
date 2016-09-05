@@ -13,7 +13,7 @@
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
 #include "Peach3DMesh.h"
-#include "Peach3DISkeleton.h"
+#include "Peach3DSkeleton.h"
 #include "Peach3DTypes.h"
 
 using namespace Peach3D;
