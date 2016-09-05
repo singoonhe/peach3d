@@ -66,8 +66,8 @@ namespace Peach3D
         IAppDelegate* delegate;
     };
     
-    /////////////////////language type////////////////////
-    enum class PEACH3D_DLL LanguageType
+    /////////////////////language type, must modify LanguageTypeNames same time////////////////////
+    enum PEACH3D_DLL LanguageType
     {
         eUnknow,        // unknow language
         eEnglish,

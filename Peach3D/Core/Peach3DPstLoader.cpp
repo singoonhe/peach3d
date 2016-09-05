@@ -46,7 +46,7 @@ namespace Peach3D
         auto poseEle = boneEle->FirstChildElement("Pose");
         if (poseEle) {
             // create new Bone
-            Bone* newBone = new Bone(boneEle->Attribute("name"), -1);
+            Bone* newBone = new Bone(boneEle->Attribute("name"));
             std::vector<std::string> strList = Utils::split(poseEle->GetText(), ',');
             Peach3DAssert(strList.size()>=16, "Invaid transform data in pst file");
             Matrix4 poseMat;

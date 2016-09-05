@@ -18,6 +18,8 @@
 namespace Peach3D
 {
     IMPLEMENT_SINGLETON_STATIC(IPlatform);
+    // language type names
+    static std::vector<std::string> LanguageTypeNames = {"Unknow", "English", "Chinese-Hans", "Chinese-Hant", "French", "Russian"};
     
     IPlatform::IPlatform() :mRender(nullptr), mCurrentFPS(0), mDrawCount(0), mTriangleCount(0), mAnimating(false), mTerminating(false),
     mResourceMgr(nullptr), mFeatureLevel(RenderFeatureLevel::eUnkonw), mSceneManager(nullptr), mEventDispatcher(nullptr),
@@ -104,7 +106,7 @@ namespace Peach3D
         // print OS version
         mLogPrinter->print(LogLevel::eInfo, "OS version: %s", mOSVerStr.c_str());
         // print local language
-        mLogPrinter->print(LogLevel::eInfo, "Local language: %d", mLocalLanguage);
+        mLogPrinter->print(LogLevel::eInfo, "Local language: %s", LanguageTypeNames[mLocalLanguage].c_str());
         // print device model
         mLogPrinter->print(LogLevel::eInfo, "Device model: %s", mDeviceModel.c_str());
         // create resource manager

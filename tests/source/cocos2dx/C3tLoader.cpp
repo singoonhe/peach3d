@@ -17,6 +17,7 @@ struct C3tObjectValue {
     string  objName;
     string  matName;
     Matrix4 objTran;
+    std::vector<std::string> boneNames;
 };
 
 static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<string, C3tObjectValue>& idNames, const map<string, Material>& materials)
@@ -25,10 +26,12 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
     for (SizeType i = 0; i < parts.Size(); i++) {
         auto partIdName = parts[i]["id"].GetString();
         string objName, materialName;
+        std::vector<std::string> boneNames;
         for (auto iter = idNames.begin(); iter != idNames.end(); ++iter) {
             if (iter->second.objName.compare(partIdName) == 0) {
                 objName = iter->first;
                 materialName = iter->second.matName;
+                boneNames = iter->second.boneNames;
                 break;
             }
         }
@@ -113,24 +116,22 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
             if (materialName.size() > 0 && findMat != materials.end()) {
                 dObj->setMaterial(findMat->second);
             }
+            
+            // set bones
+            if (boneNames.size() > 0) {
+                dObj->setUsedBones(boneNames);
+            }
         }
     }
 }
 
-static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bones, const vector<Matrix4>& matrixList, Bone* parent = nullptr)
+static Bone* c3tBoneDataParse(const Value& boneValue, map<string, Matrix4>& boneMatrixMap, Bone* parent = nullptr)
 {
     // read bone name and index
     auto boneName = boneValue["id"].GetString();
-    int boneIndex = -1;
-    for (auto i=0; i<bones.size(); ++i) {
-        if (bones[i].compare(boneName) == 0) {
-            boneIndex = i;
-            break;
-        }
-    }
     // bone may not used for vertex, also need generate it
-    Bone* newBone = new Bone(boneName, boneIndex);
-    // read bone orign transform
+    Bone* newBone = new Bone(boneName);
+    // read bone pose transform
     Matrix4 orignMat;
     const Value& transformValue = boneValue["transform"];
     for (auto i=0; i<transformValue.Size(); ++i) {
@@ -138,9 +139,7 @@ static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bone
     }
     newBone->setPoseTransform(orignMat);
     // set bone animate inverse transform
-    if (boneIndex >= 0) {
-        newBone->setInverseTransform(matrixList[boneIndex]);
-    }
+    newBone->setInverseTransform(boneMatrixMap[boneName]);
     // add new bone to parent
     if (parent) {
         parent->addChild(newBone);
@@ -149,7 +148,7 @@ static Bone* c3tBoneDataParse(const Value& boneValue, const vector<string>& bone
     if (boneValue.HasMember("children")) {
         const Value& childrenValue = boneValue["children"];
         for (auto i=0; i<childrenValue.Size(); ++i) {
-            c3tBoneDataParse(childrenValue[i], bones, matrixList, newBone);
+            c3tBoneDataParse(childrenValue[i], boneMatrixMap, newBone);
         }
     }
     return newBone;
@@ -196,8 +195,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     
     MeshPtr* dMesh = (MeshPtr*)input.handler;
     SkeletonPtr c3tSkeleton = nullptr;
-    vector<string> bonesList;
-    vector<Matrix4> bonesMatrixList;
+    map<string, Matrix4> bonesMatrixMap;
     // find object name
     map<string, C3tObjectValue> idNameList;
     const Value& nodes = document["nodes"];
@@ -216,19 +214,22 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             // read object bones
             const Value& bonesValue = nodeParts["bones"];
             for (int j=0; j<bonesValue.Size(); j++) {
-                bonesList.push_back(bonesValue[j]["node"].GetString());
+                // read used bone name
+                auto boneName = bonesValue[j]["node"].GetString();
+                nodeObj.boneNames.push_back(boneName);
+                // read used bone invert transform
                 const Value& boneTranValue = bonesValue[j]["transform"];
                 Matrix4 boneTransform;
                 for (int n=0; n<16; n++) {
                     boneTransform.mat[n] = boneTranValue[n].GetDouble();
                 }
-                bonesMatrixList.push_back(boneTransform);
+                bonesMatrixMap[boneName] = boneTransform;
             }
         }
         else {
             // read skeleton and fill bones
             c3tSkeleton = ResourceManager::getSingleton().createSkeleton((*dMesh)->getName());
-            auto rootBone = c3tBoneDataParse(nodeValue, bonesList, bonesMatrixList);
+            auto rootBone = c3tBoneDataParse(nodeValue, bonesMatrixMap);
             c3tSkeleton->addRootBone(rootBone);
             // set bone over, cache bones list
             c3tSkeleton->addBonesOver();
