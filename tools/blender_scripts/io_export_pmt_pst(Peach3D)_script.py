@@ -470,6 +470,7 @@ class Export_pmt(bpy.types.Operator, ExportHelper):
         armatures = [arm for arm in bpy.context.scene.objects if arm.type == 'ARMATURE']
         # calc skeleton file name if need
         isNeedPst = len(armatures) > 0 and props.export_pst
+        pstname = None
         if isNeedPst:
             pstpath = bpy.path.ensure_ext(filepath, ".pst")
             pstname = os.path.basename(pstpath)
