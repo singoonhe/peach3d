@@ -42,7 +42,7 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
             // calc vertex type and data size
             uint floatCount = 0;
             uint verType = 0;
-            uint uvIndex = 0;
+            uint colorOffset = 0;
             const Value& vTypeList = object["attributes"];
             for (SizeType j = 0; j < vTypeList.Size(); j++) {
                 auto attrString = vTypeList[j]["attribute"].GetString();
@@ -55,35 +55,51 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
                     verType = verType | VertexType::Normal;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_TEX_COORD") == 0) {
-                    floatCount += 2; uvIndex = floatCount;
+                    floatCount += 2;
                     verType = verType | VertexType::UV;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_BLEND_WEIGHT") == 0) {
                     floatCount += 4;
                     verType = verType | VertexType::Bone;
                 }
-                Peach3DAssert(strcmp(attrString, "VERTEX_ATTRIB_COLOR") != 0, "Not support vertex color");
+                else if (strcmp(attrString, "VERTEX_ATTRIB_COLOR") == 0) {
+                    // not support color, mark offset
+                    colorOffset = 4;
+                }
             }
             
             const Value& vertexValue = object["vertices"];
             int c3tFCount = (verType & VertexType::Bone ) ? (floatCount + 4) : floatCount;
+            c3tFCount += colorOffset; // mark offset
             auto vertexCount = vertexValue.Size()/c3tFCount;
             // malloc vertex data
             uint verDataSize = floatCount * sizeof(float) * vertexCount;
             float* verData = (float*)malloc(verDataSize);
             // read vertex data, c3t use 4 float for BONE, Peach3D use 2 float.
             for (int k = 0; k < vertexCount; k++) {
-                int copyCount = (verType & VertexType::Bone) ? (floatCount - 2) : floatCount;
-                for (int m = 0; m < copyCount; m++) {
+                // copy point and normal
+                int c3tIndex = (verType & VertexType::Normal) ? 6 : 3;
+                int curIndex = c3tIndex;
+                for (int m = 0; m < curIndex; m++) {
                     verData[k * floatCount + m] = vertexValue[k * c3tFCount + m].GetDouble();
                 }
-                // Reverse coord V, cocos2dx used not same as Peach3D
-                if (uvIndex > 0) {
-                    verData[k * floatCount + uvIndex-1] = 1.f - verData[k * floatCount + uvIndex-1];
+                // ignore color attribute
+                if (colorOffset > 0) {
+                    c3tIndex += colorOffset;
                 }
+                // copy UV coord
+                if (verType & VertexType::UV) {
+                    verData[k * floatCount + curIndex] = vertexValue[k * c3tFCount + c3tIndex].GetDouble();
+                    // Reverse coord V, cocos2dx used not same as Peach3D
+                    verData[k * floatCount + curIndex + 1] = 1.f - vertexValue[k * c3tFCount + c3tIndex + 1].GetDouble();
+                    c3tIndex += 2; curIndex += 2;
+                }
+                // copy bone data
                 if (verType & VertexType::Bone) {
-                    verData[k * floatCount + copyCount] = vertexValue[k * c3tFCount + copyCount + 2].GetDouble();
-                    verData[k * floatCount + copyCount + 1] = vertexValue[k * c3tFCount + copyCount + 3].GetDouble();
+                    verData[k * floatCount + curIndex] = vertexValue[k * c3tFCount + c3tIndex].GetDouble();
+                    verData[k * floatCount + curIndex + 1] = vertexValue[k * c3tFCount + c3tIndex + 1].GetDouble();
+                    verData[k * floatCount + curIndex + 2] = vertexValue[k * c3tFCount + c3tIndex + 4].GetDouble();
+                    verData[k * floatCount + curIndex + 3] = vertexValue[k * c3tFCount + c3tIndex + 5].GetDouble();
                 }
             }
             dObj->setVertexBuffer(verData, verDataSize, verType);
@@ -199,6 +215,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     // find object name
     map<string, C3tObjectValue> idNameList;
     const Value& nodes = document["nodes"];
+    // read bones invert transform first
     for (SizeType i = 0; i < nodes.Size(); i++) {
         const Value& nodeValue = nodes[i];
         if (nodeValue["skeleton"].GetBool() == false) {
@@ -226,7 +243,11 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
                 bonesMatrixMap[boneName] = boneTransform;
             }
         }
-        else {
+    }
+    // must after inverted transform, save bones tree
+    for (SizeType i = 0; i < nodes.Size(); i++) {
+        const Value& nodeValue = nodes[i];
+        if (nodeValue["skeleton"].GetBool() == true) {
             // read skeleton and fill bones
             c3tSkeleton = ResourceManager::getSingleton().createSkeleton((*dMesh)->getName());
             auto rootBone = c3tBoneDataParse(nodeValue, bonesMatrixMap);
