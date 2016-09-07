@@ -91,7 +91,7 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
                 if (verType & VertexType::UV) {
                     verData[k * floatCount + curIndex] = vertexValue[k * c3tFCount + c3tIndex].GetDouble();
                     // Reverse coord V, cocos2dx used not same as Peach3D
-                    verData[k * floatCount + curIndex + 1] = 1.f - vertexValue[k * c3tFCount + c3tIndex + 1].GetDouble();
+                    verData[k * floatCount + curIndex + 1] = vertexValue[k * c3tFCount + c3tIndex + 1].GetDouble();
                     c3tIndex += 2; curIndex += 2;
                 }
                 // copy bone data
@@ -218,7 +218,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     // read bones invert transform first
     for (SizeType i = 0; i < nodes.Size(); i++) {
         const Value& nodeValue = nodes[i];
-        if (nodeValue["skeleton"].GetBool() == false) {
+        if (nodeValue["skeleton"].GetBool() == false && nodeValue.HasMember("parts")) {
             const Value& nodeParts = nodeValue["parts"][0];
             C3tObjectValue& nodeObj = idNameList[nodeValue["id"].GetString()];
             nodeObj.objName = nodeParts["meshpartid"].GetString();
@@ -229,18 +229,20 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
                 nodeObj.objTran.mat[j] = objTranValue[j].GetDouble();
             }
             // read object bones
-            const Value& bonesValue = nodeParts["bones"];
-            for (int j=0; j<bonesValue.Size(); j++) {
-                // read used bone name
-                auto boneName = bonesValue[j]["node"].GetString();
-                nodeObj.boneNames.push_back(boneName);
-                // read used bone invert transform
-                const Value& boneTranValue = bonesValue[j]["transform"];
-                Matrix4 boneTransform;
-                for (int n=0; n<16; n++) {
-                    boneTransform.mat[n] = boneTranValue[n].GetDouble();
+            if (nodeParts.HasMember("bones")) {
+                const Value& bonesValue = nodeParts["bones"];
+                for (int j=0; j<bonesValue.Size(); j++) {
+                    // read used bone name
+                    auto boneName = bonesValue[j]["node"].GetString();
+                    nodeObj.boneNames.push_back(boneName);
+                    // read used bone invert transform
+                    const Value& boneTranValue = bonesValue[j]["transform"];
+                    Matrix4 boneTransform;
+                    for (int n=0; n<16; n++) {
+                        boneTransform.mat[n] = boneTranValue[n].GetDouble();
+                    }
+                    bonesMatrixMap[boneName] = boneTransform;
                 }
-                bonesMatrixMap[boneName] = boneTransform;
             }
         }
     }
