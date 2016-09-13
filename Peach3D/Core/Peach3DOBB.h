@@ -32,7 +32,7 @@ namespace Peach3D
         /** Check is Ray intersect. */
         bool isRayIntersect(const Ray& ray);
         
-        void setModelMatrix(const Matrix4& translate, const Matrix4& rotate, const Matrix4& scale);
+        void setModelMatrix(const Matrix4& model);
         const Matrix4& getModelMatrix() { return mModelMat; }
         
     private:

@@ -31,6 +31,10 @@ namespace Peach3D
         void unbindSkeleton();
         const SkeletonPtr getBindSkeleton() { return mBindSkeleton; }
         bool isBindSkeleton() { return mBindSkeleton != nullptr; }
+        /** Attach scene node to bone. Notice: attached node need use self to generate. */
+        void attachNodeToBone(const char* bone, SceneNode* node);
+        /** Detach scene node from list. */
+        void detachNode(const SceneNode* node);
         
         /** Run animation, repeat forever if repeat is true. */
         void runAnimate(const char* name, bool loop = true);
@@ -80,6 +84,10 @@ namespace Peach3D
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));
         /** Create child scene node by name. */
         SceneNode* createChild(const std::string& name);
+        /** Set model matrix directly. */
+        void setModelMatrix(const Matrix4& model);
+        /** Get current model matrix. */
+        const Matrix4& getModelMatrix() { return mModelMatrix; }
         /** Set scene node position. */
         void setPosition(const Vector3& pos);
         /** Get scene node position, default pos relative to parent. */
@@ -142,6 +150,8 @@ namespace Peach3D
         Vector3         mRotation;      // scene node rotation
         Quaternion      mRotateQuat;    // scene node rotation by Quaternion
         bool            mRotateUseVec;  // true for rotate by Vector3, false for rotate by Quaternion
+        Matrix4         mModelMatrix;   // used model matrix
+        bool            mUsedModelMatrix;// is used matrix for model directly, default is false
         
         Vector3         mWorldPosition; // cache scene node world position
         Vector3         mWorldScale;    // cache scene node world scale
@@ -155,7 +165,8 @@ namespace Peach3D
         bool            mAnimateLoop;   // is animate loop
         float           mAnimateSpeed;  // run animate speed, default 1.f
         float           mAnimateTotalTime;      // current animate total time
-        std::function<void()>   mAnimateFunc;   // animate over called function
+        std::function<void()>               mAnimateFunc;   // animate over called function
+        std::map<std::string, SceneNode*>   mBoneAttachedNodes; // bones bind scenenode
         
         bool            mLightEnable;   // is lighting enabled, default is true
         bool            mIsLightingDirty;       // is lighting state need update

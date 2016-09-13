@@ -30,7 +30,7 @@ namespace Peach3D
     class PEACH3D_DLL Bone
     {
     public:
-        Bone(const char* name) : mName(name), mAttachedNode(nullptr), mParentBone(nullptr) {}
+        Bone(const char* name) : mName(name), mParentBone(nullptr) {}
         ~Bone();
         const std::string& getName() { return mName; }
         Bone* getParentBone() { return mParentBone; }
@@ -50,9 +50,6 @@ namespace Peach3D
         /** Calc bone current transform matrix. */
         const Matrix4& timeBoneMatrix(const std::string& name, float time);
         const Matrix4& getWorldMatrix() { return mWorldMatrix; }
-        /** Attach scene node to bone, such as weapon. */
-        void attachNode(SceneNode* tn) { mAttachedNode = tn; }
-        void detachNode() { mAttachedNode = nullptr; }
         
     private:
         /** Set parent bone, only called for addChild. */
@@ -65,7 +62,6 @@ namespace Peach3D
         Matrix4     mCacheMatrix;   // cache bone time transform, pass to program
         Matrix4     mWorldMatrix;
         Bone*       mParentBone;
-        SceneNode*  mAttachedNode;
         
         std::vector<Bone*> mChildren;
         std::map<std::string, std::vector<BoneKeyFrame>> mAnimationFrames;

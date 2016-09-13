@@ -9,10 +9,10 @@
 #include "Peach3DOBB.h"
 
 namespace Peach3D
-{
-    void OBB::setModelMatrix(const Matrix4& translate, const Matrix4& rotate, const Matrix4& scale)
+{    
+    void OBB::setModelMatrix(const Matrix4& model)
     {
-        mModelMat = translate * rotate * scale * mLocalMat;
+        mModelMat = model * mLocalMat;
     }
     
     void OBB::calcCacheMatrix(const Vector3& min, const Vector3& max)
