@@ -39,7 +39,8 @@ namespace Peach3D
         mAnimateSpeed = 1.f;
         mAnimateTotalTime = 0.f;
         mAnimateFunc = nullptr;
-        mUsedModelMatrix = false;
+        // default, not used bone matrix
+        mIsExternalMat = false;
     }
     
     void SceneNode::attachMesh(const MeshPtr& mesh)
@@ -190,10 +191,10 @@ namespace Peach3D
         return newNode;
     }
     
-    void SceneNode::setModelMatrix(const Matrix4& model)
+    void SceneNode::setExternalMatrix(const Matrix4& mat)
     {
-        mModelMatrix = model;
-        mUsedModelMatrix = true;
+        mExternalMatrix = mat;
+        mIsExternalMat = true;
         setNeedUpdateRenderingAttributes();
     }
     
@@ -366,7 +367,7 @@ namespace Peach3D
                 for (auto iter = mBoneAttachedNodes.begin(); iter != mBoneAttachedNodes.end(); ++iter) {
                     auto findBone = mBindSkeleton->findBone(iter->first.c_str());
                     if (findBone) {
-                        iter->second->setModelMatrix(findBone->getWorldMatrix());
+                        iter->second->setExternalMatrix(findBone->getWorldMatrix());
                     }
                 }
             }
@@ -376,35 +377,36 @@ namespace Peach3D
     void SceneNode::updateRenderingAttributes(float lastFrameTime)
     {
         if (mIsRenderDirty) {
-            if (!mUsedModelMatrix) {
-                // update world position and world scale
-                mWorldPosition = mPosition;
-                mWorldScale = mScale;
-                mWorldRotation = mRotation;
-                SceneNode* parent = static_cast<SceneNode*>(mParentNode);
-                SceneNode* rootNode = SceneManager::getSingletonPtr()->getRootSceneNode();
-                if (parent && parent != rootNode) {
-                    mWorldPosition = mWorldPosition + parent->getPosition(TranslateRelative::eWorld);
-                    mWorldScale = mWorldScale * parent->getScale(TranslateRelative::eWorld);
-                }
-                
-                Matrix4 rotateMatrix;
-                // update matrix. Sequence: scale, rotation, translation
-                Matrix4 scaleMat = Matrix4::createScaling(mWorldScale);
-                Matrix4 translateMat = Matrix4::createTranslation(mWorldPosition);
-                if (mRotateUseVec) {
-                    rotateMatrix = Matrix4::createRotationPitchYawRoll(mRotation);
-                }
-                else {
-                    rotateMatrix = Matrix4::createRotationQuaternion(mRotateQuat);
-                }
-                mModelMatrix = translateMat * rotateMatrix * scaleMat;
+            // update world position and world scale
+            mWorldPosition = mPosition;
+            mWorldScale = mScale;
+            mWorldRotation = mRotation;
+            Matrix4 parentMatrix;
+            SceneNode* parent = static_cast<SceneNode*>(mParentNode);
+            SceneNode* rootNode = SceneManager::getSingletonPtr()->getRootSceneNode();
+            if (parent && parent != rootNode) {
+                mWorldPosition = mWorldPosition + parent->getPosition(TranslateRelative::eWorld);
+                mWorldScale = mWorldScale * parent->getScale(TranslateRelative::eWorld);
+                // cache parent model matrix
+                parentMatrix = parent->getModelMatrix();
+            }
+            
+            // update matrix. Sequence: scale, rotation, translation
+            Matrix4 scaleMat = Matrix4::createScaling(mScale);
+            Matrix4 translateMat = Matrix4::createTranslation(mPosition);
+            Matrix4 rotateMatrix;
+            if (mRotateUseVec) {
+                rotateMatrix = Matrix4::createRotationPitchYawRoll(mRotation);
             }
             else {
-                // also need transform parent matrix if use model matrix directly
-                SceneNode* parent = static_cast<SceneNode*>(mParentNode);
-                mModelMatrix = parent->getModelMatrix() * mModelMatrix;
+                rotateMatrix = Matrix4::createRotationQuaternion(mRotateQuat);
             }
+            mModelMatrix = translateMat * rotateMatrix * scaleMat;
+            mModelMatrix = parentMatrix * mModelMatrix;
+            if (mIsExternalMat) {
+                mModelMatrix = mModelMatrix * mExternalMatrix;
+            }
+
             // set model matrix to all child RenderNode
             for (auto node : mRenderNodeMap) {
                 node.second->setModelMatrix(mModelMatrix);

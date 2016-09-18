@@ -84,10 +84,6 @@ namespace Peach3D
         SceneNode* createChild(const Vector3& pos=Vector3Zero, const Vector3& rotation=Vector3Zero, const Vector3& scale=Vector3(1.0f,1.0f,1.0f));
         /** Create child scene node by name. */
         SceneNode* createChild(const std::string& name);
-        /** Set model matrix directly. */
-        void setModelMatrix(const Matrix4& model);
-        /** Get current model matrix. */
-        const Matrix4& getModelMatrix() { return mModelMatrix; }
         /** Set scene node position. */
         void setPosition(const Vector3& pos);
         /** Get scene node position, default pos relative to parent. */
@@ -112,6 +108,10 @@ namespace Peach3D
         const Vector3& getScale(TranslateRelative type = TranslateRelative::eLocal);
         /** Set attach mesh alpha. */
         virtual void setAlpha(float alpha);
+        /** Set external node matrix, such as bone. */
+        void setExternalMatrix(const Matrix4& mat);
+        /** Get current model matrix. */
+        const Matrix4& getModelMatrix() { return mModelMatrix; }
         
         /**
          * Default DepthBias not enabled, enabled it when depthBias not equal 0.0f.
@@ -150,8 +150,9 @@ namespace Peach3D
         Vector3         mRotation;      // scene node rotation
         Quaternion      mRotateQuat;    // scene node rotation by Quaternion
         bool            mRotateUseVec;  // true for rotate by Vector3, false for rotate by Quaternion
-        Matrix4         mModelMatrix;   // used model matrix
-        bool            mUsedModelMatrix;// is used matrix for model directly, default is false
+        Matrix4         mModelMatrix;   // cache current node model matrix
+        Matrix4         mExternalMatrix;// external matrix, such as bone
+        bool            mIsExternalMat; // is used external matrix(like bone attached), default is false
         
         Vector3         mWorldPosition; // cache scene node world position
         Vector3         mWorldScale;    // cache scene node world scale
