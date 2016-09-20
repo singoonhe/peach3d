@@ -84,13 +84,22 @@ namespace Peach3D
     {
         if (bone && node) {
             bool isChild = false;
+            bool isAttached = false;
             for (auto child : mChildNodeList) {
                 if (child == node) {
                     isChild = true;
                 }
             }
+            for (auto iter : mBoneAttachedNodes) {
+                if (iter.second == node) {
+                    isAttached = true;
+                }
+            }
             Peach3DAssert(isChild, "Must attached child to bone");
-            mBoneAttachedNodes[bone] = node;
+            Peach3DAssert(!isAttached, "Node had attached to another bone");
+            if (!isAttached) {
+                mBoneAttachedNodes[bone] = node;
+            }
         }
     }
     
