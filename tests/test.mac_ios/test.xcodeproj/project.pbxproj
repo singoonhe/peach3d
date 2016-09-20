@@ -41,8 +41,8 @@
 		18461D911CA25C16001A9829 /* girl.pmt in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8E1CA25C16001A9829 /* girl.pmt */; };
 		18461D921CA25C16001A9829 /* girl.png in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8F1CA25C16001A9829 /* girl.png */; };
 		18461D931CA25C16001A9829 /* girl.png in Resources */ = {isa = PBXBuildFile; fileRef = 18461D8F1CA25C16001A9829 /* girl.png */; };
-		18461D981CA25C78001A9829 /* CostumeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* CostumeScene.cpp */; };
-		18461D991CA25C78001A9829 /* CostumeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* CostumeScene.cpp */; };
+		18461D981CA25C78001A9829 /* DollScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* DollScene.cpp */; };
+		18461D991CA25C78001A9829 /* DollScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461D961CA25C78001A9829 /* DollScene.cpp */; };
 		18461DAA1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */; };
 		18461DAB1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */; };
 		184962CD1C4A42B100304991 /* peach.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 184962CA1C4A42B100304991 /* peach.mtl */; };
@@ -187,8 +187,8 @@
 		184532A71C72D8A1000B8F66 /* peach3d_ui.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = peach3d_ui.xml; sourceTree = "<group>"; };
 		18461D8E1CA25C16001A9829 /* girl.pmt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = girl.pmt; sourceTree = "<group>"; };
 		18461D8F1CA25C16001A9829 /* girl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = girl.png; sourceTree = "<group>"; };
-		18461D961CA25C78001A9829 /* CostumeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CostumeScene.cpp; sourceTree = "<group>"; };
-		18461D971CA25C78001A9829 /* CostumeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CostumeScene.h; sourceTree = "<group>"; };
+		18461D961CA25C78001A9829 /* DollScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DollScene.cpp; sourceTree = "<group>"; };
+		18461D971CA25C78001A9829 /* DollScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DollScene.h; sourceTree = "<group>"; };
 		18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RTTShadowScene.cpp; sourceTree = "<group>"; };
 		18461DA91CAA68F6001A9829 /* RTTShadowScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTTShadowScene.h; sourceTree = "<group>"; };
 		184962CA1C4A42B100304991 /* peach.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = peach.mtl; sourceTree = "<group>"; };
@@ -561,8 +561,8 @@
 				184106FC1B6B8E2D005133E2 /* BaseSample.h */,
 				184107041B6CAD4B005133E2 /* BaseScene.cpp */,
 				184107051B6CAD4B005133E2 /* BaseScene.h */,
-				18461D961CA25C78001A9829 /* CostumeScene.cpp */,
-				18461D971CA25C78001A9829 /* CostumeScene.h */,
+				18461D961CA25C78001A9829 /* DollScene.cpp */,
+				18461D971CA25C78001A9829 /* DollScene.h */,
 				182181831C579FBD00635EFE /* DeviceScene.cpp */,
 				182181841C579FBD00635EFE /* DeviceScene.h */,
 				187D771A1C8ECF9300F5D161 /* LightScene.cpp */,
@@ -808,7 +808,7 @@
 				188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107061B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
-				18461D981CA25C78001A9829 /* CostumeScene.cpp in Sources */,
+				18461D981CA25C78001A9829 /* DollScene.cpp in Sources */,
 				18F9F4D719C5E5640023C83B /* PlatformDelegate.cpp in Sources */,
 				18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */,
 				18461DAA1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */,
@@ -829,7 +829,7 @@
 				188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107071B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
-				18461D991CA25C78001A9829 /* CostumeScene.cpp in Sources */,
+				18461D991CA25C78001A9829 /* DollScene.cpp in Sources */,
 				187CF63319C7053100C8094C /* PlatformDelegate.cpp in Sources */,
 				18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */,
 				18461DAB1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */,

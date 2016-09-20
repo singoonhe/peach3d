@@ -14,7 +14,7 @@
 #include "DeviceScene.h"
 #include "LightScene.h"
 #include "RTTShadowScene.h"
-#include "CostumeScene.h"
+#include "DollScene.h"
 
 struct SceneLinker {
     std::string title;
@@ -25,10 +25,11 @@ std::vector<SceneLinker> gTestSceneList = {{"Device Test", []()->BaseScene* {ret
     {"UI Test", []()->BaseScene* {return new UIScene();}},
     {"Actions Test", []()->BaseScene* {return new ActionScene();}},
     {"Mesh Test", []()->BaseScene* {return new MeshScene();}},
+    {"Doll System", []()->BaseScene* {return new DollScene();}},
     {"Light Test", []()->BaseScene* {return new LightScene();}},
-    {"Touch Test", []()->BaseScene* {return new TouchScene();}},
     {"Rtt Shadow Test", []()->BaseScene* {return new RTTShadowScene();}},
-    {"Costume Test", []()->BaseScene* {return new CostumeScene();}}};
+    {"Touch Test", []()->BaseScene* {return new TouchScene();}},
+};
 
 bool TestScene::init()
 {

@@ -90,18 +90,19 @@ void EngineMeshSample::init(Widget* parentWidget)
     mDesc = "load *.pmt(Peach3D Mesh Text) and *.pmb(Peach3D Mesh Binary) file";
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     auto texMesh = ResourceManager::getSingleton().addMesh("texcube.pmt");
-    auto texNode = rootNode->createChild(Vector3(-6.f, 3.f, 0.f));
+    auto texNode = rootNode->createChild(Vector3(-6.f, 0.f, 0.f));
     texNode->attachMesh(texMesh);
     // rotate repeat
     texNode->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, 0.0f, DEGREE_TO_RADIANS(360.0f)), 5.0f)));
     
     // create skeleton mesh
     auto skMesh = ResourceManager::getSingleton().addMesh("donghua.pmt");
-    auto skNode = rootNode->createChild(Vector3(0.f, -3.f, 0.f));
+    auto skNode = rootNode->createChild(Vector3(6.f, -3.f, 0.f));
     skNode->attachMesh(skMesh);
     skNode->setScale(Vector3(0.3f));
-    skNode->runAnimate("Take 001");
+    skNode->runAnimate("Armature|Take 001|BaseLayer");
     skNode->setAnimateSpeed(0.1f);
+    skNode->setDrawMode(DrawMode::eLine);
 }
 
 void ExtendMeshSample::init(Widget* parentWidget)
@@ -114,15 +115,13 @@ void ExtendMeshSample::init(Widget* parentWidget)
     
     // create animate mesh with default speed
     auto c3tMesh = ResourceManager::getSingleton().addMesh("orc_jump.c3t");
-    auto c3tNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-4.f, -3.f, 0.f));
+    auto c3tNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(-6.f, 0.f, 0.f));
     c3tNode->attachMesh(c3tMesh);
-    c3tNode->setRotation(Vector3(0.f, DEGREE_TO_RADIANS(180.f), 0.f));
-    c3tNode->setScale(Vector3(0.3f));
-    // run animate whit name
-    c3tNode->runAnimate("Take 001");
+    c3tNode->setRotation(Vector3(DEGREE_TO_RADIANS(90.f), 0.f, DEGREE_TO_RADIANS(180.f)));
+    c3tNode->setScale(Vector3(0.5f));
     
     // create slow speed animate mesh
-    auto c3tNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(4.f, -3.f, 0.f));
+    auto c3tNode2 = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(6.f, -3.f, 0.f));
     c3tNode2->attachMesh(c3tMesh);
     c3tNode2->setRotation(Vector3(0.f, DEGREE_TO_RADIANS(180.f), 0.f));
     c3tNode2->setScale(Vector3(0.3f));
@@ -131,8 +130,8 @@ void ExtendMeshSample::init(Widget* parentWidget)
     c3tNode2->runAnimate("Take 001");
     // create notice label
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
-    Label* halfLabel = Label::create("half speed", 20 * LayoutManager::getSingleton().getMinScale());
-    halfLabel->setPosition(Vector2(screenSize.x * 0.65f, screenSize.y * 0.67f));
+    Label* halfLabel = Label::create("half animation speed", 20 * LayoutManager::getSingleton().getMinScale());
+    halfLabel->setPosition(Vector2(screenSize.x * 0.68f, screenSize.y * 0.67f));
     halfLabel->setFillColor(Color3Red);
     parentWidget->addChild(halfLabel);
 }
