@@ -160,6 +160,61 @@ namespace Peach3D
             \n#endif
         \n#endif\n
     });
+
+
+    // 2D particle vertex shader
+    const char* gVerParticleShaderCode2D = STRINGIFY(\
+    #ifdef PD_LEVEL_GL3\n
+        in vec2 pd_vertex;
+        in vec4 pd_color;       /* Particle point color. */
+        in vec2 pd_pSprite;     /* Particle point size and rotate. */
+        uniform vec4 pd_viewRect;
+        out float out_rotate;
+        out vec4 out_color;
+    \n#else\n
+        attribute vec2 pd_vertex;
+        attribute vec4 pd_color;       /* Particle point color. */
+        attribute vec2 pd_pSprite;     /* Particle point size and rotate. */
+        uniform vec4 pd_viewRect;
+        varying float out_rotate;
+        varying vec4 out_color;
+    \n#endif\n
+
+    void main(void)
+    {\n
+        gl_Position = vec2(pd_vertex.x/pd_viewRect.z - 1.0, pd_vertex.y/pd_viewRect.w - 1.0);
+        gl_PointSize = pd_pSprite.x;
+        out_rotate = pd_pSprite.y;
+        out_color = pd_color;
+        \n#endif\n
+    });
+
+    // 2D particle fragment shader
+    const char* gFragParticleShaderCode2D = STRINGIFY(\
+    #ifdef PD_LEVEL_GL3\n
+        in float out_rotate;
+        in vec4 out_color;
+        uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+        out vec4 out_FragColor;
+    \n#else\n
+        varying float out_rotate;
+        varying vec4 out_color;
+        uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+    \n#endif\n
+
+    void main(void)
+    {\n
+        vec2 rotatedUV = gl_PointCoord;
+        if (out_rotate > 0.0001 || out_rotate < -0.0001) {
+            rotatedUV = vec2(cos(out_rotate) * (gl_PointCoord.x - 0.5) + sin(out_rotate) * (gl_PointCoord.y - 0.5) + 0.5,
+                        cos(out_rotate) * (gl_PointCoord.y - 0.5) - sin(out_rotate) * (gl_PointCoord.x - 0.5) + 0.5);
+        }
+        \n#ifdef PD_LEVEL_GL3
+            out_FragColor = texture(pd_texture0, rotatedUV) * out_color;
+        \n#else\n
+            gl_FragColor = texture2D(pd_texture0, rotatedUV) * out_color;
+        \n#endif\n
+    });
 }
 
 #endif // PD_SHADERCODE_2D_H

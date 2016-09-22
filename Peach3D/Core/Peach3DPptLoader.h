@@ -22,7 +22,7 @@ namespace Peach3D
     {
     public:
         /* *.pp2 is Peach3D 2D Particle Text file. */
-        static bool pptParticleDataParse(uchar* orignData, ulong length, const char* dir, const ParticlePtr& pp);
+        static Particle2D* pptParticleDataParse(uchar* orignData, ulong length, const char* dir);
         
     private:
         /* Read object data, include vertex/index/material. */
@@ -39,7 +39,7 @@ namespace Peach3D
     {
     public:
         /* *.pp3 is Peach3D 3D Particle Text file. */
-        static bool pptParticleDataParse(uchar* orignData, ulong length, const char* dir, const ParticlePtr& pp);
+        static Particle3D* pptParticleDataParse(uchar* orignData, ulong length, const char* dir);
         
     private:
         /* Read object data, include vertex/index/material. */

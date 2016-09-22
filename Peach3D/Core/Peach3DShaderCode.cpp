@@ -70,8 +70,8 @@ namespace Peach3D
         
     std::string ShaderCode::getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature)
     {
-        // is vertex shader | is point3 | texture UV | light count | shadow count
-        return Utils::formatString("V%d|PT%d|TUV%d|LC%d|SC%d|SK%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount, feature.shadowCount, feature.boneCount);
+        // is vertex shader | is point3 | texture UV | light count | shadow count | is particle
+        return Utils::formatString("V%d|PT%d|TUV%d|LC%d|SC%d|SK%d|PC%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount, feature.shadowCount, feature.boneCount, feature.isParticle);
     }
     
     uint ShaderCode::getVerTypeOfProgramFeature(const PresetProgramFeatures& feature)
@@ -91,6 +91,9 @@ namespace Peach3D
         }
         if (feature.boneCount > 0) {
             verType = verType | VertexType::Bone;
+        }
+        if (feature.isParticle) {
+            verType = verType | VertexType::PSprite;
         }
         return verType;
     }

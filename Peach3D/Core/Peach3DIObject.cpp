@@ -17,7 +17,7 @@ namespace Peach3D
     {
     }
 
-    bool IObject::setVertexBuffer(const void* data, uint size, uint type)
+    bool IObject::setVertexBuffer(const void* data, uint size, uint type, bool isDynamic)
     {
         Peach3DAssert((type & VertexType::Point3) || (type & VertexType::Point2), "VertexType::Point must be included in IObject vertex buffer");
         // check vertex type, delete repeated type
@@ -40,31 +40,43 @@ namespace Peach3D
             return false;
         }
         
-        // calc border
-        const float* vData = (float*)data;
-        for (size_t i=0; i<(size / mVertexDataStride); ++i) {
-            // x
-            if (vData[0] < mBorderMin.x) {
-                mBorderMin.x = vData[0];
+        if (!(mVertexDataType & VertexType::PSprite)) {
+            // calc border
+            const float* vData = (float*)data;
+            for (size_t i=0; i<(size / mVertexDataStride); ++i) {
+                // x
+                if (vData[0] < mBorderMin.x) {
+                    mBorderMin.x = vData[0];
+                }
+                if (vData[0] > mBorderMax.x) {
+                    mBorderMax.x = vData[0];
+                }
+                // y
+                if (vData[1] < mBorderMin.y) {
+                    mBorderMin.y = vData[1];
+                }
+                if (vData[1] > mBorderMax.y) {
+                    mBorderMax.y = vData[1];
+                }
+                // z
+                if (vData[2] < mBorderMin.z) {
+                    mBorderMin.z = vData[2];
+                }
+                if (vData[2] > mBorderMax.z) {
+                    mBorderMax.z = vData[2];
+                }
+                vData = vData + mVertexDataStride/sizeof(float);
             }
-            if (vData[0] > mBorderMax.x) {
-                mBorderMax.x = vData[0];
-            }
-            // y
-            if (vData[1] < mBorderMin.y) {
-                mBorderMin.y = vData[1];
-            }
-            if (vData[1] > mBorderMax.y) {
-                mBorderMax.y = vData[1];
-            }
-            // z
-            if (vData[2] < mBorderMin.z) {
-                mBorderMin.z = vData[2];
-            }
-            if (vData[2] > mBorderMax.z) {
-                mBorderMax.z = vData[2];
-            }
-            vData = vData + mVertexDataStride/sizeof(float);
+        }
+        return true;
+    }
+    
+    bool IObject::resetVertexBuffer(const void* data, uint size)
+    {
+        // check data size
+        if (mVertexDataStride >0 && (size % mVertexDataStride) > 0) {
+            Peach3DLog(LogLevel::eError, "Object %s set vertx failed, type and data size not matched", mObjectName.c_str());
+            return false;
         }
         return true;
     }

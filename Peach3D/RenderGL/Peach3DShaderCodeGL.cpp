@@ -19,6 +19,7 @@ namespace Peach3D
         auto featureStr = ShaderCode::getNameOfProgramFeature(isVertex, feature);
         if (mShaderMap.find(featureStr) == mShaderMap.end()) {
             std::string shaderPreStr;
+            // particle have no UV attribute
             if (feature.isTexUV) {
                 shaderPreStr += "#define PD_ENABLE_TEXUV\n";
             }
@@ -43,9 +44,15 @@ namespace Peach3D
                 }
             }
             else {
-                // choose 2D node program
-                shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
-                shaderPreStr += isVertex ? gVerShaderCode2D : gFragShaderCode2D;
+                if (feature.isParticle) {
+                    // choose 2D particle program
+                    shaderPreStr += isVertex ? gVerParticleShaderCode2D : gFragParticleShaderCode2D;
+                }
+                else {
+                    // choose 2D node program
+                    shaderPreStr += isVertex ? gCommonVertexFunc2D : gCommonFragClipFunc2D;
+                    shaderPreStr += isVertex ? gVerShaderCode2D : gFragShaderCode2D;
+                }
             }
             mShaderMap[featureStr] = shaderPreStr;
         }
@@ -83,17 +90,20 @@ namespace Peach3D
                 }
             }
             else {
-                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
+                // particle only use pd_viewRect
+                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2 || feature.isParticle) {
                     uniforms.push_back(ProgramUniform("pd_viewRect", UniformDataType::eVector4));
                 }
-                uniforms.push_back(ProgramUniform("pd_showRect", UniformDataType::eVector4));
-                uniforms.push_back(ProgramUniform("pd_anRot", UniformDataType::eVector3));
-                uniforms.push_back(ProgramUniform("pd_patShowRect", UniformDataType::eVector4));
-                uniforms.push_back(ProgramUniform("pd_patAnRot", UniformDataType::eVector3));
-                uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
-                if (feature.isTexUV) {
-                    uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
-                    uniforms.push_back(ProgramUniform("pd_texEffect", UniformDataType::eVector3));
+                if (!feature.isParticle) {
+                    uniforms.push_back(ProgramUniform("pd_showRect", UniformDataType::eVector4));
+                    uniforms.push_back(ProgramUniform("pd_anRot", UniformDataType::eVector3));
+                    uniforms.push_back(ProgramUniform("pd_patShowRect", UniformDataType::eVector4));
+                    uniforms.push_back(ProgramUniform("pd_patAnRot", UniformDataType::eVector3));
+                    uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
+                    if (feature.isTexUV) {
+                        uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
+                        uniforms.push_back(ProgramUniform("pd_texEffect", UniformDataType::eVector3));
+                    }
                 }
             }
             mUniformsMap[featureStr] = uniforms;

@@ -10,13 +10,13 @@
 
 namespace Peach3D
 {
-    bool Pp2Loader::pptParticleDataParse(uchar* orignData, ulong length, const char* dir, const ParticlePtr& pp)
+    Particle2D* Pp2Loader::pptParticleDataParse(uchar* orignData, ulong length, const char* dir)
     {
-        return true;
+        return nullptr;
     }
     
-    bool Pp3Loader::pptParticleDataParse(uchar* orignData, ulong length, const char* dir, const ParticlePtr& pp)
+    Particle3D* Pp3Loader::pptParticleDataParse(uchar* orignData, ulong length, const char* dir)
     {
-        return true;
+        return nullptr;
     }
 }

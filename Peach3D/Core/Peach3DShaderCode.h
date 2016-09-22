@@ -68,9 +68,10 @@ namespace Peach3D
     // preset program params
     struct PEACH3D_DLL PresetProgramFeatures
     {
-        PresetProgramFeatures(bool _point3, bool _texUV=false, int _lCount=0, int _sCount=0, int _bCount=0) :isPoint3(_point3), isTexUV(_texUV), lightsCount(_lCount), shadowCount(_sCount), boneCount(_bCount) {}
+        PresetProgramFeatures(bool _point3, bool _texUV=false, int _lCount=0, int _sCount=0, int _bCount=0, bool _isParticle=false) :isPoint3(_point3), isTexUV(_texUV), lightsCount(_lCount), shadowCount(_sCount), boneCount(_bCount), isParticle(_isParticle) {}
         bool    isPoint3;       // 3D node or widget
         bool    isTexUV;        // is contain texture for UV
+        bool    isParticle;     // is used for particle
         int     lightsCount;    // lights count for 3D node
         int     shadowCount;    // shadow texture count for 3D node
         int     boneCount;      // bone count for 3d node

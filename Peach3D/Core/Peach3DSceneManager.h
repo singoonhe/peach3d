@@ -17,10 +17,10 @@
 #include "Peach3DSingleton.h"
 #include "Peach3DScheduler.h"
 #include "Peach3DLight.h"
-#include "Peach3DParticle.h"
 
 namespace Peach3D
 {
+    class Particle3D;
     struct PEACH3D_DLL Render3DPassContent
     {
         std::multimap<uint, RenderNode*> nodeMap;   // cache 3d render node map, using "multimap" to reduce sort
@@ -113,6 +113,8 @@ namespace Peach3D
         Widget*                 mDebugDrawNode;     // draw stats widget
         ObjectPtr               mWidgetObject;      // object for rendering widget
         ObjectPtr               mOBBObject;         // object for rendering OBB
+        ObjectPtr               mParticle2DObject;  // object for 2D particle
+        ObjectPtr               mParticle3DObject;  // object for 3D particle
         
         Camera*                 mActiveCamera;      // current active camera
         std::vector<Camera*>    mCameraList;        // scene camera list

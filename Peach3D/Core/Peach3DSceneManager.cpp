@@ -13,6 +13,7 @@
 #include "Peach3DUtils.h"
 #include "Peach3DLayoutManager.h"
 #include "Peach3DResourceManager.h"
+#include "Peach3DParticle.h"
 
 namespace Peach3D
 {
@@ -146,6 +147,18 @@ namespace Peach3D
             ushort fixedIndexData[] = {0, 1, 1, 2, 2, 3, 0, 3,  4, 5, 5, 6, 6, 7, 4, 7,  0, 4, 1, 5, 2, 6, 3, 7};
             mOBBObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point3);
             mOBBObject->setIndexBuffer(fixedIndexData, sizeof(fixedIndexData));
+        }
+        if (!mParticle2DObject) {
+            // create IObject for 2D particle
+            mParticle2DObject = IRender::getSingleton().createObject("pd_Particle2DObject");
+            float fixedVertexData[] = {0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f};
+            mParticle2DObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point2|VertexType::Color|VertexType::PSprite);
+        }
+        if (!mParticle3DObject) {
+            // create IObject for 3D particle
+            mParticle3DObject = IRender::getSingleton().createObject("pd_Particle3DObject");
+            float fixedVertexData[] = {0.f, 0.f, 0.f, 1.f, 1.f, 1.f, 1.f, 1.f, 0.f};
+            mParticle3DObject->setVertexBuffer(fixedVertexData, sizeof(fixedVertexData), VertexType::Point3|VertexType::Color|VertexType::PSprite);
         }
     }
     
@@ -310,7 +323,7 @@ namespace Peach3D
         }
         // draw all particles
         for (auto particle : content->particles) {
-            particle->render();
+            mParticle3DObject->render(particle);
         }
     }
     
@@ -449,7 +462,7 @@ namespace Peach3D
                     lastRenderWidget = nullptr;
                 }
                 // render particle
-                curParticle->render();
+                mParticle2DObject->render(curParticle);
             }
         }
         if (curList.size() > 0) {

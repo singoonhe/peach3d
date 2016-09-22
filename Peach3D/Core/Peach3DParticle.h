@@ -10,20 +10,21 @@
 #define PEACH3D_PARTICLE_H
 
 #include "Peach3DParticleEmitter.h"
-#include "Peach3DNode.h"
+#include "Peach3DWidget.h"
+#include "Peach3DSceneNode.h"
 
 namespace Peach3D
 {
-    class PEACH3D_DLL Particle : public Node
+    class PEACH3D_DLL Particle
     {
     public:
         Particle(const char* name) : mName(name) {}
         virtual ~Particle() {}
         const std::string& getName() { return mName; }
+        const std::vector<Emitter>& getEmitters() { return mEmitters; }
         
         void start();
         void end();
-        virtual void render() = 0;
         
     protected:
         /* Update rendering attributes. */
@@ -33,22 +34,13 @@ namespace Peach3D
         std::string mName;
         std::vector<Emitter>    mEmitters;
     };
-    // make shared particle simple
-    using ParticlePtr = std::shared_ptr<Particle>;
     
     /************************************** 2D particle emitter ***************************************/
-    class PEACH3D_DLL Particle2D : public Particle
+    class PEACH3D_DLL Particle2D : public Particle, public Widget
     {
     public:
         Particle2D(const char* name) : Particle(name) {}
         ~Particle2D() {}
-        
-        void render();
-        
-        /** Set current relative position. */
-        void setPosition(const Vector2& pos);
-        /** Get relative position or world position. */
-        const Vector2& getPosition(TranslateRelative type = TranslateRelative::eLocal);
         
     protected:
         /* Update rendering attributes. */
@@ -60,18 +52,11 @@ namespace Peach3D
     };
     
     /************************************** 3D particle emitter ***************************************/
-    class PEACH3D_DLL Particle3D : public Particle
+    class PEACH3D_DLL Particle3D : public Particle, public SceneNode
     {
     public:
         Particle3D(const char* name) : Particle(name) {}
         ~Particle3D() {}
-        
-        void render();
-        
-        /** Set current relative position. */
-        void setPosition(const Vector3& pos);
-        /** Get relative position or world position. */
-        const Vector3& getPosition(TranslateRelative type = TranslateRelative::eLocal);
         
     protected:
         /* Update rendering attributes. */

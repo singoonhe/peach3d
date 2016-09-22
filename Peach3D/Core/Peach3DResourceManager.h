@@ -13,7 +13,6 @@
 #include "Peach3DSingleton.h"
 #include "Peach3DITexture.h"
 #include "Peach3DMesh.h"
-#include "Peach3DParticle.h"
 #include "Peach3DShaderCode.h"
 #include "Peach3DTypes.h"
 
@@ -115,13 +114,6 @@ namespace Peach3D
         /** Delete skeleton. */
         void deleteSkeleton(const SkeletonPtr& sk);
         
-        /** Create particle from file, return ParticlePtr if success. */
-        ParticlePtr createParticle(const char* file);
-        /** Create empty particle. */
-        ParticlePtr createEmptyParticle(const char* name, bool is3D);
-        /** Delete particle. */
-        void deleteParticle(const ParticlePtr& sp);
-        
         /** Add program from file, windows need set isCompiled=true if use vs compiled.
          * @params vertexType Used to bind attribute or create layout for DX.
          * @params uniformList Use program needed uniforms info.
@@ -175,7 +167,6 @@ namespace Peach3D
         std::vector<std::string>            mSearchDirs;    // resource search dir list
         std::map<std::string, MeshPtr>      mMeshMap;       // mesh list
         std::map<std::string, SkeletonPtr>  mSkeletonMap;   // skeleton list
-        std::vector<ParticlePtr>            mParticleList;  // particle list
         std::map<uint, ProgramPtr>          mProgramMap;    // program list
         std::map<std::string, TexturePtr>   mTextureMap;    // texture list
         std::vector<TexturePtr>             mRTTList;       // RTT texture list, have no name

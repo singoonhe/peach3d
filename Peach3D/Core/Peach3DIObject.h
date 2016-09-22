@@ -40,6 +40,7 @@ namespace Peach3D
     
     class Widget;
     class RenderNode;
+    class Particle;
     class PEACH3D_DLL IObject
     {
     public:
@@ -56,8 +57,14 @@ namespace Peach3D
         * @params data Data of vertex buffer.
         * @params size Bit size of data.
         * @params type Vertex data type, must be one type of VertexDataType or combine with "|".
+        * @params isDynamic Is vertex buffer alway need modify.
         */
-        virtual bool setVertexBuffer(const void* data, uint size, uint type);
+        virtual bool setVertexBuffer(const void* data, uint size, uint type, bool isDynamic = false);
+        
+        /**
+         * @brief Reset vertex buffer data for render object.
+         */
+        virtual bool resetVertexBuffer(const void* data, uint size);
         /**
         * @brief Set index buffer data for drawing triangles.
         *  Triangles also will be drawed with array if index buffer isn't existed.
@@ -87,6 +94,10 @@ namespace Peach3D
          * @brief Render OBB list, called by SceneManager.
          */
         virtual void render(const std::vector<OBB*>& renderList) = 0;
+        /**
+         * @brief Render particle, called by SceneManager.
+         */
+        virtual void render(Particle* particle) = 0;
         
         const std::string& getName() { return mObjectName; }
         const Vector3& getBorderMax() { return mBorderMax; }

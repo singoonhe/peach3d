@@ -88,10 +88,10 @@ namespace Peach3D
         }
     }
 
-    bool ObjectGL::setVertexBuffer(const void* data, uint size, uint type)
+    bool ObjectGL::setVertexBuffer(const void* data, uint size, uint type, bool isDynamic)
     {
         // base object setVertexBuffer
-        bool result = IObject::setVertexBuffer(data, size, type);
+        bool result = IObject::setVertexBuffer(data, size, type, isDynamic);
 		// delete old vertex buffer
 		cleanObjectVertexBuffer();
         
@@ -99,11 +99,22 @@ namespace Peach3D
         if (data && size>0 && result) {
             glGenBuffers(1, &mVertexBuffer);
             glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-            glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, size, data, isDynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
         
         return result && mVertexBuffer;
+    }
+    
+    bool ObjectGL::resetVertexBuffer(const void* data, uint size)
+    {
+        bool result = IObject::resetVertexBuffer(data, size);
+        if (mVertexBuffer) {
+            glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+            glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+        return result;
     }
     
     void ObjectGL::setIndexBuffer(const void*data, uint size, IndexType type)
@@ -344,10 +355,59 @@ namespace Peach3D
         } while(0);
     }
     
+    void ObjectGL::render(Particle* particle)
+    {
+//        size_t listSize = renderList.size();
+//        Peach3DAssert(listSize > 0, "Can't render empty OBB node list.");
+//        do {
+//            IF_BREAK(listSize == 0, nullptr);
+//            
+//            IF_BREAK(!mBaseProgram || !mBaseProgram->useAsRenderProgram(), nullptr);
+//            if (PD_RENDERLEVEL_GL3()) {
+//                // update instanced uniforms
+//                mBaseProgram->updateInstancedOBBUniforms(renderList);
+//            }
+//            
+//            // bind vertex and index
+//            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+//                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mBaseProgram : nullptr);
+//            }
+//            else {
+//                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+//                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+//                bindObjectVertexAttrib();
+//            }
+//            
+//            // rendering
+//            if (PD_RENDERLEVEL_GL3()) {
+//                // draw OBB once
+//                glDrawElementsInstanced(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
+//                PD_ADD_DRAWCALL(1);
+//                PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
+//            }
+//            else {
+//                for (size_t i = 0; i < listSize; ++i) {
+//                    // update current OBB uniforms
+//                    mBaseProgram->updateOBBUniforms(renderList[i]);
+//                    // draw one OBB
+//                    glDrawElements(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
+//                    PD_ADD_DRAWCALL(1);
+//                    PD_ADD_DRAWTRIAGNLE(2);
+//                }
+//            }
+//            
+//            // unbind vertex and textures
+//            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+//                glBindVertexArray(0);
+//            }
+//            glBindBuffer(GL_ARRAY_BUFFER, 0);
+//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//        } while(0);
+    }
+    
     void ObjectGL::cleanObjectVertexBuffer()
     {
-        if (mVertexBuffer)
-        {
+        if (mVertexBuffer) {
             // delete vertex object
             glDeleteBuffers(1, &mVertexBuffer);
             mVertexBuffer = 0;

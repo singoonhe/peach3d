@@ -25,24 +25,32 @@ namespace Peach3D
         /**
          * See IObject::setVertexBuffer. 
          */
-        virtual bool setVertexBuffer(const void* data, uint size, uint type);
+        virtual bool setVertexBuffer(const void* data, uint size, uint type, bool isDynamic = false);
+        /**
+         * @brief Reset vertex buffer data for render object.
+         */
+        virtual bool resetVertexBuffer(const void* data, uint size);
         /**
         * See IObject::setIndexBuffer.
         */
         virtual void setIndexBuffer(const void*data, uint size, IndexType type = IndexType::eUShort);
         
         /**
-         * @brief Render widget list, only for GL3 and DX, called by SceneManager.
+         * @brief Render widget list, called by SceneManager.
          */
         virtual void render(const std::vector<Widget*>& renderList);
         /**
-         * @brief Render scene node list, only for GL3 and DX, called by SceneManager.
+         * @brief Render scene node list, called by SceneManager.
          */
         virtual void render(const std::vector<RenderNode*>& renderList);
         /**
-         * @brief Render OBB list, only for GL3 and DX, called by SceneManager.
+         * @brief Render OBB list, called by SceneManager.
          */
         virtual void render(const std::vector<OBB*>& renderList);
+        /**
+         * @brief Render particle, called by SceneManager.
+         */
+        virtual void render(Particle* particle);
         
     protected:
         /**

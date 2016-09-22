@@ -7,8 +7,6 @@
 //
 
 #include "Peach3DParticle.h"
-#include "Peach3DWidget.h"
-#include "Peach3DSceneNode.h"
 
 namespace Peach3D
 {
@@ -35,33 +33,6 @@ namespace Peach3D
     
     /************************************** 2D particle emitter ***************************************/
     
-    void Particle2D::render()
-    {
-        for (auto emitter : mEmitters) {
-            // render emitter points
-        }
-    }
-    
-    void Particle2D::setPosition(const Vector2& pos)
-    {
-        if (pos != mPos) {
-            mPos = pos;
-            // set children need update attributes
-            setNeedUpdateRenderingAttributes();
-        }
-    }
-    
-    const Vector2& Particle2D::getPosition(TranslateRelative type)
-    {
-        if (type == TranslateRelative::eWorld) {
-            updateRenderingAttributes(0.0f);
-            return mWorldPos;
-        }
-        else {
-            return mPos;
-        }
-    }
-    
     void Particle2D::updateRenderingAttributes(float lastFrameTime)
     {
         Widget* parent = dynamic_cast<Widget*>(mParentNode);
@@ -72,30 +43,6 @@ namespace Peach3D
     }
     
     /************************************** 2D particle emitter ***************************************/
-    
-    void Particle3D::render()
-    {
-    }
-    
-    void Particle3D::setPosition(const Vector3& pos)
-    {
-        if (pos != mPos) {
-            mPos = pos;
-            // set children need update attributes
-            setNeedUpdateRenderingAttributes();
-        }
-    }
-    
-    const Vector3& Particle3D::getPosition(TranslateRelative type)
-    {
-        if (type == TranslateRelative::eWorld) {
-            updateRenderingAttributes(0.0f);
-            return mWorldPos;
-        }
-        else {
-            return mPos;
-        }
-    }
     
     void Particle3D::updateRenderingAttributes(float lastFrameTime)
     {

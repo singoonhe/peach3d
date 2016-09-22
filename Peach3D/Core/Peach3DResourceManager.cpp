@@ -65,8 +65,6 @@ namespace Peach3D
         mMeshMap.clear();
         // skeleton will auto release, they are shared_ptr.
         mSkeletonMap.clear();
-        // particle will auto release, they are shared_ptr.
-        mParticleList.clear();
         // program will auto release, they are shared_ptr.
         mProgramMap.clear();
         delete mPresetShader;
@@ -95,15 +93,6 @@ namespace Peach3D
         for (auto it = mSkeletonMap.begin(); it != mSkeletonMap.end();) {
             if (it->second.use_count() <= 1) {
                 it = mSkeletonMap.erase(it);
-            }
-            else {
-                it++;
-            }
-        }
-        // release unhand particle
-        for (auto it = mParticleList.begin(); it != mParticleList.end();) {
-            if (it->use_count() <= 1) {
-                it = mParticleList.erase(it);
             }
             else {
                 it++;
@@ -581,71 +570,6 @@ namespace Peach3D
             // skeleton will auto release, so just erase from cache
             if (nameIter != mSkeletonMap.end()) {
                 mSkeletonMap.erase(nameIter);
-            }
-        }
-    }
-    
-    ParticlePtr ResourceManager::createParticle(const char* file)
-    {
-        ParticlePtr fileParticle = nullptr;
-        ulong fileLength = 0;
-        // get particle file data
-        uchar *fileData = getFileData(file, &fileLength);
-        if (fileLength > 0 && fileData) {
-            // get file name suffix
-            std::string fileName = file;
-            std::string ext = fileName.substr(fileName.rfind('.') == std::string::npos ? fileName.length() : fileName.rfind('.') + 1);
-            for (size_t i=0; i<ext.size(); ++i) {
-                ext[i] = tolower(ext[i]);
-            }
-            // load file data, add to map
-            bool loadResult = false;
-            std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
-            if (ext.compare("pp3") == 0) {
-                // use file name to particle
-                fileParticle = createEmptyParticle(file, true);
-                loadResult = Pp3Loader::pptParticleDataParse(fileData, fileLength, fileDir.c_str(), fileParticle);
-            }
-            else if (ext.compare("pp2") == 0) {
-                // use file name to particle
-                fileParticle = createEmptyParticle(file, false);
-                loadResult = Pp2Loader::pptParticleDataParse(fileData, fileLength, fileDir.c_str(), fileParticle);
-            }
-            if (loadResult) {
-                Peach3DLog(LogLevel::eInfo, "Load particle from file \"%s\" success", file);
-            }
-            // release memory data
-            free(fileData);
-        }
-        
-        return fileParticle;
-    }
-    
-    ParticlePtr ResourceManager::createEmptyParticle(const char* name, bool is3D)
-    {
-        if (name) {
-            if (is3D) {
-                ParticlePtr newSp(new Particle3D(name));
-                mParticleList.push_back(newSp);
-                return newSp;
-            }
-            else {
-                ParticlePtr newSp(new Particle2D(name));
-                mParticleList.push_back(newSp);
-                return newSp;
-            }
-        }
-        return nullptr;
-    }
-    
-    void ResourceManager::deleteParticle(const ParticlePtr& sp)
-    {
-        Peach3DAssert(sp, "Can't delete a null particle!");
-        if (sp) {
-            auto spIter = std::find(mParticleList.begin(), mParticleList.end(), sp);
-            // particle will auto release, so just erase from cache
-            if (spIter != mParticleList.end()) {
-                mParticleList.erase(spIter);
             }
         }
     }
