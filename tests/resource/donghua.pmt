@@ -2,7 +2,7 @@
 <Mesh version="0.1">
     <Skeleton>donghua.pst</Skeleton>
     <Object name="Box002">
-        <VertexType>54</VertexType>
+        <VertexType>106</VertexType>
         <VertexCount>28</VertexCount>
         <Vertexes>
             -9.683044, 0.000002, -0.000000, -0.707083, 0.000000, -0.707083, 1.000000, 0.500000, 0.500000, 0.500000, 0.0, 1.0

@@ -38,8 +38,9 @@ namespace Peach3D
         if (mVertexAttrList.size() == 0) {
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Point2, 2 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Point3, 3 * sizeof(float), DefaultAttrLocation::eVertex ,pdShaderVertexAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::Color, 4 * sizeof(float), DefaultAttrLocation::eColor ,pdShaderColorAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Normal, 3 * sizeof(float), DefaultAttrLocation::eNormal, pdShaderNormalAttribName));
-            mVertexAttrList.push_back(VertexAttrInfo(VertexType::PSize, sizeof(float), DefaultAttrLocation::ePSize, pdShaderPSizeAttribName));
+            mVertexAttrList.push_back(VertexAttrInfo(VertexType::PSprite, 2 * sizeof(float), DefaultAttrLocation::ePSprite, pdShaderPSpriteAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::UV, 2 * sizeof(float), DefaultAttrLocation::eUV, pdShaderUVAttribName));
             mVertexAttrList.push_back(VertexAttrInfo(VertexType::Bone, 4 * sizeof(float), DefaultAttrLocation::eSkeleton, pdShaderSkeletonAttribName));
         }

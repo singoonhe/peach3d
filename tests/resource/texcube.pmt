@@ -2,7 +2,7 @@
 <Mesh version="0.1">
 	<Object name="Cube">
 		<!--VertexType::Point3|VertexType::UV-->
-		<VertexType>18</VertexType>
+		<VertexType>34</VertexType>
 		<VertexCount>24</VertexCount>
 		<Vertexes>
 			1.000000, -1.000000, -1.000000, -0.000704, -0.002678,

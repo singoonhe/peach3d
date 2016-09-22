@@ -133,13 +133,13 @@ def do_export_object(context, props, me_ob, xmlRoot):
     # write vertex type
     if len(mesh.uv_textures) > 0:
         # VertexType::Point3|VertexType::UV
-        vertex_type_num = 18
+        vertex_type_num = 34
         if props.export_normal:
             # |VertexType::Normal
-            vertex_type_num += 4
+            vertex_type_num += 8
         if is_export_weight:
             # |VertexType::Skeleton
-            vertex_type_num += 32
+            vertex_type_num += 64
         ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # record vertex and index data
         uv_layer = mesh.uv_layers.active.data
@@ -194,10 +194,10 @@ def do_export_object(context, props, me_ob, xmlRoot):
         vertex_type_num = 2
         if props.export_normal:
             # |VertexType::Normal
-            vertex_type_num += 4
+            vertex_type_num += 8
         if is_export_weight:
             # |VertexType::Skeleton
-            vertex_type_num += 32
+            vertex_type_num += 64
         ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # write vertex count
         vertex_total_count = len(mesh.vertices)

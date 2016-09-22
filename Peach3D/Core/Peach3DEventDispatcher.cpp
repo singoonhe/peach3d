@@ -91,8 +91,11 @@ namespace Peach3D
     {
         // sort all node first depend on zorder or type
         sortEventNodes();
+        // event maybe trigged after engine destroyed
+        auto sceneMgr = SceneManager::getSingletonPtr();
+        if (!sceneMgr) return;
         
-        Widget* const rootNode = SceneManager::getSingletonPtr()->getRootWidget();
+        Widget* const rootNode = sceneMgr->getRootWidget();
         std::vector<uint>    rootNodeIds;
         std::vector<Vector2> rootNodePoss;
         // save last clicked node for double clicked event

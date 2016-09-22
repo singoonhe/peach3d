@@ -17,10 +17,12 @@ namespace Peach3D
 {
     // define the common shader vertex name, VertexType::Point2 or VertexType::Point3
     const char pdShaderVertexAttribName[]     = "pd_vertex";
+    // define the common shader color name
+    const char pdShaderColorAttribName[]      = "pd_color";
     // define the common shader normal name
     const char pdShaderNormalAttribName[]     = "pd_normal";
-    // define the common shader pSize name
-    const char pdShaderPSizeAttribName[]      = "pd_pSize";
+    // define the common shader point sprite name
+    const char pdShaderPSpriteAttribName[]  = "pd_pSprite";
     // define the common shader texture coord name
     const char pdShaderUVAttribName[]         = "pd_uv";
     // define the common shader skeleton name
@@ -30,8 +32,9 @@ namespace Peach3D
     enum class PEACH3D_DLL DefaultAttrLocation
     {
         eVertex,    // position attr in vertex
+        eColor,     // color attr in vertex
         eNormal,    // normal attr in vertex
-        ePSize,     // PSize attr in vertex
+        ePSprite,   // point sprite attr in vertex
         eUV,        // uv attr in vertex
         eSkeleton,  // skeleton attr in vertex
     };
