@@ -12,6 +12,7 @@
 #include "Peach3DCompile.h"
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
+#include "Peach3DTypes.h"
 #include "Peach3DSkeleton.h"
 #include "tinyxml2/tinyxml2.h"
 
@@ -22,7 +23,7 @@ namespace Peach3D
     {
     public:
         /* *.pst is Peach3D Skeleton Text file. */
-        static bool pstSkeletonDataParse(uchar* orignData, ulong length, const SkeletonPtr& sk);
+        static void* pstSkeletonDataParse(const ResourceLoaderInput& input);
 
     private:
         /* Read bones data from skeleton file. */

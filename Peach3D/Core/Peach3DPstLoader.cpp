@@ -12,11 +12,11 @@
 
 namespace Peach3D
 {
-    bool PstLoader::pstSkeletonDataParse(uchar* orignData, ulong length, const SkeletonPtr& sk)
+    void* PstLoader::pstSkeletonDataParse(const ResourceLoaderInput& input)
     {
         bool loadRes = false;
         XMLDocument readDoc;
-        if (readDoc.Parse((const char*)orignData, length) == XML_SUCCESS) {
+        if (readDoc.Parse((const char*)input.data, input.length) == XML_SUCCESS) {
             do {
                 XMLElement* rootEle = readDoc.FirstChildElement("Skeleton");
                 IF_BREAK(!rootEle, "Skeleton file format error");
@@ -25,20 +25,21 @@ namespace Peach3D
                 XMLElement* boneEle = rootEle->FirstChildElement();
                 if (boneEle) {
                     auto rootBone = PstLoader::pstBonesDataParse(boneEle, nullptr);
-                    sk->addRootBone(rootBone);
+                    SkeletonPtr* sk = static_cast<SkeletonPtr*>(input.handler);
+                    (*sk)->addRootBone(rootBone);
                     // set bone over, cache bones list
-                    sk->addBonesOver();
+                    (*sk)->addBonesOver();
                     // read animation elements
                     auto animEle = boneEle->NextSiblingElement();
                     while (animEle) {
-                        PstLoader::pstAnimationDataParse(animEle, sk);
+                        PstLoader::pstAnimationDataParse(animEle, (*sk));
                         animEle = animEle->NextSiblingElement();
                     }
                 }
                 loadRes = true;
             } while (0);
         }
-        return loadRes;
+        return loadRes ? input.handler : nullptr;
     }
     
     Bone* PstLoader::pstBonesDataParse(const XMLElement* boneEle, Bone* parent)

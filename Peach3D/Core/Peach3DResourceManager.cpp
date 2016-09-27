@@ -54,6 +54,7 @@ namespace Peach3D
         registerResourceLoaderFunction("obj", ObjLoader::objMeshDataParse);
         registerResourceLoaderFunction("pmt", PmtLoader::pmtMeshDataParse);
         registerResourceLoaderFunction("pmb", PmbLoader::pmbMeshDataParse);
+        registerResourceLoaderFunction("pst", PstLoader::pstSkeletonDataParse);
     }
     
     ResourceManager::~ResourceManager()
@@ -522,15 +523,14 @@ namespace Peach3D
                 for (size_t i=0; i<ext.size(); ++i) {
                     ext[i] = tolower(ext[i]);
                 }
-                // load file data, add to map
-                bool loadResult = false;
-                if (ext.compare("pst") == 0) {
-                    loadResult = PstLoader::pstSkeletonDataParse(fileData, fileLength, fileSkeleton);
+                void* skeRes = nullptr;
+                if (mResourceLoaders[ext]) {
+                    skeRes = mResourceLoaders[ext](ResourceLoaderInput(fileData, fileLength, &fileSkeleton));
                 }
-                else if (ext.compare("psb") == 0) {
-                    //loadResult = PstLoader::pstSkeletonDataParse(fileData, fileLength, fileSkeleton);
+                else {
+                    Peach3DLog(LogLevel::eError, "Did't support the skeleton format \"%s\"", ext.c_str());
                 }
-                if (loadResult) {
+                if (skeRes) {
                     Peach3DLog(LogLevel::eInfo, "Load skeleton from file \"%s\" success", file);
                 }
                 // release memory data
