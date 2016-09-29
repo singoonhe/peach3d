@@ -48,9 +48,13 @@ namespace Peach3D
          */
         virtual void render(const std::vector<OBB*>& renderList);
         /**
-         * @brief Render particle, called by SceneManager.
+         * @brief Render Particle2D, called by SceneManager.
          */
-        virtual void render(Particle* particle);
+        virtual void render(Particle2D* particle);
+        /**
+         * @brief Render Particle3D, called by SceneManager.
+         */
+        virtual void render(Particle3D* particle);
         
     protected:
         /**
@@ -78,6 +82,8 @@ namespace Peach3D
         
         std::map<GLuint, GLuint> mVAOMap;   // each program need different VAO (program will create VBO, bind to VAO)
         static ProgramPtr mBaseProgram;     // base rendering program, no texture and lights
+        static ProgramPtr mParticle2DProgram;   // particle program, render 2D point sprite
+        static ProgramPtr mParticle3DProgram;   // particle program, render 3D point sprite
     };
 }
 

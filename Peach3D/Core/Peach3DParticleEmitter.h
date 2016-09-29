@@ -13,13 +13,14 @@
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
 #include "Peach3DColor4.h"
+#include "Peach3DITexture.h"
 
 namespace Peach3D
 {
     struct PEACH3D_DLL ParticlePoint
     {
         ParticlePoint() : rotate(0.f), endRotate(0.f), size(0.f), endSize(0.f), time(0.f), lifeTime(0.f) {}
-        virtual void copy(const ParticlePoint& other) { color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime;}
+        ParticlePoint &operator=(const ParticlePoint& other){ color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Color4  color;      // point color and alpha
         Color4  endColor;   // point end color and alpha
         float   rotate;     // point rotation
@@ -33,28 +34,32 @@ namespace Peach3D
     class PEACH3D_DLL Emitter
     {
     public:
-        Emitter() : mValidCount(0), mRunningTime(0.f), mIsRunning(false) {}
-        ~Emitter() {}
+        Emitter() : mRunningTime(0.f), mIsRunning(false) {}
+        ~Emitter();
         
     public:
-        void start();
+        /** Start particle points update. */
+        virtual void start();
         /** Update particles count and normal attributes(size, color, time, rotate). */
         void update(float lastFrameTime);
-        void end();
+        /** Stop particle points update. */
+        virtual void end();
         
     protected:
         /** Update each particle point every frame. */
-        virtual void updatePointAttributes(ParticlePoint& point, float lastFrameTime) {};
+        virtual void updatePointAttributes(ParticlePoint* point, float lastFrameTime);
         /** Generate new particle point if count not max. */
         void generatePaticles(int number);
-        /** Generate particle with some rand attribute. */
-        virtual ParticlePoint generateRandPaticles();
+        /** Generate one particle point and rand attributes. */
+        virtual ParticlePoint* generateRandPaticles() = 0;
+        /** Reset particle point with rand attributes. */
+        virtual void randPaticlePointAttributes(ParticlePoint* point);
         
     public:
         uint    maxCount;       // max particle count, generate count per second
         float   duration;       // particle duration, -1 for loop
         float   lifeTime;       // each particle life time
-        float   lifeVariance;   // life time += rand(-variance, variance)
+        float   lifeTimeVariance;   // life time += rand(-variance, variance)
         // particle size
         float   startSize;
         float   startSizeVariance;
@@ -71,9 +76,10 @@ namespace Peach3D
         Color4  endColor;
         Color4  endColorVariance;
         
+        TextureFrame    texFrame;   // render frame, include texture and coord
+        
     protected:
-        std::vector<ParticlePoint> mPoints; // particle list, not alway valid
-        int     mValidCount;    // current valid particle count
+        std::vector<ParticlePoint*> mPoints;   // particle list, not alway valid
         float   mRunningTime;
         bool    mIsRunning;
     };
@@ -84,29 +90,42 @@ namespace Peach3D
     {
         ParticlePoint2D() : ParticlePoint() {}
         ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Vector2 pos;    // point render pos
         Vector2 dir;    // point moving direction
     };
     class PEACH3D_DLL Emitter2D : public Emitter
     {
     public:
-        Emitter2D() : Emitter() {}
-        ~Emitter2D() {}
+        Emitter2D() : Emitter(), mData(nullptr), mDataValidSize(0) {}
+        ~Emitter2D();
         
     public:
+        /** Return particle2d point stride. */
+        static int getPointStride() { return mPointStride; }
+        
         /** Update all particles position. */
-        virtual void update(float lastFrameTime);
+        void update(float lastFrameTime, const Vector2& curPos);
+        /** Return render data. */
+        float* getRenderBuffer() { return mData; }
+        /** Return render data size. */
+        int getRenderBufferSize() { return mDataValidSize; }
         
     protected:
         /** Update attributes for ParticlePoint2D. */
-        virtual void updatePointAttributes(ParticlePoint& point, float lastFrameTime);
-        /** Add new attributes for ParticlePoint2D. */
-        virtual ParticlePoint generateRandPaticles();
+        virtual void updatePointAttributes(ParticlePoint* point, float lastFrameTime);
+        /** Generate one particle point and rand attributes. */
+        virtual ParticlePoint* generateRandPaticles();
+        /** Reset particle point with rand attributes. */
+        virtual void randPaticlePointAttributes(ParticlePoint* point);
         
     public:
+        float*  mData;
+        int     mDataValidSize;
+        
         float   emitAngle;
         float   emitAngleVariance;
-        Vector2 emitPos;            // relative to the Particle2D position
+        Vector2 emitPos;                        // relative to the Particle2D position
         Vector2 emitPosVariance;
         
         // gravity emitter
@@ -115,9 +134,17 @@ namespace Peach3D
         Vector2 gravity;        // gravity X and gravity Y
         Vector2 accelerate;     // radial and tangential accelerate
         Vector2 accelerateVariance; // radial and tangential accelerate variance
+        
+        static int mPointStride;
     };
     
     /************************************** 3D particle emitter ***************************************/
+    class PEACH3D_DLL Emitter3D : public Emitter
+    {
+    public:
+        Emitter3D() : Emitter() {}
+        ~Emitter3D() {}
+    };
 }
 
 #endif /* PEACH3D_PARTICLE_EMITTER_H */

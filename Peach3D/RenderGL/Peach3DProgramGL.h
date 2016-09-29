@@ -68,6 +68,11 @@ namespace Peach3D
         /** Update instanced OBB uniforms depend on mProgramUniformList. */
         virtual void updateInstancedOBBUniforms(const std::vector<OBB*>& renderList);
         
+        /** Update 2d particle uniforms, include rect/textures... */
+        virtual void updateParticle2DUniforms(const Rect& coord);
+        /** Update 3d particle uniforms, include rect/textures... */
+        virtual void updateParticle3DUniforms(const Rect& coord);
+        
     protected:
         /** Compile program, this will be called automatically. */
         void compileProgram();

@@ -40,7 +40,8 @@ namespace Peach3D
     
     class Widget;
     class RenderNode;
-    class Particle;
+    class Particle2D;
+    class Particle3D;
     class PEACH3D_DLL IObject
     {
     public:
@@ -95,9 +96,13 @@ namespace Peach3D
          */
         virtual void render(const std::vector<OBB*>& renderList) = 0;
         /**
-         * @brief Render particle, called by SceneManager.
+         * @brief Render Particle2D, called by SceneManager.
          */
-        virtual void render(Particle* particle) = 0;
+        virtual void render(Particle2D* particle) = 0;
+        /**
+         * @brief Render Particle3D, called by SceneManager.
+         */
+        virtual void render(Particle3D* particle) = 0;
         
         const std::string& getName() { return mObjectName; }
         const Vector3& getBorderMax() { return mBorderMax; }

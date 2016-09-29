@@ -1091,6 +1091,28 @@ namespace Peach3D
         }
     }
     
+    void ProgramGL::updateParticle2DUniforms(const Rect& coord)
+    {
+        const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
+        // update widget uniforms in list
+        for (auto uniform : mProgramUniformList) {
+            switch (ShaderCode::getUniformNameType(uniform.name)) {
+                case UniformNameType::eViewRect:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        float viewRect[] = {0.0f, 0.0f, winSize.x, winSize.y};
+                        glUniform4fv(location, 1, viewRect);
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    void ProgramGL::updateParticle3DUniforms(const Rect& coord)
+    {
+    }
+    
     bool ProgramGL::useAsRenderProgram()
     {
         if (mProgram && mProgramValid) {

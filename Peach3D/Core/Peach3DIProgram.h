@@ -11,6 +11,7 @@
 
 #include "Peach3DCompile.h"
 #include "Peach3DVector2.h"
+#include "Peach3DRect.h"
 #include "Peach3DShaderCode.h"
 
 namespace Peach3D
@@ -81,6 +82,11 @@ namespace Peach3D
         virtual void updateOBBUniforms(OBB* obb) {};
         /** Update instanced OBB uniforms depend on mProgramUniformList. */
         virtual void updateInstancedOBBUniforms(const std::vector<OBB*>& renderList) = 0;
+        
+        /** Update 2d particle uniforms, include rect/textures... */
+        virtual void updateParticle2DUniforms(const Rect& coord) = 0;
+        /** Update 3d particle uniforms, include rect/textures... */
+        virtual void updateParticle3DUniforms(const Rect& coord) = 0;
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;

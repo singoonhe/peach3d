@@ -182,12 +182,11 @@ namespace Peach3D
 
     void main(void)
     {\n
-        gl_Position = vec2(pd_vertex.x/pd_viewRect.z - 1.0, pd_vertex.y/pd_viewRect.w - 1.0);
+        gl_Position = vec4(pd_vertex.x/pd_viewRect.z - 1.0, pd_vertex.y/pd_viewRect.w - 1.0, 0.0, 1.0);
         gl_PointSize = pd_pSprite.x;
         out_rotate = pd_pSprite.y;
         out_color = pd_color;
-        \n#endif\n
-    });
+    \n});
 
     // 2D particle fragment shader
     const char* gFragParticleShaderCode2D = STRINGIFY(\
@@ -205,11 +204,11 @@ namespace Peach3D
     void main(void)
     {\n
         vec2 rotatedUV = gl_PointCoord;
-        if (out_rotate > 0.0001 || out_rotate < -0.0001) {
+        if (out_rotate > 0.0001 || out_rotate < -0.0001) {\n
             rotatedUV = vec2(cos(out_rotate) * (gl_PointCoord.x - 0.5) + sin(out_rotate) * (gl_PointCoord.y - 0.5) + 0.5,
                         cos(out_rotate) * (gl_PointCoord.y - 0.5) - sin(out_rotate) * (gl_PointCoord.x - 0.5) + 0.5);
-        }
-        \n#ifdef PD_LEVEL_GL3
+        \n}
+        \n#ifdef PD_LEVEL_GL3\n
             out_FragColor = texture(pd_texture0, rotatedUV) * out_color;
         \n#else\n
             gl_FragColor = texture2D(pd_texture0, rotatedUV) * out_color;

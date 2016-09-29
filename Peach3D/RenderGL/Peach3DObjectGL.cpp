@@ -17,6 +17,7 @@
 #include "Peach3DRenderNode.h"
 #include "Peach3DSceneManager.h"
 #include "Peach3DResourceManager.h"
+#include "Peach3DParticle.h"
 
 namespace Peach3D
 {
@@ -39,12 +40,22 @@ namespace Peach3D
     
     /** Special program used for base rendering. */
     ProgramPtr ObjectGL::mBaseProgram = nullptr;
+    ProgramPtr ObjectGL::mParticle2DProgram = nullptr;
+    ProgramPtr ObjectGL::mParticle3DProgram = nullptr;
     
     ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
     {
         // create base program if not exist for OBB and shadow
         if (!mBaseProgram) {
             mBaseProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
+        }
+        // create 2D particle program, point2|texture|particle
+        if (!mParticle2DProgram) {
+            mParticle2DProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(false, true, 0, 0, 0, true));
+        }
+        // create 3D particle program, point3|texture|particle
+        if (!mParticle3DProgram) {
+            mParticle3DProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, true, 0, 0, 0, true));
         }
     }
     
@@ -355,54 +366,79 @@ namespace Peach3D
         } while(0);
     }
     
-    void ObjectGL::render(Particle* particle)
+    void ObjectGL::render(Particle2D* particle)
     {
-//        size_t listSize = renderList.size();
-//        Peach3DAssert(listSize > 0, "Can't render empty OBB node list.");
-//        do {
-//            IF_BREAK(listSize == 0, nullptr);
-//            
-//            IF_BREAK(!mBaseProgram || !mBaseProgram->useAsRenderProgram(), nullptr);
-//            if (PD_RENDERLEVEL_GL3()) {
-//                // update instanced uniforms
-//                mBaseProgram->updateInstancedOBBUniforms(renderList);
-//            }
-//            
-//            // bind vertex and index
-//            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-//                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mBaseProgram : nullptr);
-//            }
-//            else {
-//                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-//                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-//                bindObjectVertexAttrib();
-//            }
-//            
-//            // rendering
-//            if (PD_RENDERLEVEL_GL3()) {
-//                // draw OBB once
-//                glDrawElementsInstanced(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
-//                PD_ADD_DRAWCALL(1);
-//                PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
-//            }
-//            else {
-//                for (size_t i = 0; i < listSize; ++i) {
-//                    // update current OBB uniforms
-//                    mBaseProgram->updateOBBUniforms(renderList[i]);
-//                    // draw one OBB
-//                    glDrawElements(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
-//                    PD_ADD_DRAWCALL(1);
-//                    PD_ADD_DRAWTRIAGNLE(2);
-//                }
-//            }
-//            
-//            // unbind vertex and textures
-//            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-//                glBindVertexArray(0);
-//            }
-//            glBindBuffer(GL_ARRAY_BUFFER, 0);
-//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//        } while(0);
+        if (!mParticle2DProgram || !mParticle2DProgram->useAsRenderProgram()) {
+            return ;
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+        bindObjectVertexAttrib();
+        auto& emitters = particle->getEmitters();
+        for (auto emit : emitters) {
+            // active texture and update program uniforms
+            auto& texFrame = emit.texFrame;
+            if (texFrame.tex) {
+                GLuint glTextureId = static_cast<TextureGL*>(texFrame.tex.get())->getGLTextureId();
+                static_cast<ProgramGL*>(mParticle2DProgram.get())->activeTextures(glTextureId, 0);
+            }
+            mParticle2DProgram->updateParticle2DUniforms(texFrame.rc);
+            // bind vertex and index
+            glBufferData(GL_ARRAY_BUFFER, emit.getRenderBufferSize(), emit.getRenderBuffer(), GL_DYNAMIC_DRAW);
+            // draw points
+            glDrawArrays(GL_POINTS, 0, emit.getRenderBufferSize() / Emitter2D::getPointStride());
+            PD_ADD_DRAWCALL(1);
+        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+    
+    void ObjectGL::render(Particle3D* particle)
+    {
+        //        size_t listSize = renderList.size();
+        //        Peach3DAssert(listSize > 0, "Can't render empty OBB node list.");
+        //        do {
+        //            IF_BREAK(listSize == 0, nullptr);
+        //
+        //            IF_BREAK(!mBaseProgram || !mBaseProgram->useAsRenderProgram(), nullptr);
+        //            if (PD_RENDERLEVEL_GL3()) {
+        //                // update instanced uniforms
+        //                mBaseProgram->updateInstancedOBBUniforms(renderList);
+        //            }
+        //
+        //            // bind vertex and index
+        //            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+        //                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mBaseProgram : nullptr);
+        //            }
+        //            else {
+        //                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+        //                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+        //                bindObjectVertexAttrib();
+        //            }
+        //
+        //            // rendering
+        //            if (PD_RENDERLEVEL_GL3()) {
+        //                // draw OBB once
+        //                glDrawElementsInstanced(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0, (GLsizei)listSize);
+        //                PD_ADD_DRAWCALL(1);
+        //                PD_ADD_DRAWTRIAGNLE((GLsizei)listSize * 2);
+        //            }
+        //            else {
+        //                for (size_t i = 0; i < listSize; ++i) {
+        //                    // update current OBB uniforms
+        //                    mBaseProgram->updateOBBUniforms(renderList[i]);
+        //                    // draw one OBB
+        //                    glDrawElements(GL_LINES, mIndexBufferSize/sizeof(ushort), GL_UNSIGNED_SHORT, 0);
+        //                    PD_ADD_DRAWCALL(1);
+        //                    PD_ADD_DRAWTRIAGNLE(2);
+        //                }
+        //            }
+        //            
+        //            // unbind vertex and textures
+        //            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+        //                glBindVertexArray(0);
+        //            }
+        //            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //        } while(0);
     }
     
     void ObjectGL::cleanObjectVertexBuffer()

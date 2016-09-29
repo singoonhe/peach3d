@@ -120,7 +120,7 @@ namespace Peach3D
         std::vector<Camera*>    mCameraList;        // scene camera list
         
         std::map<std::string, LightPtr>     mLightList;         // scene light list
-        std::vector<Node*>                  mRenderWidgetList;  // cache widget list
+        std::vector<Node*>                  mRenderWidgetList;  // cache widget(may particle2d) list
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
     };
 }

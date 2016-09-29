@@ -10,59 +10,52 @@
 #define PEACH3D_PARTICLE_H
 
 #include "Peach3DParticleEmitter.h"
-#include "Peach3DWidget.h"
-#include "Peach3DSceneNode.h"
+#include "Peach3DNode.h"
 
 namespace Peach3D
-{
-    class PEACH3D_DLL Particle
-    {
-    public:
-        Particle(const char* name) : mName(name) {}
-        virtual ~Particle() {}
-        const std::string& getName() { return mName; }
-        const std::vector<Emitter>& getEmitters() { return mEmitters; }
-        
-        void start();
-        void end();
-        
-    protected:
-        /* Update rendering attributes. */
-        virtual void updateRenderingAttributes(float lastFrameTime);
-        
-    protected:
-        std::string mName;
-        std::vector<Emitter>    mEmitters;
-    };
-    
+{    
     /************************************** 2D particle emitter ***************************************/
-    class PEACH3D_DLL Particle2D : public Particle, public Widget
+    class PEACH3D_DLL Particle2D : public Node
     {
     public:
-        Particle2D(const char* name) : Particle(name) {}
-        ~Particle2D() {}
+        /* Create 2d particle with file(*.ppt). */
+        static Particle2D* create(const char* file);
+        
+        const std::string& getName() { return mName; }
+        const std::vector<Emitter2D>& getEmitters() { return mEmitters; }
         
     protected:
+        Particle2D(const char* name) : mName(name) {}
+        ~Particle2D() {}
         /* Update rendering attributes. */
         virtual void updateRenderingAttributes(float lastFrameTime);
         
     private:
+        std::string mName;
+        std::vector<Emitter2D>    mEmitters;
         Vector2     mPos;
         Vector2     mWorldPos;
     };
     
     /************************************** 3D particle emitter ***************************************/
-    class PEACH3D_DLL Particle3D : public Particle, public SceneNode
+    class PEACH3D_DLL Particle3D : public Node
     {
     public:
-        Particle3D(const char* name) : Particle(name) {}
-        ~Particle3D() {}
+        /* Create 3d particle with file(*.ppt). */
+        static Particle3D* create(const char* file);
+        
+        const std::string& getName() { return mName; }
+        const std::vector<Emitter3D>& getEmitters() { return mEmitters; }
         
     protected:
+        Particle3D(const char* name) : mName(name) {}
+        ~Particle3D() {}
         /* Update rendering attributes. */
         virtual void updateRenderingAttributes(float lastFrameTime);
         
     private:
+        std::string mName;
+        std::vector<Emitter3D>    mEmitters;
         Vector3     mPos;
         Vector3     mWorldPos;
     };

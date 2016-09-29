@@ -31,6 +31,9 @@
 		185959B61B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185959B41B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp */; };
 		185959B71B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185959B41B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp */; };
 		1859A5061A3C4A0D008073D9 /* Peach3DScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1859A5031A3C4A0D008073D9 /* Peach3DScheduler.h */; };
+		185BD0271D9D0ED5008A55D2 /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185BD0251D9D0ED5008A55D2 /* base64.cpp */; };
+		185BD0281D9D0ED5008A55D2 /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185BD0251D9D0ED5008A55D2 /* base64.cpp */; };
+		185BD0291D9D0ED5008A55D2 /* base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 185BD0261D9D0ED5008A55D2 /* base64.h */; };
 		185D824C1B08849C0034F25E /* Peach3DLayoutManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185D824A1B08849C0034F25E /* Peach3DLayoutManager.cpp */; };
 		185D824D1B08849C0034F25E /* Peach3DLayoutManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185D824A1B08849C0034F25E /* Peach3DLayoutManager.cpp */; };
 		185D824E1B08849C0034F25E /* Peach3DLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 185D824B1B08849C0034F25E /* Peach3DLayoutManager.h */; };
@@ -230,6 +233,8 @@
 		185959B41B43D1E900FFB5F5 /* Peach3DShaderCodeGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DShaderCodeGL.cpp; sourceTree = "<group>"; };
 		18595A331B4448E800FFB5F5 /* Peach3DShaderCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Peach3DShaderCode.h; sourceTree = "<group>"; };
 		1859A5031A3C4A0D008073D9 /* Peach3DScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DScheduler.h; sourceTree = "<group>"; };
+		185BD0251D9D0ED5008A55D2 /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
+		185BD0261D9D0ED5008A55D2 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		185D824A1B08849C0034F25E /* Peach3DLayoutManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DLayoutManager.cpp; sourceTree = "<group>"; };
 		185D824B1B08849C0034F25E /* Peach3DLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Peach3DLayoutManager.h; sourceTree = "<group>"; };
 		185D824F1B0884C00034F25E /* Peach3DWorldManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Peach3DWorldManager.cpp; sourceTree = "<group>"; };
@@ -374,6 +379,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		185BD0241D9D0ED5008A55D2 /* base64 */ = {
+			isa = PBXGroup;
+			children = (
+				185BD0251D9D0ED5008A55D2 /* base64.cpp */,
+				185BD0261D9D0ED5008A55D2 /* base64.h */,
+			);
+			path = base64;
+			sourceTree = "<group>";
+		};
 		185D82581B08B4B10034F25E /* tinyxml2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -635,6 +649,7 @@
 		18FEECBB19B810970002BA89 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				185BD0241D9D0ED5008A55D2 /* base64 */,
 				185D82581B08B4B10034F25E /* tinyxml2 */,
 				18FEECBC19B810970002BA89 /* xxhash */,
 			);
@@ -722,6 +737,7 @@
 				1889B1281BE0DA610025AA2E /* pdShaderCode2D.h in Headers */,
 				18ACF4E819D543140020F943 /* Peach3DRect.h in Headers */,
 				18ACF4FC19D543140020F943 /* Peach3DWidget.h in Headers */,
+				185BD0291D9D0ED5008A55D2 /* base64.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -834,6 +850,7 @@
 				18B4EE4F1C9FDA41005642A5 /* Peach3DLight.cpp in Sources */,
 				18ACF50319D543140020F943 /* Peach3DMatrix4.cpp in Sources */,
 				18B2AB7F19E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
+				185BD0271D9D0ED5008A55D2 /* base64.cpp in Sources */,
 				185D825B1B08B4B10034F25E /* tinyxml2.cpp in Sources */,
 				189FCC2F1CE8A2B80091F4E4 /* Peach3DParticle.cpp in Sources */,
 				18BE16C41C451F4F000592A4 /* Peach3DOBB.cpp in Sources */,
@@ -891,6 +908,7 @@
 				18B4EE501C9FDA41005642A5 /* Peach3DLight.cpp in Sources */,
 				18ACF50419D543140020F943 /* Peach3DMatrix4.cpp in Sources */,
 				18B2AB8019E8C5460041AC1E /* Peach3DImageParse.cpp in Sources */,
+				185BD0281D9D0ED5008A55D2 /* base64.cpp in Sources */,
 				185D825C1B08B4B10034F25E /* tinyxml2.cpp in Sources */,
 				189FCC301CE8A2B80091F4E4 /* Peach3DParticle.cpp in Sources */,
 				18BE16C51C451F4F000592A4 /* Peach3DOBB.cpp in Sources */,
