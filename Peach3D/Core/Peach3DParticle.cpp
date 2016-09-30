@@ -26,11 +26,20 @@ namespace Peach3D
                 delete resPat;
                 return nullptr;
             }
+            // start emit
+            resPat->start();
             // release memory data
             free(fileData);
             return resPat;
         }
         return nullptr;
+    }
+    
+    void Particle2D::start()
+    {
+        for (auto& emitter : mEmitters) {
+            emitter.start();
+        }
     }
     
     void Particle2D::updateRenderingAttributes(float lastFrameTime)
@@ -39,7 +48,7 @@ namespace Peach3D
         if (parent) {
             mWorldPos = mPos + parent->getPosition(TranslateRelative::eWorld);
         }
-        for (auto emitter : mEmitters) {
+        for (auto& emitter : mEmitters) {
             emitter.update(lastFrameTime, mWorldPos);
         }
     }

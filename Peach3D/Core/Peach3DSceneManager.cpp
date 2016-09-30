@@ -55,7 +55,7 @@ namespace Peach3D
     SceneManager::~SceneManager()
     {
         // clean all Camera
-        for (auto iter : mCameraList) {
+        for (auto& iter : mCameraList) {
             delete iter;
         }
         mCameraList.clear();
@@ -248,7 +248,7 @@ namespace Peach3D
     
     void SceneManager::tranverseLights(std::function<void(const std::string& name, const LightPtr& l)> callFunc, bool onlyEnabled)
     {
-        for (auto iter : mLightList) {
+        for (auto& iter : mLightList) {
             if ((!onlyEnabled || iter.second->isEnabled()) && iter.second->getType() != LightType::eUnknow) {
                 callFunc(iter.first, iter.second);
             }
@@ -302,7 +302,7 @@ namespace Peach3D
         // draw all scene node
         RenderNode* lastRenderNode = nullptr;
         std::vector<RenderNode*> curNodeList;
-        for (auto iter : content->nodeMap) {
+        for (auto& iter : content->nodeMap) {
             RenderNode* curNode = iter.second;
             if (lastRenderNode && lastRenderNode->getRenderHash() != curNode->getRenderHash()){
                 // render current objects
@@ -322,7 +322,7 @@ namespace Peach3D
             mOBBObject->render(content->OBBList);
         }
         // draw all particles
-        for (auto particle : content->particles) {
+        for (auto& particle : content->particles) {
             mParticle3DObject->render(particle);
         }
     }
@@ -341,7 +341,7 @@ namespace Peach3D
     {
         // clear picking scene node list once, only add in main pass
         mPickSceneNodeList.clear();
-        for (auto camera : mCameraList) {
+        for (auto& camera : mCameraList) {
             camera->prepareForRender(lastFrameTime);
         }
         /* traverse all nodes, activate used RTT.
@@ -363,7 +363,7 @@ namespace Peach3D
         bool isUpdateDepth = false;
         if (mLightList.size() > 0) {
             Render3DPassContent depthContent = mainContent;
-            for (auto l : mLightList) {
+            for (auto& l : mLightList) {
                 auto shadowTex = l.second->getShadowTexture();
                 if (shadowTex) {
                     if (!isUpdateDepth) {
@@ -388,7 +388,7 @@ namespace Peach3D
         }
         // if shadow rendering, mark render color now
         if (isUpdateDepth) {
-            for (auto nodeIter : mainContent.nodeMap) {
+            for (auto& nodeIter : mainContent.nodeMap) {
                 nodeIter.second->setRenderShadow(false);
             }
         }
@@ -397,7 +397,7 @@ namespace Peach3D
         IRender* mainRender = IRender::getSingletonPtr();
         // draw render target
         auto rttList = ResourceManager::getSingleton().getRenderTextureList();
-        for (auto tex : rttList) {
+        for (auto& tex : rttList) {
             if (tex->isActived() && tex->getFormat() != TextureFormat::eDepth) {
                 // generate new content to render, because RTT may update node state
                 renderForRTT(tex, nullptr);
@@ -571,7 +571,7 @@ namespace Peach3D
                 clickedRay.delta = ray3 - clickedRay.startPos;
                 
                 // check is node cross with clickedRay
-                for (auto node : mPickSceneNodeList) {
+                for (auto& node : mPickSceneNodeList) {
                     RenderNode* pickRenderNode = node->isRayIntersect(clickedRay);
                     if (pickRenderNode) {
                         if (outNode) {

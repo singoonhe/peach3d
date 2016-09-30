@@ -120,7 +120,7 @@ namespace Peach3D
     struct PEACH3D_DLL TextureFrame
     {
         TextureFrame() : tex(nullptr) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
-        TextureFrame(const TexturePtr& _tex) : tex(_tex) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
+        TextureFrame(const TexturePtr& _tex, const std::string& _name="") : tex(_tex), name(_name) { rc.pos.x = rc.pos.y = 0.f; rc.size.x = rc.size.y = 1.f; }
         TextureFrame(const TexturePtr& _tex, const Rect& _rc, const std::string& _name="") : tex(_tex), rc(_rc), name(_name) {}
         TextureFrame &operator=(const TextureFrame& other){ name = other.name; tex = other.tex; rc = other.rc; return *this; }
         std::string name;   // texture name, used for Sprite::create "#xxxx.png"

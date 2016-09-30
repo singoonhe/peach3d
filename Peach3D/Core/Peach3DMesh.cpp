@@ -37,7 +37,7 @@ namespace Peach3D
     
     void Mesh::tranverseObjects(std::function<void(const char*, const ObjectPtr&)> callFunc)
     {
-        for (auto iter : mObjectMap) {
+        for (auto& iter : mObjectMap) {
             // tranverse all child with param func
             callFunc(iter.first.c_str(), iter.second);
         }
@@ -45,7 +45,7 @@ namespace Peach3D
     
     uint Mesh::getAnyVertexType()
     {
-        for (auto iter : mObjectMap) {
+        for (auto& iter : mObjectMap) {
             return iter.second->getVertexType();
         }
         return 0;

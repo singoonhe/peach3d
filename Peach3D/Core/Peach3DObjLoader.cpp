@@ -257,7 +257,7 @@ namespace Peach3D
         }
         
         // malloc vertex buffer and index buffer
-        for (auto iter : objInfoMap)
+        for (auto& iter : objInfoMap)
         {
             auto pointCount = iter.second->pointsIndexMap.size();
             if (pointCount > 0 && iter.second->indexCount > 0) {
@@ -296,14 +296,14 @@ namespace Peach3D
         
         MeshPtr* dMesh = (MeshPtr*)input.handler;
         // calc vertex format and index type
-        for (auto iter : objInfoMap) {
+        for (auto& iter : objInfoMap) {
             std::map<std::string, uint>& pointsIndexMap = iter.second->pointsIndexMap;
             if (pointsIndexMap.size() > 0 && iter.second->indexCount > 0) {
                 // create IObject
                 ObjectPtr obj = (*dMesh)->createObject(iter.first.c_str());
                 
                 // fill vertex buffer
-                for (auto strPoint : pointsIndexMap) {
+                for (auto& strPoint : pointsIndexMap) {
                     int curStep = 0;
                     int posIndex = 0, norIndex = 0, uvIndex = 0;
                     if (strPoint.first.find("//") != std::string::npos ) {
@@ -345,7 +345,7 @@ namespace Peach3D
         }
         
         // free cache memory
-        for (auto iter : objInfoMap) {
+        for (auto& iter : objInfoMap) {
             delete iter.second;
         }
         if (meshPosCache) {
@@ -473,7 +473,7 @@ namespace Peach3D
                 // set object material
                 if ((*iter).first.compare(name) == 0) {
                     // set texture wrap
-                    for (auto tex : mat->textureList) {
+                    for (auto& tex : mat->textureList) {
                         tex->setWrap((*iter).second->texWrap);
                     }
                     obj->setMaterial(*mat);

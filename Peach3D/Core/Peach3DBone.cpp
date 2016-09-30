@@ -13,7 +13,7 @@ namespace Peach3D
     Bone::~Bone()
     {
         // delete children
-        for (auto child : mChildren) {
+        for (auto& child : mChildren) {
             delete child;
         }
         mChildren.clear();

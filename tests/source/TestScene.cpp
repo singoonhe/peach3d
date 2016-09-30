@@ -15,20 +15,22 @@
 #include "LightScene.h"
 #include "RTTShadowScene.h"
 #include "DollScene.h"
+#include "ParticleScene.h"
 
 struct SceneLinker {
     std::string title;
     std::function<IScene*()> callback;
 };
 
-std::vector<SceneLinker> gTestSceneList = {{"Device Test", []()->BaseScene* {return new DeviceScene();}},
-    {"UI Test", []()->BaseScene* {return new UIScene();}},
-    {"Actions Test", []()->BaseScene* {return new ActionScene();}},
-    {"Mesh Test", []()->BaseScene* {return new MeshScene();}},
+std::vector<SceneLinker> gTestSceneList = {{"Device Info", []()->BaseScene* {return new DeviceScene();}},
+    {"UI", []()->BaseScene* {return new UIScene();}},
+    {"Actions", []()->BaseScene* {return new ActionScene();}},
+    {"Mesh&Animation", []()->BaseScene* {return new MeshScene();}},
     {"Doll System", []()->BaseScene* {return new DollScene();}},
-    {"Light Test", []()->BaseScene* {return new LightScene();}},
-    {"Rtt Shadow Test", []()->BaseScene* {return new RTTShadowScene();}},
-    {"Touch Test", []()->BaseScene* {return new TouchScene();}},
+    {"Lights", []()->BaseScene* {return new LightScene();}},
+    {"Rtt Shadow", []()->BaseScene* {return new RTTShadowScene();}},
+    {"Particle", []()->BaseScene* {return new ParticleScene();}},
+    {"Touch 3D", []()->BaseScene* {return new TouchScene();}},
 };
 
 bool TestScene::init()

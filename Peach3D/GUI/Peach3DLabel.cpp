@@ -149,7 +149,7 @@ namespace Peach3D
                     
                     std::vector<std::string> lineList = Utils::split(stageText, ',');
                     Color4 outColor;
-                    for (auto line : lineList) {
+                    for (auto& line : lineList) {
                         std::string trimedStr = Utils::trim(line);
                         if (trimedStr.compare("click") == 0) {
                             curClickEnabled = true;
@@ -179,7 +179,7 @@ namespace Peach3D
             
             // calc real string
             mRealText.clear();
-            for (auto info : stageList) {
+            for (auto& info : stageList) {
                 mRealText = mRealText + info.text;
             }
             
@@ -275,7 +275,7 @@ namespace Peach3D
     void Label::addTextToStageList(const std::string& text, const Color4& color, bool click, std::vector<LabelStageTextInfo>* infoList)
     {
         std::vector<char> curText;
-        for (auto textc : text) {
+        for (auto& textc : text) {
             if (textc == '\n') {
                 std::vector<std::string> infoTextList;
                 if (curText.size() > 0) {
@@ -283,7 +283,7 @@ namespace Peach3D
                 }
                 infoTextList.push_back("\n");
                 // add all text to list, include '\n'
-                for (auto textStr : infoTextList) {
+                for (auto& textStr : infoTextList) {
                     if (textStr.size() > 0) {
                         LabelStageTextInfo info;
                         info.text = textStr;

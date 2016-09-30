@@ -218,7 +218,7 @@ namespace Peach3D
         float curWidth=0.0f, curHeight=0.0f;
         float lineMaxHeight=0.0f, textMaxWidth=0.0f;
         std::vector<tTextDrawInfo> lineInfoList;
-        for (auto info : textList) {
+        for (auto& info : textList) {
             float curDrawHeight = 0.0f;
             if (info.image.size() > 0) {
                 ulong imageDataSize = 0;
@@ -390,8 +390,8 @@ namespace Peach3D
         [[NSGraphicsContext currentContext] setShouldAntialias:YES];
         // patch for mac retina display and lableTTF
         [[NSAffineTransform transform] set];
-        for (auto lineList : drawInfoList) {
-            for (auto info : lineList) {
+        for (auto& lineList : drawInfoList) {
+            for (auto& info : lineList) {
                 info.start.y = info.start.y + startPosY;
                 if (info.start.y >= (-info.size.height) && info.start.y <= renderSize.y) {
                     if (info.image) {

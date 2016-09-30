@@ -109,7 +109,7 @@ namespace Peach3D
             
             SceneNode*  sceneEventNode = nullptr;
             bool        isCheckNode = false;
-            for (auto node : mNodeList) {
+            for (auto& node : mNodeList) {
                 SceneNode* csNode = dynamic_cast<SceneNode*>(node);
                 Widget* cwNode = dynamic_cast<Widget*>(node);
                 // calc the pos target SceneNode if need

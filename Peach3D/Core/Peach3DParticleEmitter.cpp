@@ -15,7 +15,7 @@ namespace Peach3D
 {
     Emitter::~Emitter()
     {
-        for (auto point : mPoints) {
+        for (auto& point : mPoints) {
             delete point;
         }
         mPoints.clear();
@@ -47,7 +47,7 @@ namespace Peach3D
         }
         int validCount = 0;
         // update particles, some points may be alive
-        for (auto point : mPoints) {
+        for (auto& point : mPoints) {
             if (point->lifeTime < FLT_EPSILON) {
                 continue;
             }
@@ -60,10 +60,9 @@ namespace Peach3D
             // update current point attributes
             validCount++;
             updatePointAttributes(point, lastFrameTime);
-            
         }
         // if need add points
-        if (mIsRunning && validCount < maxCount) {
+        if (validCount < maxCount) {
             if (mRunningTime > 1.f) {
                 generatePaticles(maxCount - validCount);
             }
@@ -90,7 +89,7 @@ namespace Peach3D
     void Emitter::generatePaticles(int number)
     {
         int remainNum = number;
-        for (auto point : mPoints) {
+        for (auto& point : mPoints) {
             if (remainNum == 0) {
                 break;
             }
@@ -184,7 +183,7 @@ namespace Peach3D
             uint vType = VertexType::Point2|VertexType::Color|VertexType::PSprite;
             const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
             // calculate position stride
-            for (auto info : infoList) {
+            for (auto& info : infoList) {
                 uint typeValue = info.type, typeSize = info.size;
                 if (typeValue & vType) {
                     mPointStride += typeSize;

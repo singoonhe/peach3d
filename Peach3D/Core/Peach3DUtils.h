@@ -25,7 +25,16 @@ namespace Peach3D
         /** Return format string, default buffer size 512. */
         static std::string formatString(const char* format, ...);
         
+        /** Get rand float, clamp in (min, max). */
         static float rand(float min, float max);
+        
+        /** Unzip memory data, out data base size default 256K.
+         * @params in Input memory data.
+         * @params inLength Input memory data size.
+         * @params out Output data, need manual free it .
+         * @return Output data size if success, or return 0.
+         */
+        static uint unzipMemoryData(uchar *in, uint inLength, uchar **out);
     };
 }
 

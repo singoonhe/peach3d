@@ -117,7 +117,7 @@ void FrameSample::init(Widget* parentWidget)
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     std::vector<TextureFrame> logoList, fileLogoList;
     std::vector<const char*> fileList = {"peach3d_1.png", "peach3d_2.png", "peach3d_3.png", "peach3d_4.png", "peach3d_5.png"};
-    for (auto file : fileList) {
+    for (auto& file : fileList) {
         logoList.push_back(TextureFrame(ResourceManager::getSingleton().addTexture(file)));
     }
     // read frame action from file

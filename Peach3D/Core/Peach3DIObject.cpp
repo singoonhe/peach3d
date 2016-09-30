@@ -27,7 +27,7 @@ namespace Peach3D
         
         const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
         // calculate position stride
-        for (auto info : infoList) {
+        for (auto& info : infoList) {
             uint typeValue = info.type, typeSize = info.size;
             if (typeValue & mVertexDataType) {
                 mVertexDataStride += typeSize;

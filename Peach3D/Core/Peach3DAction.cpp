@@ -48,7 +48,7 @@ namespace Peach3D
         if (!mIsFinished) {
             bool isAllFinished = true;
             // update all actions in list
-            for (auto inAction : mActionList) {
+            for (auto& inAction : mActionList) {
                 if (!inAction->isActionFinished()) {
                     inAction->update(target, lastFrameTime);
                     if (!inAction->isActionFinished()) {
@@ -62,7 +62,7 @@ namespace Peach3D
     
     Spawn::~Spawn()
     {
-        for (auto inAction : mActionList) {
+        for (auto& inAction : mActionList) {
             delete inAction;
         }
         mActionList.clear();
@@ -122,7 +122,7 @@ namespace Peach3D
     
     Repeat::~Repeat()
     {
-        for (auto inAction : mActionList) {
+        for (auto& inAction : mActionList) {
             delete inAction;
         }
         mActionList.clear();

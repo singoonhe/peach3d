@@ -20,8 +20,13 @@ namespace Peach3D
     public:
         /* Create 2d particle with file(*.ppt). */
         static Particle2D* create(const char* file);
+        /* Set particle whole position. */
+        void setPosition(const Vector2& pos) { mPos = pos; }
+        /* Start all emitter running. */
+        void start();
         
         const std::string& getName() { return mName; }
+        void addEmitter(const Emitter2D& emitter) { mEmitters.push_back(emitter); }
         const std::vector<Emitter2D>& getEmitters() { return mEmitters; }
         
     protected:
@@ -43,6 +48,8 @@ namespace Peach3D
     public:
         /* Create 3d particle with file(*.ppt). */
         static Particle3D* create(const char* file);
+        /* Set particle whole position. */
+        void setPosition(const Vector3& pos) { mPos = pos; }
         
         const std::string& getName() { return mName; }
         const std::vector<Emitter3D>& getEmitters() { return mEmitters; }

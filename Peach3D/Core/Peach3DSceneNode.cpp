@@ -67,7 +67,7 @@ namespace Peach3D
     {
         Peach3DAssert(skel, "Can't bind a null skeleton to Node");
         mBindSkeleton = skel;
-        for (auto node : mRenderNodeMap) {
+        for (auto& node : mRenderNodeMap) {
             node.second->bindSkeleton(skel);
         }
     }
@@ -75,7 +75,7 @@ namespace Peach3D
     void SceneNode::unbindSkeleton()
     {
         mBindSkeleton = nullptr;
-        for (auto node : mRenderNodeMap) {
+        for (auto& node : mRenderNodeMap) {
             node.second->unbindSkeleton();
         }
     }
@@ -85,12 +85,12 @@ namespace Peach3D
         if (bone && node) {
             bool isChild = false;
             bool isAttached = false;
-            for (auto child : mChildNodeList) {
+            for (auto& child : mChildNodeList) {
                 if (child == node) {
                     isChild = true;
                 }
             }
-            for (auto iter : mBoneAttachedNodes) {
+            for (auto& iter : mBoneAttachedNodes) {
                 if (iter.second == node) {
                     isAttached = true;
                 }
@@ -121,7 +121,7 @@ namespace Peach3D
             mAnimateName = name;
             mAnimateLoop = loop;
             mAnimateTime = 0.f;
-            for (auto node : mRenderNodeMap) {
+            for (auto& node : mRenderNodeMap) {
                 node.second->runAnimate(name);
             }
         }
@@ -141,7 +141,7 @@ namespace Peach3D
     void SceneNode::updateRenderState()
     {
         // set all RenderNode draw mode
-        for (auto node : mRenderNodeMap) {
+        for (auto& node : mRenderNodeMap) {
             node.second->setRenderState(mNodeState);
         }
     }
@@ -166,7 +166,7 @@ namespace Peach3D
     {
         if (enable) {
             // autl generate all OBB for picking
-            for (auto node : mRenderNodeMap) {
+            for (auto& node : mRenderNodeMap) {
                 node.second->generateOBB();
             }
         }
@@ -179,7 +179,7 @@ namespace Peach3D
         Peach3DAssert(alpha >= 0.f && alpha <= 1.f, "Alpha must clamp in (0, 1)");
         Node::setAlpha(alpha);
         // set all RenderNode alpha
-        for (auto node : mRenderNodeMap) {
+        for (auto& node : mRenderNodeMap) {
             node.second->setAlpha(alpha);
         }
     }
@@ -307,7 +307,7 @@ namespace Peach3D
     {
         mIsLightingDirty = true;
         // auto set children lighting state update
-        for (auto cn : mChildNodeList) {
+        for (auto& cn : mChildNodeList) {
             static_cast<SceneNode*>(cn)->setLightingStateNeedUpdate();
         }
     }
@@ -324,7 +324,7 @@ namespace Peach3D
     {
         bool isShine = true;
         // light can't be ignored
-        for (auto igL : mIgnoreLights) {
+        for (auto& igL : mIgnoreLights) {
             if (igL == l) {
                 return false;
             }
@@ -365,7 +365,7 @@ namespace Peach3D
         
         // update all RenderNode
         if (isNeedRender()) {
-            for (auto node : mRenderNodeMap) {
+            for (auto& node : mRenderNodeMap) {
                 node.second->prepareForRender(lastFrameTime);
                 if (isAnimate) {
                     node.second->updateAnimateTime(mAnimateTime);
@@ -417,7 +417,7 @@ namespace Peach3D
             }
 
             // set model matrix to all child RenderNode
-            for (auto node : mRenderNodeMap) {
+            for (auto& node : mRenderNodeMap) {
                 node.second->setModelMatrix(mModelMatrix);
                 OBB* renderOBB = node.second->getRenderOBB();
                 if (renderOBB) {
@@ -445,7 +445,7 @@ namespace Peach3D
                 }, true);
             }
             // set all RenderNode lights
-            for (auto node : mRenderNodeMap) {
+            for (auto& node : mRenderNodeMap) {
                 node.second->setRenderLights(validLights, shadowLights);
             }
             mIsLightingDirty = false;
@@ -458,7 +458,7 @@ namespace Peach3D
             updateRenderingAttributes(0.0f);
             
             // check all RenderNode
-            for (auto node : mRenderNodeMap) {
+            for (auto& node : mRenderNodeMap) {
                 if (node.second->isRayIntersect(ray)) {
                     return node.second;
                 }
@@ -470,7 +470,7 @@ namespace Peach3D
     SceneNode::~SceneNode()
     {
         // release all render node
-        for (auto rn : mRenderNodeMap) {
+        for (auto& rn : mRenderNodeMap) {
             delete rn.second;
         }
         mRenderNodeMap.clear();

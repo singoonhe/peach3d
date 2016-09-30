@@ -190,8 +190,8 @@ namespace Peach3D
             if (name[0] == '#') {
                 frameName = name + 1;
                 // find frame in cache
-                for (auto list : mTexFrameMap) {
-                    for (auto frame : list.second) {
+                for (auto& list : mTexFrameMap) {
+                    for (auto& frame : list.second) {
                         if (frame.name == frameName) {
                             if (outFrame) {
                                 *outFrame = frame;
@@ -412,7 +412,7 @@ namespace Peach3D
     
     void ResourceManager::inactiveRenderTextures()
     {
-        for (auto it : mRTTList) {
+        for (auto& it : mRTTList) {
             it->setActived(false);
         }
     }

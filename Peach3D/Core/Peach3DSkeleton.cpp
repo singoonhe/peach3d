@@ -13,7 +13,7 @@ namespace Peach3D
     Skeleton::~Skeleton()
     {
         // delete all root bones
-        for (auto bone : mRootBoneList) {
+        for (auto& bone : mRootBoneList) {
             delete bone;
         }
         mRootBoneList.clear();
@@ -24,7 +24,7 @@ namespace Peach3D
     {
         mCacheBones.clear();
         if (mRootBoneList.size() > 0) {
-            for (auto root : mRootBoneList) {
+            for (auto& root : mRootBoneList) {
                 mCacheBones.push_back(root);
                 // cache all bones and clac count
                 cacheChildrenBonesList(root);
@@ -35,7 +35,7 @@ namespace Peach3D
     Bone* Skeleton::findBone(const char* name)
     {
         Peach3DAssert(mCacheBones.size() > 0, "Find bone must called after \"addBonesOver\"");
-        for (auto bone : mCacheBones) {
+        for (auto& bone : mCacheBones) {
             if (bone->getName() == name) {
                 return bone;
             }
@@ -46,7 +46,7 @@ namespace Peach3D
     void Skeleton::cacheChildrenBonesList(Bone* parent)
     {
         auto children = parent->getChildren();
-        for (auto child : children) {
+        for (auto& child : children) {
             mCacheBones.push_back(child);
             cacheChildrenBonesList(child);
         }
@@ -56,7 +56,7 @@ namespace Peach3D
     {
         if (mCacheBones.size() > 0) {
             // update bones transform, cache list also update too
-            for (auto root : mRootBoneList) {
+            for (auto& root : mRootBoneList) {
                 mCacheBoneMats[root->getName()] = root->timeBoneMatrix(name, time);
                 cacheChildrenBonesMatrix(root, name, time);
             }
@@ -66,7 +66,7 @@ namespace Peach3D
     void Skeleton::cacheChildrenBonesMatrix(Bone* parent, const std::string& name, float time)
     {
         auto children = parent->getChildren();
-        for (auto child : children) {
+        for (auto& child : children) {
             mCacheBoneMats[child->getName()] = child->timeBoneMatrix(name, time);
             cacheChildrenBonesMatrix(child, name, time);
         }
@@ -83,7 +83,7 @@ namespace Peach3D
     std::vector<Matrix4> Skeleton::getBonesAnimMatrix(const std::vector<std::string>& names)
     {
         std::vector<Matrix4> cached;
-        for (auto name : names) {
+        for (auto& name : names) {
             cached.push_back(mCacheBoneMats[name]);
         }
         return cached;

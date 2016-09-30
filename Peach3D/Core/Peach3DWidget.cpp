@@ -212,7 +212,10 @@ namespace Peach3D
             std::stable_sort(mChildNodeList.begin(), mChildNodeList.end(), [](Node* a, Node* b) {
                 Widget* wa = dynamic_cast<Widget*>(a);
                 Widget* wb = dynamic_cast<Widget*>(b);
-                return wa->getLocalZOrder() < wb->getLocalZOrder();
+                if (wa && wb) {
+                    return wa->getLocalZOrder() < wb->getLocalZOrder();
+                }
+                return false;
             });
             mChildNeedSort = false;
         }

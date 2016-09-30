@@ -34,7 +34,7 @@ namespace Peach3D
     void Node::deleteAllChildren()
     {
         // set all children need deleted
-        for (auto iterNode : mChildNodeList) {
+        for (auto& iterNode : mChildNodeList) {
             iterNode->signNeedDeleted(true);
         }
     }
@@ -71,7 +71,7 @@ namespace Peach3D
         Node* findChild = nullptr;
         if (name.size() > 0 && mChildNodeList.size() > 0) {
             // find node in children
-            for (auto child : mChildNodeList) {
+            for (auto& child : mChildNodeList) {
                 if (child->getName() == name) {
                     findChild = child;
                     break;
@@ -79,7 +79,7 @@ namespace Peach3D
             }
             if (!findChild) {
                 // find node in children of child
-                for (auto child : mChildNodeList) {
+                for (auto& child : mChildNodeList) {
                     findChild = child->findChildByName(name);
                     if (findChild) {
                         break;

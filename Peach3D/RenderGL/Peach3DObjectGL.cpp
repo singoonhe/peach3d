@@ -374,7 +374,7 @@ namespace Peach3D
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         bindObjectVertexAttrib();
         auto& emitters = particle->getEmitters();
-        for (auto emit : emitters) {
+        for (auto& emit : emitters) {
             // active texture and update program uniforms
             auto& texFrame = emit.texFrame;
             if (texFrame.tex) {
@@ -453,7 +453,7 @@ namespace Peach3D
             
             // delete all vertex array
             if (PD_GLEXT_VERTEXARRAY_SUPPORT() && mVAOMap.size() > 0) {
-                for (auto vao : mVAOMap) {
+                for (auto& vao : mVAOMap) {
                     glDeleteVertexArrays(1, &vao.second);
                 }
                 mVAOMap.clear();
@@ -472,7 +472,7 @@ namespace Peach3D
             
             // delete all vertex array
             if (PD_GLEXT_VERTEXARRAY_SUPPORT() && mVAOMap.size() > 0) {
-                for (auto vao : mVAOMap) {
+                for (auto& vao : mVAOMap) {
                     glDeleteVertexArrays(1, &vao.second);
                 }
                 mVAOMap.clear();

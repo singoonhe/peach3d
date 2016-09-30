@@ -57,7 +57,7 @@ namespace Peach3D
     
     void ActionImplement::stopActions()
     {
-        for (auto inAction : mActionList) {
+        for (auto& inAction : mActionList) {
             delete inAction;
         }
         mActionList.clear();

@@ -215,7 +215,7 @@ namespace Peach3D
         if (PD_RENDERLEVEL_GL3() && uniformList.size() > 0) {
             // save one instanced uniform buffer size
             mUniformsSize = 0;
-            for (auto uniform : uniformList) {
+            for (auto& uniform : uniformList) {
                 mUniformsSize += ShaderCode::getUniformFloatBits(uniform.dType) * sizeof(float);
             }
         }
@@ -308,7 +308,7 @@ namespace Peach3D
             // map lights buffer and copy memory on GL3
             const size_t varArraySize = sizeof(float) * 4 * lights.size();
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mLightsUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-            for (auto uniform : mLightsUBOUniforms) {
+            for (auto& uniform : mLightsUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eLightTypeSpot: {
                         for (auto i=0; i<lights.size(); ++i) {
@@ -393,7 +393,7 @@ namespace Peach3D
             glBindBuffer(GL_UNIFORM_BUFFER, mShadowUBOId);
             // map shadow buffer and copy memory on GL3
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mShadowUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-            for (auto uniform : mShadowUBOUniforms) {
+            for (auto& uniform : mShadowUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eShadowMatrix: {
                         for (auto i=0; i<shadows.size(); ++i) {
@@ -417,7 +417,7 @@ namespace Peach3D
             glBindBuffer(GL_UNIFORM_BUFFER, mBoneUBOId);
             // map shadow buffer and copy memory on GL3
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mBoneUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-            for (auto uniform : mBoneUBOUniforms) {
+            for (auto& uniform : mBoneUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eBoneMatrix: {
                         auto matrixList = sk->getBonesAnimMatrix(names);
@@ -456,7 +456,7 @@ namespace Peach3D
             // map global buffer and copy memory on GL3
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mObjectUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
             SceneManager* sgr = SceneManager::getSingletonPtr();
-            for (auto uniform : mObjectUBOUniforms) {
+            for (auto& uniform : mObjectUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eProjMatrix: {
                         const Matrix4& projMatrix = sgr->getProjectionMatrix();
@@ -483,7 +483,7 @@ namespace Peach3D
             glBindBuffer(GL_UNIFORM_BUFFER, mWidgetUBOId);
             // map global buffer and copy memory on GL3
             float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mWidgetUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
-            for (auto uniform : mWidgetUBOUniforms) {
+            for (auto& uniform : mWidgetUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eViewRect: {
                         const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
@@ -507,7 +507,7 @@ namespace Peach3D
             
             // bind program instace buffer
             GLuint curOffset = 0;
-            for (auto uniform : mProgramUniformList) {
+            for (auto& uniform : mProgramUniformList) {
                 uint uniformFloatSize = ShaderCode::getUniformFloatBits(uniform.dType);
                 uint repeatCount = (uniform.dType == UniformDataType::eMatrix4) ? 4 : 1;
                 uniformFloatSize = (uniform.dType == UniformDataType::eMatrix4) ? (uniformFloatSize / 4) : uniformFloatSize;
@@ -614,7 +614,7 @@ namespace Peach3D
             shadows = node->getShadowLights();
         }
         // update object uniforms in list
-        for (auto uniform : mProgramUniformList) {
+        for (auto& uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eProjMatrix:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
@@ -797,7 +797,7 @@ namespace Peach3D
                 int startOffset = 0;
                 int uniformOffset = (mUniformsSize / 4) * i;
                 const Material& objMat = renderList[i]->getMaterial();
-                for (auto uniform : mProgramUniformList) {
+                for (auto& uniform : mProgramUniformList) {
                     switch (ShaderCode::getUniformNameType(uniform.name)) {
                         case UniformNameType::eModelMatrix: {
                             const Matrix4& modelMat = renderList[i]->getModelMatrix();
@@ -855,7 +855,7 @@ namespace Peach3D
         SceneManager* sgr = SceneManager::getSingletonPtr();
         Color4 OBBColor = IRender::getSingleton().getRenderOBBColor();
         // update object uniforms in list
-        for (auto uniform : mProgramUniformList) {
+        for (auto& uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eProjMatrix:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
@@ -898,7 +898,7 @@ namespace Peach3D
             for (auto i = 0; i < renderList.size(); ++i) {
                 int startOffset = 0;
                 int uniformOffset = (mUniformsSize / 4) * i;
-                for (auto uniform : mProgramUniformList) {
+                for (auto& uniform : mProgramUniformList) {
                     switch (ShaderCode::getUniformNameType(uniform.name)) {
                         case UniformNameType::eModelMatrix: {
                             const Matrix4& modelMat = renderList[i]->getModelMatrix();
@@ -927,7 +927,7 @@ namespace Peach3D
     {
         const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
         // update widget uniforms in list
-        for (auto uniform : mProgramUniformList) {
+        for (auto& uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eViewRect:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
@@ -1015,7 +1015,7 @@ namespace Peach3D
             for (auto i = 0; i < renderList.size(); ++i) {
                 int startOffset = 0;
                 int uniformOffset = (mUniformsSize / 4) * i;
-                for (auto uniform : mProgramUniformList) {
+                for (auto& uniform : mProgramUniformList) {
                     switch (ShaderCode::getUniformNameType(uniform.name)) {
                         case UniformNameType::eShowRect: {
                             const Vector2& pos = renderList[i]->getPosition(TranslateRelative::eWorld);
@@ -1095,7 +1095,7 @@ namespace Peach3D
     {
         const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
         // update widget uniforms in list
-        for (auto uniform : mProgramUniformList) {
+        for (auto& uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
                 case UniformNameType::eViewRect:
                     setUniformLocationValue(uniform.name, [&](GLint location) {

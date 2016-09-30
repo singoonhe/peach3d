@@ -107,9 +107,9 @@ namespace Peach3D
         /** Update all particles position. */
         void update(float lastFrameTime, const Vector2& curPos);
         /** Return render data. */
-        float* getRenderBuffer() { return mData; }
+        float* getRenderBuffer()const { return mData; }
         /** Return render data size. */
-        int getRenderBufferSize() { return mDataValidSize; }
+        int getRenderBufferSize()const { return mDataValidSize; }
         
     protected:
         /** Update attributes for ParticlePoint2D. */
@@ -120,9 +120,6 @@ namespace Peach3D
         virtual void randPaticlePointAttributes(ParticlePoint* point);
         
     public:
-        float*  mData;
-        int     mDataValidSize;
-        
         float   emitAngle;
         float   emitAngleVariance;
         Vector2 emitPos;                        // relative to the Particle2D position
@@ -136,6 +133,10 @@ namespace Peach3D
         Vector2 accelerateVariance; // radial and tangential accelerate variance
         
         static int mPointStride;
+        
+    private:
+        float*  mData;
+        int     mDataValidSize;
     };
     
     /************************************** 3D particle emitter ***************************************/

@@ -58,6 +58,10 @@
 		184FED1D1C6302650014B2E0 /* peach3d_log.xml in Resources */ = {isa = PBXBuildFile; fileRef = 184FED1A1C6302650014B2E0 /* peach3d_log.xml */; };
 		184FED1E1C6302650014B2E0 /* peach3d_log.xml in Resources */ = {isa = PBXBuildFile; fileRef = 184FED1A1C6302650014B2E0 /* peach3d_log.xml */; };
 		185959C01B440AF600FFB5F5 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185959BF1B440AF500FFB5F5 /* Carbon.framework */; };
+		185BD0311D9D1376008A55D2 /* ParticleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185BD02F1D9D1376008A55D2 /* ParticleScene.cpp */; };
+		185BD0321D9D1376008A55D2 /* ParticleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185BD02F1D9D1376008A55D2 /* ParticleScene.cpp */; };
+		185BD0361D9D18C1008A55D2 /* 2dfire.ppt in Resources */ = {isa = PBXBuildFile; fileRef = 185BD0351D9D18C1008A55D2 /* 2dfire.ppt */; };
+		185BD0371D9D18C1008A55D2 /* 2dfire.ppt in Resources */ = {isa = PBXBuildFile; fileRef = 185BD0351D9D18C1008A55D2 /* 2dfire.ppt */; };
 		185ED00319B4773F00801CA0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185ED00219B4773F00801CA0 /* Cocoa.framework */; };
 		185ED1C81B70E10A0012667B /* press_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 185ED1C51B70E10A0012667B /* press_down.png */; };
 		185ED1C91B70E10A0012667B /* press_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 185ED1C51B70E10A0012667B /* press_down.png */; };
@@ -199,6 +203,9 @@
 		184FED191C6302650014B2E0 /* peach3d_log.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = peach3d_log.png; sourceTree = "<group>"; };
 		184FED1A1C6302650014B2E0 /* peach3d_log.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = peach3d_log.xml; sourceTree = "<group>"; };
 		185959BF1B440AF500FFB5F5 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		185BD02F1D9D1376008A55D2 /* ParticleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleScene.cpp; sourceTree = "<group>"; };
+		185BD0301D9D1376008A55D2 /* ParticleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleScene.h; sourceTree = "<group>"; };
+		185BD0351D9D18C1008A55D2 /* 2dfire.ppt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 2dfire.ppt; sourceTree = "<group>"; };
 		185ECFFF19B4773F00801CA0 /* test_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		185ED00219B4773F00801CA0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		185ED00519B4773F00801CA0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -431,6 +438,7 @@
 		1899802319B9B7FB003FBA2D /* resource */ = {
 			isa = PBXGroup;
 			children = (
+				185BD0351D9D18C1008A55D2 /* 2dfire.ppt */,
 				18AC2E6F1D616FAC00D6590B /* monguger.png */,
 				18AC2E701D616FAC00D6590B /* orc_jump.c3t */,
 				18AC2E641D5DADBD00D6590B /* BOX_action.c3t */,
@@ -569,6 +577,8 @@
 				187D771B1C8ECF9300F5D161 /* LightScene.h */,
 				184C3BBE1C3AB6E20073B598 /* MeshScene.cpp */,
 				184C3BBF1C3AB6E20073B598 /* MeshScene.h */,
+				185BD02F1D9D1376008A55D2 /* ParticleScene.cpp */,
+				185BD0301D9D1376008A55D2 /* ParticleScene.h */,
 				18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */,
 				18F9F4D619C5E5640023C83B /* PlatformDelegate.h */,
 				18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */,
@@ -711,6 +721,7 @@
 				18461D921CA25C16001A9829 /* girl.png in Resources */,
 				184532A21C71C939000B8F66 /* common_disable.png in Resources */,
 				18432DFD1C6251C5007B36EC /* peach3d_5.png in Resources */,
+				185BD0361D9D18C1008A55D2 /* 2dfire.ppt in Resources */,
 				18B4EE521CA03C53005642A5 /* peach.pmt in Resources */,
 				184532A81C72D8A1000B8F66 /* peach3d_ui.png in Resources */,
 				18B2AB6619E7AD910041AC1E /* texcube.obj in Resources */,
@@ -753,6 +764,7 @@
 				185ED1C91B70E10A0012667B /* press_down.png in Resources */,
 				18461D911CA25C16001A9829 /* girl.pmt in Resources */,
 				18A272D919E5434500145FDB /* Cube.mtl in Resources */,
+				185BD0371D9D18C1008A55D2 /* 2dfire.ppt in Resources */,
 				18461D931CA25C16001A9829 /* girl.png in Resources */,
 				1841070E1B6CBB65005133E2 /* front_normal.png in Resources */,
 				184962D31C4A8AD800304991 /* peach.obj in Resources */,
@@ -814,6 +826,7 @@
 				18461DAA1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */,
 				18AC2E031D59D3E800D6590B /* C3tLoader.cpp in Sources */,
 				187CF64119C72A3100C8094C /* main.m in Sources */,
+				185BD0311D9D1376008A55D2 /* ParticleScene.cpp in Sources */,
 				187CF63F19C71BBC00C8094C /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -835,6 +848,7 @@
 				18461DAB1CAA68F6001A9829 /* RTTShadowScene.cpp in Sources */,
 				18AC2E041D59D3E800D6590B /* C3tLoader.cpp in Sources */,
 				187CF60A19C7019000C8094C /* AppDelegate.mm in Sources */,
+				185BD0321D9D1376008A55D2 /* ParticleScene.cpp in Sources */,
 				187CF60619C7019000C8094C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

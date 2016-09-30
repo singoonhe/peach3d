@@ -90,15 +90,15 @@ namespace Peach3D
             // calc render unique hash code(Name:Program:DrawMode)
             std::string renderState = Utils::formatString("N:%sP:%uDM:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
             renderState += "MT"; // Material Texture
-            for (auto tex : mMaterial.textureList) {
+            for (auto& tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();
             }
             renderState += "RL"; // Render Lights
-            for (auto l : mRenderLights) {
+            for (auto& l : mRenderLights) {
                 renderState = renderState + l->getName();
             }
             renderState += "SL"; // Shadow Lights
-            for (auto l : mShadowLights) {
+            for (auto& l : mShadowLights) {
                 renderState = renderState + l->getName();
             }
             // animate skeleton
@@ -112,7 +112,7 @@ namespace Peach3D
         }
         
         // make object used RTT active
-        for (auto tex : mMaterial.textureList) {
+        for (auto& tex : mMaterial.textureList) {
             if (tex->getType() == TextureType::eRTT) {
                 tex->setActived(true);
             }

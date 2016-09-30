@@ -10,6 +10,7 @@
 #include "Peach3DVector2.h"
 #include "Peach3DVector3.h"
 #include "Peach3DTypes.h"
+#include "Peach3DUtils.h"
 #include "Peach3DLogPrinter.h"
 #include "Peach3DResourceManager.h"
 #include "base64/base64.h"
@@ -26,7 +27,7 @@ namespace Peach3D
             if (p2dEle) {
                 Particle2D* p2d = static_cast<Particle2D*>(input.handler);
                 XMLElement* emitterEle = p2dEle->FirstChildElement();
-                if (emitterEle) {
+                while (emitterEle) {
                     PptLoader::emitter2DDataParse(emitterEle, p2d);
                     emitterEle = emitterEle->NextSiblingElement();
                 }
@@ -35,7 +36,7 @@ namespace Peach3D
             if (p3dEle) {
                 Particle3D* p3d = static_cast<Particle3D*>(input.handler);
                 XMLElement* emitterEle = p3dEle->FirstChildElement();
-                if (emitterEle) {
+                while (emitterEle) {
                     PptLoader::emitter3DDataParse(emitterEle, p3d);
                     emitterEle = emitterEle->NextSiblingElement();
                 }
@@ -51,7 +52,7 @@ namespace Peach3D
         XMLElement* attrEle = emitterEle->FirstChildElement();
         std::string texFile;
         unsigned char* texData = nullptr;
-        if (attrEle) {
+        while (attrEle) {
             auto attrName = attrEle->Name();
             if (strcmp(attrName, "MaxCount") == 0) {
                 emitter.maxCount = atoi(attrEle->GetText());
@@ -129,17 +130,35 @@ namespace Peach3D
                 texFile = attrEle->GetText();
             }
             else if (strcmp(attrName, "TextureData") == 0) {
-                texFile = attrEle->GetText();
+                texData = (unsigned char*)attrEle->GetText();
             }
             attrEle = attrEle->NextSiblingElement();
         }
         if (texFile.size() > 0) {
-            if (texData) {
-                unsigned char *buffer = nullptr;
-                ulong decodeSize = base64Decode(texData, strlen((const char *)texData), &buffer);
-                TexturePtr base64Tex = ResourceManager::getSingleton().createTexture((const char*)texFile.size(), buffer, decodeSize);
-                if (base64Tex) {
-                    emitter.texFrame = TextureFrame(base64Tex);
+            uint texDataSize = strlen((const char *)texData);
+            if (texData && texDataSize > 0) {
+                // base64 decode first
+                unsigned char *buffer = nullptr, *deflated = nullptr;
+                do {
+                    ulong decodeSize = base64Decode(texData, texDataSize, &buffer);
+                    IF_BREAK(!buffer, "Particle texture base64 decode error");
+                    
+                    // then unzip data
+                    ssize_t deflatedLen = Utils::unzipMemoryData(buffer, decodeSize, &deflated);
+                    IF_BREAK(!deflated, "Unzip particle texture error");
+                    
+                    // create image with encode texture
+                    TexturePtr base64Tex = ResourceManager::getSingleton().createTexture(texFile.c_str(), deflated, deflatedLen);
+                    IF_BREAK(!base64Tex, nullptr);
+                    
+                    emitter.texFrame = TextureFrame(base64Tex, texFile.c_str());
+                } while(0);
+                // free caches
+                if (buffer) {
+                    free(buffer);
+                }
+                if (deflated) {
+                    free(deflated);
                 }
             }
             else {
@@ -149,6 +168,7 @@ namespace Peach3D
                 }
             }
         }
+        handler->addEmitter(emitter);
     }
     
     void PptLoader::emitter3DDataParse(XMLElement* emitterEle, Particle3D* handler)
