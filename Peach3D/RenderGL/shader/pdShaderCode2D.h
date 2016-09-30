@@ -182,7 +182,8 @@ namespace Peach3D
 
     void main(void)
     {\n
-        gl_Position = vec4(pd_vertex.x/pd_viewRect.z - 1.0, pd_vertex.y/pd_viewRect.w - 1.0, 0.0, 1.0);
+        /* Convert current pos to screen, left_bottom (-1, -1), right_top (1, 1).*/
+        gl_Position = vec4((pd_vertex.x * 2.0)/pd_viewRect.z - 1.0, (pd_vertex.y * 2.0)/pd_viewRect.w - 1.0, 0.0, 1.0);
         gl_PointSize = pd_pSprite.x;
         out_rotate = pd_pSprite.y;
         out_color = pd_color;

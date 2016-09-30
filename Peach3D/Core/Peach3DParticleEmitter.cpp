@@ -200,8 +200,8 @@ namespace Peach3D
         for (auto i=0; i<mPoints.size(); ++i) {
             ParticlePoint2D* point = (ParticlePoint2D*)mPoints[i];
             if (point->lifeTime > FLT_EPSILON) {
-                mData[index * mPointStride + 0] = point->pos.x;
-                mData[index * mPointStride + 1] = point->pos.y;
+                mData[index * mPointStride + 0] = point->pos.x + curPos.x;
+                mData[index * mPointStride + 1] = point->pos.y + curPos.y;
                 
                 mData[index * mPointStride + 2] = point->color.r;
                 mData[index * mPointStride + 3] = point->color.g;

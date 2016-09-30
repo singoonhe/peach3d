@@ -135,8 +135,8 @@ namespace Peach3D
             attrEle = attrEle->NextSiblingElement();
         }
         if (texFile.size() > 0) {
-            uint texDataSize = strlen((const char *)texData);
-            if (texData && texDataSize > 0) {
+            if (texData) {
+                uint texDataSize = strlen((const char *)texData);
                 // base64 decode first
                 unsigned char *buffer = nullptr, *deflated = nullptr;
                 do {
