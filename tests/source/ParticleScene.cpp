@@ -29,9 +29,8 @@ void Particle2DSample::init(Widget* parentWidget)
     // create fire particle from file
     Particle2D* fire = Particle2D::create("2dfire.ppt");
     fire->setPosition(Vector2(winSize.x / 2.f, winSize.y / 4.f));
-    // add particle to root widget
-    auto rootWidget = SceneManager::getSingleton().getRootWidget();
-    rootWidget->addChild(fire);
+    // add particle to scene widget (root widget will not clean when changing sample)
+    parentWidget->addChild(fire);
 }
 
 void Particle3DSample::init(Widget* parentWidget)

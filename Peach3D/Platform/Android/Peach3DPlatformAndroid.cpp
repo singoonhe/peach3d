@@ -438,6 +438,8 @@ namespace Peach3D
         IPlatform::terminate();
         // delete activity
         ANativeActivity_finish(mActivity);
+        // force exit, so much static/global variables need free
+        std::terminate();
     }
 
     void PlatformAndroid::callJniFunc(const std::function<void(JNIEnv*, jclass)>& callback, const char* className)

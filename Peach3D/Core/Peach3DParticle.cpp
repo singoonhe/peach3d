@@ -44,9 +44,20 @@ namespace Peach3D
     
     void Particle2D::updateRenderingAttributes(float lastFrameTime)
     {
-        Widget* parent = dynamic_cast<Widget*>(mParentNode);
-        if (parent) {
-            mWorldPos = mPos + parent->getPosition(TranslateRelative::eWorld);
+        Widget* parentWidget = dynamic_cast<Widget*>(mParentNode);
+        if (parentWidget) {
+            // cumulative parent offset, convert to world coordinate
+            auto parentSize = parentWidget->getContentSize(TranslateRelative::eWorld);
+            const Vector2 worldAnchorPos = parentSize * parentWidget->getAnchorPoint();
+            Vector2 rotateOffset = mPos * parentWidget->getScale(TranslateRelative::eWorld) - worldAnchorPos;
+            float worldRotate = parentWidget->getRotation(TranslateRelative::eWorld);
+            // rotation follow parent widget
+            if (worldRotate > FLT_EPSILON) {
+                float sinRot = sinf(worldRotate), cosRot = cosf(worldRotate);
+                rotateOffset = Vector2(cosRot * rotateOffset.x - sinRot * rotateOffset.y,
+                                       sinRot * rotateOffset.x + cosRot * rotateOffset.y);
+            }
+            mWorldPos = parentWidget->getPosition(TranslateRelative::eWorld) + rotateOffset;
         }
         for (auto& emitter : mEmitters) {
             emitter.update(lastFrameTime, mWorldPos);

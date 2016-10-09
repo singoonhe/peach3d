@@ -43,6 +43,10 @@ namespace Peach3D
         glEnable(GL_BLEND);
         glEnable(GL_CULL_FACE);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+#if PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_MAC
+        // use shader gl_PointSize, only mac GL3 supported
+        glEnable(GL_PROGRAM_POINT_SIZE);
+#endif
         // set initial window size
         setRenderSize(size);
         

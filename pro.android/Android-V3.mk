@@ -53,6 +53,7 @@ GUI/Peach3DSprite.cpp \
 GUI/Peach3DButton.cpp \
 GUI/Peach3DLabel.cpp \
 Platform/Android/Peach3DPlatformAndroid.cpp \
+Support/base64/base64.cpp \
 Support/xxhash/xxhash.cpp \
 Support/tinyxml2/tinyxml2.cpp
 

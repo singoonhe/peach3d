@@ -31,7 +31,7 @@ namespace Peach3D
         
     protected:
         Particle2D(const char* name) : mName(name) {}
-        ~Particle2D() {}
+        virtual ~Particle2D() {}
         /* Update rendering attributes. */
         virtual void updateRenderingAttributes(float lastFrameTime);
         
@@ -56,7 +56,7 @@ namespace Peach3D
         
     protected:
         Particle3D(const char* name) : mName(name) {}
-        ~Particle3D() {}
+        virtual ~Particle3D() {}
         /* Update rendering attributes. */
         virtual void updateRenderingAttributes(float lastFrameTime);
         

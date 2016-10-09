@@ -69,10 +69,13 @@ namespace Peach3D
             glBindVertexArray(vaoId);
             // bind vertex buffer and index buffer
             glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+            // index buffer may not valid, such as Particle
+            if (mIndexBuffer) {
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+            }
             bindObjectVertexAttrib();
-            // bind program buffer for GL3
-            if (program && PD_RENDERLEVEL_GL3()) {
+            // bind program buffer for GL3, Particle not use draw instance
+            if (program && !(mVertexDataType & VertexType::PSprite) && PD_RENDERLEVEL_GL3()) {
                 static_cast<ProgramGL*>(program.get())->bindProgramVertexAttrib();
             }
             mVAOMap[programId] = vaoId;
@@ -116,18 +119,7 @@ namespace Peach3D
         
         return result && mVertexBuffer;
     }
-    
-    bool ObjectGL::resetVertexBuffer(const void* data, uint size)
-    {
-        bool result = IObject::resetVertexBuffer(data, size);
-        if (mVertexBuffer) {
-            glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-            glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-        }
-        return result;
-    }
-    
+        
     void ObjectGL::setIndexBuffer(const void*data, uint size, IndexType type)
     {
         // base object setIndexBuffer
@@ -368,27 +360,45 @@ namespace Peach3D
     
     void ObjectGL::render(Particle2D* particle)
     {
-        if (!mParticle2DProgram || !mParticle2DProgram->useAsRenderProgram()) {
-            return ;
-        }
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        bindObjectVertexAttrib();
         auto& emitters = particle->getEmitters();
-        for (auto& emit : emitters) {
-            // active texture and update program uniforms
-            auto& texFrame = emit.texFrame;
-            if (texFrame.tex) {
-                GLuint glTextureId = static_cast<TextureGL*>(texFrame.tex.get())->getGLTextureId();
-                static_cast<ProgramGL*>(mParticle2DProgram.get())->activeTextures(glTextureId, 0);
+        do {
+            IF_BREAK(emitters.size() == 0, nullptr);
+            // use particle2d program
+            IF_BREAK(!mParticle2DProgram || !mParticle2DProgram->useAsRenderProgram(), nullptr);
+            
+            // must use VAO on MAC OpenGL core version
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mParticle2DProgram : nullptr);
+                // bind vertex buffer, emitter data need update
+                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
             }
-            mParticle2DProgram->updateParticle2DUniforms(texFrame.rc);
-            // bind vertex and index
-            glBufferData(GL_ARRAY_BUFFER, emit.getRenderBufferSize(), emit.getRenderBuffer(), GL_DYNAMIC_DRAW);
-            // draw points
-            glDrawArrays(GL_POINTS, 0, emit.getRenderBufferSize() / Emitter2D::getPointStride());
-            PD_ADD_DRAWCALL(1);
-        }
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+            else {
+                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+                bindObjectVertexAttrib();
+            }
+            
+            for (auto& emit : emitters) {
+                // active texture and update program uniforms
+                auto& texFrame = emit.texFrame;
+                if (texFrame.tex) {
+                    GLuint glTextureId = static_cast<TextureGL*>(texFrame.tex.get())->getGLTextureId();
+                    static_cast<ProgramGL*>(mParticle2DProgram.get())->activeTextures(glTextureId, 0);
+                    
+                    mParticle2DProgram->updateParticle2DUniforms(texFrame.rc);
+                    // bind vertex and draw points
+                    auto bufferSize = emit.getRenderBufferSize();
+                    glBufferData(GL_ARRAY_BUFFER, bufferSize, emit.getRenderBuffer(), GL_DYNAMIC_DRAW);
+                    glDrawArrays(GL_POINTS, 0, bufferSize / mVertexDataStride);
+                    PD_ADD_DRAWCALL(1);
+                }
+            }
+            // unbind vertex and textures
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+                glBindVertexArray(0);
+            }
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        } while(0);
     }
     
     void ObjectGL::render(Particle3D* particle)

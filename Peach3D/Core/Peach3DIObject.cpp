@@ -71,16 +71,6 @@ namespace Peach3D
         return true;
     }
     
-    bool IObject::resetVertexBuffer(const void* data, uint size)
-    {
-        // check data size
-        if (mVertexDataStride >0 && (size % mVertexDataStride) > 0) {
-            Peach3DLog(LogLevel::eError, "Object %s set vertx failed, type and data size not matched", mObjectName.c_str());
-            return false;
-        }
-        return true;
-    }
-
     void IObject::setIndexBuffer(const void*data, uint size, IndexType type)
     {
         mIndexBufferSize = size;

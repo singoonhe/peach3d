@@ -194,8 +194,8 @@ namespace Peach3D
         else {
             mProgramValid = true;
             
-            // bind gobal uniforms when GL3 support
-            if (PD_RENDERLEVEL_GL3()) {
+            // bind gobal uniforms when GL3 support, particle not need
+            if (PD_RENDERLEVEL_GL3() && !(mVertexType & VertexType::PSprite)) {
                 bindUniformsBuffer("GlobalUniforms", (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId,
                                    (mVertexType & VertexType::Point3) ? &mObjectUBOSize : &mWidgetUBOSize,
                                    (mVertexType & VertexType::Point3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms,
@@ -1118,9 +1118,9 @@ namespace Peach3D
         if (mProgram && mProgramValid) {
             glUseProgram(mProgram);
             
-            // bind uniform buffer for GL3
+            // bind uniform buffer for GL3, particle not need
             //! this is very Important, just like bind array buffer and index buffer
-            if (PD_RENDERLEVEL_GL3()) {
+            if (PD_RENDERLEVEL_GL3() && !(mVertexType & VertexType::PSprite)) {
                 glBindBufferBase(GL_UNIFORM_BUFFER, GLOBAL_UBO_BINDING_POINT,
                                  (mVertexType & VertexType::Point3) ? mObjectUBOId: mWidgetUBOId);
                 if (mLightsCount > 0) {

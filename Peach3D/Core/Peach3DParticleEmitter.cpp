@@ -63,12 +63,7 @@ namespace Peach3D
         }
         // if need add points
         if (validCount < maxCount) {
-            if (mRunningTime > 1.f) {
-                generatePaticles(maxCount - validCount);
-            }
-            else {
-                generatePaticles(mRunningTime * lastFrameTime - validCount);
-            }
+            generatePaticles(maxCount - validCount);
         }
     }
     
@@ -113,6 +108,7 @@ namespace Peach3D
         if (lifeTimeVariance > FLT_EPSILON) {
             point->lifeTime +=  Utils::rand(-lifeTimeVariance, lifeTimeVariance);
         }
+        point->lifeTime = std::max(0.f, point->lifeTime);
         // color
         point->color = startColor;
         if (startColorVariance.r > FLT_EPSILON) {
@@ -149,10 +145,12 @@ namespace Peach3D
         if (startSizeVariance > FLT_EPSILON) {
             point->size +=  Utils::rand(-startSizeVariance, startSizeVariance);
         }
+        point->size = std::max(0.f, point->size);
         point->endSize = endSize;
         if (endSizeVariance > FLT_EPSILON) {
             point->endSize +=  Utils::rand(-endSizeVariance, endSizeVariance);
         }
+        point->endSize = std::max(0.f, point->endSize);
         // rotation
         point->rotate = startRotate;
         if (startRotateVariance > FLT_EPSILON) {
@@ -222,8 +220,8 @@ namespace Peach3D
         Emitter::updatePointAttributes(point, lastFrameTime);
         
         // position
-        ParticlePoint2D& point2D = (ParticlePoint2D&)point;
-        point2D.pos = point2D.pos + point2D.dir * lastFrameTime;
+        ParticlePoint2D* point2D = static_cast<ParticlePoint2D*>(point);
+        point2D->pos = point2D->pos + point2D->dir * lastFrameTime;
     }
     
     ParticlePoint* Emitter2D::generateRandPaticles()

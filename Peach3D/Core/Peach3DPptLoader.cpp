@@ -135,7 +135,12 @@ namespace Peach3D
             attrEle = attrEle->NextSiblingElement();
         }
         if (texFile.size() > 0) {
-            if (texData) {
+            TextureFrame pTexFrame;
+            // get texture from cache first, particle may load much times
+            if (ResourceManager::getSingleton().getTextureFrame(texFile.c_str(), &pTexFrame)) {
+                emitter.texFrame = pTexFrame;
+            }
+            else if (texData) {
                 uint texDataSize = strlen((const char *)texData);
                 // base64 decode first
                 unsigned char *buffer = nullptr, *deflated = nullptr;
@@ -159,12 +164,6 @@ namespace Peach3D
                 }
                 if (deflated) {
                     free(deflated);
-                }
-            }
-            else {
-                TextureFrame pTexFrame;
-                if (ResourceManager::getSingleton().getTextureFrame(texFile.c_str(), &pTexFrame)) {
-                    emitter.texFrame = pTexFrame;
                 }
             }
         }

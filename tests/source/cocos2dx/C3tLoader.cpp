@@ -35,7 +35,6 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
                 break;
             }
         }
-        Peach3DAssert(objName.size() > 0, "Parse object name error");
         if (objName.size() > 0) {
             ObjectPtr dObj = (*mesh)->createObject(objName.c_str());
             

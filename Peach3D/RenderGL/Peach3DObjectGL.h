@@ -27,10 +27,6 @@ namespace Peach3D
          */
         virtual bool setVertexBuffer(const void* data, uint size, uint type, bool isDynamic = false);
         /**
-         * @brief Reset vertex buffer data for render object.
-         */
-        virtual bool resetVertexBuffer(const void* data, uint size);
-        /**
         * See IObject::setIndexBuffer.
         */
         virtual void setIndexBuffer(const void*data, uint size, IndexType type = IndexType::eUShort);
@@ -60,6 +56,9 @@ namespace Peach3D
         /**
          * Generate or bind VAO for program, each program need a new VAO for DrawInstance.
          * Every program will generate a VBO for DrawInstance.
+         * Notice : OpenGL 3.x on Mac OS only supports the core profile.
+                    In the core profile, calling glEnableVertexAttribArray() without a VAO bound is an error.
+                    See http://stackoverflow.com/questions/26362232/building-opengl-applications-not-working-in-osx-10-9 for more.
          */
         void generateProgramVertexArray(const ProgramPtr& program);
         /**

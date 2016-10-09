@@ -81,6 +81,8 @@ namespace Peach3D
         // mWidgetObject and mOBBObject will auto clean
         mWidgetObject = nullptr;
         mOBBObject = nullptr;
+        mParticle2DObject = nullptr;
+        mParticle3DObject = nullptr;
     }
     
     void SceneManager::reset()

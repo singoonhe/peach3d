@@ -724,7 +724,7 @@ namespace Peach3D
         }
         // is file readed ?
         if (!fileBuffer) {
-            Peach3DLog(LogLevel::eError, "Can't find file \"%s\" in search dir list", relativePath);
+            Peach3DLog(LogLevel::eWarn, "Can't find file \"%s\" in search dir list", relativePath);
         }
         return fileBuffer;
     }

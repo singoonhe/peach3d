@@ -22,13 +22,14 @@ LOCAL_SRC_FILES := main.cpp \
 ../../source/TestScene.cpp \
 ../../source/TouchScene.cpp \
 ../../source/BaseScene.cpp \
-../../source/CostumeScene.cpp \
+../../source/DollScene.cpp \
 ../../source/DeviceScene.cpp \
 ../../source/LightScene.cpp \
 ../../source/UIScene.cpp \
 ../../source/ActionScene.cpp \
 ../../source/RTTShadowScene.cpp \
 ../../source/MeshScene.cpp \
+../../source/ParticleScene.cpp \
 ../../source/cocos2dx/C3tLoader.cpp
 
 LOCAL_LDLIBS    := -llog -landroid

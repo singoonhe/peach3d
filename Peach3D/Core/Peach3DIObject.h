@@ -61,11 +61,6 @@ namespace Peach3D
         * @params isDynamic Is vertex buffer alway need modify.
         */
         virtual bool setVertexBuffer(const void* data, uint size, uint type, bool isDynamic = false);
-        
-        /**
-         * @brief Reset vertex buffer data for render object.
-         */
-        virtual bool resetVertexBuffer(const void* data, uint size);
         /**
         * @brief Set index buffer data for drawing triangles.
         *  Triangles also will be drawed with array if index buffer isn't existed.
