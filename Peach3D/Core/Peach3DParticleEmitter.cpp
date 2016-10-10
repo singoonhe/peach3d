@@ -103,6 +103,7 @@ namespace Peach3D
     
     void Emitter::randPaticlePointAttributes(ParticlePoint* point)
     {
+        point->time = 0.f;
         // life time
         point->lifeTime = lifeTime;
         if (lifeTimeVariance > FLT_EPSILON) {
@@ -221,7 +222,8 @@ namespace Peach3D
         
         // position
         ParticlePoint2D* point2D = static_cast<ParticlePoint2D*>(point);
-        point2D->pos = point2D->pos + point2D->dir * lastFrameTime;
+        point2D->pos.x = point2D->dir.x * point2D->time + gravity.x * point2D->time * point2D->time * 0.5f;
+        point2D->pos.y = point2D->dir.y * point2D->time + gravity.y * point2D->time * point2D->time * 0.5f;
     }
     
     ParticlePoint* Emitter2D::generateRandPaticles()
@@ -243,11 +245,17 @@ namespace Peach3D
         if (emitPosVariance.y > FLT_EPSILON) {
             curPoint->pos.y += Utils::rand(-emitPosVariance.y, emitPosVariance.y);
         }
-        // direction
-        float finalAngle = emitAngle;
+        // base direction
+        auto finalAngle = emitAngle;
         if (emitAngleVariance > FLT_EPSILON) {
             finalAngle +=  Utils::rand(-emitAngleVariance, emitAngleVariance);
         }
-        curPoint->dir = Vector2(cos(DEGREE_TO_RADIANS(finalAngle)), sin(DEGREE_TO_RADIANS(finalAngle)));
+        // moving speed
+        auto finalSpeed = speed;
+        if (speedVariance > FLT_EPSILON) {
+            finalSpeed +=  Utils::rand(-speedVariance, speedVariance);
+        }
+        // calc direction and speed
+        curPoint->dir = Vector2(cos(finalAngle), sin(finalAngle)) * finalSpeed;
     }
 }

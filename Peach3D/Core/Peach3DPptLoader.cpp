@@ -97,16 +97,16 @@ namespace Peach3D
                 sscanf(attrEle->GetText(), "%f,%f", &emitter.accelerateVariance.x, &emitter.accelerateVariance.y);
             }
             else if (strcmp(attrName, "StartRotate") == 0) {
-                emitter.startRotate = atof(attrEle->GetText());
+                emitter.startRotate = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
             }
             else if (strcmp(attrName, "StartRotateVariance") == 0) {
-                emitter.startRotateVariance = atof(attrEle->GetText());
+                emitter.startRotateVariance = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
             }
             else if (strcmp(attrName, "EndRotate") == 0) {
-                emitter.endRotate = atof(attrEle->GetText());
+                emitter.endRotate = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
             }
             else if (strcmp(attrName, "EndRotateVariance") == 0) {
-                emitter.endRotateVariance = atof(attrEle->GetText());
+                emitter.endRotateVariance = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
             }
             else if (strcmp(attrName, "Speed") == 0) {
                 emitter.speed = atof(attrEle->GetText());

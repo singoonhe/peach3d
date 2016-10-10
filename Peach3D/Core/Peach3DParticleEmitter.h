@@ -92,7 +92,7 @@ namespace Peach3D
         ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Vector2 pos;    // point render pos
-        Vector2 dir;    // point moving direction
+        Vector2 dir;    // point moving direction and speed
     };
     class PEACH3D_DLL Emitter2D : public Emitter
     {
@@ -120,14 +120,14 @@ namespace Peach3D
         virtual void randPaticlePointAttributes(ParticlePoint* point);
         
     public:
-        float   emitAngle;
+        float   emitAngle;                      // all points emit angle, make points moving direction
         float   emitAngleVariance;
+        float   speed;                          // points emit speed
+        float   speedVariance;
         Vector2 emitPos;                        // relative to the Particle2D position
         Vector2 emitPosVariance;
         
         // gravity emitter
-        float   speed;
-        float   speedVariance;
         Vector2 gravity;        // gravity X and gravity Y
         Vector2 accelerate;     // radial and tangential accelerate
         Vector2 accelerateVariance; // radial and tangential accelerate variance
