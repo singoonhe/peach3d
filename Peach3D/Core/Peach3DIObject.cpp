@@ -13,8 +13,14 @@
 
 namespace Peach3D
 {
-    IObject::IObject(const char* name) : mObjectName(name), mVertexBufferSize(0), mIndexBufferSize(0), mVertexDataStride(0), mIndexDataType(IndexType::eUShort), mObjectProgram(nullptr)
+    IObject::IObject(const char* name, const char* meshName) : mObjectName(name), mVertexBufferSize(0), mIndexBufferSize(0), mVertexDataStride(0), mIndexDataType(IndexType::eUShort), mObjectProgram(nullptr)
     {
+        if (meshName) {
+            mUniqueName = meshName + mObjectName;
+        }
+        else {
+            mUniqueName = mObjectName;
+        }
     }
 
     bool IObject::setVertexBuffer(const void* data, uint size, uint type, bool isDynamic)

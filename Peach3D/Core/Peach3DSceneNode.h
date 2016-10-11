@@ -33,8 +33,8 @@ namespace Peach3D
         bool isBindSkeleton() { return mBindSkeleton != nullptr; }
         /** Attach scene node to bone. Notice: attached node need use self to generate. */
         void attachNodeToBone(const char* bone, SceneNode* node);
-        /** Detach scene node from list. */
-        void detachNode(const SceneNode* node);
+        /** Detach scene node from list, delete and clean it. */
+        void detachNode(SceneNode* node);
         
         /** Run animation, repeat forever if repeat is true. */
         void runAnimate(const char* name, bool loop = true);

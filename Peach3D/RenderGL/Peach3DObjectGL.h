@@ -19,7 +19,7 @@ namespace Peach3D
     {
     public:
         // constructor and destructor must be public, because shared_ptr need call them
-        ObjectGL(const char* name);
+        ObjectGL(const char* name, const char* meshName);
         virtual ~ObjectGL();
         
         /**

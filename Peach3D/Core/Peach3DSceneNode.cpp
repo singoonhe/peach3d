@@ -95,7 +95,7 @@ namespace Peach3D
                     isAttached = true;
                 }
             }
-            Peach3DAssert(isChild, "Must attached child to bone");
+            Peach3DAssert(isChild, "Node must be a child");
             Peach3DAssert(!isAttached, "Node had attached to another bone");
             if (!isAttached) {
                 mBoneAttachedNodes[bone] = node;
@@ -103,11 +103,13 @@ namespace Peach3D
         }
     }
     
-    void SceneNode::detachNode(const SceneNode* node)
+    void SceneNode::detachNode(SceneNode* node)
     {
         for (auto iter = mBoneAttachedNodes.begin(); iter != mBoneAttachedNodes.end(); ++iter) {
             if (iter->second == node) {
                 mBoneAttachedNodes.erase(iter);
+                // delete detached node and clean
+                deleteChild(node);
                 break;
             }
         }

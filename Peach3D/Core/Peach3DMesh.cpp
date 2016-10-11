@@ -22,7 +22,7 @@ namespace Peach3D
             newName = pName;
         }
         // add Object to mesh
-        ObjectPtr childObject = IRender::getSingletonPtr()->createObject(newName);
+        ObjectPtr childObject = IRender::getSingletonPtr()->createObject(newName, mMeshName.c_str());
         mObjectMap[newName] = childObject;
         return childObject;
     }

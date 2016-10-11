@@ -43,7 +43,7 @@ namespace Peach3D
     ProgramPtr ObjectGL::mParticle2DProgram = nullptr;
     ProgramPtr ObjectGL::mParticle3DProgram = nullptr;
     
-    ObjectGL::ObjectGL(const char* name):IObject(name),mVertexBuffer(0),mIndexBuffer(0)
+    ObjectGL::ObjectGL(const char* name, const char* meshName):IObject(name, meshName),mVertexBuffer(0),mIndexBuffer(0)
     {
         // create base program if not exist for OBB and shadow
         if (!mBaseProgram) {

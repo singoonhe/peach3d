@@ -82,6 +82,8 @@ namespace Peach3D
         void setAlpha(float alpha) { mMaterial.alpha = alpha; }
         /** Reset Object index texture, add texture need use "IObject::addTextureToMaterial" as template. */
         void resetTextureByIndex(int index, TexturePtr texture);
+        /** Replace render object, recalc OBB. */
+        void resetRenderObject(const ObjectPtr& obj);
         /** Set render program, preset program will be set default. */
         void setRenderProgram(const ProgramPtr& program) { mRenderProgram = program; mIsRenderCodeDirty = true; }
         const ProgramPtr& getProgramForRender() { return mRenderProgram; }
@@ -110,7 +112,6 @@ namespace Peach3D
         std::vector<LightPtr>   mRenderLights;  // valid lights, setting by parent
         std::vector<LightPtr>   mShadowLights;  // valid shadow lights, setting by parent
         NodeRenderState mNodeState;     // include OBB, shadow, mode state
-        std::string     mObjSpliceName; // (mesh name + object name), keep unique
         uint            mRenderHash;    // calc render hash using XXH32, accelerate sort when rendering
         bool            mIsRenderShadow;    // is rendering for shadow
         bool            mIsRenderCodeDirty; // control when render hash need recalc

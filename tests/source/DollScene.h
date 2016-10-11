@@ -22,6 +22,12 @@ public:
 class DollSample : public BaseSample
 {
     void init(Widget* parentWidget);
+    
+private:
+    ObjectPtr   mHeadObj;
+    ObjectPtr   mHead1Obj;
+    SceneNode*  mGirlNode;
+    SceneNode*  mWeaponNode;
 };
 
 #endif /* DOLL_SCENE_H */

@@ -17,8 +17,6 @@ namespace Peach3D
 {
     RenderNode::RenderNode(const std::string& meshName, const ObjectPtr& obj) : mRenderObj(obj), mRenderProgram(nullptr), mIsRenderCodeDirty(true), mRenderOBB(nullptr), mIsRenderShadow(false)
     {
-        // current render obj unique name
-        mObjSpliceName = meshName + obj->getName();
         // copy object template material for node
         mMaterial = obj->getMaterial();
         // copy object template program for node if exist
@@ -70,6 +68,21 @@ namespace Peach3D
         }
     }
     
+    void RenderNode::resetRenderObject(const ObjectPtr& obj)
+    {
+        mRenderObj = obj;
+        // copy object template material for node
+        mMaterial = obj->getMaterial();
+        // recalc OBB if need
+        if (mRenderOBB) {
+            delete mRenderOBB;
+            mRenderOBB = nullptr;
+            generateOBB();
+        }
+        // need recalc render state
+        mIsRenderCodeDirty = true;
+    }
+    
     void RenderNode::updateSkeletonAnimate()
     {
         if (mAnimateSkeleton) {
@@ -88,7 +101,7 @@ namespace Peach3D
                 mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount, sCount, bCount));
             }
             // calc render unique hash code(Name:Program:DrawMode)
-            std::string renderState = Utils::formatString("N:%sP:%uDM:%d", mObjSpliceName.c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
+            std::string renderState = Utils::formatString("N:%sP:%uDM:%d", mRenderObj->getUniqueName().c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);
             renderState += "MT"; // Material Texture
             for (auto& tex : mMaterial.textureList) {
                 renderState = renderState + tex->getName();

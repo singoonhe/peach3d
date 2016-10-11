@@ -57,7 +57,7 @@ namespace Peach3D
          * @params objectName the name of new renderable object.
          * @return return the new object pointer, return nullptr if create failed. 
          */
-        virtual ObjectPtr createObject(const char* objectName) = 0;
+        virtual ObjectPtr createObject(const char* objectName, const char* meshName = nullptr) = 0;
         
         /** Create normal texture with name. */
         virtual TexturePtr createTexture(const char* name) = 0;

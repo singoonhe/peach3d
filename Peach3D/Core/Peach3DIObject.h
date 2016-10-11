@@ -45,8 +45,11 @@ namespace Peach3D
     class PEACH3D_DLL IObject
     {
     public:
-        // constructor and destructor must be public, because shared_ptr need call them
-        IObject(const char* name);
+        /**
+         * @params name Object itself name.
+         * @params meshName Mesh name, (object+mesh) is object unique name.
+        */
+        IObject(const char* name, const char* meshName);
         virtual ~IObject() {}
         
         /** Set template program, all using current Object Node will use current program first. */
@@ -100,12 +103,14 @@ namespace Peach3D
         virtual void render(Particle3D* particle) = 0;
         
         const std::string& getName() { return mObjectName; }
+        const std::string& getUniqueName() { return mUniqueName; }
         const Vector3& getBorderMax() { return mBorderMax; }
         const Vector3& getBorderMin() { return mBorderMin; }
         uint getVertexType() { return mVertexDataType; }
 
     protected:
         std::string    mObjectName;        // name of object
+        std::string    mUniqueName;        // unique object name, important for render hash
         ProgramPtr     mObjectProgram;     // current used template program
         Material       mObjectMtl;         // object material, scene node template material
 

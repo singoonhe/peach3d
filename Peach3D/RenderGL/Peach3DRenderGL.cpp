@@ -156,10 +156,10 @@ namespace Peach3D
         return texture;
     }
     
-    ObjectPtr RenderGL::createObject(const char* objectName)
+    ObjectPtr RenderGL::createObject(const char* objectName, const char* meshName)
     {
         Peach3DAssert(strlen(objectName)>0, "The object name can't be null");
-        ObjectPtr object(new ObjectGL(objectName));
+        ObjectPtr object(new ObjectGL(objectName, meshName));
         return object;
     }
 }
