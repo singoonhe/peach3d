@@ -8,6 +8,7 @@
 
 #include "C3tLoader.h"
 #include "Peach3DResourceManager.h"
+#include "Peach3DUtils.h"
 #include "rapidjson/document.h"
 
 using namespace rapidjson;
@@ -216,7 +217,7 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
             for (SizeType k = 0; k < nodeParts.Size(); ++k) {
                 const Value& nodePart = nodeParts[k];
                 // object name add index if count is not only one
-                string curStringName = (nodeParts.Size() == 1) ? baseName : baseName + std::to_string(k);
+                string curStringName = (nodeParts.Size() == 1) ? baseName : Utils::formatString("%s%d", baseName.c_str(), k);
                 C3tObjectValue& nodeObj = idNameList[curStringName];
                 nodeObj.objName = nodePart["meshpartid"].GetString();
                 nodeObj.matName = nodePart["materialid"].GetString();
