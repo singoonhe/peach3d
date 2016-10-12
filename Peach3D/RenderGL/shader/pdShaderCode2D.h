@@ -205,9 +205,10 @@ namespace Peach3D
     void main(void)
     {\n
         vec2 rotatedUV = gl_PointCoord;
+        rotatedUV.y = 1.0 - rotatedUV.y; /* gl_PointCoord used top left, but texture used top bottom.*/
         if (out_rotate > 0.0001 || out_rotate < -0.0001) {\n
-            rotatedUV = vec2(cos(out_rotate) * (gl_PointCoord.x - 0.5) + sin(out_rotate) * (gl_PointCoord.y - 0.5) + 0.5,
-                        cos(out_rotate) * (gl_PointCoord.y - 0.5) - sin(out_rotate) * (gl_PointCoord.x - 0.5) + 0.5);
+            rotatedUV = vec2(cos(out_rotate) * (rotatedUV.x - 0.5) + sin(out_rotate) * (rotatedUV.y - 0.5) + 0.5,
+                        cos(out_rotate) * (rotatedUV.y - 0.5) - sin(out_rotate) * (rotatedUV.x - 0.5) + 0.5);
         \n}
         \n#ifdef PD_LEVEL_GL3\n
             out_FragColor = texture(pd_texture0, rotatedUV) * out_color;

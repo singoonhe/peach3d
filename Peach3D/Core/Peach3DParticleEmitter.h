@@ -19,14 +19,14 @@ namespace Peach3D
 {
     struct PEACH3D_DLL ParticlePoint
     {
-        ParticlePoint() : rotate(0.f), endRotate(0.f), size(0.f), endSize(0.f), time(0.f), lifeTime(0.f) {}
-        ParticlePoint &operator=(const ParticlePoint& other){ color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        ParticlePoint() : rotate(0.f), lenRotate(0.f), size(0.f), lenSize(0.f), time(0.f), lifeTime(0.f) {}
+        ParticlePoint &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Color4  color;      // point color and alpha
-        Color4  endColor;   // point end color and alpha
+        Color4  lenColor;   // point end color and alpha
         float   rotate;     // point rotation
-        float   endRotate;  // point end rotation
+        float   lenRotate;  // point end rotation
         float   size;       // point size
-        float   endSize;    // point end size
+        float   lenSize;    // point end size
         float   time;       // point current time
         float   lifeTime;   // point life time
     };
@@ -89,8 +89,8 @@ namespace Peach3D
     struct PEACH3D_DLL ParticlePoint2D : public ParticlePoint
     {
         ParticlePoint2D() : ParticlePoint() {}
-        ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
-        ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; endColor = other.endColor; rotate = other.rotate; endRotate = other.endRotate; size = other.size; endSize = other.endSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Vector2 pos;    // point render pos
         Vector2 dir;    // point moving direction and speed
     };

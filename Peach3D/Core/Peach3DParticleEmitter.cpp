@@ -69,16 +69,13 @@ namespace Peach3D
     
     void Emitter::updatePointAttributes(ParticlePoint* point, float lastFrameTime)
     {
+        double interval = lastFrameTime / point->lifeTime;
         // color
-        float timeInterval = point->lifeTime - point->time;
-        auto disColor = (point->endColor - point->color) / timeInterval;
-        point->color += disColor * lastFrameTime;
+        point->color += point->lenColor * interval;
         // size
-        auto disSize = (point->endSize - point->size) / timeInterval;
-        point->size += disSize * lastFrameTime;
+        point->size += point->lenSize * interval;
         // rotation
-        auto disRotate = (point->endRotate - point->rotate) / timeInterval;
-        point->rotate += disRotate * lastFrameTime;
+        point->rotate += point->lenRotate * interval;
     }
     
     void Emitter::generatePaticles(int number)
@@ -126,41 +123,43 @@ namespace Peach3D
         }
         point->color.standard();
         // end color
-        point->endColor = endColor;
+        auto pointEndColor = endColor;
         if (endColorVariance.r > FLT_EPSILON) {
-            point->endColor.r += Utils::rand(-endColorVariance.r, endColorVariance.r);
+            pointEndColor.r += Utils::rand(-endColorVariance.r, endColorVariance.r);
         }
         if (endColorVariance.g > FLT_EPSILON) {
-            point->
-            endColor.g += Utils::rand(-endColorVariance.g, endColorVariance.g);
+            pointEndColor.g += Utils::rand(-endColorVariance.g, endColorVariance.g);
         }
         if (endColorVariance.b > FLT_EPSILON) {
-            point->endColor.b += Utils::rand(-endColorVariance.b, endColorVariance.b);
+            pointEndColor.b += Utils::rand(-endColorVariance.b, endColorVariance.b);
         }
         if (endColorVariance.a > FLT_EPSILON) {
-            point->endColor.a += Utils::rand(-endColorVariance.a, endColorVariance.a);
+            pointEndColor.a += Utils::rand(-endColorVariance.a, endColorVariance.a);
         }
-        point->endColor.standard();
+        pointEndColor.standard();   // end color must valid, so lenColor is valid
+        point->lenColor = pointEndColor - point->color;
         // size
         point->size = startSize;
         if (startSizeVariance > FLT_EPSILON) {
             point->size +=  Utils::rand(-startSizeVariance, startSizeVariance);
         }
         point->size = std::max(0.f, point->size);
-        point->endSize = endSize;
+        auto pointEndSize = endSize;
         if (endSizeVariance > FLT_EPSILON) {
-            point->endSize +=  Utils::rand(-endSizeVariance, endSizeVariance);
+            pointEndSize +=  Utils::rand(-endSizeVariance, endSizeVariance);
         }
-        point->endSize = std::max(0.f, point->endSize);
+        pointEndSize = std::max(0.f, pointEndSize);
+        point->lenSize = pointEndSize - point->size;
         // rotation
         point->rotate = startRotate;
         if (startRotateVariance > FLT_EPSILON) {
             point->rotate +=  Utils::rand(-startRotateVariance, startRotateVariance);
         }
-        point->endRotate = endRotate;
+        auto pointEndRotate = endRotate;
         if (endRotateVariance > FLT_EPSILON) {
-            point->endRotate +=  Utils::rand(-endRotateVariance, endRotateVariance);
+            pointEndRotate +=  Utils::rand(-endRotateVariance, endRotateVariance);
         }
+        point->lenRotate = pointEndRotate - point->rotate;
     }
     
     /************************************** 2D particle emitter ***************************************/
@@ -191,24 +190,25 @@ namespace Peach3D
         }
         // init max count memory
         if (!mData && maxCount > 0) {
-            mData = (float*)malloc(mPointStride * maxCount * sizeof(float));
+            mData = (float*)malloc(mPointStride * maxCount);
         }
         
         // copy point attributes to cache data
         int index = 0;
+        const int strideFloatCount = mPointStride / sizeof(float);
         for (auto i=0; i<mPoints.size(); ++i) {
             ParticlePoint2D* point = (ParticlePoint2D*)mPoints[i];
             if (point->lifeTime > FLT_EPSILON) {
-                mData[index * mPointStride + 0] = point->pos.x + curPos.x;
-                mData[index * mPointStride + 1] = point->pos.y + curPos.y;
+                mData[index * strideFloatCount + 0] = point->pos.x + curPos.x;
+                mData[index * strideFloatCount + 1] = point->pos.y + curPos.y;
+
+                mData[index * strideFloatCount + 2] = point->color.r;
+                mData[index * strideFloatCount + 3] = point->color.g;
+                mData[index * strideFloatCount + 4] = point->color.b;
+                mData[index * strideFloatCount + 5] = point->color.a;
                 
-                mData[index * mPointStride + 2] = point->color.r;
-                mData[index * mPointStride + 3] = point->color.g;
-                mData[index * mPointStride + 4] = point->color.b;
-                mData[index * mPointStride + 5] = point->color.a;
-                
-                mData[index * mPointStride + 6] = point->size;
-                mData[index * mPointStride + 7] = point->rotate;
+                mData[index * strideFloatCount + 6] = point->size;
+                mData[index * strideFloatCount + 7] = point->rotate;
                 index++;
             }
         }
@@ -220,10 +220,11 @@ namespace Peach3D
     {
         Emitter::updatePointAttributes(point, lastFrameTime);
         
-        // position
+        // position ((v0*t2 - 0.5*g*t2^2) - (v0*t1 - 0.5*g*t1^2)) && (t2 = t1 + t)
         ParticlePoint2D* point2D = static_cast<ParticlePoint2D*>(point);
-        point2D->pos.x = point2D->dir.x * point2D->time + gravity.x * point2D->time * point2D->time * 0.5f;
-        point2D->pos.y = point2D->dir.y * point2D->time + gravity.y * point2D->time * point2D->time * 0.5f;
+        double squareLastTime = lastFrameTime * lastFrameTime;
+        point2D->pos.x += point2D->dir.x * lastFrameTime - 0.5f * gravity.x * squareLastTime + gravity.x * lastFrameTime * point->time;
+        point2D->pos.y += point2D->dir.y * lastFrameTime - 0.5f * gravity.y * squareLastTime + gravity.y * lastFrameTime * point->time;
     }
     
     ParticlePoint* Emitter2D::generateRandPaticles()
