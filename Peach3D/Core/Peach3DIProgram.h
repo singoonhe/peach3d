@@ -26,18 +26,21 @@ namespace Peach3D
     const char pdShaderPSpriteAttribName[]  = "pd_pSprite";
     // define the common shader texture coord name
     const char pdShaderUVAttribName[]         = "pd_uv";
-    // define the common shader skeleton name
-    const char pdShaderSkeletonAttribName[]   = "pd_skeleton";
+    // define the common shader bone widget name
+    const char pdShaderBoneWidgetAttribName[]   = "pd_bWidget";
+    // define the common shader bone index name
+    const char pdShaderBoneIndexAttribName[]   = "pd_bIndex";
     
     // enum attrs bind location for GL3
     enum class PEACH3D_DLL DefaultAttrLocation
     {
-        eVertex,    // position attr in vertex
-        eColor,     // color attr in vertex
-        eNormal,    // normal attr in vertex
-        ePSprite,   // point sprite attr in vertex
-        eUV,        // uv attr in vertex
-        eSkeleton,  // skeleton attr in vertex
+        eVertex,    // position attr in vertex, float2 or float3
+        eColor,     // color attr in vertex, float4
+        eNormal,    // normal attr in vertex, flaot3
+        ePSprite,   // point sprite attr in vertex, float2(size+rotation)
+        eUV,        // uv attr in vertex, float2
+        eBWidget,   // bone widget attr in vertex, float4
+        eBIndex,    // bone index attr in vertex, float4
     };
     
     class OBB;

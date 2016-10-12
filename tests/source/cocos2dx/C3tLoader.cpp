@@ -59,7 +59,11 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_BLEND_WEIGHT") == 0) {
                     floatCount += 4;
-                    verType = verType | VertexType::Bone;
+                    verType = verType | VertexType::BWidget;
+                }
+                else if (strcmp(attrString, "VERTEX_ATTRIB_BLEND_INDEX") == 0) {
+                    floatCount += 4;
+                    verType = verType | VertexType::BIndex;
                 }
                 else if (strcmp(attrString, "VERTEX_ATTRIB_COLOR") == 0) {
                     // not support color, mark offset
@@ -68,37 +72,24 @@ static void c3tObjectDataParse(const Value& object, MeshPtr* mesh, const map<str
             }
             
             const Value& vertexValue = object["vertices"];
-            int c3tFCount = (verType & VertexType::Bone ) ? (floatCount + 4) : floatCount;
-            c3tFCount += colorOffset; // mark offset
+            int c3tFCount = floatCount + colorOffset; // mark offset
             auto vertexCount = vertexValue.Size()/c3tFCount;
             // malloc vertex data
             uint verDataSize = floatCount * sizeof(float) * vertexCount;
             float* verData = (float*)malloc(verDataSize);
-            // read vertex data, c3t use 4 float for BONE, Peach3D use 2 float.
+            // read vertex data
+            int c3tIndex = (verType & VertexType::Normal) ? 6 : 3;
+            int c3tLastIndex = c3tFCount - c3tIndex - colorOffset;
             for (int k = 0; k < vertexCount; k++) {
                 // copy point and normal
-                int c3tIndex = (verType & VertexType::Normal) ? 6 : 3;
-                int curIndex = c3tIndex;
-                for (int m = 0; m < curIndex; m++) {
+                for (int m = 0; m < c3tIndex; m++) {
                     verData[k * floatCount + m] = vertexValue[k * c3tFCount + m].GetDouble();
                 }
                 // ignore color attribute
-                if (colorOffset > 0) {
-                    c3tIndex += colorOffset;
-                }
-                // copy UV coord
-                if (verType & VertexType::UV) {
-                    verData[k * floatCount + curIndex] = vertexValue[k * c3tFCount + c3tIndex].GetDouble();
-                    // Reverse coord V, cocos2dx used not same as Peach3D
-                    verData[k * floatCount + curIndex + 1] = vertexValue[k * c3tFCount + c3tIndex + 1].GetDouble();
-                    c3tIndex += 2; curIndex += 2;
-                }
-                // copy bone data
-                if (verType & VertexType::Bone) {
-                    verData[k * floatCount + curIndex] = vertexValue[k * c3tFCount + c3tIndex].GetDouble();
-                    verData[k * floatCount + curIndex + 1] = vertexValue[k * c3tFCount + c3tIndex + 1].GetDouble();
-                    verData[k * floatCount + curIndex + 2] = vertexValue[k * c3tFCount + c3tIndex + 4].GetDouble();
-                    verData[k * floatCount + curIndex + 3] = vertexValue[k * c3tFCount + c3tIndex + 5].GetDouble();
+                int curIndex = c3tIndex + colorOffset;
+                // copy last data (UV and bone)
+                for (int m = 0; m < c3tLastIndex; m++) {
+                    verData[k * floatCount + c3tIndex + m] = vertexValue[k * c3tFCount + curIndex + m].GetDouble();
                 }
             }
             dObj->setVertexBuffer(verData, verDataSize, verType);

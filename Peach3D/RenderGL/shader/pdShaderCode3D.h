@@ -49,7 +49,8 @@ namespace Peach3D
         in vec2 pd_uv;
     \n#endif
     \n#ifdef PD_ENABLE_SKELETON\n
-        in vec4 pd_skeleton;
+        in vec4 pd_bWidget;
+        in vec4 pd_bIndex;
     \n#endif\n
     in mat4 pd_modelMatrix;
     in vec4 pd_diffuse;
@@ -85,12 +86,12 @@ namespace Peach3D
             vec4 vMtY = vec4(0.0);
             vec4 vMtZ = vec4(0.0);
             bool isUsedBones = false;
-            for (int i = 0; i < 2; ++i){
-                if (pd_skeleton[i] > 0.0) {
-                    int boneIndex = int(pd_skeleton[i + 2]) * 3;
-                    vMtX += pd_boneMatrix[boneIndex] * pd_skeleton[i];
-                    vMtY += pd_boneMatrix[boneIndex + 1] * pd_skeleton[i];
-                    vMtZ += pd_boneMatrix[boneIndex + 2] * pd_skeleton[i];
+            for (int i = 0; i < 4; ++i){
+                if (pd_bWidget[i] > 0.0) {
+                    int boneIndex = int(pd_bIndex[i]) * 3;
+                    vMtX += pd_boneMatrix[boneIndex] * pd_bWidget[i];
+                    vMtY += pd_boneMatrix[boneIndex + 1] * pd_bWidget[i];
+                    vMtZ += pd_boneMatrix[boneIndex + 2] * pd_bWidget[i];
                     isUsedBones = true;
                 }
             }
@@ -261,7 +262,8 @@ namespace Peach3D
         attribute vec2 pd_uv;
     \n#endif
     \n#ifdef PD_ENABLE_SKELETON\n
-        attribute vec4 pd_skeleton;
+        attribute vec4 pd_bWidget;
+        attribute vec4 pd_bIndex;
         uniform vec4 pd_boneMatrix[PD_ENABLE_SKELETON * 3];
     \n#endif\n
     uniform mat4 pd_projMatrix;
@@ -292,12 +294,12 @@ namespace Peach3D
             vec4 vMtY = vec4(0.0);
             vec4 vMtZ = vec4(0.0);
             bool isUsedBones = false;
-            for (int i = 0; i < 2; ++i){
-                if (pd_skeleton[i] > 0.0) {
-                    int boneIndex = int(pd_skeleton[i + 2]) * 3;
-                    vMtX += pd_boneMatrix[boneIndex] * pd_skeleton[i];
-                    vMtY += pd_boneMatrix[boneIndex + 1] * pd_skeleton[i];
-                    vMtZ += pd_boneMatrix[boneIndex + 2] * pd_skeleton[i];
+            for (int i = 0; i < 4; ++i){
+                if (pd_bWidget[i] > 0.0) {
+                    int boneIndex = int(pd_bIndex[i]) * 3;
+                    vMtX += pd_boneMatrix[boneIndex] * pd_bWidget[i];
+                    vMtY += pd_boneMatrix[boneIndex + 1] * pd_bWidget[i];
+                    vMtZ += pd_boneMatrix[boneIndex + 2] * pd_bWidget[i];
                     isUsedBones = true;
                 }
             }

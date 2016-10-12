@@ -86,7 +86,10 @@ namespace Peach3D
         if (verType & VertexType::UV) {
             floatCount += 2;
         }
-        if (verType & VertexType::Bone) {
+        if (verType & VertexType::BWidget) {
+            floatCount += 4;
+        }
+        if (verType & VertexType::BIndex) {
             floatCount += 4;
         }
         // malloc vertex data

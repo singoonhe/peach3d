@@ -90,7 +90,8 @@ namespace Peach3D
             verType = verType | VertexType::Normal;
         }
         if (feature.boneCount > 0) {
-            verType = verType | VertexType::Bone;
+            verType = verType | VertexType::BWidget;
+            verType = verType | VertexType::BIndex;
         }
         if (feature.isParticle) {
             verType = verType | VertexType::PSprite;
