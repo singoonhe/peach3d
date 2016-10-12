@@ -92,8 +92,8 @@ def do_calc_rotate_normal(isRot, normal):
 def add_vertex_weight_string(vertex, mesh):
     # total bones group list
     mesh_groups_list = mesh.vertex_groups
-    weight_vector = [0.0, 0.0, 0.0, 0.0]
-    for x in range(2):
+    weight_vector = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    for x in range(4):
         is_have_weight = x < len(vertex.groups)
         # store bone weight
         vgroup_weight = is_have_weight and vertex.groups[x].weight or 0.0
@@ -101,8 +101,8 @@ def add_vertex_weight_string(vertex, mesh):
         # find bone in pst animation bones list
         if is_have_weight:
             bone_index = vertex.groups[x].group
-            weight_vector[x + 2] = bone_index
-    return " %f, %f, %.1f, %.1f" % (weight_vector[0], weight_vector[1], weight_vector[2], weight_vector[3])
+            weight_vector[x + 4] = bone_index
+    return " %f, %f, %f, %f, %.1f, %.1f, %.1f, %.1f" % (weight_vector[0], weight_vector[1], weight_vector[2], weight_vector[3], weight_vector[4], weight_vector[5], weight_vector[6], weight_vector[7])
 
 # export one object, using vertex normal, rendering more smooth.
 def do_export_object(context, props, me_ob, xmlRoot):
@@ -138,8 +138,8 @@ def do_export_object(context, props, me_ob, xmlRoot):
             # |VertexType::Normal
             vertex_type_num += 8
         if is_export_weight:
-            # |VertexType::Skeleton
-            vertex_type_num += 64
+            # |VertexType::BWidget|VertexType::BIndex
+            vertex_type_num += 192
         ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # record vertex and index data
         uv_layer = mesh.uv_layers.active.data
@@ -196,8 +196,8 @@ def do_export_object(context, props, me_ob, xmlRoot):
             # |VertexType::Normal
             vertex_type_num += 8
         if is_export_weight:
-            # |VertexType::Skeleton
-            vertex_type_num += 64
+            # |VertexType::BWidget|VertexType::BIndex
+            vertex_type_num += 192
         ET.SubElement(objElem, "VertexType").text='%d' % vertex_type_num
         # write vertex count
         vertex_total_count = len(mesh.vertices)
