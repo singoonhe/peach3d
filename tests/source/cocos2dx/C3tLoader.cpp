@@ -209,29 +209,37 @@ void* C3tLoader::c3tMeshDataParse(const ResourceLoaderInput& input)
     for (SizeType i = 0; i < nodes.Size(); i++) {
         const Value& nodeValue = nodes[i];
         if (nodeValue["skeleton"].GetBool() == false && nodeValue.HasMember("parts")) {
-            const Value& nodeParts = nodeValue["parts"][0];
-            C3tObjectValue& nodeObj = idNameList[nodeValue["id"].GetString()];
-            nodeObj.objName = nodeParts["meshpartid"].GetString();
-            nodeObj.matName = nodeParts["materialid"].GetString();
-            // read object transform matrix
-            const Value& objTranValue = nodeValue["transform"];
-            for (int j=0; j<16; j++) {
-                nodeObj.objTran.mat[j] = objTranValue[j].GetDouble();
-            }
-            // read object bones
-            if (nodeParts.HasMember("bones")) {
-                const Value& bonesValue = nodeParts["bones"];
-                for (int j=0; j<bonesValue.Size(); j++) {
-                    // read used bone name
-                    auto boneName = bonesValue[j]["node"].GetString();
-                    nodeObj.boneNames.push_back(boneName);
-                    // read used bone invert transform
-                    const Value& boneTranValue = bonesValue[j]["transform"];
-                    Matrix4 boneTransform;
-                    for (int n=0; n<16; n++) {
-                        boneTransform.mat[n] = boneTranValue[n].GetDouble();
+            const Value& nodeParts = nodeValue["parts"];
+            string baseName = nodeValue["id"].GetString();
+            
+            // load every object
+            for (SizeType k = 0; k < nodeParts.Size(); ++k) {
+                const Value& nodePart = nodeParts[k];
+                // object name add index if count is not only one
+                string curStringName = (nodeParts.Size() == 1) ? baseName : baseName + std::to_string(k);
+                C3tObjectValue& nodeObj = idNameList[curStringName];
+                nodeObj.objName = nodePart["meshpartid"].GetString();
+                nodeObj.matName = nodePart["materialid"].GetString();
+                // read object transform matrix
+                const Value& objTranValue = nodeValue["transform"];
+                for (int j=0; j<16; j++) {
+                    nodeObj.objTran.mat[j] = objTranValue[j].GetDouble();
+                }
+                // read object bones
+                if (nodePart.HasMember("bones")) {
+                    const Value& bonesValue = nodePart["bones"];
+                    for (int j=0; j<bonesValue.Size(); j++) {
+                        // read used bone name
+                        auto boneName = bonesValue[j]["node"].GetString();
+                        nodeObj.boneNames.push_back(boneName);
+                        // read used bone invert transform
+                        const Value& boneTranValue = bonesValue[j]["transform"];
+                        Matrix4 boneTransform;
+                        for (int n=0; n<16; n++) {
+                            boneTransform.mat[n] = boneTranValue[n].GetDouble();
+                        }
+                        bonesMatrixMap[boneName] = boneTransform;
                     }
-                    bonesMatrixMap[boneName] = boneTransform;
                 }
             }
         }
