@@ -45,8 +45,8 @@ namespace Peach3D
         void normalize()
         {
             float length = sqrt(pow(x, 2) + pow(y, 2));
-            if (length > 0.0f)
-            {
+            // not normalized and not zero
+            if (length != 1.0f && length > 0.0f) {
                 x = x/length; y = y/length;
             }
         }

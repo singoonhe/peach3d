@@ -220,11 +220,20 @@ namespace Peach3D
     {
         Emitter::updatePointAttributes(point, lastFrameTime);
         
-        // position ((v0*t2 - 0.5*g*t2^2) - (v0*t1 - 0.5*g*t1^2)) && (t2 = t1 + t)
         ParticlePoint2D* point2D = static_cast<ParticlePoint2D*>(point);
-        double squareLastTime = lastFrameTime * lastFrameTime;
-        point2D->pos.x += point2D->dir.x * lastFrameTime - 0.5f * gravity.x * squareLastTime + gravity.x * lastFrameTime * point->time;
-        point2D->pos.y += point2D->dir.y * lastFrameTime - 0.5f * gravity.y * squareLastTime + gravity.y * lastFrameTime * point->time;
+        Vector2 radial = point2D->pos;
+        // radial acceleration
+        radial.normalize();
+        Vector2 tangential = radial;
+        radial = radial * point2D->accelerate.x;
+        
+        // tangential acceleration
+        std::swap(tangential.x, tangential.y);
+        tangential = tangential * point2D->accelerate.y;
+        
+        // (gravity + radial + tangential) * dt
+        point2D->dir = point2D->dir + (radial + tangential + gravity) * lastFrameTime;
+        point2D->pos = point2D->pos + point2D->dir * lastFrameTime;
     }
     
     ParticlePoint* Emitter2D::generateRandPaticles()
@@ -258,5 +267,13 @@ namespace Peach3D
         }
         // calc direction and speed
         curPoint->dir = Vector2(cos(finalAngle), sin(finalAngle)) * finalSpeed;
+        // radial and tangential accelerate
+        curPoint->accelerate = accelerate;
+        if (accelerateVariance.x > FLT_EPSILON) {
+            curPoint->accelerate.x +=  Utils::rand(-accelerateVariance.x, accelerateVariance.x);
+        }
+        if (accelerateVariance.y > FLT_EPSILON) {
+            curPoint->accelerate.y += Utils::rand(-accelerateVariance.y, accelerateVariance.y);
+        }
     }
 }
