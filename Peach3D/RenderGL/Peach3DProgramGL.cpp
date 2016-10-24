@@ -1103,6 +1103,12 @@ namespace Peach3D
                         glUniform4fv(location, 1, viewRect);
                     });
                     break;
+                case UniformNameType::eUVRect:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        float viewRect[] = {coord.pos.x, coord.pos.y, coord.size.x, coord.size.y};
+                        glUniform4fv(location, 1, viewRect);
+                    });
+                    break;
                 default:
                     break;
             }

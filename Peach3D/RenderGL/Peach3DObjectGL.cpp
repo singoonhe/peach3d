@@ -383,7 +383,7 @@ namespace Peach3D
                 if (texFrame.tex) {
                     GLuint glTextureId = static_cast<TextureGL*>(texFrame.tex.get())->getGLTextureId();
                     static_cast<ProgramGL*>(mParticle2DProgram.get())->activeTextures(glTextureId, 0);
-                    
+                    // support texture plist, size must be power of 2
                     mParticle2DProgram->updateParticle2DUniforms(texFrame.rc);
                     // bind vertex and draw points
                     auto bufferSize = emit.getRenderBufferSize();

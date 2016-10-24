@@ -23,8 +23,12 @@ void Particle2DSample::init(Widget* parentWidget)
 {
     // only set title here
     mTitle = "2D fire particle";
-    //mDesc = "";
     
+    // also support plist texture, width and height must be power of 2
+    //std::vector<TextureFrame> fileLogoList;
+    //Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", &fileLogoList), "Load frame file failed");
+    
+    // read frame action from file
     auto winSize = LayoutManager::getSingleton().getScreenSize();
     // create fire particle from file
     Particle2D* fire = Particle2D::create("2dfire.ppt");

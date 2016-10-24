@@ -93,6 +93,10 @@ namespace Peach3D
                 // particle only use pd_viewRect
                 if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2 || feature.isParticle) {
                     uniforms.push_back(ProgramUniform("pd_viewRect", UniformDataType::eVector4));
+                    if (feature.isParticle) {
+                        // support texture plist
+                        uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
+                    }
                 }
                 if (!feature.isParticle) {
                     uniforms.push_back(ProgramUniform("pd_showRect", UniformDataType::eVector4));

@@ -21,7 +21,8 @@ namespace Peach3D
     "   if (anRot.z > 0.0001) { \n"
     "       float aspect = viewRect.z / viewRect.w; \n"
     "       /* Rotate with aspect, because current vertex is relative pos.*/ \n"
-    "       mat2 rotateMat = mat2(cos(anRot.z), sin(anRot.z) * aspect, -sin(anRot.z) / aspect, cos(anRot.z)); \n"
+    "       float cosRotZ = cos(anRot.z); float sinRotZ = sin(anRot.z); \n"
+    "       mat2 rotateMat = mat2(cosRotZ, sinRotZ * aspect, -sinRotZ / aspect, cosRotZ); \n"
     "       vec2 offset = vec2(relRect.x * 2.0 - 1.0, relRect.y * 2.0 - 1.0); \n"
     "       /* Move anchor point to zero, then rotate.*/ \n"
     "       vec2 rPos = rotateMat * vec2(posX - offset.x, posY - offset.y); \n"
@@ -38,7 +39,8 @@ namespace Peach3D
     "   if (patAnRot.z > 0.0001) { \n"
     "       vec2 offset = vec2(gl_FragCoord.x - patShowRect.x, gl_FragCoord.y - patShowRect.y); \n"
     "       /* Rotate gl_FragCoord nevgative parent rotation.*/ \n"
-    "       mat2 rotateMat = mat2(cos(patAnRot.z), -sin(patAnRot.z), sin(patAnRot.z), cos(patAnRot.z)); \n"
+    "       float cosRotZ = cos(patAnRot.z); float sinRotZ = sin(patAnRot.z); \n"
+    "       mat2 rotateMat = mat2(cosRotZ, -sinRotZ, sinRotZ, cosRotZ); \n"
     "       offset = rotateMat * offset + anchorSize; \n"
     "       if (offset.x < 0.0 || offset.y < 0.0 || offset.x > patShowRect.z || offset.y > patShowRect.w) discard; \n"
     "   } \n"
@@ -194,21 +196,26 @@ namespace Peach3D
     #ifdef PD_LEVEL_GL3\n
         in float out_rotate;
         in vec4 out_color;
-        uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
         out vec4 out_FragColor;
     \n#else\n
         varying float out_rotate;
         varying vec4 out_color;
-        uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
     \n#endif\n
+    uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+    uniform vec4      pd_uvRect;
 
     void main(void)
     {\n
         vec2 rotatedUV = gl_PointCoord;
-        rotatedUV.y = 1.0 - rotatedUV.y; /* gl_PointCoord used top left, but texture used top bottom.*/
+        rotatedUV.x = rotatedUV.x * pd_uvRect.z + pd_uvRect.x;
+        rotatedUV.y = (1.0 - rotatedUV.y) * pd_uvRect.w + pd_uvRect.y; /* gl_PointCoord used top left, but texture used top bottom.*/
         if (out_rotate > 0.0001 || out_rotate < -0.0001) {\n
-            rotatedUV = vec2(cos(out_rotate) * (rotatedUV.x - 0.5) + sin(out_rotate) * (rotatedUV.y - 0.5) + 0.5,
-                        cos(out_rotate) * (rotatedUV.y - 0.5) - sin(out_rotate) * (rotatedUV.x - 0.5) + 0.5);
+            vec2 center = vec2(pd_uvRect.z * 0.5 + pd_uvRect.x, pd_uvRect.w * 0.5 + pd_uvRect.y);
+            float sinR = sin(out_rotate);
+            float cosR = cos(out_rotate);
+            float aspect = pd_uvRect.w / pd_uvRect.z;
+            mat2 rotateMat = mat2(cosR, sinR * aspect, -sinR / aspect, cosR);
+            rotatedUV = rotateMat * vec2(rotatedUV.x - center.x, rotatedUV.y - center.y) + center;
         \n}
         \n#ifdef PD_LEVEL_GL3\n
             out_FragColor = texture(pd_texture0, rotatedUV) * out_color;
