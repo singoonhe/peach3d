@@ -221,19 +221,28 @@ namespace Peach3D
         Emitter::updatePointAttributes(point, lastFrameTime);
         
         ParticlePoint2D* point2D = static_cast<ParticlePoint2D*>(point);
-        Vector2 radial = point2D->pos;
-        // radial acceleration
-        radial.normalize();
-        Vector2 tangential = radial;
-        radial = radial * point2D->accelerate.x;
-        
-        // tangential acceleration
-        std::swap(tangential.x, tangential.y);
-        tangential = tangential * point2D->accelerate.y;
-        
-        // (gravity + radial + tangential) * dt
-        point2D->dir = point2D->dir + (radial + tangential + gravity) * lastFrameTime;
-        point2D->pos = point2D->pos + point2D->dir * lastFrameTime;
+        if (emitterMode == Mode::eGravity) {
+            Vector2 radial = point2D->pos;
+            // radial acceleration
+            radial.normalize();
+            Vector2 tangential = radial;
+            radial = radial * point2D->accelerate.x;
+            
+            // tangential acceleration
+            std::swap(tangential.x, tangential.y);
+            tangential = tangential * point2D->accelerate.y;
+            
+            // (gravity + radial + tangential) * dt
+            point2D->dir = point2D->dir + (radial + tangential + gravity) * lastFrameTime;
+            point2D->pos = point2D->pos + point2D->dir * lastFrameTime;
+        }
+        else {
+            point2D->angle += point2D->rotatePerSecond * lastFrameTime;
+            double interval = lastFrameTime / point->lifeTime;
+            point2D->radius += point2D->lenRadius * interval;
+            point2D->pos.x = -cosf(point2D->angle) * point2D->radius;
+            point2D->pos.y = -sinf(point2D->angle) * point2D->radius;
+        }
     }
     
     ParticlePoint* Emitter2D::generateRandPaticles()
@@ -255,25 +264,50 @@ namespace Peach3D
         if (emitPosVariance.y > FLT_EPSILON) {
             curPoint->pos.y += Utils::rand(-emitPosVariance.y, emitPosVariance.y);
         }
-        // base direction
-        auto finalAngle = emitAngle;
-        if (emitAngleVariance > FLT_EPSILON) {
-            finalAngle +=  Utils::rand(-emitAngleVariance, emitAngleVariance);
+        if (emitterMode == Mode::eGravity) {
+            // base direction
+            auto finalAngle = emitAngle;
+            if (emitAngleVariance > FLT_EPSILON) {
+                finalAngle +=  Utils::rand(-emitAngleVariance, emitAngleVariance);
+            }
+            // moving speed
+            auto finalSpeed = speed;
+            if (speedVariance > FLT_EPSILON) {
+                finalSpeed +=  Utils::rand(-speedVariance, speedVariance);
+            }
+            // calc direction and speed
+            curPoint->dir = Vector2(cos(finalAngle), sin(finalAngle)) * finalSpeed;
+            // radial and tangential accelerate
+            curPoint->accelerate = accelerate;
+            if (accelerateVariance.x > FLT_EPSILON) {
+                curPoint->accelerate.x +=  Utils::rand(-accelerateVariance.x, accelerateVariance.x);
+            }
+            if (accelerateVariance.y > FLT_EPSILON) {
+                curPoint->accelerate.y += Utils::rand(-accelerateVariance.y, accelerateVariance.y);
+            }
         }
-        // moving speed
-        auto finalSpeed = speed;
-        if (speedVariance > FLT_EPSILON) {
-            finalSpeed +=  Utils::rand(-speedVariance, speedVariance);
-        }
-        // calc direction and speed
-        curPoint->dir = Vector2(cos(finalAngle), sin(finalAngle)) * finalSpeed;
-        // radial and tangential accelerate
-        curPoint->accelerate = accelerate;
-        if (accelerateVariance.x > FLT_EPSILON) {
-            curPoint->accelerate.x +=  Utils::rand(-accelerateVariance.x, accelerateVariance.x);
-        }
-        if (accelerateVariance.y > FLT_EPSILON) {
-            curPoint->accelerate.y += Utils::rand(-accelerateVariance.y, accelerateVariance.y);
+        else {
+            // start radius
+            curPoint->radius = startRadius;
+            if (startRadiusVariance > FLT_EPSILON) {
+                curPoint->radius +=  Utils::rand(-startRadiusVariance, startRadiusVariance);
+            }
+            // radius length
+            float finalRadius = endRadius;
+            if (endRadiusVariance > FLT_EPSILON) {
+                finalRadius +=  Utils::rand(-endRadiusVariance, endRadiusVariance);
+            }
+            curPoint->lenRadius = finalRadius - curPoint->radius;
+            // angle
+            curPoint->angle = emitAngle;
+            if (emitAngleVariance > FLT_EPSILON) {
+                curPoint->angle +=  Utils::rand(-emitAngleVariance, emitAngleVariance);
+            }
+            // rotate per second
+            curPoint->rotatePerSecond = rotatePerSecond;
+            if (rotatePerSecondVariance > FLT_EPSILON) {
+                curPoint->rotatePerSecond +=  Utils::rand(-rotatePerSecondVariance, rotatePerSecondVariance);
+            }
         }
     }
 }

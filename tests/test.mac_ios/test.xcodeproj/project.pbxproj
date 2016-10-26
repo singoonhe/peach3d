@@ -66,6 +66,10 @@
 		185BD0321D9D1376008A55D2 /* ParticleScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 185BD02F1D9D1376008A55D2 /* ParticleScene.cpp */; };
 		185BD0361D9D18C1008A55D2 /* 2dfire.ppt in Resources */ = {isa = PBXBuildFile; fileRef = 185BD0351D9D18C1008A55D2 /* 2dfire.ppt */; };
 		185BD0371D9D18C1008A55D2 /* 2dfire.ppt in Resources */ = {isa = PBXBuildFile; fileRef = 185BD0351D9D18C1008A55D2 /* 2dfire.ppt */; };
+		185D9CCF1DBF61120004C73B /* 2dcloud.ppt in Resources */ = {isa = PBXBuildFile; fileRef = 185D9CCE1DBF61120004C73B /* 2dcloud.ppt */; };
+		185D9CD01DBF61120004C73B /* 2dcloud.ppt in Resources */ = {isa = PBXBuildFile; fileRef = 185D9CCE1DBF61120004C73B /* 2dcloud.ppt */; };
+		185D9CD41DBF65720004C73B /* 2dcloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 185D9CD31DBF65720004C73B /* 2dcloud.png */; };
+		185D9CD51DBF65720004C73B /* 2dcloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 185D9CD31DBF65720004C73B /* 2dcloud.png */; };
 		185ED00319B4773F00801CA0 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 185ED00219B4773F00801CA0 /* Cocoa.framework */; };
 		185ED1C81B70E10A0012667B /* press_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 185ED1C51B70E10A0012667B /* press_down.png */; };
 		185ED1C91B70E10A0012667B /* press_down.png in Resources */ = {isa = PBXBuildFile; fileRef = 185ED1C51B70E10A0012667B /* press_down.png */; };
@@ -214,6 +218,8 @@
 		185BD02F1D9D1376008A55D2 /* ParticleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleScene.cpp; sourceTree = "<group>"; };
 		185BD0301D9D1376008A55D2 /* ParticleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleScene.h; sourceTree = "<group>"; };
 		185BD0351D9D18C1008A55D2 /* 2dfire.ppt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 2dfire.ppt; sourceTree = "<group>"; };
+		185D9CCE1DBF61120004C73B /* 2dcloud.ppt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = 2dcloud.ppt; sourceTree = "<group>"; };
+		185D9CD31DBF65720004C73B /* 2dcloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2dcloud.png; sourceTree = "<group>"; };
 		185ECFFF19B4773F00801CA0 /* test_mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_mac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		185ED00219B4773F00801CA0 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		185ED00519B4773F00801CA0 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -447,6 +453,8 @@
 		1899802319B9B7FB003FBA2D /* resource */ = {
 			isa = PBXGroup;
 			children = (
+				185D9CD31DBF65720004C73B /* 2dcloud.png */,
+				185D9CCE1DBF61120004C73B /* 2dcloud.ppt */,
 				185BD0351D9D18C1008A55D2 /* 2dfire.ppt */,
 				18AC2E6F1D616FAC00D6590B /* monguger.png */,
 				18AC2E701D616FAC00D6590B /* orc_jump.c3t */,
@@ -720,6 +728,7 @@
 				18A272DA19E5434500145FDB /* Cube.obj in Resources */,
 				187CF64919C72A7100C8094C /* Images.xcassets in Resources */,
 				18B2AB6C19E7BE770041AC1E /* texcubeShader.fsh in Resources */,
+				185D9CD41DBF65720004C73B /* 2dcloud.png in Resources */,
 				18D9A1AE1DA9451E00F84E5F /* girl.c3t in Resources */,
 				18432DF91C6251C5007B36EC /* peach3d_3.png in Resources */,
 				1899802A19B9B7FB003FBA2D /* demoShader.vsh in Resources */,
@@ -731,6 +740,7 @@
 				189B0F5D19EE56C60080C7A6 /* widgetShader.fsh in Resources */,
 				18E94CDD1C5A360F00F448D8 /* testlayout.plt in Resources */,
 				1891F4F41C73777D00DDA79D /* texcube.pmt in Resources */,
+				185D9CCF1DBF61120004C73B /* 2dcloud.ppt in Resources */,
 				18432DF51C6251C5007B36EC /* peach3d_1.png in Resources */,
 				184FED1B1C6302650014B2E0 /* peach3d_log.png in Resources */,
 				18461D921CA25C16001A9829 /* girl.png in Resources */,
@@ -818,8 +828,10 @@
 				184962D41C4A8ADC00304991 /* peach.png in Resources */,
 				18D756051A5AA54E00635CD1 /* common_normal.png in Resources */,
 				18AC2E661D5DADBD00D6590B /* BOX_action.c3t in Resources */,
+				185D9CD51DBF65720004C73B /* 2dcloud.png in Resources */,
 				18B2AB6F19E7BE770041AC1E /* texcubeShader.vsh in Resources */,
 				184FED1E1C6302650014B2E0 /* peach3d_log.xml in Resources */,
+				185D9CD01DBF61120004C73B /* 2dcloud.ppt in Resources */,
 				185ED1D51B70EE440012667B /* peach3d_leaf.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

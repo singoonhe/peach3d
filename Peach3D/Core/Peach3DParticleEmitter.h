@@ -92,13 +92,26 @@ namespace Peach3D
         ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Vector2 pos;    // point render pos
+        
         Vector2 dir;    // point moving direction and speed
         Vector2 accelerate; // radial and tangential accelerate
+        
+        float   angle;      // radius emitter
+        float   rotatePerSecond; // radius emitter
+        float   radius;     // radius emitter
+        float   lenRadius;  // radius emitter
     };
     class PEACH3D_DLL Emitter2D : public Emitter
     {
     public:
-        Emitter2D() : Emitter(), mData(nullptr), mDataValidSize(0) {}
+        // emitter mode
+        enum class Mode {
+            eGravity,
+            eRadius,
+        };
+        
+    public:
+        Emitter2D() : Emitter(), mData(nullptr), mDataValidSize(0), emitterMode(Mode::eGravity) {}
         ~Emitter2D();
         
     public:
@@ -121,6 +134,8 @@ namespace Peach3D
         virtual void randPaticlePointAttributes(ParticlePoint* point);
         
     public:
+        Mode    emitterMode;
+        
         float   emitAngle;                      // all points emit angle, make points moving direction
         float   emitAngleVariance;
         Vector2 emitPos;                        // relative to the Particle2D position
@@ -129,9 +144,17 @@ namespace Peach3D
         // gravity emitter
         float   speed;          // points emit speed
         float   speedVariance;
-        Vector2 gravity;        // gravity X and gravity Y
+        Vector2 gravity;            // gravity X and gravity Y
         Vector2 accelerate;         // radial and tangential accelerate
         Vector2 accelerateVariance; // radial and tangential accelerate variance
+        
+        // radius emitter
+        float   startRadius;
+        float   startRadiusVariance;
+        float   endRadius;
+        float   endRadiusVariance;
+        float   rotatePerSecond;
+        float   rotatePerSecondVariance;
         
         static int mPointStride;
         

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Particle2D version="0.1">
+    <Emitter>
+        <EmitterMode>1</EmitterMode>
+        <MaxCount>923</MaxCount>
+        <Angle>207</Angle>
+        <AngleVariance>348</AngleVariance>
+        <PosVariance>7, 7</PosVariance>
+        <Duration>-1</Duration>
+        <StartColor>0.56, 0.009999999, 0.37, 0.07</StartColor>
+        <StartColorVariance>0.27, 0.37, 0.56, 0.75</StartColorVariance>
+        <EndColor>0.2, 0.0, 0.12999999, 0.15</EndColor>
+        <EndColorVariance>0.15, 0.6999999, 0.4, 0.029999999</EndColorVariance>
+        <Gravity>1.679999, 1.3500</Gravity>
+        <LifeTime>1</LifeTime>
+        <LifeTimeVariance>1</LifeTimeVariance>
+        <Accelerate>0, 0</Accelerate>
+        <AccelerateVariance>0, 0</AccelerateVariance>
+        <StartRotate>0</StartRotate>
+        <StartRotateVariance>0</StartRotateVariance>
+        <EndRotate>0</EndRotate>
+        <EndRotateVariance>0</EndRotateVariance>
+        <Speed>302</Speed>
+        <SpeedVariance>401</SpeedVariance>
+        <StartSize>34</StartSize>
+        <StartSizeVariance>26</StartSizeVariance>
+        <EndSize>13</EndSize>
+        <EndSizeVariance>0</EndSizeVariance>
+        <StartRadius>100</StartRadius>
+        <StartRadiusVariance>72.62999725</StartRadiusVariance>
+        <EndRadius>0</EndRadius>
+        <EndRadiusVariance>0</EndRadiusVariance>
+        <RotatePerSecond>0</RotatePerSecond>
+        <RotatePerSecondVariance>153.9499969</RotatePerSecondVariance>
+        <TextureName>2dcloud.png</TextureName>
+        <TextureData></TextureData>
+    </Emitter>
+</Particle2D>

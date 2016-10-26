@@ -19,7 +19,12 @@ public:
     bool init();
 };
 
-class Particle2DSample : public BaseSample
+class Particle2DFireSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+};
+
+class Particle2DCloudSample : public BaseSample
 {
     void init(Widget* parentWidget);
 };

@@ -54,7 +54,10 @@ namespace Peach3D
         unsigned char* texData = nullptr;
         while (attrEle) {
             auto attrName = attrEle->Name();
-            if (strcmp(attrName, "MaxCount") == 0) {
+            if (strcmp(attrName, "EmitterMode") == 0) {
+                emitter.emitterMode = static_cast<Emitter2D::Mode>(atoi(attrEle->GetText()));
+            }
+            else if (strcmp(attrName, "MaxCount") == 0) {
                 emitter.maxCount = atoi(attrEle->GetText());
             }
             else if (strcmp(attrName, "Angle") == 0) {
@@ -125,6 +128,24 @@ namespace Peach3D
             }
             else if (strcmp(attrName, "EndSizeVariance") == 0) {
                 emitter.endSizeVariance = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "StartRadius") == 0) {
+                emitter.startRadius = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "StartRadiusVariance") == 0) {
+                emitter.startRadiusVariance = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "EndRadius") == 0) {
+                emitter.endRadius = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "EndRadiusVariance") == 0) {
+                emitter.endRadiusVariance = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "RotatePerSecond") == 0) {
+                emitter.rotatePerSecond = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
+            }
+            else if (strcmp(attrName, "RotatePerSecondVariance") == 0) {
+                emitter.rotatePerSecondVariance = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
             }
             else if (strcmp(attrName, "TextureName") == 0) {
                 texFile = attrEle->GetText();
