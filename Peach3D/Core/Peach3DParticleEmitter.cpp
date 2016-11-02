@@ -19,6 +19,11 @@ namespace Peach3D
             delete point;
         }
         mPoints.clear();
+        
+        if (mData) {
+            free(mData);
+            mData = nullptr;
+        }
     }
     
     void Emitter::start()
@@ -165,14 +170,6 @@ namespace Peach3D
     /************************************** 2D particle emitter ***************************************/
     int Emitter2D::mPointStride = 0;
     
-    Emitter2D::~Emitter2D()
-    {
-        if (mData) {
-            free(mData);
-            mData = nullptr;
-        }
-    }
-    
     void Emitter2D::update(float lastFrameTime, const Vector2& curPos)
     {
         Emitter::update(lastFrameTime);
@@ -309,5 +306,105 @@ namespace Peach3D
                 curPoint->rotatePerSecond +=  Utils::rand(-rotatePerSecondVariance, rotatePerSecondVariance);
             }
         }
+    }
+    
+    /************************************** 3D particle emitter ***************************************/
+    int Emitter3D::mPointStride = 0;
+    
+    void Emitter3D::update(float lastFrameTime, const Vector3& curPos)
+    {
+        Emitter::update(lastFrameTime);
+        
+        if (mPointStride == 0) {
+            uint vType = VertexType::Point3|VertexType::Color|VertexType::PSprite;
+            const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
+            // calculate position stride
+            for (auto& info : infoList) {
+                uint typeValue = info.type, typeSize = info.size;
+                if (typeValue & vType) {
+                    mPointStride += typeSize;
+                }
+            }
+        }
+        // init max count memory
+        if (!mData && maxCount > 0) {
+            mData = (float*)malloc(mPointStride * maxCount);
+        }
+        
+        // copy point attributes to cache data
+        int index = 0;
+        const int strideFloatCount = mPointStride / sizeof(float);
+        for (auto i=0; i<mPoints.size(); ++i) {
+            ParticlePoint3D* point = (ParticlePoint3D*)mPoints[i];
+            if (point->lifeTime > FLT_EPSILON) {
+                mData[index * strideFloatCount + 0] = point->pos.x + curPos.x;
+                mData[index * strideFloatCount + 1] = point->pos.y + curPos.y;
+                mData[index * strideFloatCount + 2] = point->pos.z + curPos.z;
+                
+                mData[index * strideFloatCount + 3] = point->color.r;
+                mData[index * strideFloatCount + 4] = point->color.g;
+                mData[index * strideFloatCount + 5] = point->color.b;
+                mData[index * strideFloatCount + 6] = point->color.a;
+                
+                mData[index * strideFloatCount + 7] = point->size;
+                mData[index * strideFloatCount + 8] = point->rotate;
+                index++;
+            }
+        }
+        // current valid data size
+        mDataValidSize = index * mPointStride;
+    }
+    
+    void Emitter3D::updatePointAttributes(ParticlePoint* point, float lastFrameTime)
+    {
+        Emitter::updatePointAttributes(point, lastFrameTime);
+        
+        ParticlePoint3D* point3D = static_cast<ParticlePoint3D*>(point);
+        
+        // gravity * dt
+        point3D->dir = point3D->dir + gravity * lastFrameTime;
+        point3D->pos = point3D->pos + point3D->dir * lastFrameTime;
+    }
+    
+    ParticlePoint* Emitter3D::generateRandPaticles()
+    {
+        ParticlePoint3D* point = new ParticlePoint3D();
+        randPaticlePointAttributes(point);
+        return point;
+    }
+    
+    void Emitter3D::randPaticlePointAttributes(ParticlePoint* point)
+    {
+        Emitter::randPaticlePointAttributes(point);
+        ParticlePoint3D* curPoint = static_cast<ParticlePoint3D*>(point);
+        // position
+        curPoint->pos = emitPos;
+        if (emitPosVariance.x > FLT_EPSILON) {
+            curPoint->pos.x += Utils::rand(-emitPosVariance.x, emitPosVariance.x);
+        }
+        if (emitPosVariance.y > FLT_EPSILON) {
+            curPoint->pos.y += Utils::rand(-emitPosVariance.y, emitPosVariance.y);
+        }
+        if (emitPosVariance.z > FLT_EPSILON) {
+            curPoint->pos.z += Utils::rand(-emitPosVariance.z, emitPosVariance.z);
+        }
+        // base direction
+        curPoint->dir = emitDir;
+        if (emitDirVariance.x > FLT_EPSILON) {
+            curPoint->dir.x +=  Utils::rand(-emitDirVariance.x, emitDirVariance.x);
+        }
+        if (emitDirVariance.y > FLT_EPSILON) {
+            curPoint->dir.y +=  Utils::rand(-emitDirVariance.y, emitDirVariance.y);
+        }
+        if (emitDirVariance.z > FLT_EPSILON) {
+            curPoint->dir.z +=  Utils::rand(-emitDirVariance.z, emitDirVariance.z);
+        }
+        // moving speed
+        auto finalSpeed = speed;
+        if (speedVariance > FLT_EPSILON) {
+            finalSpeed +=  Utils::rand(-speedVariance, speedVariance);
+        }
+        // calc direction and speed
+        curPoint->dir = curPoint->dir * finalSpeed;
     }
 }

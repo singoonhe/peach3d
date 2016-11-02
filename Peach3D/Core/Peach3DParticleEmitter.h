@@ -19,8 +19,7 @@ namespace Peach3D
 {
     struct PEACH3D_DLL ParticlePoint
     {
-        ParticlePoint() : rotate(0.f), lenRotate(0.f), size(0.f), lenSize(0.f), time(0.f), lifeTime(0.f) {}
-        ParticlePoint &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        ParticlePoint() : size(0.f), lenSize(0.f), time(0.f), lifeTime(0.f) {}
         Color4  color;      // point color and alpha
         Color4  lenColor;   // point end color and alpha
         float   rotate;     // point rotation
@@ -34,7 +33,7 @@ namespace Peach3D
     class PEACH3D_DLL Emitter
     {
     public:
-        Emitter() : mRunningTime(0.f), mIsRunning(false) {}
+        Emitter() : mRunningTime(0.f), mIsRunning(false), mData(nullptr), mDataValidSize(0) {}
         ~Emitter();
         
     public:
@@ -44,6 +43,11 @@ namespace Peach3D
         void update(float lastFrameTime);
         /** Stop particle points update. */
         virtual void end();
+        
+        /** Return render data. */
+        float* getRenderBuffer()const { return mData; }
+        /** Return render data size. */
+        int getRenderBufferSize()const { return mDataValidSize; }
         
     protected:
         /** Update each particle point every frame. */
@@ -82,6 +86,9 @@ namespace Peach3D
         std::vector<ParticlePoint*> mPoints;   // particle list, not alway valid
         float   mRunningTime;
         bool    mIsRunning;
+        
+        float*  mData;
+        int     mDataValidSize;
     };
     
     /************************************** 2D particle emitter ***************************************/
@@ -89,8 +96,6 @@ namespace Peach3D
     struct PEACH3D_DLL ParticlePoint2D : public ParticlePoint
     {
         ParticlePoint2D() : ParticlePoint() {}
-        ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
-        ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Vector2 pos;    // point render pos
         
         Vector2 dir;    // point moving direction and speed
@@ -111,20 +116,14 @@ namespace Peach3D
         };
         
     public:
-        Emitter2D() : Emitter(), mData(nullptr), mDataValidSize(0), emitterMode(Mode::eGravity) {}
-        ~Emitter2D();
-        
+        Emitter2D() : Emitter(), emitterMode(Mode::eGravity) {}
+
     public:
         /** Return particle2d point stride. */
         static int getPointStride() { return mPointStride; }
-        
         /** Update all particles position. */
         void update(float lastFrameTime, const Vector2& curPos);
-        /** Return render data. */
-        float* getRenderBuffer()const { return mData; }
-        /** Return render data size. */
-        int getRenderBufferSize()const { return mDataValidSize; }
-        
+
     protected:
         /** Update attributes for ParticlePoint2D. */
         virtual void updatePointAttributes(ParticlePoint* point, float lastFrameTime);
@@ -132,22 +131,22 @@ namespace Peach3D
         virtual ParticlePoint* generateRandPaticles();
         /** Reset particle point with rand attributes. */
         virtual void randPaticlePointAttributes(ParticlePoint* point);
-        
+
     public:
         Mode    emitterMode;
-        
+
         float   emitAngle;                      // all points emit angle, make points moving direction
         float   emitAngleVariance;
         Vector2 emitPos;                        // relative to the Particle2D position
         Vector2 emitPosVariance;
-        
+
         // gravity emitter
         float   speed;          // points emit speed
         float   speedVariance;
         Vector2 gravity;            // gravity X and gravity Y
         Vector2 accelerate;         // radial and tangential accelerate
         Vector2 accelerateVariance; // radial and tangential accelerate variance
-        
+
         // radius emitter
         float   startRadius;
         float   startRadiusVariance;
@@ -155,20 +154,49 @@ namespace Peach3D
         float   endRadiusVariance;
         float   rotatePerSecond;
         float   rotatePerSecondVariance;
-        
+
         static int mPointStride;
-        
-    private:
-        float*  mData;
-        int     mDataValidSize;
     };
-    
+
     /************************************** 3D particle emitter ***************************************/
+
+    struct PEACH3D_DLL ParticlePoint3D : public ParticlePoint
+    {
+        ParticlePoint3D() : ParticlePoint() {}
+        Vector3 pos;        // point render pos
+        Vector3 dir;        // point moving direction and speed
+    };
     class PEACH3D_DLL Emitter3D : public Emitter
     {
     public:
         Emitter3D() : Emitter() {}
-        ~Emitter3D() {}
+
+    public:
+        /** Return particle3d point stride. */
+        static int getPointStride() { return mPointStride; }
+        /** Update all particles position. */
+        void update(float lastFrameTime, const Vector3& curPos);
+
+    protected:
+        /** Update attributes for ParticlePoint3D. */
+        virtual void updatePointAttributes(ParticlePoint* point, float lastFrameTime);
+        /** Generate one particle point and rand attributes. */
+        virtual ParticlePoint* generateRandPaticles();
+        /** Reset particle point with rand attributes. */
+        virtual void randPaticlePointAttributes(ParticlePoint* point);
+
+    public:
+        Vector3     emitDir;         // all points emit direction
+        Vector3     emitDirVariance;
+        Vector3     emitPos;         // relative to the Particle3D position
+        Vector3     emitPosVariance;
+
+        // gravity emitter
+        float   speed;          // points emit speed
+        float   speedVariance;
+        Vector3 gravity;        // gravity X and gravity Y
+
+        static int mPointStride;
     };
 }
 
