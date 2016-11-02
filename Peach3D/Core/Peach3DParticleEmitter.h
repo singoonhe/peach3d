@@ -19,10 +19,12 @@ namespace Peach3D
 {
     struct PEACH3D_DLL ParticlePoint
     {
-        ParticlePoint() : size(0.f), lenSize(0.f), time(0.f), lifeTime(0.f) {}
-        ParticlePoint &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        ParticlePoint() : rotate(0.f), lenRotate(0.f), size(0.f), lenSize(0.f), time(0.f), lifeTime(0.f) {}
+        ParticlePoint &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
         Color4  color;      // point color and alpha
         Color4  lenColor;   // point end color and alpha
+        float   rotate;     // point rotation
+        float   lenRotate;  // point end rotation
         float   size;       // point size
         float   lenSize;    // point end size
         float   time;       // point current time
@@ -63,6 +65,11 @@ namespace Peach3D
         float   startSizeVariance;
         float   endSize;
         float   endSizeVariance;
+        // particle rotate
+        float   startRotate;
+        float   startRotateVariance;
+        float   endRotate;
+        float   endRotateVariance;
         // particle color
         Color4  startColor;
         Color4  startColorVariance;
@@ -83,12 +90,10 @@ namespace Peach3D
     {
         ParticlePoint2D() : ParticlePoint() {}
         ParticlePoint2D &operator=(const ParticlePoint2D& other){ pos = other.pos; dir = other.dir; color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
-        ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
-        Vector2 pos;        // point render pos
-        float   rotate;     // point rotation
-        float   lenRotate;  // point end rotation
+        ParticlePoint2D &operator=(const ParticlePoint& other){ color = other.color; lenColor = other.lenColor; rotate = other.rotate; lenRotate = other.lenRotate; size = other.size; lenSize = other.lenSize; time = other.time; lifeTime = other.lifeTime; return *this; }
+        Vector2 pos;    // point render pos
         
-        Vector2 dir;        // point moving direction and speed
+        Vector2 dir;    // point moving direction and speed
         Vector2 accelerate; // radial and tangential accelerate
         
         float   angle;      // radius emitter
@@ -130,12 +135,6 @@ namespace Peach3D
         
     public:
         Mode    emitterMode;
-        
-        // particle rotate
-        float   startRotate;
-        float   startRotateVariance;
-        float   endRotate;
-        float   endRotateVariance;
         
         float   emitAngle;                      // all points emit angle, make points moving direction
         float   emitAngleVariance;

@@ -74,6 +74,8 @@ namespace Peach3D
         point->color += point->lenColor * interval;
         // size
         point->size += point->lenSize * interval;
+        // rotation
+        point->rotate += point->lenRotate * interval;
     }
     
     void Emitter::generatePaticles(int number)
@@ -148,6 +150,16 @@ namespace Peach3D
         }
         pointEndSize = std::max(0.f, pointEndSize);
         point->lenSize = pointEndSize - point->size;
+        // rotation
+        point->rotate = startRotate;
+        if (startRotateVariance > FLT_EPSILON) {
+            point->rotate +=  Utils::rand(-startRotateVariance, startRotateVariance);
+        }
+        auto pointEndRotate = endRotate;
+        if (endRotateVariance > FLT_EPSILON) {
+            pointEndRotate +=  Utils::rand(-endRotateVariance, endRotateVariance);
+        }
+        point->lenRotate = pointEndRotate - point->rotate;
     }
     
     /************************************** 2D particle emitter ***************************************/
@@ -209,10 +221,6 @@ namespace Peach3D
         Emitter::updatePointAttributes(point, lastFrameTime);
         
         ParticlePoint2D* point2D = static_cast<ParticlePoint2D*>(point);
-        // rotation
-        double interval = lastFrameTime / point2D->lifeTime;
-        point2D->rotate += point2D->lenRotate * interval;
-        
         if (emitterMode == Mode::eGravity) {
             Vector2 radial = point2D->pos;
             // radial acceleration
@@ -230,6 +238,7 @@ namespace Peach3D
         }
         else {
             point2D->angle += point2D->rotatePerSecond * lastFrameTime;
+            double interval = lastFrameTime / point->lifeTime;
             point2D->radius += point2D->lenRadius * interval;
             point2D->pos.x = -cosf(point2D->angle) * point2D->radius;
             point2D->pos.y = -sinf(point2D->angle) * point2D->radius;
@@ -247,16 +256,6 @@ namespace Peach3D
     {
         Emitter::randPaticlePointAttributes(point);
         ParticlePoint2D* curPoint = static_cast<ParticlePoint2D*>(point);
-        // rotation
-        curPoint->rotate = startRotate;
-        if (startRotateVariance > FLT_EPSILON) {
-            curPoint->rotate +=  Utils::rand(-startRotateVariance, startRotateVariance);
-        }
-        auto pointEndRotate = endRotate;
-        if (endRotateVariance > FLT_EPSILON) {
-            pointEndRotate +=  Utils::rand(-endRotateVariance, endRotateVariance);
-        }
-        curPoint->lenRotate = pointEndRotate - curPoint->rotate;
         // position
         curPoint->pos = emitPos;
         if (emitPosVariance.x > FLT_EPSILON) {
