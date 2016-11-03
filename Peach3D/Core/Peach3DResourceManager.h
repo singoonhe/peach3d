@@ -164,6 +164,7 @@ namespace Peach3D
         TextureFilter   mTexFilter;         // texture filter, default nearest
         bool            mTexMipMapEnabled;  // texture is mipmap enabled, default false
 
+        std::string                         mDefaultSearchDir;  // default system search dirctory
         std::vector<std::string>            mSearchDirs;    // resource search dir list
         std::map<std::string, MeshPtr>      mMeshMap;       // mesh list
         std::map<std::string, SkeletonPtr>  mSkeletonMap;   // skeleton list

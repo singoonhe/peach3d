@@ -32,6 +32,10 @@ class Particle2DCloudSample : public BaseSample
 class Particle3DSample : public BaseSample
 {
     void init(Widget* parentWidget);
+    virtual ~Particle3DSample();
+    
+private:
+    Vector3 mDefaultPos;    // save default camera pos
 };
 
 #endif /* PARTICLE_SCENE_H */

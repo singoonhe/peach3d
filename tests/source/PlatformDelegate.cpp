@@ -10,6 +10,7 @@
 #include "TestScene.h"
 #include "BaseScene.h"
 #include "PlatformDelegate.h"
+#include "Peach3DResourceManager.h"
 
 using namespace Peach3D;
 
@@ -17,6 +18,8 @@ bool PlatformDelegate::appDidFinishLaunching()
 {
     // show drawing stats, only valid on debug
     IPlatform::getSingleton().setIsDrawStats(true);
+    // add resource directory
+    ResourceManager::getSingleton().addSearchDirectory("resource");
 
     // start with TestScene
     IPlatform::getSingleton().replaceWithNewScene(new TestScene());

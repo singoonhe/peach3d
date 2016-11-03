@@ -692,12 +692,20 @@ namespace Peach3D
             }
         }
         
+        // make dir to full path
+        if (mDefaultSearchDir.size() > 0 && newPath[0] != '/') {
+            newPath = mDefaultSearchDir + newPath;
+        }
         // add new dir to back or front
         if (isBack) {
             mSearchDirs.push_back(newPath);
         }
         else {
             mSearchDirs.insert(mSearchDirs.begin(), newPath);
+        }
+        // set default directory
+        if (mDefaultSearchDir.empty() && mSearchDirs.size() == 1) {
+            mDefaultSearchDir = mSearchDirs[0];
         }
         Peach3DLog(LogLevel::eInfo, "Add search directory: %s", newPath.c_str());
     }

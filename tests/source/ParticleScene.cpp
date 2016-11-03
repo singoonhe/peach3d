@@ -73,5 +73,13 @@ void Particle3DSample::init(Widget* parentWidget)
     
     // make camera faraway
     auto mainCamera = SceneManager::getSingleton().getActiveCamera();
+    mDefaultPos = mainCamera->getPosition();
     mainCamera->setPosition(Vector3(0, 0, 100));
+}
+
+Particle3DSample::~Particle3DSample()
+{
+    // restore camera pos
+    auto mainCamera = SceneManager::getSingleton().getActiveCamera();
+    mainCamera->setPosition(mDefaultPos);
 }
