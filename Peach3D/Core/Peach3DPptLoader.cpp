@@ -24,8 +24,9 @@ namespace Peach3D
         if (readDoc.Parse((const char*)input.data, input.length) == XML_SUCCESS) {
             XMLElement* p2dEle = readDoc.FirstChildElement("Particle2D");
             XMLElement* p3dEle = readDoc.FirstChildElement("Particle3D");
-            if (p2dEle) {
-                Particle2D* p2d = static_cast<Particle2D*>(input.handler);
+            Node* pNode = static_cast<Node*>(input.handler);
+            Particle2D* p2d = dynamic_cast<Particle2D*>(pNode);
+            if (p2dEle && p2d) {
                 XMLElement* emitterEle = p2dEle->FirstChildElement();
                 while (emitterEle) {
                     PptLoader::emitter2DDataParse(emitterEle, p2d);
@@ -33,8 +34,8 @@ namespace Peach3D
                 }
                 loadRes = true;
             }
-            if (p3dEle) {
-                Particle3D* p3d = static_cast<Particle3D*>(input.handler);
+            Particle3D* p3d = dynamic_cast<Particle3D*>(pNode);
+            if (p3dEle && p3d) {
                 XMLElement* emitterEle = p3dEle->FirstChildElement();
                 while (emitterEle) {
                     PptLoader::emitter3DDataParse(emitterEle, p3d);
@@ -193,5 +194,119 @@ namespace Peach3D
     
     void PptLoader::emitter3DDataParse(XMLElement* emitterEle, Particle3D* handler)
     {
+        Emitter3D emitter;
+        XMLElement* attrEle = emitterEle->FirstChildElement();
+        std::string texFile;
+        unsigned char* texData = nullptr;
+        while (attrEle) {
+            auto attrName = attrEle->Name();
+            if (strcmp(attrName, "MaxCount") == 0) {
+                emitter.maxCount = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "EmitDir") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &emitter.emitDir.x, &emitter.emitDir.y, &emitter.emitDir.z);
+            }
+            else if (strcmp(attrName, "EmitDirVariance") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &emitter.emitDirVariance.x, &emitter.emitDirVariance.y, &emitter.emitDirVariance.z);
+            }
+            else if (strcmp(attrName, "PosVariance") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &emitter.emitPosVariance.x, &emitter.emitPosVariance.y, &emitter.emitPosVariance.z);
+            }
+            else if (strcmp(attrName, "Duration") == 0) {
+                emitter.duration = atof(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "StartColor") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f,%f", &emitter.startColor.r, &emitter.startColor.g, &emitter.startColor.b, &emitter.startColor.a);
+            }
+            else if (strcmp(attrName, "StartColorVariance") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f,%f", &emitter.startColorVariance.r, &emitter.startColorVariance.g, &emitter.startColorVariance.b, &emitter.startColorVariance.a);
+            }
+            else if (strcmp(attrName, "EndColor") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f,%f", &emitter.endColor.r, &emitter.endColor.g, &emitter.endColor.b, &emitter.endColor.a);
+            }
+            else if (strcmp(attrName, "EndColorVariance") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f,%f", &emitter.endColorVariance.r, &emitter.endColorVariance.g, &emitter.endColorVariance.b, &emitter.endColorVariance.a);
+            }
+            else if (strcmp(attrName, "Gravity") == 0) {
+                sscanf(attrEle->GetText(), "%f,%f,%f", &emitter.gravity.x, &emitter.gravity.y, &emitter.gravity.z);
+            }
+            else if (strcmp(attrName, "LifeTime") == 0) {
+                emitter.lifeTime = atof(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "LifeTimeVariance") == 0) {
+                emitter.lifeTimeVariance = atof(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "StartRotate") == 0) {
+                emitter.startRotate = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
+            }
+            else if (strcmp(attrName, "StartRotateVariance") == 0) {
+                emitter.startRotateVariance = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
+            }
+            else if (strcmp(attrName, "EndRotate") == 0) {
+                emitter.endRotate = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
+            }
+            else if (strcmp(attrName, "EndRotateVariance") == 0) {
+                emitter.endRotateVariance = DEGREE_TO_RADIANS(atof(attrEle->GetText()));
+            }
+            else if (strcmp(attrName, "Speed") == 0) {
+                emitter.speed = atof(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "SpeedVariance") == 0) {
+                emitter.speedVariance = atof(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "StartSize") == 0) {
+                emitter.startSize = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "StartSizeVariance") == 0) {
+                emitter.startSizeVariance = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "EndSize") == 0) {
+                emitter.endSize = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "EndSizeVariance") == 0) {
+                emitter.endSizeVariance = atoi(attrEle->GetText());
+            }
+            else if (strcmp(attrName, "TextureName") == 0) {
+                texFile = attrEle->GetText();
+            }
+            else if (strcmp(attrName, "TextureData") == 0) {
+                texData = (unsigned char*)attrEle->GetText();
+            }
+            attrEle = attrEle->NextSiblingElement();
+        }
+        if (texFile.size() > 0) {
+            TextureFrame pTexFrame;
+            // get texture from cache first, particle may load much times
+            if (ResourceManager::getSingleton().getTextureFrame(texFile.c_str(), &pTexFrame)) {
+                emitter.texFrame = pTexFrame;
+            }
+            else if (texData) {
+                uint texDataSize = strlen((const char *)texData);
+                // base64 decode first
+                unsigned char *buffer = nullptr, *deflated = nullptr;
+                do {
+                    ulong decodeSize = base64Decode(texData, texDataSize, &buffer);
+                    IF_BREAK(!buffer, "Particle texture base64 decode error");
+                    
+                    // then unzip data
+                    ssize_t deflatedLen = Utils::unzipMemoryData(buffer, decodeSize, &deflated);
+                    IF_BREAK(!deflated, "Unzip particle texture error");
+                    
+                    // create image with encode texture
+                    TexturePtr base64Tex = ResourceManager::getSingleton().createTexture(texFile.c_str(), deflated, deflatedLen);
+                    IF_BREAK(!base64Tex, nullptr);
+                    
+                    emitter.texFrame = TextureFrame(base64Tex, texFile.c_str());
+                } while(0);
+                // free caches
+                if (buffer) {
+                    free(buffer);
+                }
+                if (deflated) {
+                    free(deflated);
+                }
+            }
+        }
+        handler->addEmitter(emitter);
     }
 }

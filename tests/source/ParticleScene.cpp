@@ -14,6 +14,7 @@ bool ParticleScene::init()
     // init sample list
     mSampleList.push_back([]()->BaseSample* {return new Particle2DFireSample();});
     mSampleList.push_back([]()->BaseSample* {return new Particle2DCloudSample();});
+    mSampleList.push_back([]()->BaseSample* {return new Particle3DSample();});
     
     // init base scene
     BaseScene::init();
@@ -59,6 +60,18 @@ void Particle2DCloudSample::init(Widget* parentWidget)
 void Particle3DSample::init(Widget* parentWidget)
 {
     // only set title here
-    mTitle = "3D particle";
-    //mDesc = "";
+    mTitle = "3D fire particle, gravity mode";
+    
+    // also support plist texture, width and height must be power of 2
+    //std::vector<TextureFrame> fileLogoList;
+    //Peach3DAssert(ResourceManager::getSingleton().addTextureFrames("peach3d_log.xml", &fileLogoList), "Load frame file failed");
+    
+    auto rootSceneNode = SceneManager::getSingleton().getRootSceneNode();
+    // create fire particle from file
+    Particle3D* fire = Particle3D::create("3dfire.ppt");
+    rootSceneNode->addChild(fire);
+    
+    // make camera faraway
+    auto mainCamera = SceneManager::getSingleton().getActiveCamera();
+    mainCamera->setPosition(Vector3(0, 0, 100));
 }

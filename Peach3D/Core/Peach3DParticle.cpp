@@ -72,12 +72,12 @@ namespace Peach3D
         uchar *fileData = ResourceManager::getSingleton().getFileData(file, &fileLength);
         if (fileLength > 0 && fileData) {
             Particle3D* resPat = new Particle3D(file);
-            std::string fileName = file;
-            std::string fileDir = fileName.substr(0, fileName.rfind('/') == std::string::npos ? 0 : fileName.rfind('/')+1);
-            if (!PptLoader::pptParticleDataParse(ResourceLoaderInput(fileData, fileLength, resPat, fileDir.c_str()))) {
+            if (!PptLoader::pptParticleDataParse(ResourceLoaderInput(fileData, fileLength, resPat))) {
                 delete resPat;
                 return nullptr;
             }
+            // start emit
+            resPat->start();
             // release memory data
             free(fileData);
             return resPat;
@@ -85,11 +85,21 @@ namespace Peach3D
         return nullptr;
     }
     
+    void Particle3D::start()
+    {
+        for (auto& emitter : mEmitters) {
+            emitter.start();
+        }
+    }
+    
     void Particle3D::updateRenderingAttributes(float lastFrameTime)
     {
         SceneNode* parent = dynamic_cast<SceneNode*>(mParentNode);
         if (parent) {
             mWorldPos = mPos + parent->getPosition(TranslateRelative::eWorld);
+        }
+        for (auto& emitter : mEmitters) {
+            emitter.update(lastFrameTime, mWorldPos);
         }
     }
 }

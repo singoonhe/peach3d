@@ -50,8 +50,11 @@ namespace Peach3D
         static Particle3D* create(const char* file);
         /* Set particle whole position. */
         void setPosition(const Vector3& pos) { mPos = pos; }
+        /* Start all emitter running. */
+        void start();
         
         const std::string& getName() { return mName; }
+        void addEmitter(const Emitter3D& emitter) { mEmitters.push_back(emitter); }
         const std::vector<Emitter3D>& getEmitters() { return mEmitters; }
         
     protected:

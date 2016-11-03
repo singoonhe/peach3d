@@ -434,6 +434,73 @@ namespace Peach3D
         \n#endif\n
         gl_FragColor = fragColor;\n
     });
+
+    /************************************** particle3d shders ***************************************/
+    // 3D particle vertex shader
+    const char* gVerParticleShaderCode3D = STRINGIFY(\
+    #ifdef PD_LEVEL_GL3\n
+        in vec3 pd_vertex;
+        in vec4 pd_color;       /* Particle point color. */
+        in vec2 pd_pSprite;     /* Particle point size and rotate. */
+        uniform vec4 pd_viewRect;
+        uniform mat4 pd_projMatrix;
+        uniform mat4 pd_viewMatrix;
+        out float out_rotate;
+        out vec4 out_color;
+    \n#else\n
+        attribute vec3 pd_vertex;
+        attribute vec4 pd_color;       /* Particle point color. */
+        attribute vec2 pd_pSprite;     /* Particle point size and rotate. */
+        uniform vec4 pd_viewRect;
+        uniform mat4 pd_projMatrix;
+        uniform mat4 pd_viewMatrix;
+        varying float out_rotate;
+        varying vec4 out_color;
+    \n#endif\n
+
+    void main(void)
+    {\n
+        vec4 eyePos = pd_viewMatrix * vec4(pd_vertex, 1.0);
+        vec4 projVoxel = pd_projMatrix * vec4(pd_pSprite.x, pd_pSprite.x, eyePos.z, eyePos.w);
+        vec2 projSize = vec2(pd_viewRect.z, pd_viewRect.w) * projVoxel.xy / projVoxel.w;
+        gl_PointSize = 0.25 * (projSize.x + projSize.y);
+        gl_Position = pd_projMatrix * eyePos;
+        out_rotate = pd_pSprite.y;
+        out_color = pd_color;
+    \n});
+
+    // 3D particle fragment shader
+    const char* gFragParticleShaderCode3D = STRINGIFY(\
+    #ifdef PD_LEVEL_GL3\n
+        in float out_rotate;
+        in vec4 out_color;
+        out vec4 out_FragColor;
+    \n#else\n
+        varying float out_rotate;
+        varying vec4 out_color;
+    \n#endif\n
+    uniform sampler2D pd_texture0;  /* Texture must named "pd_texturex".*/
+    uniform vec4      pd_uvRect;
+
+    void main(void)
+    {\n
+        vec2 rotatedUV = gl_PointCoord;
+        rotatedUV.x = rotatedUV.x * pd_uvRect.z + pd_uvRect.x;
+        rotatedUV.y = (1.0 - rotatedUV.y) * pd_uvRect.w + pd_uvRect.y; /* gl_PointCoord used top left, but texture used top bottom.*/
+        if (out_rotate > 0.0001 || out_rotate < -0.0001) {\n
+            vec2 center = vec2(pd_uvRect.z * 0.5 + pd_uvRect.x, pd_uvRect.w * 0.5 + pd_uvRect.y);
+            float sinR = sin(out_rotate);
+            float cosR = cos(out_rotate);
+            float aspect = pd_uvRect.w / pd_uvRect.z;
+            mat2 rotateMat = mat2(cosR, sinR * aspect, -sinR / aspect, cosR);
+            rotatedUV = rotateMat * vec2(rotatedUV.x - center.x, rotatedUV.y - center.y) + center;
+        \n}
+        \n#ifdef PD_LEVEL_GL3\n
+            out_FragColor = texture(pd_texture0, rotatedUV) * out_color;
+        \n#else\n
+            gl_FragColor = texture2D(pd_texture0, rotatedUV) * out_color;
+        \n#endif\n
+    });
 }
 
 #endif // PD_POSCOLORUV_SHADER_3D_H

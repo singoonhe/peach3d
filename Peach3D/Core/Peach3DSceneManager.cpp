@@ -478,9 +478,9 @@ namespace Peach3D
         // prepare render first for update "NeedRender"
         node->prepareForRender(lastFrameTime);
         
-        SceneNode* rNode = static_cast<SceneNode*>(node);
+        SceneNode* rNode = dynamic_cast<SceneNode*>(node);
         if (content) {
-            Particle3D* pNode = static_cast<Particle3D*>(node);
+            Particle3D* pNode = dynamic_cast<Particle3D*>(node);
             if (rNode) {
                 // add node to render list.
                 if (rNode->isNeedRender()) {

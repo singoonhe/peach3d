@@ -35,12 +35,18 @@ namespace Peach3D
                 shaderPreStr += Utils::formatString("#define PD_ENABLE_SKELETON %d\n", feature.boneCount);
             }
             if (feature.isPoint3) {
-                // choose 3D node program
-                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-                    shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
+                if (feature.isParticle) {
+                    // choose 3D particle program
+                    shaderPreStr += isVertex ? gVerParticleShaderCode3D : gFragParticleShaderCode3D;
                 }
                 else {
-                    shaderPreStr += isVertex ? gVerGL2ShaderCode3D : gFragGL2ShaderCode3D;
+                    // choose 3D node program
+                    if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
+                        shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
+                    }
+                    else {
+                        shaderPreStr += isVertex ? gVerGL2ShaderCode3D : gFragGL2ShaderCode3D;
+                    }
                 }
             }
             else {
@@ -65,28 +71,37 @@ namespace Peach3D
         if (mUniformsMap.find(featureStr) == mUniformsMap.end()) {
             std::vector<ProgramUniform> uniforms;
             if (feature.isPoint3) {
-                if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
+                if (feature.isParticle) {
                     uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
                     uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
-                    if (feature.lightsCount > 0) {
-                        uniforms.insert(uniforms.end(), ShaderCode::mLightUniforms.begin(), ShaderCode::mLightUniforms.end());
-                        
-                        if (feature.shadowCount > 0) {
-                            uniforms.push_back(ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4));
+                    uniforms.push_back(ProgramUniform("pd_viewRect", UniformDataType::eVector4));
+                    // support texture plist
+                    uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
+                }
+                else {
+                    if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
+                        uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
+                        uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
+                        if (feature.lightsCount > 0) {
+                            uniforms.insert(uniforms.end(), ShaderCode::mLightUniforms.begin(), ShaderCode::mLightUniforms.end());
+                            
+                            if (feature.shadowCount > 0) {
+                                uniforms.push_back(ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4));
+                            }
+                        }
+                        if (feature.boneCount > 0) {
+                            uniforms.push_back(ProgramUniform("pd_boneMatrix", UniformDataType::eVector4));
                         }
                     }
-                    if (feature.boneCount > 0) {
-                        uniforms.push_back(ProgramUniform("pd_boneMatrix", UniformDataType::eVector4));
+                    uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));
+                    uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
+                    if (feature.lightsCount > 0) {
+                        uniforms.push_back(ProgramUniform("pd_normalMatrix", UniformDataType::eMatrix4));
+                        uniforms.push_back(ProgramUniform("pd_ambient", UniformDataType::eVector3));
+                        // specular included shininess
+                        uniforms.push_back(ProgramUniform("pd_specular", UniformDataType::eVector4));
+                        uniforms.push_back(ProgramUniform("pd_emissive", UniformDataType::eVector3));
                     }
-                }
-                uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));
-                uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));
-                if (feature.lightsCount > 0) {
-                    uniforms.push_back(ProgramUniform("pd_normalMatrix", UniformDataType::eMatrix4));
-                    uniforms.push_back(ProgramUniform("pd_ambient", UniformDataType::eVector3));
-                    // specular included shininess
-                    uniforms.push_back(ProgramUniform("pd_specular", UniformDataType::eVector4));
-                    uniforms.push_back(ProgramUniform("pd_emissive", UniformDataType::eVector3));
                 }
             }
             else {
