@@ -339,9 +339,8 @@ namespace Peach3D
     
     Matrix4 Matrix4::createPerspectiveProjection(float fovY, float asPect, float zNear, float zFar)
     {
-        float r = DEGREE_TO_RADIANS(fovY / 2);
         float deltaZ = zFar - zNear;
-        float s = sin(r);
+        float s = sin(fovY);
         
         Matrix4 mm;
         if (deltaZ == 0 || s == 0 || asPect == 0) {
@@ -349,7 +348,7 @@ namespace Peach3D
         }
         
         //cos(r) / sin(r) = cot(r)
-        float cotangent = cos(r) / s;
+        float cotangent = cos(fovY) / s;
         mm.mat[0] = cotangent / asPect;
         mm.mat[5] = cotangent;
         mm.mat[10] = -(zFar + zNear) / deltaZ;

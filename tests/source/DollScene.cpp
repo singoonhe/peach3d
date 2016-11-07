@@ -35,9 +35,9 @@ void DollSample::init(Widget* parentWidget)
     mHead1Obj = girl1Mesh->getObjectByName(headName);
     
     // create girl node
-    mGirlNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -5.f, 0.f));
+    mGirlNode = SceneManager::getSingleton().getRootSceneNode()->createChild(Vector3(0.f, -6.f, -10.f));
     mGirlNode->attachMesh(girlMesh);
-    mGirlNode->setScale(Vector3(0.005f));
+    mGirlNode->setScale(Vector3(0.01f));
 //    mGirlNode->setRotation(Vector3(DEGREE_TO_RADIANS(90.f), 0.f, DEGREE_TO_RADIANS(180.f)));
     mGirlNode->runAnimate("Take 001");
     // rotate repeat

@@ -38,7 +38,7 @@ namespace Peach3D
         
         const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
         // init object render projection
-        setPerspectiveProjection(90.0f, winSize.x/winSize.y);
+        setPerspectiveProjection(60.0f, winSize.x/winSize.y);
         
         // create root widget and set to center
         mRootWidget = Widget::create();
@@ -202,7 +202,7 @@ namespace Peach3D
     void SceneManager::setPerspectiveProjection(float fovY, float asPect, float zNear, float zFar)
     {
         Peach3DAssert(zNear > FLT_EPSILON, "zNear must bigger than 0!");
-        mProjectionMatrix = Matrix4::createPerspectiveProjection(fovY, asPect, zNear, zFar);
+        mProjectionMatrix = Matrix4::createPerspectiveProjection(DEGREE_TO_RADIANS(fovY), asPect, zNear, zFar);
     }
     
     void SceneManager::setOrthoProjection(float left, float right, float bottom, float top, float nearVal, float farVal)

@@ -18,6 +18,9 @@ public:
     //! add test samples for test
     bool init();
     void exit();
+    
+private:
+    Matrix4   mSysPMat;
 };
 
 class DirLightSample : public BaseSample

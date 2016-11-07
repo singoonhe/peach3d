@@ -30,7 +30,7 @@ void PickSample::init(Widget* parentWidget)
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     auto cubeMesh = ResourceManager::getSingleton().addMesh("texcube.obj");
     for (auto i=0; i<9; i++) {
-        auto cubeNodex = rootNode->createChild(Vector3((i % 3) * 5.f - 5.f, int(i / 3) * 4.f - 4.f, 0.f));
+        auto cubeNodex = rootNode->createChild(Vector3((i % 3) * 5.f - 5.f, int(i / 3) * 5.f - 4.f, 0.f));
         cubeNodex->attachMesh(cubeMesh);
         cubeNodex->setPickingEnabled(true);
         cubeNodex->runAction(Repeat::createListForever(MoveBy3D::create(Vector3(0.f, 1.f, 0.f), 0.25f), MoveBy3D::create(Vector3(0.f, -1.f, 0.f), 1.5f), NULL));
@@ -69,7 +69,7 @@ void SNEventSample::init(Widget* parentWidget)
     auto rootNode = SceneManager::getSingleton().getRootSceneNode();
     auto cubeMesh = ResourceManager::getSingleton().addMesh("peach.obj");
     for (auto i=0; i<9; i++) {
-        auto cubeNodex = rootNode->createChild(Vector3((i % 3) * 5.f - 5.f, int(i / 3) * 4.f - 4.f, 0.f));
+        auto cubeNodex = rootNode->createChild(Vector3((i % 3) * 5.f - 5.f, int(i / 3) * 5.f - 4.f, 0.f));
         cubeNodex->attachMesh(cubeMesh);
         cubeNodex->setPickingEnabled(true);
         cubeNodex->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));

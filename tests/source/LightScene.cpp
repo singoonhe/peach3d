@@ -19,6 +19,7 @@ bool LightScene::init()
     mSampleList.push_back([]()->BaseSample* {return new LightControlSample();});
     
     // set ortho projective
+    mSysPMat = SceneManager::getSingleton().getProjectionMatrix();
     const float fixWidth = 40.f;
     auto screenSize = LayoutManager::getSingleton().getScreenSize();
     float calcHeight = screenSize.y * fixWidth / screenSize.x;
@@ -33,8 +34,7 @@ void LightScene::exit()
 {
     BaseScene::exit();
     // reset projective
-    auto screenSize = LayoutManager::getSingleton().getScreenSize();
-    SceneManager::getSingleton().setPerspectiveProjection(90.f, screenSize.x/screenSize.y);
+    SceneManager::getSingleton().setProjectionMatrix(mSysPMat);
 }
 
 void DirLightSample::init(Widget* parentWidget)
