@@ -74,7 +74,6 @@ namespace Peach3D
                 if (feature.isParticle) {
                     uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
                     uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
-                    uniforms.push_back(ProgramUniform("pd_viewRect", UniformDataType::eVector4));
                     // support texture plist
                     uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
                 }

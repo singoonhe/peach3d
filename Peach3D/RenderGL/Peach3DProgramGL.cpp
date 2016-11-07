@@ -1134,12 +1134,6 @@ namespace Peach3D
                         glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
                     });
                     break;
-                case UniformNameType::eViewRect:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float viewRect[] = {0.0f, 0.0f, winSize.x, winSize.y};
-                        glUniform4fv(location, 1, viewRect);
-                    });
-                    break;
                 case UniformNameType::eUVRect:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
                         float viewRect[] = {coord.pos.x, coord.pos.y, coord.size.x, coord.size.y};

@@ -442,7 +442,6 @@ namespace Peach3D
         in vec3 pd_vertex;
         in vec4 pd_color;       /* Particle point color. */
         in vec2 pd_pSprite;     /* Particle point size and rotate. */
-        uniform vec4 pd_viewRect;
         uniform mat4 pd_projMatrix;
         uniform mat4 pd_viewMatrix;
         out float out_rotate;
@@ -451,7 +450,6 @@ namespace Peach3D
         attribute vec3 pd_vertex;
         attribute vec4 pd_color;       /* Particle point color. */
         attribute vec2 pd_pSprite;     /* Particle point size and rotate. */
-        uniform vec4 pd_viewRect;
         uniform mat4 pd_projMatrix;
         uniform mat4 pd_viewMatrix;
         varying float out_rotate;
@@ -461,10 +459,9 @@ namespace Peach3D
     void main(void)
     {\n
         vec4 eyePos = pd_viewMatrix * vec4(pd_vertex, 1.0);
-        vec4 projVoxel = pd_projMatrix * vec4(pd_pSprite.x, pd_pSprite.x, eyePos.z, eyePos.w);
-        vec2 projSize = vec2(pd_viewRect.z, pd_viewRect.w) * projVoxel.xy / projVoxel.w;
-        gl_PointSize = 0.25 * (projSize.x + projSize.y);
         gl_Position = pd_projMatrix * eyePos;
+        vec4 offV = pd_projMatrix * vec4(pd_pSprite.x, 0, 0, 1);
+        gl_PointSize = offV.x;
         out_rotate = pd_pSprite.y;
         out_color = pd_color;
     \n});

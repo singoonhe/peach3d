@@ -271,6 +271,7 @@ namespace Peach3D
             auto finalSpeed = speed;
             if (speedVariance > FLT_EPSILON) {
                 finalSpeed +=  Utils::rand(-speedVariance, speedVariance);
+                finalSpeed = std::max(0.f, finalSpeed);
             }
             // calc direction and speed
             curPoint->dir = Vector2(cos(finalAngle), sin(finalAngle)) * finalSpeed;
@@ -403,6 +404,7 @@ namespace Peach3D
         auto finalSpeed = speed;
         if (speedVariance > FLT_EPSILON) {
             finalSpeed +=  Utils::rand(-speedVariance, speedVariance);
+            finalSpeed = std::max(0.f, finalSpeed);
         }
         // calc direction and speed
         curPoint->dir = curPoint->dir * finalSpeed;
