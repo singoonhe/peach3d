@@ -11,12 +11,18 @@
 #include <limits>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 #include "tinyxml2.h"
 #include "document.h"
 #include "filereadstream.h"
 
 using namespace tinyxml2;
 using namespace rapidjson;
+
+typedef struct _AnimRange {
+    int start;
+    int end;
+}AnimRange;
 
 int totalBones = 0;
 void fixBone(XMLElement* rootBoneEle, const char* name, float* value)
@@ -44,16 +50,31 @@ void fixBone(XMLElement* rootBoneEle, const char* name, float* value)
     }
 }
 
+XMLElement* depthClone(XMLElement* parent)
+{
+    XMLElement* resEle = (XMLElement*)parent->ShallowClone(nullptr);
+    if (parent->GetText()) {
+        resEle->SetText(parent->GetText());
+    }
+    auto childEle = parent->FirstChildElement();
+    while (childEle) {
+        auto cloneEle = depthClone(childEle);
+        resEle->LinkEndChild(cloneEle);
+        childEle = childEle->NextSiblingElement();
+    }
+    return resEle;
+}
+
 int main(int argc, const char * argv[]) {
     if (argc < 3) {
         // print params
         std::cout << "skeleton_upgrade [Peach3D skeleton file] [(c3t file)|(animate split xml)]\n"
         "Animate split xml example:\n"
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        "<AnimateSplit version=\"0.1\">\n"
-        "    <idle>1, 5</idle>\n"
-        "    <kick>6, 20</kick>\n"
-        "</AnimateSplit>\n";
+        "<Animations version=\"0.1\">\n"
+        "   <Animation name=\"idle\">1, 5</Animation>\n"
+        "   <Animation name=\"kick\">6, 20</Animation>\n"
+        "</Animations>\n";
         return 0;
     }
     
@@ -133,8 +154,85 @@ int main(int argc, const char * argv[]) {
         } while(0);
     }
     else {
-        // get animate split data
-        std::cout << "start read split file for animations" <<std::endl;
+        do {
+            auto rootEle = splitDoc.FirstChildElement();
+            if (strcmp(rootEle->Name(), "Animations") !=0 ) {
+                std::cout << "animation split file parse error" <<std::endl;
+                break;
+            }
+            // parse animation ranges
+            int maxFrameCount = 0;
+            std::map<std::string, AnimRange> rangeList;
+            auto animEle = rootEle->FirstChildElement();
+            while (animEle) {
+                // read animation name and range
+                auto animName = animEle->Attribute("name");
+                AnimRange curRange;
+                sscanf(animEle->GetText(), "%d,%d", &curRange.start, &curRange.end);
+                rangeList[animName] = curRange;
+                if (curRange.end > maxFrameCount) {
+                    maxFrameCount = curRange.end;
+                }
+                animEle = animEle->NextSiblingElement();
+            }
+            
+            // check is frame count match with plist
+            auto psRootEle = psDoc.FirstChildElement("Skeleton");
+            auto paAnimEle = psRootEle->FirstChildElement("Animation");
+            std::vector<XMLElement*> oldAnimList;
+            std::vector<XMLElement*> maxFrameList;
+            while (paAnimEle) {
+                std::vector<XMLElement*> frameList;
+                int maxFrameCount = 0;
+                auto frameEle = paAnimEle->FirstChildElement();
+                while (frameEle) {
+                    frameList.push_back(frameEle);
+                    maxFrameCount++;
+                    frameEle = frameEle->NextSiblingElement();
+                }
+                // find max frame list
+                if (maxFrameCount > maxFrameList.size()) {
+                    maxFrameList = frameList;
+                }
+                oldAnimList.push_back(paAnimEle);
+                paAnimEle = paAnimEle->NextSiblingElement();
+            }
+            if (maxFrameCount != maxFrameList.size()) {
+                std::cout << "split xml frame count not match as skeleton file" <<std::endl;
+                break;
+            }
+            std::cout << "start read split file for animations" <<std::endl;
+            
+            // add split animation
+            for (auto iter : rangeList) {
+                XMLElement* animEle = psDoc.NewElement("Animation");
+                // calc animation time length
+                auto startEle = maxFrameList[iter.second.start-1];
+                float startTime = startEle->FloatAttribute("time");
+                auto endEle = maxFrameList[iter.second.end-1];
+                float endTime = endEle->FloatAttribute("time");
+                animEle->SetAttribute("length", endTime - startTime);
+                animEle->SetAttribute("name", iter.first.c_str());
+                std::cout <<"add animation \""<<iter.first<<"\" from "<<iter.second.start<<" to "<<iter.second.end<<std::endl;
+                
+                // add frames to new animation
+                for (auto i=iter.second.start; i<=iter.second.end; ++i) {
+                    auto copyEle = depthClone(maxFrameList[i-1]);
+                    float oldTime = copyEle->FloatAttribute("time");
+                    copyEle->SetAttribute("time", oldTime - startTime);
+                    animEle->LinkEndChild(copyEle);
+                }
+                psRootEle->LinkEndChild(animEle);
+            }
+            
+            // delete all old animation
+            for (auto ele : oldAnimList) {
+                psRootEle->DeleteChild(ele);
+            }
+            
+            psDoc.SaveFile(psPath);
+            std::cout << "split animation over" <<std::endl;
+        } while(0);
     }
     return 0;
 }
