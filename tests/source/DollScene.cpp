@@ -29,7 +29,7 @@ void DollSample::init(Widget* parentWidget)
     // load girl mesh
     ResourceManager::getSingleton().registerResourceLoaderFunction("c3t", C3tLoader::c3tMeshDataParse);
     auto girlMesh = ResourceManager::getSingleton().addMesh("girl.c3t");
-    auto girl1Mesh = ResourceManager::getSingleton().addMesh("girl1.c3t");
+    auto girl1Mesh = ResourceManager::getSingleton().addMesh("girl_head.c3t");
     // save head object
     mHeadObj = girlMesh->getObjectByName(headName);
     mHead1Obj = girl1Mesh->getObjectByName(headName);
@@ -76,7 +76,7 @@ void DollSample::init(Widget* parentWidget)
         }
         else {
             weaponButton->setTitleText("unequip");
-            auto weaponMesh = ResourceManager::getSingleton().addMesh("girlweapon.pmt");
+            auto weaponMesh = ResourceManager::getSingleton().addMesh("girl_weapon.pmt");
             mWeaponNode = mGirlNode->createChild();
             mWeaponNode->attachMesh(weaponMesh);
             mGirlNode->attachNodeToBone("Bip001 L Hand", mWeaponNode);
