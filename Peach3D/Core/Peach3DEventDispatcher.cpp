@@ -329,15 +329,34 @@ namespace Peach3D
                     }
                 }
                 
-                float oldDis = gesturePos.distance(focusPos);
-                float curDis = curGesturePos.distance(curFocusPos);
-                if (!FLOAT_EQUAL(oldDis, curDis)) {
+                auto oldOffset = gesturePos - focusPos;
+                auto curOffset = curGesturePos - curFocusPos;
+                // check is need trigger pinch event
+                float oldLength = oldOffset.length();
+                float curLength = curOffset.length();
+                float offsetDiff = curLength - oldLength;
+                if (fabsf(offsetDiff) > FLT_EPSILON) {
                     std::vector<Vector2> pinchPoss;
-                    pinchPoss.push_back(Vector2(curDis - oldDis, 0.0f));
+                    pinchPoss.push_back(Vector2(offsetDiff, 0.0f));
                     mClickNodeMap[rootNode](ClickEvent::ePinch, pinchPoss);
-                    
-                    // trigger rotation event, x is two figures rotation
                 }
+                // check is need trigger rotation event
+                double oldCosValue = oldOffset.y / oldLength;
+                CLAMP(oldCosValue, -1, 1);
+                double curCosValue = curOffset.y / curLength;
+                CLAMP(curCosValue, -1, 1);
+                float oldAngle = acos(curCosValue);
+                float curAngle = acos(oldCosValue);
+                float angleOffset = curAngle - oldAngle;
+                if (oldOffset.x < 0 && curOffset.x < 0) {
+                    angleOffset *= -1.f;
+                }
+                if (fabsf(angleOffset) > FLT_EPSILON) {
+                    std::vector<Vector2> poss;
+                    poss.push_back(Vector2(-angleOffset, 0.0f));
+                    mClickNodeMap[rootNode](ClickEvent::eRotation, poss);
+                }
+                
                 focusPos = curFocusPos;
                 gesturePos = curGesturePos;
             }

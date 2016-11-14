@@ -41,7 +41,7 @@ namespace Peach3D
         LogPrinter(const std::string& filePath = "");
         ~LogPrinter();
         //! Get current system timeval.
-        /** \params return current system timeval, include year,month,day,hour,minute,second,millisecond. */
+        /** \params timeval return current system timeval, include year,month,day,hour,minute,second,millisecond. */
         void getCurrentSystemTimeval(SystemTimeval *timeval);
         //! print log info
         void print(LogLevel level, const char* format, ...);

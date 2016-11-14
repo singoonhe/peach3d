@@ -157,7 +157,7 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
 
 - (void)rightMouseDragged:(NSEvent *)theEvent
 {
-    [self triggerEvent:theEvent withType:ClickEvent::eDrag];
+    [self triggerEvent:theEvent withType:ClickEvent::eRightDrag];
 }
 
 - (void)triggerEvent:(NSEvent *)theEvent withType:(ClickEvent)type

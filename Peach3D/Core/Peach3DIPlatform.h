@@ -119,7 +119,7 @@ namespace Peach3D
         //! Get render window is renderable.
         virtual bool isRenderWindowValid() { return mRender->isRenderValid(); }
         //! swap two buffers, calculate FPS.
-        /** \return the time of last frame rendered time.*/
+        /** @params lastFrameTime the time of last frame rendered time.*/
         virtual void renderOneFrame(float lastFrameTime);
         
         /**
