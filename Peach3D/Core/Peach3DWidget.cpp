@@ -23,8 +23,10 @@ namespace Peach3D
         widget->setContentSize(size);
         if (size==Vector2Zero) {
             // default to set win size
+            auto isLand = LayoutManager::getSingleton().isLandscape();
             const Vector2& designSize = LayoutManager::getSingleton().getDesignSize();
-            widget->setContentSize(designSize);
+            float minSize = std::min(designSize.x, designSize.y), maxSize = std::max(designSize.x, designSize.y);
+            widget->setContentSize(Vector2(isLand ? maxSize : minSize, isLand ? minSize : maxSize));
             widget->setSizeScaleType(AutoScaleType::eWidth, AutoScaleType::eHeight);
         }
         return widget;
