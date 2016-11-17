@@ -127,6 +127,9 @@ namespace Peach3D
                 node.second->runAnimate(name);
             }
         }
+        else {
+            Peach3DWarnLog("Can't find animation %s in skeleton", name);
+        }
     }
     
     RenderNode* SceneNode::getRenderNode(const char* name)

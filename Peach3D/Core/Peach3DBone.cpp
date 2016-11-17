@@ -38,13 +38,50 @@ namespace Peach3D
         }
     }
     
+    std::vector<float> Bone::splitFrames(const std::string& name, const std::vector<Bone::KeyFrameRange>& split)
+    {
+        std::vector<float> times;
+        auto findIter = mAnimationFrames.find(name);
+        if (findIter == mAnimationFrames.end()) {
+            return times;
+        }
+        for (auto& range : split) {
+            std::vector<BoneKeyFrame> frames;
+            float startCheckTime = range.startTime - FLT_EPSILON;
+            float endCheckTime = range.endTime + FLT_EPSILON;
+            float totalTime = 0.f;
+            for (auto frame : findIter->second) {
+                // time in range
+                if (frame.time >= startCheckTime && frame.time <= endCheckTime) {
+                    // make frames time start with 0
+                    if (frames.empty()) {
+                        frame.time = 0.f;
+                    }
+                    else if (range.startTime > 0.f) {
+                        frame.time -= range.startTime;
+                    }
+                    frames.push_back(frame);
+                    // save max time as animation length
+                    if (frame.time > totalTime) {
+                        totalTime = frame.time;
+                    }
+                }
+            }
+            times.push_back(totalTime);
+            mAnimationFrames[range.name] = frames;
+        }
+        // delete old animation
+        mAnimationFrames.erase(findIter);
+        return times;
+    }
+    
     const Matrix4& Bone::timeBoneMatrix(const std::string& name, float time)
     {
         if (mAnimationFrames.find(name) != mAnimationFrames.end()) {
-            auto frameList = mAnimationFrames[name];
+            auto& frameList = mAnimationFrames[name];
             // find based frame
             size_t curIndex = 0, maxSize = frameList.size();
-            for (auto i=0; i<frameList.size(); ++i) {
+            for (auto i=0; i<maxSize; ++i) {
                 if (time >= frameList[i].time) {
                     curIndex = i;
                 }

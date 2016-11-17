@@ -30,6 +30,17 @@ namespace Peach3D
     class PEACH3D_DLL Bone
     {
     public:
+        // used for split animation
+        struct PEACH3D_DLL KeyFrameRange
+        {
+            KeyFrameRange() {}
+            KeyFrameRange(const std::string& _name, float _startT, float _endT) : name(_name), startTime(_startT), endTime(_endT) {}
+            std::string name;   // animation name
+            float startTime;
+            float endTime;
+        };
+        
+    public:
         Bone(const char* name) : mName(name), mParentBone(nullptr) {}
         ~Bone();
         const std::string& getName() { return mName; }
@@ -41,6 +52,10 @@ namespace Peach3D
         void setInverseTransform(const Matrix4& transform) { mInvTransform = transform; }
         /** Add new frame for animation when import file. */
         void addKeyFrame(const char* name, const BoneKeyFrame& frame) { mAnimationFrames[name].push_back(frame); }
+        /** Split named frames to more, delete old frames.
+         * @return New animation running time list.
+         */
+        std::vector<float> splitFrames(const std::string& name, const std::vector<Bone::KeyFrameRange>& split);
         
         void addChild(Bone* child);
         void tranverseChildBone(std::function<void(Bone*)> callFunc);

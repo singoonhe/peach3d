@@ -38,6 +38,8 @@ namespace Peach3D
         void addAnimateTime(const char* name, float time) { Peach3DAssert(name && time > 0.f, "Animatie name or time not valid"); mAnimations[name] = time; }
         /** Return named animation time. */
         float getAnimateTime(const std::string& name);
+        /** Split animation to more, delete old animation. */
+        bool splitAnimation(const std::string& name, const std::vector<Bone::KeyFrameRange>& split);
         
     private:
         /** Rranverse all children and cache list. */

@@ -7,6 +7,7 @@
 //
 
 #include "Peach3DSkeleton.h"
+#include "Peach3DLogPrinter.h"
 
 namespace Peach3D
 {
@@ -87,5 +88,40 @@ namespace Peach3D
             cached.push_back(mCacheBoneMats[name]);
         }
         return cached;
+    }
+    
+    bool Skeleton::splitAnimation(const std::string& name, const std::vector<Bone::KeyFrameRange>& split)
+    {
+        auto findIter = mAnimations.find(name);
+        if (findIter == mAnimations.end()) {
+            return false;
+        }
+#if PEACH3D_DEBUG == 1
+        // check is all range right
+        for (auto range : split) {
+            Peach3DAssert(name.size() > 0, "Split animation name not valid");
+            if (range.startTime > findIter->second || range.startTime > range.endTime) {
+                Peach3DErrorLog("Frame range time is not valid when spliting animation %s", name.c_str());
+                return false;
+            }
+        }
+#endif
+        // split all bones
+        std::vector<float> maxTimes(split.size(), 0.f);
+        for (auto& bone : mCacheBones) {
+            auto times = bone->splitFrames(name, split);
+            for (auto i=0; i<times.size(); ++i) {
+                if (times[i] > maxTimes[i]) {
+                    maxTimes[i] = times[i];
+                }
+            }
+        }
+        // add new animations
+        for (auto i=0; i<split.size(); ++i) {
+            mAnimations[split[i].name] = maxTimes[i];
+        }
+        // delete old animation
+        mAnimations.erase(findIter);
+        return true;
     }
 }
