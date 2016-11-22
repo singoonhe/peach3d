@@ -43,6 +43,11 @@ private:
     Widget* mParentWidget;
 };
 
+class ProgressBarSample : public BaseSample
+{
+    void init(Widget* parentWidget);
+};
+
 class LayoutSample : public BaseSample
 {
     void init(Widget* parentWidget);

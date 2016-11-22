@@ -14,27 +14,58 @@
 
 namespace Peach3D
 {
+    // define progress bar type
+    enum ProgressBarType
+    {
+        eHorizontal,
+        eVertical,
+    };
+    // define progress bar cut mode
+    enum ProgressBarCutMode
+    {
+        eRightTop,  // right or top of image will be cut when rate not 1
+        eLeftBottom,// left or bottom of image will be cut when rate not 1
+    };
+    
     class PEACH3D_DLL ProgressBar : public Sprite
     {
     public:
         /** Create progress bar, static method.
-         * @params
+         * @params barOffset Bar sprite will be set to center of bg if offset is zero.
          */
-        static ProgressBar* create(const char* bgImage, const char* barImage, Vector2 barOffset = Vector2Zero);
+        static ProgressBar* create(const char* bgImage, const char* barImage, ProgressBarType type = ProgressBarType::eHorizontal, Vector2 barOffset = Vector2Zero);
         static ProgressBar* create();
         
-        /** Return bar sprite above on backgruond. */
-        Sprite* getBarSprite() { return mBarSprite; };
+        void setBarType(ProgressBarType type) { mType = type; mNeedUpdate = true; }
+        void setBarCutMode(ProgressBarCutMode mode) { mCutMode = mode; mNeedUpdate = true; }
+        /** Set bar new texture, create new bar if no bar sprite. */
+        void setBarTexture(const TextureFrame& frame);
         /** Set bar position relative of bg sprite, bar sprite anchor is (0, 0). */
-        void setBarOffset(const Vector2& offset) { mBarSprite->setPosition(offset); }
+        void setBarOffset(const Vector2& offset) { if (mBarSprite) { mBarSprite->setPosition(offset); } }
         const Vector2& getBarOffset() { return mBarSprite ? mBarSprite->getPosition(): Vector2Zero; }
         
+        /** Set progress rate, clamp in (0-1). */
+        void setCurrentProgress(float rate) { CLAMP(rate, 0.f, 1.f); mCurRate = rate; mNeedUpdate = true; }
+        float getCurrentProgress() { return mCurRate; }
+        
+    protected:
+        void updateProgress();
+        /** Update rendering attributes, update progress. */
+        virtual void updateRenderingAttributes(float lastFrameTime) { Sprite::updateRenderingAttributes(lastFrameTime); updateProgress(); }
+        
     public:
-        ProgressBar() : mBarSprite(nullptr) {}
+        ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true) {}
         virtual ~ProgressBar() {}
         
     private:
+        ProgressBarType     mType;
+        ProgressBarCutMode  mCutMode;
+        
+        float   mCurRate;
+        bool    mNeedUpdate;
         Sprite* mBarSprite;
+        Rect    mBarCoord;
+        Vector2 mBarSize;
     };
 }
 

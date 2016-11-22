@@ -15,6 +15,7 @@ bool UIScene::init()
     mSampleList.push_back([]()->BaseSample* {return new SpriteSample();});
     mSampleList.push_back([]()->BaseSample* {return new LabelSample();});
     mSampleList.push_back([]()->BaseSample* {return new ButtonSample();});
+    mSampleList.push_back([]()->BaseSample* {return new ProgressBarSample();});
     mSampleList.push_back([]()->BaseSample* {return new LayoutSample();});
     
     // init base scene
@@ -228,6 +229,27 @@ void ButtonSample::init(Widget* parentWidget)
         scale9TitleButton->setTitleText(enable ? "content twice" : "scale9 twice");
     });
     parentWidget->addChild(scale9TitleButton);
+}
+
+void ProgressBarSample::init(Widget* parentWidget)
+{
+    // set title and desc
+    mTitle = "ProgressBar Sample";
+    mDesc = "Layout loading and variables binding, check \"Peach3DLayoutManager.cpp\" for more";
+    // create horizontal progress bar
+    const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
+    ProgressBar *hbar = ProgressBar::create("bar_hor_bg.png", "bar_hor_bar.png");
+    hbar->setPosition(screenSize / 2.f);
+    parentWidget->addChild(hbar);
+    hbar->setCurrentProgress(0.5f);
+    
+    // create vertical progress bar
+    ProgressBar *vbar = ProgressBar::create("bar_ver_bg.png", "bar_ver_bar.png", ProgressBarType::eVertical);
+    vbar->setBarOffset(Vector2Zero);
+    vbar->setPosition(Vector2(screenSize.x * 0.1f, screenSize.y * 0.45f));
+    parentWidget->addChild(vbar);
+    vbar->setCurrentProgress(0.58f);
+    vbar->setBarCutMode(ProgressBarCutMode::eLeftBottom);
 }
 
 void LayoutSample::init(Widget* parentWidget)

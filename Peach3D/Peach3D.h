@@ -23,5 +23,6 @@
 #include "Peach3DLayoutManager.h"
 #include "GUI/Peach3DButton.h"
 #include "GUI/Peach3DLabel.h"
+#include "GUI/Peach3DProgressBar.hpp"
 
 #endif // PEACH3D_H
