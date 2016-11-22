@@ -235,21 +235,37 @@ void ProgressBarSample::init(Widget* parentWidget)
 {
     // set title and desc
     mTitle = "ProgressBar Sample";
-    mDesc = "Layout loading and variables binding, check \"Peach3DLayoutManager.cpp\" for more";
+    mDesc = "create much type progress bar, running progress actions";
     // create horizontal progress bar
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     ProgressBar *hbar = ProgressBar::create("bar_hor_bg.png", "bar_hor_bar.png");
     hbar->setPosition(screenSize / 2.f);
     parentWidget->addChild(hbar);
     hbar->setCurrentProgress(0.5f);
+    // repeat moving
+    hbar->runProgressAction(0.2f, 2.f, 2);
     
     // create vertical progress bar
     ProgressBar *vbar = ProgressBar::create("bar_ver_bg.png", "bar_ver_bar.png", ProgressBarType::eVertical);
     vbar->setBarOffset(Vector2Zero);
-    vbar->setPosition(Vector2(screenSize.x * 0.1f, screenSize.y * 0.45f));
+    vbar->setPosition(Vector2(screenSize.x * 0.1f, screenSize.y * 0.48f));
     parentWidget->addChild(vbar);
-    vbar->setCurrentProgress(0.58f);
+    vbar->setCurrentProgress(1.f);
     vbar->setBarCutMode(ProgressBarCutMode::eLeftBottom);
+    // moving back
+    vbar->runProgressAction(0.f, 5.f);
+    
+    // button title auto scale
+    Button* againButton = Button::create("common_normal.png");
+    againButton->setTitleText("Again");
+    againButton->setTitleColor(Color3Black);
+    againButton->setScale(Vector2(0.5f));
+    againButton->setPosition(Vector2(screenSize.x * 0.1f, screenSize.y * 0.04f));
+    parentWidget->addChild(againButton);
+    againButton->setClickedAction([vbar](const Vector2&){
+        vbar->setCurrentProgress(1.f);
+        vbar->runProgressAction(0.f, 5.f);
+    });
 }
 
 void LayoutSample::init(Widget* parentWidget)

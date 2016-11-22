@@ -11,6 +11,7 @@
 
 #include "Peach3DCompile.h"
 #include "Peach3DSprite.h"
+#include "Peach3DScheduler.h"
 
 namespace Peach3D
 {
@@ -48,24 +49,38 @@ namespace Peach3D
         void setCurrentProgress(float rate) { CLAMP(rate, 0.f, 1.f); mCurRate = rate; mNeedUpdate = true; }
         float getCurrentProgress() { return mCurRate; }
         
+        /** Run progress action. 
+         @params dstRate Moving to target rate.
+         @params lapTime Progress running base time from 0-1.
+         @params repeatCount Repeat count of moving frome 0-1.
+         @params moveFront Moving front or back, just valid when repeatCount not 0.
+         */
+        void runProgressAction(float dstRate, float lapTime, uint repeatCount = 0, bool moveFront = true);
+        
     protected:
         void updateProgress();
         /** Update rendering attributes, update progress. */
         virtual void updateRenderingAttributes(float lastFrameTime) { Sprite::updateRenderingAttributes(lastFrameTime); updateProgress(); }
         
     public:
-        ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true) {}
-        virtual ~ProgressBar() {}
+        ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true), mBarScheduler(nullptr) {}
+        virtual ~ProgressBar();
         
     private:
         ProgressBarType     mType;
         ProgressBarCutMode  mCutMode;
+        Scheduler*          mBarScheduler;
         
         float   mCurRate;
         bool    mNeedUpdate;
         Sprite* mBarSprite;
         Rect    mBarCoord;
         Vector2 mBarSize;
+        
+        float   mDstRate;
+        float   mLapTime;
+        uint    mRepeatCount;
+        bool    mMoveFront;
     };
 }
 

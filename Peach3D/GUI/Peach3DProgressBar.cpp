@@ -8,6 +8,7 @@
 
 #include "Peach3DProgressBar.hpp"
 #include "Peach3DResourceManager.h"
+#include "Peach3DIPlatform.h"
 
 namespace Peach3D
 {
@@ -39,6 +40,13 @@ namespace Peach3D
         return progress;
     }
     
+    ProgressBar::~ProgressBar()
+    {
+        if (mBarScheduler) {
+            IPlatform::getSingleton().deleteScheduler(mBarScheduler);
+        }
+    }
+    
     void ProgressBar::setBarTexture(const TextureFrame& frame)
     {
         if (frame.tex) {
@@ -53,6 +61,47 @@ namespace Peach3D
             // save bar orgin texture coord and size
             mBarCoord = frame.rc;
             mBarSize = mBarSprite->getContentSize();
+        }
+    }
+    
+    void ProgressBar::runProgressAction(float dstRate, float lapTime, uint repeatCount, bool moveFront)
+    {
+        mDstRate = dstRate;
+        mLapTime = lapTime;
+        mRepeatCount = repeatCount;
+        if (repeatCount > 0) {
+            mMoveFront = moveFront;
+        }
+        else {
+            mMoveFront = (mCurRate > dstRate) ? false : true;
+        }
+        
+        // start action scheduler
+        if (!mBarScheduler) {
+            mBarScheduler = IPlatform::getSingleton().addScheduler([&](float interval){
+                double addRate = interval / mLapTime;
+                float newRate = mCurRate + (mMoveFront ? addRate : -addRate);
+                if (mRepeatCount == 0 && ((mMoveFront && newRate >= mDstRate) || (!mMoveFront && newRate <= mDstRate))) {
+                    // moving to target rate, stop scheduler
+                    this->setCurrentProgress(mDstRate);
+                    mBarScheduler->pause();
+                }
+                else {
+                    if (newRate < 0.f && repeatCount > 0) {
+                        newRate += 1.f;
+                        mRepeatCount--;
+                    }
+                    else if (newRate > 1.f && repeatCount > 0) {
+                        newRate -= 1.f;
+                        mRepeatCount--;
+                    }
+                    this->setCurrentProgress(newRate);
+                }
+            });
+        }
+        else {
+            mBarScheduler->reset();
+            mBarScheduler->start();
         }
     }
     
