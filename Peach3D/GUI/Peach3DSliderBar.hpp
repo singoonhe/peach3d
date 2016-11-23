@@ -23,23 +23,27 @@ namespace Peach3D
         static SliderBar* create(const char* bgImage, const char* barImage, const char* markImage, ProgressBarType type = ProgressBarType::eHorizontal, Vector2 barOffset = Vector2Zero);
         static SliderBar* create() { return new SliderBar(); }
         
-        /** Set progress rate, clamp in (0-1). */
-        virtual void setCurrentProgress(float rate) { CLAMP(rate, 0.f, 1.f); mCurRate = rate; mNeedUpdate = true; }
-        
-        /** Run progress action.
-         @params dstRate Moving to target rate.
-         @params lapTime Progress running base time from 0-1.
-         @params repeatCount Repeat count of moving frome 0-1.
-         @params moveFront Moving front or back, just valid when repeatCount not 0.
-         */
-//        void runProgressAction(float dstRate, float lapTime, uint repeatCount = 0, bool moveFront = true);
+        /** Set mark new texture, create new mark if no mark sprite. */
+        void setMarkTexture(const TextureFrame& frame);
+        /** Set mark down and drag texture. */
+        void setMarkDownTexture(const TextureFrame& frame) { mDownFrame = frame; }
+        /** Set mark start and end offset, range = bar_size - 2 * mark_offset. */
+        void setMarkOffset(float offset) { mMarOffset = offset; }
         
     public:
-        SliderBar() : ProgressBar(), mMarkSprite(nullptr) {}
+        SliderBar() : ProgressBar(), mMarkSprite(nullptr), mMarOffset(0.f) {}
         virtual ~SliderBar() {}
+        
+        /** Update mark sprite position. */
+        virtual void updateProgress();
         
     protected:
         Sprite* mMarkSprite;
+        float   mMarOffset;
+        Vector2 mDownPos;
+        
+        TextureFrame    mNormalFrame;
+        TextureFrame    mDownFrame;
     };
 }
 

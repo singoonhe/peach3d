@@ -239,7 +239,7 @@ void ProgressBarSample::init(Widget* parentWidget)
     // create horizontal progress bar
     const Vector2&  screenSize  = LayoutManager::getSingleton().getScreenSize();
     ProgressBar *hbar = ProgressBar::create("bar_hor_bg.png", "bar_hor_bar.png");
-    hbar->setPosition(screenSize / 2.f);
+    hbar->setPosition(Vector2(screenSize.x * 0.5f, screenSize.y * 0.8f));
     parentWidget->addChild(hbar);
     hbar->setCurrentProgress(0.5f);
     // repeat moving
@@ -254,6 +254,14 @@ void ProgressBarSample::init(Widget* parentWidget)
     vbar->setBarCutMode(ProgressBarCutMode::eLeftBottom);
     // moving back
     vbar->runProgressAction(0.f, 5.f);
+    
+    // create vertical slider bar
+    SliderBar *vsbar = SliderBar::create("bar_hor_bg.png", "bar_hor_bar.png", "slider_mark.png");
+    vsbar->setPosition(Vector2(screenSize.x * 0.5f, screenSize.y * 0.2f));
+    parentWidget->addChild(vsbar);
+    vsbar->setMarkOffset(8.f);
+    vsbar->setCurrentProgress(0.f);
+    vsbar->setMarkDownTexture(ResourceManager::getSingleton().addTexture("slider_mark_down.png"));
     
     // button title auto scale
     Button* againButton = Button::create("common_normal.png");

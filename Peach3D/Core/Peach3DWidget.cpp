@@ -166,29 +166,36 @@ namespace Peach3D
     {
         bool inZoom = Node::isPointInZone(point);
         if (inZoom) {
-            Vector2 anchorSize(mAnchor.x * mWorldSize.x, mAnchor.y * mWorldSize.y);
-            if (mWorldRotate > FLT_EPSILON) {
-                // Calc point offset to widget anchor position.
-                Vector2 offset(point.x - mWorldPos.x, point.y - mWorldPos.y);
-                // convert nevgative world rotate
-                float sinTheta = cosf(mWorldRotate), cosTheta = cosf(mWorldRotate);
-                Vector2 rotaOffset(offset.x * cosTheta - offset.y * sinTheta, offset.x * sinTheta + offset.y * cosTheta);
-                rotaOffset = rotaOffset + anchorSize;
-                if (rotaOffset.x < 0 || rotaOffset.y < 0 || rotaOffset.x > mWorldSize.x ||
-                    rotaOffset.y > mWorldSize.y) {
-                    inZoom = false;
-                }
-            }
-            else {
-                Vector2 startPos(mWorldPos.x - mAnchor.x * mWorldSize.x,
-                                 mWorldPos.y - mAnchor.y * mWorldSize.y);
-                if (point.x < startPos.x || point.y < startPos.y || point.x > (startPos.x + mWorldSize.x) ||
-                    point.y > (startPos.y  + mWorldSize.y)) {
-                    inZoom = false;
-                }
-            }
+            auto insideV = convertScreenToInside(point);
+            return insideV.x >= 0 && insideV.y >= 0;
         }
         return inZoom;
+    }
+    
+    Vector2 Widget::convertScreenToInside(const Vector2& point)
+    {
+        Vector2 insideV(-1, -1);
+        Vector2 anchorSize(mAnchor.x * mWorldSize.x, mAnchor.y * mWorldSize.y);
+        if (!FLOAT_EQUAL_0(mWorldRotate)) {
+            // Calc point offset to widget anchor position.
+            Vector2 offset(point.x - mWorldPos.x, point.y - mWorldPos.y);
+            // convert nevgative world rotate
+            float sinTheta = cosf(mWorldRotate), cosTheta = cosf(mWorldRotate);
+            Vector2 rotaOffset(offset.x * cosTheta - offset.y * sinTheta, offset.x * sinTheta + offset.y * cosTheta);
+            insideV = rotaOffset + anchorSize;
+            if (rotaOffset.x < 0 || rotaOffset.y < 0 || rotaOffset.x > mWorldSize.x ||
+                rotaOffset.y > mWorldSize.y) {
+                insideV.x = insideV.y = -1;
+            }
+        }
+        else {
+            Vector2 startPos = mWorldPos - anchorSize;
+            insideV = point - startPos;
+            if (insideV.x < 0.f || insideV.y < 0.f || insideV.x > mWorldSize.x || insideV.y > mWorldSize.y) {
+                insideV.x = insideV.y = -1;
+            }
+        }
+        return insideV;
     }
     
     void Widget::updateRenderingState(const std::string& extState)

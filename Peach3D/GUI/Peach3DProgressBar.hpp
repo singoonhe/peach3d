@@ -58,16 +58,15 @@ namespace Peach3D
         void runProgressAction(float dstRate, float lapTime, uint repeatCount = 0, bool moveFront = true);
         
     protected:
-        void updateProgress();
-        /** Update rendering attributes, update progress. */
-        virtual void updateRenderingAttributes(float lastFrameTime) { Sprite::updateRenderingAttributes(lastFrameTime); updateProgress(); }
-        
-    public:
         ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true), mBarScheduler(nullptr) {}
         virtual ~ProgressBar() {}
         
         /** Delete scheduler if need. */
         virtual void exit();
+        /** Update bar state. */
+        virtual void updateProgress();
+        /** Update rendering attributes, update progress. */
+        virtual void updateRenderingAttributes(float lastFrameTime) { Sprite::updateRenderingAttributes(lastFrameTime); updateProgress(); }
         
     protected:
         ProgressBarType     mType;
