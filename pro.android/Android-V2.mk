@@ -52,6 +52,8 @@ RenderGL/Peach3DImageParse.cpp \
 GUI/Peach3DSprite.cpp \
 GUI/Peach3DButton.cpp \
 GUI/Peach3DLabel.cpp \
+GUI/Peach3DProgressBar.cpp \
+GUI/Peach3DSliderBar.cpp \
 Platform/Android/Peach3DPlatformAndroid.cpp \
 Support/base64/base64.cpp \
 Support/xxhash/xxhash.cpp \

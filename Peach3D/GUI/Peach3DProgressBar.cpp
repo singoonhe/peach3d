@@ -34,16 +34,13 @@ namespace Peach3D
         return progress;
     }
     
-    ProgressBar* ProgressBar::create()
+    void ProgressBar::exit()
     {
-        ProgressBar* progress = new ProgressBar();
-        return progress;
-    }
-    
-    ProgressBar::~ProgressBar()
-    {
+        Sprite::exit();
+        
         if (mBarScheduler) {
             IPlatform::getSingleton().deleteScheduler(mBarScheduler);
+            mBarScheduler = nullptr;
         }
     }
     
@@ -79,6 +76,9 @@ namespace Peach3D
         // start action scheduler
         if (!mBarScheduler) {
             mBarScheduler = IPlatform::getSingleton().addScheduler([&](float interval){
+                if (this->isNeedDelete()) {
+                    return ;
+                }
                 double addRate = interval / mLapTime;
                 float newRate = mCurRate + (mMoveFront ? addRate : -addRate);
                 if (mRepeatCount == 0 && ((mMoveFront && newRate >= mDstRate) || (!mMoveFront && newRate <= mDstRate))) {
@@ -87,13 +87,15 @@ namespace Peach3D
                     mBarScheduler->pause();
                 }
                 else {
-                    if (newRate < 0.f && repeatCount > 0) {
-                        newRate += 1.f;
-                        mRepeatCount--;
-                    }
-                    else if (newRate > 1.f && repeatCount > 0) {
-                        newRate -= 1.f;
-                        mRepeatCount--;
+                    if (mRepeatCount > 0) {
+                        if (newRate < 0.f) {
+                            newRate += 1.f;
+                            mRepeatCount--;
+                        }
+                        else if (newRate > 1.f) {
+                            newRate -= 1.f;
+                            mRepeatCount--;
+                        }
                     }
                     this->setCurrentProgress(newRate);
                 }

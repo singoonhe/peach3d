@@ -35,11 +35,11 @@ namespace Peach3D
     public:
         //! add node to child node list
         virtual void addChild(Node* childNode);
-        //! delete self from parent
+        //! mark need delete, waiting for next loop
         virtual void deleteFromParent(bool cleanNode = true);
-        //! delete node from child node list
+        //! mark node need delete, waiting for next loop
         virtual void deleteChild(Node* childNode, bool cleanNode = true);
-        /** Delete all child node and clean them. */
+        /** Mark children need delete, waiting for next loop. */
         virtual void deleteAllChildren();
         //! return parent node
         Node* getParentNode() { return mParentNode; }
@@ -81,6 +81,8 @@ namespace Peach3D
         Node(const std::string& name = "") : mName(name), mParentNode(nullptr), mVisible(true), mAlpha(1.f), mSwallowEvents(true), mIsRenderDirty(true), mSignDeleted(false), mSignClean(true) {}
         //! clean node and all child node, user can't call destructor function.
         virtual ~Node();
+        /** When it's mark for delete, exit() will be called. */
+        virtual void exit() { for (auto child : mChildNodeList) child->exit(); }
         /** Set parent node, only called for addChildNode */
         virtual void setParentNode(Node* pNode) { mParentNode = pNode; }
         
@@ -88,7 +90,7 @@ namespace Peach3D
         virtual void updateRenderingAttributes(float lastFrameTime) = 0;
         
         /** Sign node need deleted next frame. */
-        void signNeedDeleted(bool needClean) { mSignDeleted = true; mSignClean = needClean; }
+        void signNeedDeleted(bool needClean);
         /** Is node need delete. */
         bool isNeedDelete() { return mSignDeleted; }
         /** Is node need clean when deleted. */

@@ -135,6 +135,16 @@ namespace Peach3D
         });
     }
     
+    void Node::signNeedDeleted(bool needClean)
+    {
+        mSignDeleted = true;
+        mSignClean = needClean;
+        // node just unbind from parent if not clean
+        if (mSignClean) {
+            exit();
+        }
+    }
+    
     Node::~Node()
     {
         // delete self event listener

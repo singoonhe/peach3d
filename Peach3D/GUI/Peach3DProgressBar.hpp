@@ -35,7 +35,7 @@ namespace Peach3D
          * @params barOffset Bar sprite will be set to center of bg if offset is zero.
          */
         static ProgressBar* create(const char* bgImage, const char* barImage, ProgressBarType type = ProgressBarType::eHorizontal, Vector2 barOffset = Vector2Zero);
-        static ProgressBar* create();
+        static ProgressBar* create() { return new ProgressBar(); }
         
         void setBarType(ProgressBarType type) { mType = type; mNeedUpdate = true; }
         void setBarCutMode(ProgressBarCutMode mode) { mCutMode = mode; mNeedUpdate = true; }
@@ -46,7 +46,7 @@ namespace Peach3D
         const Vector2& getBarOffset() { return mBarSprite ? mBarSprite->getPosition(): Vector2Zero; }
         
         /** Set progress rate, clamp in (0-1). */
-        void setCurrentProgress(float rate) { CLAMP(rate, 0.f, 1.f); mCurRate = rate; mNeedUpdate = true; }
+        virtual void setCurrentProgress(float rate) { CLAMP(rate, 0.f, 1.f); mCurRate = rate; mNeedUpdate = true; }
         float getCurrentProgress() { return mCurRate; }
         
         /** Run progress action. 
@@ -64,9 +64,12 @@ namespace Peach3D
         
     public:
         ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true), mBarScheduler(nullptr) {}
-        virtual ~ProgressBar();
+        virtual ~ProgressBar() {}
         
-    private:
+        /** Delete scheduler if need. */
+        virtual void exit();
+        
+    protected:
         ProgressBarType     mType;
         ProgressBarCutMode  mCutMode;
         Scheduler*          mBarScheduler;
