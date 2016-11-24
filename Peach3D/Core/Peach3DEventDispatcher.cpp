@@ -180,8 +180,8 @@ namespace Peach3D
                             else if (mFocusNode) {
                                 // send event when up in other node. There is no drag event if quickly on IOS.
                                 mClickNodeMap[mFocusNode](ClickEvent::eCancel, eventPoss);
-                                mFocusNode = nullptr;
                             }
+                            mFocusNode = nullptr;
                         }
                         else if (event == ClickEvent::eDrag) {
                             // set scroll view to clicked node if button not swallow and drag a distance
@@ -250,8 +250,11 @@ namespace Peach3D
                 // release focus clickId if last click up
                 if ((event == ClickEvent::eUp || event == ClickEvent::eCancel)) {
                     // release focus node no matter where Up event trigger
+                    if (mFocusNode) {
+                        mClickNodeMap[mFocusNode](ClickEvent::eCancel, {poss[i]});
+                        mFocusNode = nullptr;
+                    }
                     mFocusClickId = 0;
-                    mFocusNode = nullptr;
                     mDragNode = nullptr;
                 }
                 
