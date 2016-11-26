@@ -330,8 +330,7 @@ namespace Peach3D
                 case LayoutAttrType::eSwallowEvents:
                     if (strcmp(attrText, "true") == 0) {
                         // register null listener, just swallow events.
-                        EventDispatcher::getSingletonPtr()->addClickEventListener(newNode,
-                                                                                  [&](ClickEvent event, const std::vector<Vector2>& poss) {});
+                        EventDispatcher::getSingletonPtr()->addClickEventListener(newNode, [&](ClickEvent, const Vector2&) {});
                     }
                     break;
                 case LayoutAttrType::eFillColor: {

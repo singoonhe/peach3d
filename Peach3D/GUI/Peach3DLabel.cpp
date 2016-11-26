@@ -310,7 +310,7 @@ namespace Peach3D
     void Label::addLabelClickedEventFunc()
     {
         // register widget click event, trigger label clicked event
-        EventDispatcher::getSingletonPtr()->addClickEventListener(this, [&](ClickEvent event, const std::vector<Vector2>& pos){
+        EventDispatcher::getSingletonPtr()->addClickEventListener(this, [&](ClickEvent event, const Vector2&){
             if (mClickedFunc) {
                 if (event == ClickEvent::eDown) {
                     // is pos in label clicked rect

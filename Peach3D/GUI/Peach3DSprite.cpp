@@ -137,7 +137,7 @@ namespace Peach3D
     {
         // create or delete event listener
         if (!mIsEnabled && enabled) {
-            EventDispatcher::getSingletonPtr()->addClickEventListener(this, [&](ClickEvent event, const std::vector<Vector2>& poss) {
+            EventDispatcher::getSingletonPtr()->addClickEventListener(this, [&](ClickEvent event, const Vector2& pos) {
                 // auto zoom when clicked
                 if (mIsClickZoomed) {
                     switch (event) {
@@ -158,7 +158,7 @@ namespace Peach3D
                 }
                 // trigger button registered event
                 if (mEventFuncMap.find(event) != mEventFuncMap.end()) {
-                    mEventFuncMap[event](poss[0]);
+                    mEventFuncMap[event](pos);
                 }
             });
         }

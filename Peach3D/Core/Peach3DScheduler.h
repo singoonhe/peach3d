@@ -16,9 +16,9 @@ namespace Peach3D
     class PEACH3D_DLL Scheduler
     {
     public:
-        void start() {mIsPaused = false;}
+        void start() {mCurrentTime = 0.0f; resume();}
         void pause() {mIsPaused = true;}
-        void reset() {mCurrentTime = 0.0f;}
+        void resume() {mIsPaused = false;}
         bool isPaused() {return mIsPaused;}
         void trigger(float interval) {
             if (mFixInterval > 0.0f) {

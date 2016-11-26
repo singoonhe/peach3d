@@ -95,191 +95,169 @@ namespace Peach3D
         auto sceneMgr = SceneManager::getSingletonPtr();
         if (!sceneMgr) return;
         
-        Widget* const rootNode = sceneMgr->getRootWidget();
         std::vector<uint>    rootNodeIds;
         std::vector<Vector2> rootNodePoss;
-        // save last clicked node for double clicked event
-        static Node* lastClickedNode = nullptr;
-        
         // start deal widget event
         for (uint i=0; i<clickIds.size(); ++i) {
-            // sign is current click event dealed
-            bool isClickDealed = false;
-            bool isEventStrike = false;
-            
-            SceneNode*  sceneEventNode = nullptr;
-            bool        isCheckNode = false;
-            for (auto& node : mNodeList) {
-                SceneNode* csNode = dynamic_cast<SceneNode*>(node);
-                Widget* cwNode = dynamic_cast<Widget*>(node);
-                // calc the pos target SceneNode if need
-                if (csNode && !isCheckNode) {
-                    sceneEventNode = SceneManager::getSingleton().getWindowClickedNode(poss[i]);
-                    isCheckNode = true;
-                }
-                
-                // pos in widget or in SceneNode
-                if (rootNode != node && ((cwNode && cwNode->isPointInZone(poss[i])) || (csNode && node == sceneEventNode))) {
-                    isClickDealed = true;
-                    // get current focus clickId
-                    if (!mFocusClickId) {
-                        mFocusClickId = clickIds[i];
-                    }
-                    
-                    if (mFocusClickId == clickIds[i]) {
-                        // save last point
-                        mLastPoint = poss[i];
-                        std::vector<Vector2> eventPoss = {mLastPoint};
-                        
-                        // deal with mouse move event
-                        if (event == ClickEvent::eMoved) {
-                            mClickNodeMap[node](event, eventPoss);
-                            if (mMovedNode != node) {
-                                if (mMovedNode) {
-                                    mClickNodeMap[mMovedNode](ClickEvent::eMoveOut, eventPoss);
-                                }
-                                mClickNodeMap[node](ClickEvent::eMoveIn, eventPoss);
-                                mMovedNode = node;
-                            }
-                            // start hold scheduler
-                            mHoldScheduler->start();
-                            mCurHoldTime = 0.0f;
-                        }
-                        // deal with mouse down or touch down
-                        else if (event == ClickEvent::eDown) {
-                            // release move node if it exist
-                            mMovedNode = nullptr;
-                            mBeginPoint = mLastPoint;
-                            // set focus node
-                            mFocusNode = node;
-                            mDragNode = node;
-                            mClickNodeMap[node](event, eventPoss);
-                            // start hold scheduler
-                            mHoldScheduler->start();
-                            mCurHoldTime = 0.0f;
-                        }
-                        else if (event == ClickEvent::eUp) {
-                            mClickNodeMap[node](event, eventPoss);
-                            // trigger click event
-                            if (mFocusNode == node) {
-                                mClickNodeMap[node](ClickEvent::eClicked, eventPoss);
-                                if (mCurClickedTime < FLT_EPSILON || mCurClickedTime > mEventDClickTime) {
-                                    lastClickedNode = node;
-                                    // start click time for double clicked event
-                                    mCurClickedTime = 0.0f;
-                                    mDClickScheduler->start();
-                                }
-                                else if (mCurClickedTime < mEventDClickTime && mCurClickedTime > FLT_EPSILON && lastClickedNode == node) {
-                                    lastClickedNode = nullptr;
-                                    mClickNodeMap[node](ClickEvent::eDClicked, eventPoss);
-                                    // pause click time for double clicked event
-                                    mCurClickedTime = 0.0f;
-                                    mDClickScheduler->pause();
-                                }
-                            }
-                            else if (mFocusNode) {
-                                // send event when up in other node. There is no drag event if quickly on IOS.
-                                mClickNodeMap[mFocusNode](ClickEvent::eCancel, eventPoss);
-                            }
-                            mFocusNode = nullptr;
-                        }
-                        else if (event == ClickEvent::eDrag) {
-                            // set scroll view to clicked node if button not swallow and drag a distance
-                            if (isEventStrike) {
-                                mFocusNode = node;
-                            }
-                            // deal dragIn and dragOut event
-                            if (mDragNode != node) {
-                                if (mDragNode) {
-                                    mClickNodeMap[mDragNode](ClickEvent::eDragOut, eventPoss);
-                                }
-                                mClickNodeMap[node](ClickEvent::eDragIn, eventPoss);
-                                mDragNode = node;
-                            }
-                            if (mFocusNode) {
-                                // drag event always send to click focus node
-                                mClickNodeMap[mFocusNode](event, eventPoss);
-                                // node not swallow event, pass event to parent node if drag for a distence
-                                Vector2 dis = mLastPoint - mBeginPoint;
-                                if (dis.length() > 8) {
-                                    if (!mFocusNode->isSwallowEvents()) {
-                                        // transmit event to next widget if node not swallowed
-                                        mClickNodeMap[mFocusNode](ClickEvent::eCancel, eventPoss);
-                                        isEventStrike = true;
-                                        isClickDealed = false;
-                                    }
-                                    // start hold scheduler, hold event only valid when drag in clicked focus node
-                                    else if (mFocusNode == node) {
-                                        mBeginPoint = mLastPoint;
-                                        mHoldScheduler->start();
-                                        mCurHoldTime = 0.0f;
-                                    }
-                                }
-                            }
-                        }
-                        else if (event == ClickEvent::eScrollWheel) {
-                            // just trigger scroll wheel event
-                            mClickNodeMap[node](event, eventPoss);
-                        }
-                        else if (event == ClickEvent::eCancel) {
-                            mClickNodeMap[node](event, eventPoss);
-                            // release focus node
-                            mFocusNode = nullptr;
-                        }
-                    }
-                    
-                    // release gesture click when up or cancel in GUI widget (Sometimes, click drag from root widget to GUI widget).
-                    if ((event == ClickEvent::eCancel || event == ClickEvent::eUp) && mClickNodeMap.find(rootNode)!=mClickNodeMap.end()) {
-                        std::vector<uint>    rootCancelIds = {clickIds[i]};
-                        std::vector<Vector2> rootCancelPoss = {poss[i]};
-                        triggerGestureEvent(ClickEvent::eCancel, rootCancelIds, rootCancelPoss);
-                    }
-                }
-                else if (rootNode == node) {
-                    // just add clicked pos to root node, this may need trigger gesture
-                    rootNodeIds.push_back(clickIds[i]);
-                    rootNodePoss.push_back(poss[i]);
-                }
-                // break if event had been dealed
-                if (isClickDealed) {
-                    break;
-                }
+            // get current focus clickId
+            if (!mFocusClickId) {
+                mFocusClickId = clickIds[i];
             }
-            
             if (mFocusClickId == clickIds[i]) {
-                // release focus clickId if last click up
-                if ((event == ClickEvent::eUp || event == ClickEvent::eCancel)) {
-                    // release focus node no matter where Up event trigger
-                    if (mFocusNode) {
-                        mClickNodeMap[mFocusNode](ClickEvent::eCancel, {poss[i]});
-                        mFocusNode = nullptr;
-                    }
-                    mFocusClickId = 0;
-                    mDragNode = nullptr;
-                }
-                
-                std::vector<Vector2> eventPoss = {mLastPoint};
-                if (!isClickDealed && mMovedNode) {
-                    // set node move out and release moved node
-                    mClickNodeMap[mMovedNode](ClickEvent::eMoveOut, eventPoss);
-                    mMovedNode = nullptr;
-                    // not hold node, pause scheduler
-                    mCurHoldTime = 0.0f;
-                    mHoldScheduler->pause();
-                }
-                if (!isClickDealed && mDragNode) {
-                    mClickNodeMap[mDragNode](ClickEvent::eDragOut, eventPoss);
-                    mDragNode = nullptr;
-                    // not hold node pause sheduler
-                    mCurHoldTime = 0.0f;
-                    mHoldScheduler->pause();
-                }
+                triggerNodeEvent(event, clickIds[i], poss[i]);
+            }
+            else {
+                rootNodeIds.push_back(clickIds[i]);
+                rootNodePoss.push_back(poss[i]);
             }
         }
         
         // trigger multi-touch for root widget
         if (rootNodePoss.size() > 0 && rootNodeIds.size() > 0) {
             triggerGestureEvent(event, rootNodeIds, rootNodePoss);
+        }
+    }
+    
+    void EventDispatcher::triggerNodeEvent(ClickEvent event, uint clickId, const Vector2& pos)
+    {
+        mLastPoint = pos;
+        
+        // find all nodes which event pos inside
+        const Widget* rootNode = SceneManager::getSingleton().getRootWidget();
+        std::vector<Node*> eventNodes;
+        Node* swallowNode = nullptr;
+        for (auto& node : mNodeList) {
+            Widget* cwNode = dynamic_cast<Widget*>(node);
+            if (cwNode && cwNode->isPointInZone(pos) && cwNode != rootNode) {
+                eventNodes.push_back(cwNode);
+                // not continue finding follow node
+                if (cwNode->isSwallowEvents()) {
+                    swallowNode = cwNode;
+                    break;
+                }
+            }
+        }
+        // finding 3D node which event pos inside, add to back of list
+        SceneNode*  sceneEventNode = SceneManager::getSingleton().getWindowClickedNode(pos);
+        if (sceneEventNode) {
+            eventNodes.push_back(sceneEventNode);
+            // set swallow 3d node
+            if (sceneEventNode->isSwallowEvents() && !swallowNode) {
+                swallowNode = sceneEventNode;
+            }
+        }
+        // get default focus node
+        Node* firstNode = eventNodes.size() ? eventNodes[0] : nullptr;
+        
+        if (event == ClickEvent::eMoved) {
+            // trigger move out when move to other node or null space
+            if (mMovedNode != firstNode) {
+                if (mMovedNode) {
+                    mClickNodeMap[mMovedNode](ClickEvent::eMoveOut, pos);
+                    mMovedNode = nullptr;
+                    // not hold node, pause scheduler
+                    mCurHoldTime = 0.0f;
+                    mHoldScheduler->pause();
+                }
+                if (firstNode) {
+                    mClickNodeMap[firstNode](ClickEvent::eMoveIn, pos);
+                    mMovedNode = firstNode;
+                    // start hold scheduler
+                    mHoldScheduler->start();
+                    mCurHoldTime = 0.0f;
+                }
+            }
+            else if (firstNode) {
+                mClickNodeMap[firstNode](event, pos);
+            }
+        }
+        else if (event == ClickEvent::eDown && firstNode) {
+            // release move node if it exist
+            mMovedNode = nullptr;
+            mBeginPoint = mLastPoint;
+            // set focus node
+            mFocusNode = firstNode;
+            mDragNode = firstNode;
+            mClickNodeMap[firstNode](event, pos);
+            // start hold scheduler
+            mHoldScheduler->start();
+            mCurHoldTime = 0.0f;
+        }
+        else if (event == ClickEvent::eUp) {
+            // save last clicked node for double clicked event
+            static Node* lastClickedNode = nullptr;
+            if (mFocusNode) {
+                mClickNodeMap[mFocusNode](event, pos);
+                
+                // trigger click event
+                if (mFocusNode == firstNode) {
+                    mClickNodeMap[mFocusNode](ClickEvent::eClicked, pos);
+                    if (mCurClickedTime < FLT_EPSILON || mCurClickedTime > mEventDClickTime) {
+                        lastClickedNode = firstNode;
+                        // start click time for double clicked event
+                        mCurClickedTime = 0.0f;
+                        mDClickScheduler->start();
+                    }
+                    else if (mCurClickedTime < mEventDClickTime && mCurClickedTime > FLT_EPSILON && lastClickedNode == firstNode) {
+                        lastClickedNode = nullptr;
+                        mClickNodeMap[mFocusNode](ClickEvent::eDClicked, pos);
+                        // pause click time for double clicked event
+                        mCurClickedTime = 0.0f;
+                        mDClickScheduler->pause();
+                    }
+                }
+                mDragNode = nullptr;
+                mFocusNode = nullptr;
+            }
+            mFocusClickId = 0;
+        }
+        else if (event == ClickEvent::eDrag) {
+            // deal dragIn and dragOut event
+            if (mDragNode != firstNode) {
+                if (mDragNode) {
+                    mClickNodeMap[mDragNode](ClickEvent::eDragOut, pos);
+                    // not hold node pause sheduler
+                    mCurHoldTime = 0.0f;
+                    mHoldScheduler->pause();
+                }
+                if (firstNode) {
+                    mClickNodeMap[firstNode](ClickEvent::eDragIn, pos);
+                    mDragNode = firstNode;
+                    // start hold scheduler
+                    mCurHoldTime = 0.0f;
+                    mHoldScheduler->start();
+                }
+            }
+            
+            if (mFocusNode) {
+                mClickNodeMap[mFocusNode](event, pos);
+                if (mFocusNode == firstNode) {
+                    if (!mFocusNode->isSwallowEvents()) {
+                        // node not swallow event, pass event to parent node if drag for a distence
+                        Vector2 dis = mLastPoint - mBeginPoint;
+                        if (dis.length() > 8 && swallowNode) {
+                            // transmit event to next widget if node not swallowed
+                            mClickNodeMap[mFocusNode](ClickEvent::eCancel, pos);
+                            mFocusNode = swallowNode;
+                        }
+                    }
+                    else {
+                        mBeginPoint = mLastPoint;
+                        mHoldScheduler->start();
+                        mCurHoldTime = 0.0f;
+                    }
+                }
+            }
+        }
+        else if (event == ClickEvent::eScrollWheel && swallowNode) {
+            // just trigger scroll wheel event
+            mClickNodeMap[swallowNode](event, pos);
+        }
+        else if (event == ClickEvent::eCancel && mFocusNode) {
+            mClickNodeMap[mFocusNode](event, pos);
+            // release focus node
+            mFocusNode = nullptr;
+            mDragNode = nullptr;
         }
     }
     
@@ -339,9 +317,7 @@ namespace Peach3D
                 float curLength = curOffset.length();
                 float offsetDiff = curLength - oldLength;
                 if (fabsf(offsetDiff) > FLT_EPSILON) {
-                    std::vector<Vector2> pinchPoss;
-                    pinchPoss.push_back(Vector2(offsetDiff, 0.0f));
-                    mClickNodeMap[rootNode](ClickEvent::ePinch, pinchPoss);
+                    mClickNodeMap[rootNode](ClickEvent::ePinch, Vector2(offsetDiff, 0.0f));
                 }
                 // check is need trigger rotation event
                 double oldCosValue = oldOffset.y / oldLength;
@@ -355,9 +331,7 @@ namespace Peach3D
                     angleOffset *= -1.f;
                 }
                 if (fabsf(angleOffset) > FLT_EPSILON) {
-                    std::vector<Vector2> poss;
-                    poss.push_back(Vector2(-angleOffset, 0.0f));
-                    mClickNodeMap[rootNode](ClickEvent::eRotation, poss);
+                    mClickNodeMap[rootNode](ClickEvent::eRotation, Vector2(-angleOffset, 0.0f));
                 }
                 
                 focusPos = curFocusPos;
@@ -381,9 +355,7 @@ namespace Peach3D
                 for (size_t i=0; i<clickIds.size(); ++i) {
                     if (clickIds[i] == focusId) {
                         focusPos = poss[i];
-                        std::vector<Vector2> pinchPoss;
-                        pinchPoss.push_back(poss[i]);
-                        mClickNodeMap[rootNode](event, pinchPoss);
+                        mClickNodeMap[rootNode](event, poss[i]);
                         break;
                     }
                 }
@@ -392,10 +364,10 @@ namespace Peach3D
         else if (event != ClickEvent::eDrag) {
             if (event == ClickEvent::eUp && isClickValid == true) {
                 // trigger clicked event if near draged
-                mClickNodeMap[rootNode](ClickEvent::eClicked, poss);
+                mClickNodeMap[rootNode](ClickEvent::eClicked, poss[0]);
             }
             // trigger other events
-            mClickNodeMap[rootNode](event, poss);
+            mClickNodeMap[rootNode](event, poss[0]);
         }
     }
 
@@ -435,15 +407,14 @@ namespace Peach3D
     void EventDispatcher::holdSchedulerCallback(float interval)
     {
         mCurHoldTime += interval;
-        std::vector<Vector2> eventPoss = {mLastPoint};
         // send move hold event if time enough
         if (mCurHoldTime >= mEventHoldTime) {
             if (mMovedNode) {
-                mClickNodeMap[mMovedNode](ClickEvent::eMoveHold, eventPoss);
+                mClickNodeMap[mMovedNode](ClickEvent::eMoveHold, mLastPoint);
             }
             else if (mDragNode) {
                 // only clicked focus node could get hold event
-                mClickNodeMap[mDragNode](ClickEvent::eDragHold, eventPoss);
+                mClickNodeMap[mDragNode](ClickEvent::eDragHold, mLastPoint);
             }
             mCurHoldTime = 0.0f;
             mHoldScheduler->pause();

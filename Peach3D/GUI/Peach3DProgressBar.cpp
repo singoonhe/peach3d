@@ -102,7 +102,6 @@ namespace Peach3D
             });
         }
         else {
-            mBarScheduler->reset();
             mBarScheduler->start();
         }
     }

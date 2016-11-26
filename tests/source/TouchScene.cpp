@@ -37,14 +37,14 @@ void PickSample::init(Widget* parentWidget)
     }
     
     // add touch listener
-    EventDispatcher::getSingletonPtr()->addClickEventListener(parentWidget, [&](ClickEvent event, const std::vector<Vector2>& poss) {
+    EventDispatcher::getSingletonPtr()->addClickEventListener(parentWidget, [&](ClickEvent event, const Vector2& pos) {
         switch (event) {
             case ClickEvent::eUp: {
                 if (mClickedNode) {
                     mClickedNode->setOBBEnabled(false);
                     mClickedNode = nullptr;
                 }
-                SceneNode* clNode = SceneManager::getSingleton().getWindowClickedNode(poss[0]);
+                SceneNode* clNode = SceneManager::getSingleton().getWindowClickedNode(pos);
                 if (clNode) {
                     clNode->setOBBEnabled(true);
                     mClickedNode = clNode;
@@ -75,7 +75,7 @@ void SNEventSample::init(Widget* parentWidget)
         cubeNodex->runAction(Repeat::createForever(RotateBy3D::create(Vector3(0.0f, DEGREE_TO_RADIANS(360.0f), 0.0f), 5.0f)));
         
         // register event to SceneNode
-        dispatcher->addClickEventListener(cubeNodex, [&, cubeNodex](ClickEvent event, const std::vector<Vector2>&){
+        dispatcher->addClickEventListener(cubeNodex, [&, cubeNodex](ClickEvent event, const Vector2&){
             if (event == ClickEvent::eClicked) {
                 if (mClickedNode) {
                     mClickedNode->setOBBEnabled(false);
