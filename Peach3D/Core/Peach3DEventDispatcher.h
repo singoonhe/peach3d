@@ -17,6 +17,7 @@
 namespace Peach3D
 {
     class Node;
+    class Widget;
     class IScene;
     // redefine mouse and touch event listener function, it's too long
     /* Touch listener, widget clicked touch will not be added in multi-touch event */
@@ -55,9 +56,9 @@ namespace Peach3D
         // click time scheduler callback
         void clickSchedulerCallback(float interval);
         // trigger node event
-        void triggerNodeEvent(ClickEvent event, uint clickId, const Vector2& pos);
+        void triggerNodeEvent(Widget* rootNode, ClickEvent event, uint clickId, const Vector2& pos);
         // trigger gesture event for root widget
-        void triggerGestureEvent(ClickEvent event, std::vector<uint> clickIds, const std::vector<Vector2>& poss);
+        void triggerGestureEvent(Widget* rootNode, ClickEvent event, std::vector<uint> clickIds, const std::vector<Vector2>& poss);
         
     private:
         std::map<Node*, ClickListenerFunction>  mClickNodeMap;      // node event map

@@ -93,6 +93,7 @@ namespace Peach3D
         sortEventNodes();
         // event maybe trigged after engine destroyed
         auto sceneMgr = SceneManager::getSingletonPtr();
+        Widget* rootNode = sceneMgr->getRootWidget();
         if (!sceneMgr) return;
         
         std::vector<uint>    rootNodeIds;
@@ -104,7 +105,7 @@ namespace Peach3D
                 mFocusClickId = clickIds[i];
             }
             if (mFocusClickId == clickIds[i]) {
-                triggerNodeEvent(event, clickIds[i], poss[i]);
+                triggerNodeEvent(rootNode, event, clickIds[i], poss[i]);
             }
             else {
                 rootNodeIds.push_back(clickIds[i]);
@@ -112,18 +113,18 @@ namespace Peach3D
             }
         }
         
-        // trigger multi-touch for root widget
-        if (rootNodePoss.size() > 0 && rootNodeIds.size() > 0) {
-            triggerGestureEvent(event, rootNodeIds, rootNodePoss);
+        // trigger multi-touch or root event for root widget
+        bool isRootRegisted = mClickNodeMap.find(rootNode) != mClickNodeMap.end();
+        if (isRootRegisted && rootNodePoss.size() > 0 && rootNodeIds.size() > 0) {
+            triggerGestureEvent(rootNode, event, rootNodeIds, rootNodePoss);
         }
     }
     
-    void EventDispatcher::triggerNodeEvent(ClickEvent event, uint clickId, const Vector2& pos)
+    void EventDispatcher::triggerNodeEvent(Widget* rootNode, ClickEvent event, uint clickId, const Vector2& pos)
     {
         mLastPoint = pos;
         
         // find all nodes which event pos inside
-        const Widget* rootNode = SceneManager::getSingleton().getRootWidget();
         std::vector<Node*> eventNodes;
         Node* swallowNode = nullptr;
         for (auto& node : mNodeList) {
@@ -270,9 +271,8 @@ namespace Peach3D
         }
     }
     
-    void EventDispatcher::triggerGestureEvent(ClickEvent event, std::vector<uint> clickIds, const std::vector<Vector2>& poss)
+    void EventDispatcher::triggerGestureEvent(Widget* rootNode, ClickEvent event, std::vector<uint> clickIds, const std::vector<Vector2>& poss)
     {
-        Widget* const rootNode = SceneManager::getSingletonPtr()->getRootWidget();
         static bool isClickValid = false;
         static Vector2 focusPos, gesturePos;
         static uint focusId = 0, gestureId = 0;
