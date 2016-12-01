@@ -255,14 +255,6 @@ void ProgressBarSample::init(Widget* parentWidget)
     // moving back
     vbar->runProgressAction(0.f, 5.f);
     
-    // create vertical slider bar
-    SliderBar *vsbar = SliderBar::create("bar_hor_bg.png", "bar_hor_bar.png", "slider_mark.png");
-    vsbar->setPosition(Vector2(screenSize.x * 0.5f, screenSize.y * 0.2f));
-    parentWidget->addChild(vsbar);
-    vsbar->setMarkOffset(8.f);
-    vsbar->setCurrentProgress(0.f);
-    vsbar->setMarkDownTexture(ResourceManager::getSingleton().addTexture("slider_mark_down.png"));
-    
     // button title auto scale
     Button* againButton = Button::create("common_normal.png");
     againButton->setTitleText("Again");
@@ -273,6 +265,22 @@ void ProgressBarSample::init(Widget* parentWidget)
     againButton->setClickedAction([vbar](const Vector2&){
         vbar->setCurrentProgress(1.f);
         vbar->runProgressAction(0.f, 5.f);
+    });
+    
+    // create vertical slider bar
+    SliderBar *vsbar = SliderBar::create("bar_hor_bg.png", "bar_hor_bar.png", "slider_mark.png");
+    vsbar->setPosition(Vector2(screenSize.x * 0.5f, screenSize.y * 0.2f));
+    parentWidget->addChild(vsbar);
+    vsbar->setMarkOffset(10.f);
+    vsbar->setCurrentProgress(0.f);
+    vsbar->setMarkDownTexture(ResourceManager::getSingleton().addTexture("slider_mark_down.png"));
+    // print current rate
+    Label* labelRate = Label::create("0.00", 20 * LayoutManager::getSingleton().getMinScale());
+    labelRate->setFillColor(Color3Green);
+    labelRate->setPosition(Vector2(screenSize.x * 0.5f, screenSize.y * 0.2f - 25.f));
+    parentWidget->addChild(labelRate);
+    vsbar->setProgressFunction([labelRate, vsbar](float rate){
+        labelRate->setText(Utils::formatString("%.2f", vsbar->getCurrentProgress()));
     });
 }
 

@@ -61,21 +61,19 @@ namespace Peach3D
                     if (mDownFrame.tex) {
                         mMarkSprite->setTextureFrame(mDownFrame);
                     }
-                    mDownPos = mMarkSprite->convertScreenToInside(pos);
+                    mDownPos = pos;
                 }, ClickEvent::eDown);
                 mMarkSprite->setClickedAction([&](const Vector2& pos) {
-                    auto curPos = mMarkSprite->convertScreenToInside(pos);
-                    if (curPos.x > 0 && curPos.y > 0) {
-                        auto offset = curPos - mDownPos;
-                        if (mType == ProgressBarType::eHorizontal) {
-                            float rangeRate = offset.x / (mBarSize.x - mMarOffset * 2);
-                            this->setCurrentProgress(rangeRate);
-                        }
-                        else if (mType == ProgressBarType::eVertical) {
-                            float rangeRate = offset.y / (mBarSize.y - mMarOffset * 2);
-                            this->setCurrentProgress(rangeRate);
-                        }
+                    auto offset = pos - mDownPos;
+                    if (mType == ProgressBarType::eHorizontal) {
+                        float rangeRate = mCurRate + offset.x / (mBarSize.x - mMarOffset * 2);
+                        this->setCurrentProgress(rangeRate);
                     }
+                    else if (mType == ProgressBarType::eVertical) {
+                        float rangeRate = mCurRate + offset.y / (mBarSize.y - mMarOffset * 2);
+                        this->setCurrentProgress(rangeRate);
+                    }
+                    mDownPos = pos;
                 }, ClickEvent::eDrag);
             }
             else {

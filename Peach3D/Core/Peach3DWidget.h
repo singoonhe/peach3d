@@ -115,7 +115,7 @@ namespace Peach3D
         /** Convert global position to widget.
          * @return Vector2(-1, -1) will return if not inside.
          */
-        Vector2 convertScreenToInside(const Vector2& point);
+        Vector2 convertScreenToNode(const Vector2& point);
         /** Set widget global ZOrder, called before render. User should call setLocalZOrder. */
         void setGlobalZOrder(uint order) { mGlobalZOrder = order; }
         /** Get widget global ZOrder, called before Event trigger. User should call setLocalZOrder. */

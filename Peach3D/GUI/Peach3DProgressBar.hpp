@@ -46,8 +46,10 @@ namespace Peach3D
         const Vector2& getBarOffset() { return mBarSprite ? mBarSprite->getPosition(): Vector2Zero; }
         
         /** Set progress rate, clamp in (0-1). */
-        virtual void setCurrentProgress(float rate) { CLAMP(rate, 0.f, 1.f); mCurRate = rate; mNeedUpdate = true; }
+        virtual void setCurrentProgress(float rate);
         float getCurrentProgress() { return mCurRate; }
+        /** Function will called when current rate changed. */
+        void setProgressFunction(const std::function<void(float rate)>& func) { mProgressFunc = func; }
         
         /** Run progress action. 
          @params dstRate Moving to target rate.
@@ -58,7 +60,7 @@ namespace Peach3D
         void runProgressAction(float dstRate, float lapTime, uint repeatCount = 0, bool moveFront = true);
         
     protected:
-        ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true), mBarScheduler(nullptr) {}
+        ProgressBar() : mBarSprite(nullptr), mType(ProgressBarType::eHorizontal), mCutMode(ProgressBarCutMode::eRightTop), mCurRate(1.f), mNeedUpdate(true), mBarScheduler(nullptr), mProgressFunc(nullptr) {}
         virtual ~ProgressBar() {}
         
         /** Delete scheduler if need. */
@@ -83,6 +85,8 @@ namespace Peach3D
         float   mLapTime;
         uint    mRepeatCount;
         bool    mMoveFront;
+        
+        std::function<void(float rate)> mProgressFunc;
     };
 }
 

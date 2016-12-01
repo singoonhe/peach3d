@@ -184,6 +184,10 @@ namespace Peach3D
             mCurHoldTime = 0.0f;
         }
         else if (event == ClickEvent::eUp) {
+            // also trigger current node event
+            if (firstNode && mFocusNode != firstNode) {
+                mClickNodeMap[firstNode](event, pos);
+            }
             // save last clicked node for double clicked event
             static Node* lastClickedNode = nullptr;
             if (mFocusNode) {
@@ -208,10 +212,6 @@ namespace Peach3D
                 }
                 mDragNode = nullptr;
                 mFocusNode = nullptr;
-            }
-            // also trigger current node event
-            if (firstNode && mFocusNode != firstNode) {
-                mClickNodeMap[firstNode](event, pos);
             }
             mFocusClickId = 0;
         }

@@ -166,13 +166,13 @@ namespace Peach3D
     {
         bool inZoom = Node::isPointInZone(point);
         if (inZoom) {
-            auto insideV = convertScreenToInside(point);
+            auto insideV = convertScreenToNode(point);
             return insideV.x >= 0 && insideV.y >= 0;
         }
         return inZoom;
     }
     
-    Vector2 Widget::convertScreenToInside(const Vector2& point)
+    Vector2 Widget::convertScreenToNode(const Vector2& point)
     {
         Vector2 insideV(-1, -1);
         Vector2 anchorSize(mAnchor.x * mWorldSize.x, mAnchor.y * mWorldSize.y);

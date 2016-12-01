@@ -106,6 +106,17 @@ namespace Peach3D
         }
     }
     
+    void ProgressBar::setCurrentProgress(float rate)
+    {
+        CLAMP(rate, 0.f, 1.f);
+        mCurRate = rate;
+        mNeedUpdate = true;
+        // call listener function
+        if (mProgressFunc) {
+            mProgressFunc(mCurRate);
+        }
+    }
+    
     void ProgressBar::updateProgress()
     {
         if (mNeedUpdate && mBarSprite) {
