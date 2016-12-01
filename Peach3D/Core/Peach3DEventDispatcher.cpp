@@ -209,6 +209,10 @@ namespace Peach3D
                 mDragNode = nullptr;
                 mFocusNode = nullptr;
             }
+            // also trigger current node event
+            if (firstNode && mFocusNode != firstNode) {
+                mClickNodeMap[firstNode](event, pos);
+            }
             mFocusClickId = 0;
         }
         else if (event == ClickEvent::eDrag) {
@@ -253,8 +257,13 @@ namespace Peach3D
             // just trigger scroll wheel event
             mClickNodeMap[swallowNode](event, pos);
         }
-        else if (event == ClickEvent::eCancel && mFocusNode) {
-            mClickNodeMap[mFocusNode](event, pos);
+        else if (event == ClickEvent::eCancel) {
+            if (mFocusNode) {
+                mClickNodeMap[mFocusNode](event, pos);
+            }
+            if (firstNode && mFocusNode != firstNode) {
+                mClickNodeMap[firstNode](event, pos);
+            }
             // release focus node
             mFocusNode = nullptr;
             mDragNode = nullptr;
