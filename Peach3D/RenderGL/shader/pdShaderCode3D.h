@@ -13,6 +13,7 @@
 
 namespace Peach3D
 {
+    /************************************** GL3 shders ***************************************/
     const char* gVerGL3ShaderCode3D = STRINGIFY(\
     #ifdef PD_ENABLE_LIGHT
         \n#define PD_LIGHT_DIRECTION    1.5

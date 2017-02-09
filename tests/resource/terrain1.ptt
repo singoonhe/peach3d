@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Terrain>
+    <!-- current piece orign position -->
+    <OrignPos>0, 0, 0</OrignPos>
+    <!-- vertex count per line -->
+    <HighCount>5</HighCount>
+    <!-- distance between two vertex -->
+    <PerPace>1</PerPace>
+    <!-- all vertex height -->
+    <HighData>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</HighData>
+    <!-- all vertex uv,  unsigned int -->
+    <HighUV>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</HighUV>
+    <Brushs>
+        <Brush>next_normal.png</Brush>
+    </Brushs>
+</Terrain>

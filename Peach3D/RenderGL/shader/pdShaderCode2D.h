@@ -11,6 +11,7 @@
 
 namespace Peach3D
 {
+    /************************************** widget shders ***************************************/
     // vertex shader
     const char* gCommonVertexFunc2D = "vec4 convertPosition2(vec4 viewRect, vec2 vertex, vec4 showRect, vec3 anRot) { \n"
     "   vec4 relRect = vec4(showRect.x/viewRect.z, showRect.y/viewRect.w, showRect.z/viewRect.z, showRect.w/viewRect.w); \n"
@@ -162,8 +163,8 @@ namespace Peach3D
             \n#endif
         \n#endif\n
     });
-
-
+    
+    /************************************** particle2d shders ***************************************/
     // 2D particle vertex shader
     const char* gVerParticleShaderCode2D = STRINGIFY(\
     #ifdef PD_LEVEL_GL3\n
