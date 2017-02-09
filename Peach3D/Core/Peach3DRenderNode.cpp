@@ -96,7 +96,7 @@ namespace Peach3D
             // set preset program first if needed
             auto lCount = (int)mRenderLights.size();
             auto sCount = (int)mShadowLights.size();
-            int bCount = mAnimateName.size() > 0 ? mRenderObj->getUsedBones().size() : 0;
+            int bCount = mAnimateName.size() > 0 ? int(mRenderObj->getUsedBones().size()) : 0;
             if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount) || (mRenderProgram->getShadowCount() != sCount)) {
                 mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount, sCount, bCount));
             }

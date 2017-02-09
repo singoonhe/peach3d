@@ -260,7 +260,7 @@ namespace Peach3D
         texture = IRender::getSingletonPtr()->createTexture(name);
         isTexDataValid = texture->setTextureData(data, (uint)size, TextureDataStatus::eEncoded);
 #else
-        TextureLoaderRes* res = parseImageData(data, size);
+        TextureLoaderRes* res = parseImageData(data, (uint)size);
         // create texture if parse data success
         if (res && res->size > 0) {
             texture = IRender::getSingletonPtr()->createTexture(name);

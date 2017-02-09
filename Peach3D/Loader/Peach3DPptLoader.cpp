@@ -163,11 +163,11 @@ namespace Peach3D
                 emitter.texFrame = pTexFrame;
             }
             else if (texData) {
-                uint texDataSize = strlen((const char *)texData);
+                uint texDataSize = (uint)strlen((const char *)texData);
                 // base64 decode first
                 unsigned char *buffer = nullptr, *deflated = nullptr;
                 do {
-                    ulong decodeSize = base64Decode(texData, texDataSize, &buffer);
+                    uint decodeSize = base64Decode(texData, texDataSize, &buffer);
                     IF_BREAK(!buffer, "Particle texture base64 decode error");
                     
                     // then unzip data
@@ -281,11 +281,11 @@ namespace Peach3D
                 emitter.texFrame = pTexFrame;
             }
             else if (texData) {
-                uint texDataSize = strlen((const char *)texData);
+                uint texDataSize = (uint)strlen((const char *)texData);
                 // base64 decode first
                 unsigned char *buffer = nullptr, *deflated = nullptr;
                 do {
-                    ulong decodeSize = base64Decode(texData, texDataSize, &buffer);
+                    uint decodeSize = base64Decode(texData, texDataSize, &buffer);
                     IF_BREAK(!buffer, "Particle texture base64 decode error");
                     
                     // then unzip data

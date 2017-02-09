@@ -126,7 +126,7 @@ namespace Peach3D
                 bufferSize *= BUFFER_INC_FACTOR;
             }
         }
-        outLength = bufferSize - d_stream.avail_out;
+        outLength = uint(bufferSize - d_stream.avail_out);
         err = inflateEnd(&d_stream);
         
         // check result

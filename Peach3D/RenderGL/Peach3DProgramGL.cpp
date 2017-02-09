@@ -1118,7 +1118,6 @@ namespace Peach3D
     void ProgramGL::updateParticle3DUniforms(const Rect& coord)
     {
         SceneManager* sgr = SceneManager::getSingletonPtr();
-        const Vector2& winSize = LayoutManager::getSingleton().getScreenSize();
         // update widget uniforms in list
         for (auto& uniform : mProgramUniformList) {
             switch (ShaderCode::getUniformNameType(uniform.name)) {
