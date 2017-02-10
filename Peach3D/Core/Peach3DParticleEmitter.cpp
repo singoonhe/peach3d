@@ -175,15 +175,9 @@ namespace Peach3D
         Emitter::update(lastFrameTime);
         
         if (mPointStride == 0) {
+            // calc memory size per vertex
             uint vType = VertexType::Point2|VertexType::Color|VertexType::PSprite;
-            const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
-            // calculate position stride
-            for (auto& info : infoList) {
-                uint typeValue = info.type, typeSize = info.size;
-                if (typeValue & vType) {
-                    mPointStride += typeSize;
-                }
-            }
+            mPointStride = IObject::getVertexStrideSize(vType);
         }
         // init max count memory
         if (!mData && maxCount > 0) {
@@ -317,15 +311,9 @@ namespace Peach3D
         Emitter::update(lastFrameTime);
         
         if (mPointStride == 0) {
+            // calc memory size per vertex
             uint vType = VertexType::Point3|VertexType::Color|VertexType::PSprite;
-            const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
-            // calculate position stride
-            for (auto& info : infoList) {
-                uint typeValue = info.type, typeSize = info.size;
-                if (typeValue & vType) {
-                    mPointStride += typeSize;
-                }
-            }
+            mPointStride = IObject::getVertexStrideSize(vType);
         }
         // init max count memory
         if (!mData && maxCount > 0) {

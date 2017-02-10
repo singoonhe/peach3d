@@ -46,6 +46,10 @@ namespace Peach3D
     class PEACH3D_DLL IObject
     {
     public:
+        /** Get memory size per vertex for VertexType. */
+        static int getVertexStrideSize(uint type);
+        
+    public:
         /**
          * @params name Object itself name.
          * @params meshName Mesh name, (object+mesh) is object unique name.

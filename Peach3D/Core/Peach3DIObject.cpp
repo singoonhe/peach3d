@@ -13,6 +13,20 @@
 
 namespace Peach3D
 {
+    int IObject::getVertexStrideSize(uint type)
+    {
+        int strideSize = 0;
+        const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
+        // calculate position stride
+        for (auto& info : infoList) {
+            uint typeValue = info.type, typeSize = info.size;
+            if (typeValue & type) {
+                strideSize += typeSize;
+            }
+        }
+        return strideSize;
+    }
+    
     IObject::IObject(const char* name, const char* meshName) : mObjectName(name), mVertexBufferSize(0), mIndexBufferSize(0), mVertexDataStride(0), mIndexDataType(IndexType::eUShort), mObjectProgram(nullptr)
     {
         if (meshName) {
@@ -29,16 +43,7 @@ namespace Peach3D
         // check vertex type, delete repeated type
         mVertexDataType = type;
         mVertexBufferSize = size;
-        mVertexDataStride = 0;
-        
-        const std::vector<VertexAttrInfo>& infoList = ResourceManager::getVertexAttrInfoList();
-        // calculate position stride
-        for (auto& info : infoList) {
-            uint typeValue = info.type, typeSize = info.size;
-            if (typeValue & mVertexDataType) {
-                mVertexDataStride += typeSize;
-            }
-        }
+        mVertexDataStride = IObject::getVertexStrideSize(mVertexDataType);
         
         // check data size
         if (mVertexDataStride >0 && (size % mVertexDataStride) > 0) {
