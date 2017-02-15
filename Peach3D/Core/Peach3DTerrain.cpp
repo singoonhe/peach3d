@@ -11,9 +11,10 @@
 
 namespace Peach3D
 {
-    Terrain::Terrain(int count, float pace, const float* data)
+    Terrain::Terrain(int width, int height, float pace, const float* data)
     {
-        mHighCount = count;
+        mWidthCount = width;
+        mHeightCount = height;
         mPerPace = pace;
         memcpy(mHighData, data, sizeof(data));
     }
@@ -26,10 +27,10 @@ namespace Peach3D
         }
     }
     
-    Terrain* Terrain::create(int count, float pace, const float* data, const uint* uvdata, const std::vector<TexturePtr>& texl)
+    Terrain* Terrain::create(int width, int height, float pace, const float* data, const uint* uvdata, const std::vector<TexturePtr>& texl)
     {
-        if (count > 0 && pace > 0 && data && uvdata) {
-            Terrain* newT = new Terrain(count, pace, data);
+        if (width > 0 && height > 0 && pace > 0 && data && uvdata) {
+            Terrain* newT = new Terrain(width, height, pace, data);
             newT->buildTerrain(uvdata, texl);
             return newT;
         }
@@ -40,12 +41,31 @@ namespace Peach3D
     {
         mTerrainObj = IRender::getSingleton().createObject(("pd_Terrain_"+mName).c_str());
         uint vType = VertexType::Point3|VertexType::Normal|VertexType::UV;
-        float* vertexData = (float*)malloc(mHighCount * mHighCount * IObject::getVertexStrideSize(vType));
+        auto strideSize = IObject::getVertexStrideSize(vType);
+        auto strideFloatSize = strideSize / 4;
+        float* vertexData = (float*)malloc(mWidthCount * mHeightCount * strideSize);
+        for (auto i=0; i<mHeightCount; ++i) {
+            for (auto j=0; j<mWidthCount; ++j) {
+                auto curIndex = i * mWidthCount + j;
+                uint curStart = curIndex * strideFloatSize;
+                // point
+                vertexData[curStart] = mPerPace * i;
+                vertexData[curStart + 1] = mHighData[curIndex];
+                vertexData[curStart + 2] = -mPerPace * j;
+                // normal
+                vertexData[curStart + 3] = 0.f;
+                vertexData[curStart + 4] = 0.f;
+                vertexData[curStart + 5] = 0.f;
+                // uv
+                vertexData[curStart + 6] = j * 1.0 / mWidthCount;
+                vertexData[curStart + 7] = i * 1.0 / mHeightCount;
+            }
+        }
         // fill vertex data
         mTerrainObj->setVertexBuffer(vertexData, sizeof(vertexData), vType);
         free(vertexData);
         
-        uint indexCount = (mHighCount - 1) * (mHighCount - 1) * 6;
+        uint indexCount = (mWidthCount - 1) * (mHeightCount - 1) * 6;
         IndexType inxType = IndexType::eUShort;
         auto inxDataSize = indexCount * sizeof(ushort);
         if (indexCount > 65535) {
@@ -53,6 +73,75 @@ namespace Peach3D
             inxDataSize = indexCount * sizeof(uint);
         }
         void* inxData = malloc(inxDataSize);
+        for (auto i=0; i<(mHeightCount-1); ++i) {
+            for (auto j=0; j<(mWidthCount-1); ++j) {
+                uint aboveStart = ((i + 1) * mWidthCount + j), curStart = i * mWidthCount + j;
+                uint aboveNext = aboveStart + 1, curNext = curStart + 1;
+                uint inxStart = curStart * 6;
+                // fill two trangles(0,1,3, 3,1,2)
+                if (inxType == IndexType::eUShort) {
+                    ushort* fillData = (ushort*)inxData;
+                    fillData[inxStart] = curStart;
+                    fillData[inxStart + 1] = aboveStart;
+                    fillData[inxStart + 2] = curNext;
+                    fillData[inxStart + 3] = curNext;
+                    fillData[inxStart + 4] = aboveStart;
+                    fillData[inxStart + 5] = aboveNext;
+                }
+                else {
+                    uint* fillData = (uint*)inxData;
+                    fillData[inxStart] = curStart;
+                    fillData[inxStart + 1] = aboveStart;
+                    fillData[inxStart + 2] = curNext;
+                    fillData[inxStart + 3] = curNext;
+                    fillData[inxStart + 4] = aboveStart;
+                    fillData[inxStart + 5] = aboveNext;
+                }
+            }
+        }
+        for (auto i=0; i<indexCount; i+=3) {
+            Vector3 v1, v2;
+            if (inxType == IndexType::eUShort) {
+                ushort* fillData = (ushort*)inxData;
+                auto Index0 = fillData[i] * strideFloatSize;
+                auto Index1 = fillData[i + 1] * strideFloatSize;
+                auto Index2 = fillData[i + 2] * strideFloatSize;
+                Vector3 v0 = Vector3(vertexData[Index0], vertexData[Index0+1], vertexData[Index0+2]);
+                v1 = Vector3(vertexData[Index1], vertexData[Index1+1], vertexData[Index1+2]) - v0;
+                v2 = Vector3(vertexData[Index2], vertexData[Index2+1], vertexData[Index2+2]) - v0;
+                // calc face normal
+                Vector3 cn = v1.cross(v2);
+                cn.normalize();
+                vertexData[Index0] += cn.x; vertexData[Index0+1] += cn.y; vertexData[Index0+2] += cn.z;
+                vertexData[Index1] += cn.x; vertexData[Index1+1] += cn.y; vertexData[Index1+2] += cn.z;
+                vertexData[Index2] += cn.x; vertexData[Index2+1] += cn.y; vertexData[Index2+2] += cn.z;
+            }
+            else {
+                uint* fillData = (uint*)inxData;
+                auto Index0 = fillData[i] * strideFloatSize;
+                auto Index1 = fillData[i + 1] * strideFloatSize;
+                auto Index2 = fillData[i + 2] * strideFloatSize;
+                Vector3 v0 = Vector3(vertexData[Index0], vertexData[Index0+1], vertexData[Index0+2]);
+                v1 = Vector3(vertexData[Index1], vertexData[Index1+1], vertexData[Index1+2]) - v0;
+                v2 = Vector3(vertexData[Index2], vertexData[Index2+1], vertexData[Index2+2]) - v0;
+                // calc face normal
+                Vector3 cn = v1.cross(v2);
+                cn.normalize();
+                vertexData[Index0] += cn.x; vertexData[Index0+1] += cn.y; vertexData[Index0+2] += cn.z;
+                vertexData[Index1] += cn.x; vertexData[Index1+1] += cn.y; vertexData[Index1+2] += cn.z;
+                vertexData[Index2] += cn.x; vertexData[Index2+1] += cn.y; vertexData[Index2+2] += cn.z;
+            }
+        }
+        // normal normalized
+        for (auto i=0; i<mHeightCount; ++i) {
+            for (auto j=0; j<mWidthCount; ++j) {
+                auto curIndex = i * mWidthCount + j;
+                uint curStart = curIndex * strideFloatSize;
+                Vector3 on(vertexData[curStart], vertexData[curStart+1], vertexData[curStart+2]);
+                on.normalize();
+                vertexData[curStart] = on.x; vertexData[curStart+1] = on.y; vertexData[curStart+2] = on.z;
+            }
+        }
         // fill index data
         mTerrainObj->setIndexBuffer(inxData, inxDataSize, inxType);
         free(inxData);
@@ -60,6 +149,30 @@ namespace Peach3D
     
     float Terrain::getCurrentHeight(const Vector3& pos)
     {
-        return 0.f;
+        Vector3 maxR(mPerPace * (mWidthCount - 1), 0, mPerPace * (mHeightCount - 1));
+        Vector3 offset = pos - mTerrainPos;
+        if (offset.x >= 0 && offset.x <= maxR.x && offset.z >= 0 && offset.z <= maxR.z ) {
+            float widthIndex = offset.x / mPerPace, heightIndex = offset.z / mPerPace;
+            int widthInt = (int)widthIndex, heightInt = (int)heightIndex;
+            float widthDec = widthIndex - widthInt, heightDec = heightIndex - heightInt;
+            // calc 4 corners high data
+            uint aboveStart = ((heightInt + 1) * mWidthCount + widthInt), curStart = heightInt * mWidthCount + widthInt;
+            uint aboveNext = aboveStart + 1, curNext = curStart + 1;
+            bool isOverflow = (heightInt >= mHeightCount) || (widthInt >= mWidthCount);
+            float curStartHigh = mHighData[curStart];
+            float aboveNextHigh = isOverflow ? curStartHigh : mHighData[aboveNext];
+            // linear calc current high
+            if (widthDec > heightDec) {
+                float curNextHigh = isOverflow ? curStartHigh : mHighData[curNext];
+                return curNextHigh + (aboveNextHigh - curNextHigh) * heightDec;
+            }
+            else {
+                float aboveStartHigh = isOverflow ? curStartHigh : mHighData[aboveStart];
+                return aboveStartHigh + (aboveNextHigh - aboveStartHigh) * widthDec;
+            }
+        }
+        else {
+            return 0.f;
+        }
     }
 }

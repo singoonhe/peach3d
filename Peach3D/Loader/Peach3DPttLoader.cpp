@@ -38,25 +38,26 @@ namespace Peach3D
             sscanf(posEle->GetText(), "%f,%f,%f", &originPos.x, &originPos.y, &originPos.z);
             // vertex count per line
             auto countEle = rootEle->FirstChildElement("OrignPos");
-            int highCount = atoi(countEle->GetText());
-            int squareCount = highCount * highCount;
+            int highCount = 0, widthCount = 0;
+            sscanf(countEle->GetText(), "%f,%f", &widthCount, &highCount);
+            int totalCount = widthCount * highCount;
             // distance between two vertex
             auto paceEle = rootEle->FirstChildElement("PerPace");
             float perPace = atof(paceEle->GetText());
             // height data
-            highData = new float[squareCount];
+            highData = new float[totalCount];
             auto dataEle = rootEle->FirstChildElement("HighData");
             auto splitData = Utils::split(dataEle->GetText(), ',');
-            Peach3DAssert(splitData.size()>=squareCount, "high data size not enough");
-            for (auto i=0; i<squareCount; ++i) {
+            Peach3DAssert(splitData.size()>=totalCount, "high data size not enough");
+            for (auto i=0; i<totalCount; ++i) {
                 highData[i] = atof(splitData[i].c_str());
             }
             // uv data
-            uvData = new uint[squareCount];
+            uvData = new uint[totalCount];
             auto uvEle = rootEle->FirstChildElement("HighUV");
             auto uvsData = Utils::split(uvEle->GetText(), ',');
-            Peach3DAssert(uvsData.size()>=squareCount, "uv data size not enough");
-            for (auto i=0; i<squareCount; ++i) {
+            Peach3DAssert(uvsData.size()>=totalCount, "uv data size not enough");
+            for (auto i=0; i<totalCount; ++i) {
                 uvData[i] = (uint)atoll(uvsData[i].c_str());
             }
             // used textures
@@ -69,7 +70,7 @@ namespace Peach3D
             }
             
             // create terrain
-            loadTer = Terrain::create(highCount, perPace, highData, uvData, texl);
+            loadTer = Terrain::create(highCount, highCount, perPace, highData, uvData, texl);
             if (loadTer) {
                 loadTer->setPosition(originPos);
             }

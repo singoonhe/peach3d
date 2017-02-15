@@ -301,6 +301,10 @@ namespace Peach3D
         
         // reupdate global uniforms for GL3, befor rendering may modify camera
         IRender::getSingleton().prepareForObjectRender();
+        // draw all terrains
+        for (auto trr : mTerrainList) {
+            trr->getObject()->render(trr);
+        }
         // draw all scene node
         RenderNode* lastRenderNode = nullptr;
         std::vector<RenderNode*> curNodeList;

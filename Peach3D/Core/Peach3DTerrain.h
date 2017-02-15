@@ -24,7 +24,7 @@ namespace Peach3D
          * @params uvdata Vertex UV data buffer.
          * @params texl Texture list of terrain.
          */
-        static Terrain* create(int count, float pace, const float* data, const uint* uvdata, const std::vector<TexturePtr>& texl);
+        static Terrain* create(int width, int height, float pace, const float* data, const uint* uvdata, const std::vector<TexturePtr>& texl);
         //! query current height info for position
         float getCurrentHeight(const Vector3& pos);
         
@@ -35,13 +35,14 @@ namespace Peach3D
         ObjectPtr getObject() { return mTerrainObj; }
         
     protected:
-        Terrain(int count, float pace, const float* data);
+        Terrain(int width, int height, float pace, const float* data);
         ~Terrain();
         //! create terrain object(vertex, normal, uv)
         void buildTerrain(const uint* uvdata, const std::vector<TexturePtr>& texl);
         
     private:
-        int         mHighCount;     // high data cont per line
+        int         mWidthCount;    // width vertex count
+        int         mHeightCount;   // height vertex count
         float       mPerPace;       // distance between two vertex
         float*      mHighData;      // saved data for query current height
         

@@ -43,6 +43,7 @@ namespace Peach3D
     class RenderNode;
     class Particle2D;
     class Particle3D;
+    class Terrain;
     class PEACH3D_DLL IObject
     {
     public:
@@ -106,6 +107,10 @@ namespace Peach3D
          * @brief Render Particle3D, called by SceneManager.
          */
         virtual void render(Particle3D* particle) = 0;
+        /**
+         * @brief Render Terrain, called by SceneManager.
+         */
+        virtual void render(Terrain* rtt) = 0;
         
         const std::string& getName() { return mObjectName; }
         const std::string& getUniqueName() { return mUniqueName; }

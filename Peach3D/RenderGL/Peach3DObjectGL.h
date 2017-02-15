@@ -51,6 +51,10 @@ namespace Peach3D
          * @brief Render Particle3D, called by SceneManager.
          */
         virtual void render(Particle3D* particle);
+        /**
+         * @brief Render Terrain, called by SceneManager.
+         */
+        virtual void render(Terrain* rtt);
         
     protected:
         /**

@@ -17,6 +17,7 @@
 #include "Peach3DSingleton.h"
 #include "Peach3DScheduler.h"
 #include "Peach3DLight.h"
+#include "Peach3DTerrain.h"
 
 namespace Peach3D
 {
@@ -47,6 +48,9 @@ namespace Peach3D
         Camera* getActiveCamera() { return mActiveCamera; }
         SceneNode* getRootSceneNode() { return mRootSceneNode; }
         Widget* getRootWidget() { return mRootWidget; }
+        
+        /** Add Terrain to rendering list. */
+        void addTerrain(Terrain* trr) { if(trr && trr->getObject()) mTerrainList.push_back(trr); }
         
         void setLightMax(int count) { if (count > 0) mLightMax = count; }
         int getLightMax() { return mLightMax; }
@@ -122,6 +126,7 @@ namespace Peach3D
         std::map<std::string, LightPtr>     mLightList;         // scene light list
         std::vector<Node*>                  mRenderWidgetList;  // cache widget(may particle2d) list
         std::vector<SceneNode*>             mPickSceneNodeList; // cache picking scene node list
+        std::vector<Terrain*>               mTerrainList;       // all rendering Terrains
     };
 }
 

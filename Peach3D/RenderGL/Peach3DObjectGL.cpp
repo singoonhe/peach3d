@@ -444,6 +444,48 @@ namespace Peach3D
         } while(0);
     }
     
+    void ObjectGL::render(Terrain* rtt)
+    {
+        /*
+        do {
+            // use particle3d program
+            IF_BREAK(!mParticle3DProgram || !mParticle3DProgram->useAsRenderProgram(), nullptr);
+            
+            // must use VAO on MAC OpenGL core version
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mParticle3DProgram : nullptr);
+                // bind vertex buffer, emitter data need update
+                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+            }
+            else {
+                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+                bindObjectVertexAttrib();
+            }
+            
+            for (auto& emit : emitters) {
+                // active texture and update program uniforms
+                auto& texFrame = emit.texFrame;
+                if (texFrame.tex) {
+                    GLuint glTextureId = static_cast<TextureGL*>(texFrame.tex.get())->getGLTextureId();
+                    static_cast<ProgramGL*>(mParticle3DProgram.get())->activeTextures(glTextureId, 0);
+                    // support texture plist, size must be power of 2
+                    mParticle3DProgram->updateParticle3DUniforms(texFrame.rc);
+                    // bind vertex and draw points
+                    auto bufferSize = emit.getRenderBufferSize();
+                    glBufferData(GL_ARRAY_BUFFER, bufferSize, emit.getRenderBuffer(), GL_DYNAMIC_DRAW);
+                    glDrawArrays(GL_POINTS, 0, bufferSize / mVertexDataStride);
+                    PD_ADD_DRAWCALL(1);
+                }
+            }
+            // unbind vertex and textures
+            if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
+                glBindVertexArray(0);
+            }
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        } while(0); */
+    }
+    
     void ObjectGL::cleanObjectVertexBuffer()
     {
         if (mVertexBuffer) {

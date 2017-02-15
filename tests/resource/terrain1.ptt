@@ -2,8 +2,8 @@
 <Terrain>
     <!-- current piece orign position -->
     <OrignPos>0, 0, 0</OrignPos>
-    <!-- vertex count per line -->
-    <HighCount>5</HighCount>
+    <!-- vertex width count and height count -->
+    <HighCount>5, 5</HighCount>
     <!-- distance between two vertex, float -->
     <PerPace>1</PerPace>
     <!-- all vertex height -->
