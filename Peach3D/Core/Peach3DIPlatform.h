@@ -195,7 +195,9 @@ namespace Peach3D
         
         std::list<Scheduler*>       mSchedulerList;     // all scheduler
         std::vector<Scheduler*>     mAddSchedulerList;  // need added scheduler in next loop
-        PlatformCreationParams      mCreationParams;// peach3d init params
+        PlatformCreationParams      mCreationParams;    // peach3d init params
+    public:
+        static std::vector<std::string> LanguageTypeNames;  // convert language type to string
     };
     
     // get render feature level

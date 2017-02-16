@@ -26,7 +26,7 @@ void DeviceSample::init(Widget* parentWidget)
     auto platform = IPlatform::getSingletonPtr();
     std::vector<std::string> textList;
     textList.push_back(Utils::formatString("Engine version : %s", PEACH3D_SDK_VERSION));
-    textList.push_back(Utils::formatString("Local langague : %d", platform->getLocalLanguage()));
+    textList.push_back(Utils::formatString("Local langague : %s", IPlatform::LanguageTypeNames[platform->getLocalLanguage()].c_str()));
     textList.push_back(Utils::formatString("Device name : %s", platform->getDeviceName().c_str()));
     textList.push_back(Utils::formatString("OS version : %s", platform->getOSVersionString().c_str()));
     textList.push_back(Utils::formatString("Video card : %s", IRender::getSingleton().getVideoCard().c_str()));

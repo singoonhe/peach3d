@@ -18,6 +18,7 @@ Core/Peach3DIPlatform.cpp \
 Core/Peach3DIRender.cpp \
 Core/Peach3DIScene.cpp \
 Core/Peach3DSkeleton.cpp \
+Core/Peach3DTerrain.cpp \
 Core/Peach3DITexture.cpp \
 Core/Peach3DLayoutManager.cpp \
 Core/Peach3DLight.cpp \
@@ -26,13 +27,8 @@ Core/Peach3DMatrix4.cpp \
 Core/Peach3DMesh.cpp \
 Core/Peach3DNode.cpp \
 Core/Peach3DOBB.cpp \
-Core/Peach3DObjLoader.cpp \
 Core/Peach3DParticle.cpp \
 Core/Peach3DParticleEmitter.cpp \
-Core/Peach3DPmbLoader.cpp \
-Core/Peach3DPmtLoader.cpp \
-Core/Peach3DPptLoader.cpp \
-Core/Peach3DPstLoader.cpp \
 Core/Peach3DQuaternion.cpp \
 Core/Peach3DRenderNode.cpp \
 Core/Peach3DResourceManager.cpp \
@@ -42,6 +38,12 @@ Core/Peach3DShaderCode.cpp \
 Core/Peach3DUtils.cpp \
 Core/Peach3DVector.cpp \
 Core/Peach3DWidget.cpp \
+Loader/Peach3DObjLoader.cpp \
+Loader/Peach3DPmbLoader.cpp \
+Loader/Peach3DPmtLoader.cpp \
+Loader/Peach3DPptLoader.cpp \
+Loader/Peach3DPstLoader.cpp \
+Loader/Peach3DPttLoader.cpp \
 RenderGL/Peach3DCommonGL.cpp \
 RenderGL/Peach3DObjectGL.cpp \
 RenderGL/Peach3DProgramGL.cpp \
@@ -61,6 +63,7 @@ Support/tinyxml2/tinyxml2.cpp
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/Core \
+                    $(LOCAL_PATH)/Loader \
                     $(LOCAL_PATH)/GUI \
                     $(LOCAL_PATH)/Platform \
                     $(LOCAL_PATH)/Support \
@@ -68,6 +71,7 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/Core \
+                    $(LOCAL_PATH)/Loader \
                     $(LOCAL_PATH)/GUI \
                     $(LOCAL_PATH)/Platform \
                     $(LOCAL_PATH)/Support \

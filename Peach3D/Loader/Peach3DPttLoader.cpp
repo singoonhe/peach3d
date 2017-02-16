@@ -39,7 +39,7 @@ namespace Peach3D
             // vertex count per line
             auto countEle = rootEle->FirstChildElement("OrignPos");
             int highCount = 0, widthCount = 0;
-            sscanf(countEle->GetText(), "%f,%f", &widthCount, &highCount);
+            sscanf(countEle->GetText(), "%d,%d", &widthCount, &highCount);
             int totalCount = widthCount * highCount;
             // distance between two vertex
             auto paceEle = rootEle->FirstChildElement("PerPace");

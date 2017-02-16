@@ -97,7 +97,7 @@ void BaseScene::changeToSample(int index)
         // create new sample and init
         auto sample = mSampleList[index]();
         sample->init(mSampleWidget);
-        mTitleLabel->setText(sample->getSampleTitle());
+        mTitleLabel->setText(Utils::formatString("%d. ", index + 1) + sample->getSampleTitle());
         bool isDesc = sample->getSampleDesc().size() > 0;
         mDescLabel->setVisible(isDesc);
         if (isDesc) {
