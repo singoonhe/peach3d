@@ -225,7 +225,7 @@ namespace Peach3D
         if (mIsRenderHashDirty) {
             // set default program, then Widget::updateRenderingState will not change it
             if (!mRenderProgram) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(false, true));
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 0}, {PROGRAM_FEATURE_UV, 1}});
             }
             // sprite will not render if texture is null
             Widget::updateRenderingState(mRenderFrame.tex ? mRenderFrame.tex->getName() : "");

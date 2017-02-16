@@ -65,29 +65,28 @@ namespace Peach3D
         uint            offset; // current uniform offset, uniforms may not closely packed
     };
     
-    // preset program params
-    struct PEACH3D_DLL PresetProgramFeatures
-    {
-        PresetProgramFeatures(bool _point3, bool _texUV=false, int _lCount=0, int _sCount=0, int _bCount=0, bool _isParticle=false) :isPoint3(_point3), isTexUV(_texUV), lightsCount(_lCount), shadowCount(_sCount), boneCount(_bCount), isParticle(_isParticle) {}
-        bool    isPoint3;       // 3D node or widget
-        bool    isTexUV;        // is contain texture for UV
-        bool    isParticle;     // is used for particle
-        int     lightsCount;    // lights count for 3D node
-        int     shadowCount;    // shadow texture count for 3D node
-        int     boneCount;      // bone count for 3d node
-    };
+    /* defined all feature name for program */
+#define PROGRAM_FEATURE_POINT3      "Point3"    // 3D node or widget, must be included
+#define PROGRAM_FEATURE_UV          "UV"        // contain texture for UV
+#define PROGRAM_FEATURE_PARTICLE    "Particle"  // used for particle
+#define PROGRAM_FEATURE_LIGHT       "Light"     // lights count for 3D node
+#define PROGRAM_FEATURE_SHADOW      "Shadow"    // shadow texture count for 3D node
+#define PROGRAM_FEATURE_BONE        "Bone"      // bone count for 3d node
+#define PROGRAM_FEATURE_TERRAIN     "Terrain"   // terrain texture count
+    // use list contain features
+    typedef std::map<std::string, int> ProgramFeatureMap;
     
     class ShaderCode
     {
     public:
         /* Return shader code by name */
-        const std::string& getShaderCode(bool isVertex, const PresetProgramFeatures& feature);
+        const std::string& getShaderCode(bool isVertex, const ProgramFeatureMap& feature);
         /* Return shader uniforms by name */
-        const std::vector<ProgramUniform>& getProgramUniforms(const PresetProgramFeatures& feature);
+        const std::vector<ProgramUniform>& getProgramUniforms(const ProgramFeatureMap& feature);
         /* Calc cache name from program feature.*/
-        std::string getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature);
+        std::string getNameOfProgramFeature(bool isVertex, const ProgramFeatureMap& feature);
         /* Calc vertex type from program feature.*/
-        uint getVerTypeOfProgramFeature(const PresetProgramFeatures& feature);
+        uint getVerTypeOfProgramFeature(const ProgramFeatureMap& feature);
         
         /* Return shader uniforms by name */
         static uint getUniformFloatBits(UniformDataType type);

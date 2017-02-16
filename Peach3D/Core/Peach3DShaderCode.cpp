@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 singoon.he. All rights reserved.
 //
 
+#include <sstream>
 #include "Peach3DShaderCode.h"
 #include "Peach3DUtils.h"
 #include "Peach3DIObject.h"
@@ -68,32 +69,68 @@ namespace Peach3D
         return mUniformsNamesMap[name];
     }
         
-    std::string ShaderCode::getNameOfProgramFeature(bool isVertex, const PresetProgramFeatures& feature)
+    std::string ShaderCode::getNameOfProgramFeature(bool isVertex, const ProgramFeatureMap& feature)
     {
-        // is vertex shader | is point3 | texture UV | light count | shadow count | is particle
-        return Utils::formatString("V%d|PT%d|TUV%d|LC%d|SC%d|SK%d|PC%d", isVertex, feature.isPoint3, feature.isTexUV, feature.lightsCount, feature.shadowCount, feature.boneCount, feature.isParticle);
+        // is vertex shader
+        std::ostringstream retString;
+        retString<<"V"<<(isVertex ? "1" : "0");
+        // is point3
+        retString<<"|PT";
+        auto findIter = feature.find(PROGRAM_FEATURE_POINT3);
+        retString<<((findIter!=feature.end() && findIter->second > 0) ? "1" : "0");
+        // texture UV
+        findIter = feature.find(PROGRAM_FEATURE_UV);
+        if ((findIter!=feature.end() && findIter->second > 0)) {
+            retString<<"|TUV1";
+        }
+        // light count
+        findIter = feature.find(PROGRAM_FEATURE_LIGHT);
+        if ((findIter!=feature.end() && findIter->second > 0)) {
+            retString<<"|LC"<<findIter->second;
+        }
+        // shadow count
+        findIter = feature.find(PROGRAM_FEATURE_SHADOW);
+        if ((findIter!=feature.end() && findIter->second > 0)) {
+            retString<<"|SC"<<findIter->second;
+        }
+        // bones count
+        findIter = feature.find(PROGRAM_FEATURE_BONE);
+        if ((findIter!=feature.end() && findIter->second > 0)) {
+            retString<<"|SK"<<findIter->second;
+        }
+        // is particle
+        findIter = feature.find(PROGRAM_FEATURE_PARTICLE);
+        if ((findIter!=feature.end() && findIter->second > 0)) {
+            retString<<"|PC1";
+        }
+        return retString.str();
     }
     
-    uint ShaderCode::getVerTypeOfProgramFeature(const PresetProgramFeatures& feature)
+    uint ShaderCode::getVerTypeOfProgramFeature(const ProgramFeatureMap& feature)
     {
+        auto findIter = feature.find(PROGRAM_FEATURE_POINT3);
         uint verType = 0;
-        if (feature.isPoint3) {
+        if (findIter != feature.end() && findIter->second > 0) {
             verType = VertexType::Point3;
         }
         else {
             verType = VertexType::Point2;
         }
-        if (feature.isTexUV) {
+        findIter = feature.find(PROGRAM_FEATURE_UV);
+        if (findIter != feature.end() && findIter->second > 0) {
             verType = verType | VertexType::UV;
         }
-        if (feature.lightsCount > 0) {
+        findIter = feature.find(PROGRAM_FEATURE_LIGHT);
+        if (findIter != feature.end() && findIter->second > 0) {
             verType = verType | VertexType::Normal;
         }
-        if (feature.boneCount > 0) {
+        findIter = feature.find(PROGRAM_FEATURE_BONE);
+        if (findIter != feature.end() && findIter->second > 0) {
             verType = verType | VertexType::BWidget;
             verType = verType | VertexType::BIndex;
         }
-        if (feature.isParticle) {
+        findIter = feature.find(PROGRAM_FEATURE_PARTICLE);
+        if (findIter != feature.end() && findIter->second > 0) {
             verType = verType | VertexType::PSprite;
         }
         return verType;

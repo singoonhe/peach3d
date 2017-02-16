@@ -636,7 +636,7 @@ namespace Peach3D
         }
     }
     
-    ProgramPtr ResourceManager::getPresetProgram(const PresetProgramFeatures& feature)
+    ProgramPtr ResourceManager::getPresetProgram(const ProgramFeatureMap& feature)
     {
         auto verData = mPresetShader->getShaderCode(true, feature);
         auto fragData = mPresetShader->getShaderCode(false, feature);
@@ -659,14 +659,19 @@ namespace Peach3D
                 // set object uniform
                 program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(feature));
                 // enable light and generate lights uniforms for GL3
-                program->setLightsCount(feature.lightsCount);
-                if (feature.lightsCount > 0) {
+                auto findIter = feature.find(PROGRAM_FEATURE_LIGHT);
+                auto lightsCount = (findIter!=feature.end()) ? findIter->second : 0;
+                program->setLightsCount(lightsCount);
+                if (lightsCount) {
                     // generate shaodw uniforms for GL3 if have lights
-                    program->setShadowCount(feature.shadowCount);
+                    findIter = feature.find(PROGRAM_FEATURE_SHADOW);
+                    program->setShadowCount((findIter!=feature.end()) ? findIter->second : 0);
                 }
-                if (feature.boneCount > 0) {
+                findIter = feature.find(PROGRAM_FEATURE_BONE);
+                auto bonesCount = (findIter!=feature.end()) ? findIter->second : 0;
+                if (bonesCount > 0) {
                     // generate bone uniforms for GL3
-                    program->setBoneCount(feature.boneCount);
+                    program->setBoneCount(bonesCount);
                 }
                 
                 if (program->isProgramValid()) {

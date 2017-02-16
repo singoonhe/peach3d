@@ -123,7 +123,7 @@ namespace Peach3D
         /** Create program from memory, params see @addProgram. */
         ProgramPtr createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool isCompiled=false);
         /** Get preset object program in Peach3D system, program will create if not find. */
-        ProgramPtr getPresetProgram(const PresetProgramFeatures& feature);
+        ProgramPtr getPresetProgram(const ProgramFeatureMap& feature);
         void deleteProgram(const ProgramPtr& program);
 
         //! get file data and length, nullptr will return if file not exist

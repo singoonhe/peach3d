@@ -98,7 +98,7 @@ namespace Peach3D
             auto sCount = (int)mShadowLights.size();
             int bCount = mAnimateName.size() > 0 ? int(mRenderObj->getUsedBones().size()) : 0;
             if (!mRenderProgram || (mRenderProgram->getLightsCount() != lCount) || (mRenderProgram->getShadowCount() != sCount)) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, mMaterial.getTextureCount() > 0, lCount, sCount, bCount));
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 1}, {PROGRAM_FEATURE_UV, mMaterial.getTextureCount()}, {PROGRAM_FEATURE_LIGHT, lCount}, {PROGRAM_FEATURE_SHADOW, sCount}, {PROGRAM_FEATURE_BONE, bCount}});
             }
             // calc render unique hash code(Name:Program:DrawMode)
             std::string renderState = Utils::formatString("N:%sP:%uDM:%d", mRenderObj->getUniqueName().c_str(), mRenderProgram->getProgramId(), (int)mNodeState.mode);

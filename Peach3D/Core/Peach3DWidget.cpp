@@ -205,7 +205,7 @@ namespace Peach3D
         if (mIsRenderHashDirty && mNeedRender) {
             // set default program if user or subclass not set
             if (!mRenderProgram) {
-                mRenderProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(false, false));
+                mRenderProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 0}});
             }
             
             std::string states = extState + Utils::formatString("Program:%u", mRenderProgram->getProgramId());

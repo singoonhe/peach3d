@@ -47,15 +47,15 @@ namespace Peach3D
     {
         // create base program if not exist for OBB and shadow
         if (!mBaseProgram) {
-            mBaseProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, false));
+            mBaseProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 1}, {PROGRAM_FEATURE_UV, 0}});
         }
         // create 2D particle program, point2|texture|particle
         if (!mParticle2DProgram) {
-            mParticle2DProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(false, true, 0, 0, 0, true));
+            mParticle2DProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 0}, {PROGRAM_FEATURE_UV, 1}, {PROGRAM_FEATURE_PARTICLE, 1}});
         }
         // create 3D particle program, point3|texture|particle
         if (!mParticle3DProgram) {
-            mParticle3DProgram = ResourceManager::getSingleton().getPresetProgram(PresetProgramFeatures(true, true, 0, 0, 0, true));
+            mParticle3DProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 1}, {PROGRAM_FEATURE_UV, 1}, {PROGRAM_FEATURE_PARTICLE, 1}});
         }
     }
     
