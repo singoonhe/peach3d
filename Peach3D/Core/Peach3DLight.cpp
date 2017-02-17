@@ -109,6 +109,7 @@ namespace Peach3D
     
     bool Light::isIlluminePos(const Vector3& pos, const std::vector<std::string>& ls)
     {
+        if (!mIsEnabled) return false;
         // all node need direction light
         if (mType == LightType::eDirection) {
             return true;

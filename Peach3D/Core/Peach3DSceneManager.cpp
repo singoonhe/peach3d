@@ -304,13 +304,13 @@ namespace Peach3D
     
     void SceneManager::renderOncePass(Render3DPassContent* content)
     {
-        // update all lights
-        for (auto l : mLightList) {
-            l.second->prepareForRender();
-        }
         // update all scene node
         Render3DPassContent newContent;
         if (!content) {
+            // update all lights
+            for (auto l : mLightList) {
+                l.second->prepareForRender();
+            }
             // get render content first
             mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
                 this->addSceneNodeToCacheList(childNode, 0.f, &newContent, false);
@@ -367,6 +367,10 @@ namespace Peach3D
         mPickSceneNodeList.clear();
         for (auto& camera : mCameraList) {
             camera->prepareForRender(lastFrameTime);
+        }
+        // update all lights
+        for (auto l : mLightList) {
+            l.second->prepareForRender();
         }
         /* traverse all nodes, activate used RTT.
          root scene node must update, children may need delete. */
