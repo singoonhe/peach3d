@@ -144,7 +144,7 @@ namespace Peach3D
             IF_BREAK(listSize == 0, nullptr);
             
             RenderNode* firstNode = renderList[0];
-            auto isRenderShadow = firstNode->isRenderShadow();
+            auto isRenderShadow = firstNode->isRenderForShadow();
             ProgramPtr usedProgram = isRenderShadow ? mBaseProgram : firstNode->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
@@ -446,44 +446,65 @@ namespace Peach3D
     
     void ObjectGL::render(Terrain* rtt)
     {
-        /*
         do {
-            // use particle3d program
-            IF_BREAK(!mParticle3DProgram || !mParticle3DProgram->useAsRenderProgram(), nullptr);
-            
-            // must use VAO on MAC OpenGL core version
+            ProgramPtr usedProgram = rtt->getProgramForRender();
+            IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
+            // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mParticle3DProgram : nullptr);
-                // bind vertex buffer, emitter data need update
-                glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? usedProgram : nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
                 bindObjectVertexAttrib();
             }
             
-            for (auto& emit : emitters) {
-                // active texture and update program uniforms
-                auto& texFrame = emit.texFrame;
-                if (texFrame.tex) {
-                    GLuint glTextureId = static_cast<TextureGL*>(texFrame.tex.get())->getGLTextureId();
-                    static_cast<ProgramGL*>(mParticle3DProgram.get())->activeTextures(glTextureId, 0);
-                    // support texture plist, size must be power of 2
-                    mParticle3DProgram->updateParticle3DUniforms(texFrame.rc);
-                    // bind vertex and draw points
-                    auto bufferSize = emit.getRenderBufferSize();
-                    glBufferData(GL_ARRAY_BUFFER, bufferSize, emit.getRenderBuffer(), GL_DYNAMIC_DRAW);
-                    glDrawArrays(GL_POINTS, 0, bufferSize / mVertexDataStride);
-                    PD_ADD_DRAWCALL(1);
+            ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
+            int usedTexCount = 0;
+            // active UV texture
+            auto brushes = rtt->getBrushes();
+            for (auto i = 0; i < brushes.size(); i++) {
+                auto texGL = static_cast<TextureGL*>(brushes[i].get());
+                if (texGL) {
+                    usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++, Utils::formatString("pd_texture[%d]", i));
                 }
             }
+            // active alpha map texture
+            auto mapTes = rtt->getAlphaMaps();
+            for (auto i = 0; i < mapTes.size(); i++) {
+                auto texGL = static_cast<TextureGL*>(mapTes[i].get());
+                if (texGL) {
+                    usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++, Utils::formatString("pd_alphaMap%d", i));
+                }
+            }
+            // active shadow texture if need
+            auto shadows = rtt->getShadowLights();
+            for (auto i = 0; i < shadows.size(); i++) {
+                auto texGL = static_cast<TextureGL*>(shadows[i]->getShadowTexture().get());
+                if (texGL) {
+                    usedProgramGL->activeTextures(texGL->getGLTextureId(), usedTexCount++, Utils::formatString("pd_shadowTexture[%d]", i));
+                }
+            }
+            
+            GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+            GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
+            GLenum glDrawMode = convertDrawModeToGL(rtt->getDrawMode());
+            // update current widget uniforms
+//            usedProgram->updateRenderNodeUniforms();
+            // draw one widget
+            glDrawElements(glDrawMode, indexCount, indexType, 0);
+            PD_ADD_DRAWCALL(1);
+            PD_ADD_DRAWTRIAGNLE(indexCount / 3);
+            // disable render state
+            glBindTexture(GL_TEXTURE_2D, 0);
+            
             // unbind vertex and textures
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
                 glBindVertexArray(0);
             }
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-        } while(0); */
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        } while(0);
     }
     
     void ObjectGL::cleanObjectVertexBuffer()

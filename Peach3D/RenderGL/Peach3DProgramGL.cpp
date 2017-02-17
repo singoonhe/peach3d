@@ -609,7 +609,7 @@ namespace Peach3D
         float lData[16 * SceneManager::getSingleton().getLightMax()];
         // set lighting unfo
         std::vector<LightPtr> lights, shadows;
-        if (!node->isRenderShadow()) {
+        if (!node->isRenderForShadow()) {
             lights = node->getRenderLights();
             shadows = node->getShadowLights();
         }

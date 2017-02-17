@@ -59,8 +59,8 @@ namespace Peach3D
         /** Check is ray intersect to current node. */
         bool isRayIntersect(const Ray& ray) { generateOBB(); return mRenderOBB->isRayIntersect(ray); }
         /** Set node will rendering for shadow now, using special program. */
-        void setRenderShadow(bool shadow) { mIsRenderShadow = shadow; }
-        bool isRenderShadow() { return mIsRenderShadow; }
+        void setRenderForShadow(bool shadow) { mIsRenderShadow = shadow; }
+        bool isRenderForShadow() { return mIsRenderShadow; }
         bool isBringShadow() { return mNodeState.isBringShadow; }
         bool isAcceptShadow() { return mNodeState.isAcceptShadow; }
         

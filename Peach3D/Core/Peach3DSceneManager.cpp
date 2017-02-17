@@ -402,7 +402,7 @@ namespace Peach3D
                             }
                             else {
                                 // mark render shadow now
-                                iter->second->setRenderShadow(true);
+                                iter->second->setRenderForShadow(true);
                                 ++iter;
                             }
                         }
@@ -417,7 +417,7 @@ namespace Peach3D
         // if shadow rendering, mark render color now
         if (isUpdateDepth) {
             for (auto& nodeIter : mainContent.nodeMap) {
-                nodeIter.second->setRenderShadow(false);
+                nodeIter.second->setRenderForShadow(false);
             }
         }
         

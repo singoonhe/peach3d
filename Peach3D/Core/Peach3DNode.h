@@ -13,6 +13,7 @@
 #include "Peach3DVector2.h"
 #include "Peach3DMatrix4.h"
 #include "Peach3DIProgram.h"
+#include "Peach3DTypes.h"
 #include "Peach3DActionImplement.h"
 
 namespace Peach3D
@@ -21,13 +22,6 @@ namespace Peach3D
     {
         eLocal,     // local rotation diff from parent
         eWorld,     // translate relative to world node
-    };
-    
-    enum class PEACH3D_DLL DrawMode
-    {
-        ePoint,     // node draw with point model
-        eLine,      // node draw with line model
-        eTriangle,  // node draw with triangle model
     };
     
     class PEACH3D_DLL Node : public ActionImplement

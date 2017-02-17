@@ -24,6 +24,14 @@ namespace Peach3D
         eGL2    // feature level for OpenGL ES 2.0 or OpenGL 2.x
     };
     
+    /////////////////////DrawMode//////////////////////////////
+    enum class PEACH3D_DLL DrawMode
+    {
+        ePoint,     // node draw with point model
+        eLine,      // node draw with line model
+        eTriangle,  // node draw with triangle model
+    };
+    
     /////////////////////RenderFeatureLevel////////////////////
     struct PEACH3D_DLL CameraState
     {

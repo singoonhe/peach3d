@@ -46,7 +46,7 @@ namespace Peach3D
     
     void Terrain::buildTerrain(const uint* uvdata, const std::vector<TexturePtr>& texl)
     {
-        mBrushs = texl;
+        mBrushes = texl;
         
         // create texture
         mTerrainObj = IRender::getSingleton().createObject(("pd_Terrain_"+mName).c_str());
@@ -207,7 +207,7 @@ namespace Peach3D
                 }, true);
             }
             // generate render program
-            mRenderProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 1}, {PROGRAM_FEATURE_UV, 1}, {PROGRAM_FEATURE_LIGHT, mRenderLights.size()}, {PROGRAM_FEATURE_SHADOW, mShadowLights.size()}, {PROGRAM_FEATURE_TERRAIN, mBrushs.size()}});
+            mRenderProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 1}, {PROGRAM_FEATURE_UV, 1}, {PROGRAM_FEATURE_LIGHT, mRenderLights.size()}, {PROGRAM_FEATURE_SHADOW, mShadowLights.size()}, {PROGRAM_FEATURE_TERRAIN, mBrushes.size()}});
             mIsLightingDirty = false;
         }
     }

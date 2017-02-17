@@ -34,6 +34,9 @@ namespace Peach3D
         /** Change render program before rendering. */
         void prepareForRender(float lastFrameTime);
         
+        /** Set node draw mode, Points/Lines/Trangles. */
+        void setDrawMode(DrawMode mode) { mDrawMode = mode; }
+        DrawMode getDrawMode() {return mDrawMode;}
         /** Set is terrain will show shadow. */
         void setAcceptShadow(bool enable) { mAcceptShadow = enable; setLightingStateNeedUpdate();}
         bool isAcceptShadow() { return mAcceptShadow; }
@@ -45,7 +48,11 @@ namespace Peach3D
         
         void setName(const std::string& name) { mName = name; }
         ObjectPtr getObject() { return mTerrainObj; }
-        ProgramPtr getRenderingProgram()const {return mRenderProgram;}
+        const std::vector<TexturePtr>& getBrushes() { return mBrushes; }
+        const std::vector<TexturePtr>& getAlphaMaps() { return mAlphaMap; }
+        const std::vector<LightPtr>& getRenderLights() { return mRenderLights; }
+        const std::vector<LightPtr>& getShadowLights() { return mShadowLights; }
+        ProgramPtr getProgramForRender()const {return mRenderProgram;}
         
     protected:
         Terrain(int width, int height, float pace, const float* data);
@@ -60,11 +67,13 @@ namespace Peach3D
         float*      mHighData;      // saved data for query current height
         
         std::string mName;
+        DrawMode    mDrawMode;
         ProgramPtr  mRenderProgram; // render program
         ObjectPtr   mTerrainObj;
         Vector3     mTerrainPos;    // terrain current position
         Vector3     mTerrainLength; // terrain x and z length
-        std::vector<TexturePtr> mBrushs;// terrain textures
+        std::vector<TexturePtr> mBrushes;   // terrain brush textures
+        std::vector<TexturePtr> mAlphaMap;  // terrain alpha map textures
         
         bool        mAcceptShadow;  // is terrain accept shadow
         bool        mLightEnable;   // is lighting enabled, default is true
