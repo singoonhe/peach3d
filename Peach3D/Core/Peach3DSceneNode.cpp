@@ -325,28 +325,6 @@ namespace Peach3D
         }
     }
     
-    bool SceneNode::isLightShineNode(const LightPtr& l)
-    {
-        bool isShine = true;
-        // light can't be ignored
-        for (auto& igL : mIgnoreLights) {
-            if (igL == l) {
-                return false;
-            }
-        }
-        if (l->getType() != LightType::eDirection) {
-            // calc light accumulate for node, ignore light if too far
-            auto lenVector = mWorldPosition - l->getPosition();
-            float calLen = lenVector.length();
-            auto attenV = l->getAttenuate();
-            float accuAtten = attenV.x + attenV.y * calLen + attenV.z * calLen * calLen;
-            if (accuAtten > 100.f) {
-                isShine = false;
-            }
-        }
-        return isShine;
-    }
-    
     void SceneNode::prepareForRender(float lastFrameTime)
     {
         Node::prepareForRender(lastFrameTime);
@@ -440,7 +418,7 @@ namespace Peach3D
             if (mLightEnable && isNormal) {
                 // save enabled lights name
                 SceneManager::getSingleton().tranverseLights([&](const std::string& name, const LightPtr& l){
-                    if (isLightShineNode(l)) {
+                    if (l->isIlluminePos(mWorldPosition, mIgnoreLights)) {
                         validLights.push_back(l);
                         // is shadow valid
                         if (isAcceptShadow() && l->getShadowTexture()) {

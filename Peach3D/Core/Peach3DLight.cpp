@@ -33,26 +33,22 @@ namespace Peach3D
     void Light::usingAsDirection(const Vector3& dir, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eDirection; mDir = dir; mColor = color; mAmbient = ambient;
-        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::usingAsDot(const Vector3& pos, const Vector3& attenuate, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eDot; mPos = pos; mAttenuate = attenuate; mColor = color; mAmbient = ambient;
-        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate, const Vector2& ext, const Color3& color, const Color3& ambient)
     {
         mType = LightType::eSpot; mPos = pos; mDir = dir; mAttenuate = attenuate; mSpotExt = ext; mColor = color; mAmbient = ambient;
-        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
     }
     
     void Light::setEnabled(bool enable)
     {
         mIsEnabled = enable;
-        // SceneNode may need update lighting count
-        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
+        mIsDirty = true;
     }
     
     void Light::setShadowEnabled(bool enable, float factor)
@@ -108,8 +104,53 @@ namespace Peach3D
             ResourceManager::getSingleton().deleteTexture(mShadowTexture);
             mShadowTexture = nullptr;
         }
-        // SceneNode may need update lighting count
-        SceneManager::getSingleton().getRootSceneNode()->setLightingStateNeedUpdate();
+        mIsDirty = true;
+    }
+    
+    bool Light::isIlluminePos(const Vector3& pos, const std::vector<std::string>& ls)
+    {
+        // all node need direction light
+        if (mType == LightType::eDirection) {
+            return true;
+        }
+        // light can't be ignored
+        for (auto& igL : ls) {
+            if (igL == mName) {
+                return false;
+            }
+        }
+        // calc light accumulate for position, ignore light if too far
+        auto lenVector = pos - mPos;
+        float calLen = lenVector.length();
+        return calLen <= mMaxIllumine;
+    }
+    
+    void Light::prepareForRender()
+    {
+        if (mIsDirty && mType != LightType::eUnknow) {
+            if (mType != LightType::eDirection && mIsEnabled) {
+                mMaxIllumine = 0.f;
+                float maxDis = 100.f;
+                if (mAttenuate.z > 0) {
+                    // float accuAtten = attenV.x + attenV.y * calLen + attenV.z * calLen * calLen;
+                    float delta = mAttenuate.y * mAttenuate.y - 4 * (mAttenuate.z) * (mAttenuate.x - maxDis);
+                    if (delta > 0) {
+                        mMaxIllumine = (-mAttenuate.y + sqrt(delta)) / (2 * (mAttenuate.x - maxDis));
+                    }
+                }
+                else if (mAttenuate.y > 0) {
+                    // float accuAtten = attenV.x + attenV.y * calLen;
+                    mMaxIllumine = (maxDis - mAttenuate.x) / mAttenuate.y;
+                }
+                else {
+                    // float accuAtten = attenV.x;
+                    mMaxIllumine = FLT_MAX;
+                }
+            }
+            // sene manager need update light, if some node need lighting now
+            SceneManager::getSingleton().setUpdateLighting();
+            mIsDirty = false;
+        }
     }
 }
 

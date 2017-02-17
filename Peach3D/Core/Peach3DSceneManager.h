@@ -60,6 +60,8 @@ namespace Peach3D
         void deleteLight(const char* name);
         void deleteAllLights();
         void tranverseLights(std::function<void(const std::string& name, const LightPtr& l)> callFunc, bool onlyEnabled = false);
+        /** Call scene node and terrain update light. */
+        void setUpdateLighting();
         
         /** Set perspective projection. */
         void setPerspectiveProjection(float fovY, float asPect, float zNear=1.0f, float zFar=1000.0f);

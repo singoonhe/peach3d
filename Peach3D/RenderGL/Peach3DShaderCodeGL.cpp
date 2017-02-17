@@ -38,6 +38,10 @@ namespace Peach3D
             if (findIter!=feature.end() && findIter->second > 0) {
                 shaderPreStr += Utils::formatString("#define PD_ENABLE_SKELETON %d\n", findIter->second);
             }
+            findIter = feature.find(PROGRAM_FEATURE_TERRAIN);
+            if (findIter!=feature.end() && findIter->second > 0) {
+                shaderPreStr += Utils::formatString("#define PD_ENABLE_TERRAIN %d\n", findIter->second);
+            }
             findIter = feature.find(PROGRAM_FEATURE_POINT3);
             auto findParIter = feature.find(PROGRAM_FEATURE_PARTICLE);
             if (findIter!=feature.end() && findIter->second > 0) {

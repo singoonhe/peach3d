@@ -220,6 +220,8 @@ namespace Peach3D
         // create new null light
         LightPtr newL(new Light(insertName.c_str()));
         mLightList[insertName] = newL;
+        // lighting need be updated if new light
+        setUpdateLighting();
         return newL;
     }
 
@@ -238,7 +240,7 @@ namespace Peach3D
         if (findIter != mLightList.end()) {
             mLightList.erase(findIter);
             // delete a light, node need update valid name
-            mRootSceneNode->setLightingStateNeedUpdate();
+            setUpdateLighting();
         }
     }
     
@@ -246,6 +248,18 @@ namespace Peach3D
     {
         // lights will autorelease
         mLightList.clear();
+        // disable all lighting
+        setUpdateLighting();
+    }
+    
+    void SceneManager::setUpdateLighting()
+    {
+        // update all scene node
+        mRootSceneNode->setLightingStateNeedUpdate();
+        // update all terrains
+        for (auto ter : mTerrainList) {
+            ter->setLightingStateNeedUpdate();
+        }
     }
     
     void SceneManager::tranverseLights(std::function<void(const std::string& name, const LightPtr& l)> callFunc, bool onlyEnabled)
@@ -290,6 +304,11 @@ namespace Peach3D
     
     void SceneManager::renderOncePass(Render3DPassContent* content)
     {
+        // update all lights
+        for (auto l : mLightList) {
+            l.second->prepareForRender();
+        }
+        // update all scene node
         Render3DPassContent newContent;
         if (!content) {
             // get render content first
@@ -298,7 +317,6 @@ namespace Peach3D
             });
             content = &newContent;
         }
-        
         // reupdate global uniforms for GL3, befor rendering may modify camera
         IRender::getSingleton().prepareForObjectRender();
         // draw all terrains

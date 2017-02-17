@@ -29,7 +29,7 @@ namespace Peach3D
     class PEACH3D_DLL Light
     {
     public:
-        Light(const char* name) : mName(name), mType(LightType::eUnknow), mIsEnabled(true) {}
+        Light(const char* name) : mName(name), mType(LightType::eUnknow), mIsEnabled(true), mIsDirty(true), mMaxIllumine(0) {}
         ~Light();
         
         /** Direction light only need direction. */
@@ -50,12 +50,14 @@ namespace Peach3D
         const Vector3& getShadowPos() { return mShadowPos; }
         /** Shadow matrix saved in shadow RTT pass, used in main pass. */
         const Matrix4& getShadowMatrix() { return mShadowMatrix; }
+        /** Is position will be illumined by light. */
+        bool isIlluminePos(const Vector3& pos, const std::vector<std::string>& ls);
         
         const std::string& getName() { return mName; }
         LightType getType() { return mType; }
         void setEnabled(bool enable);
         bool isEnabled() { return mIsEnabled; }
-        void setPosition(const Vector3& pos) { mPos = pos; };
+        void setPosition(const Vector3& pos) { mPos = pos; mIsDirty = true; };
         const Vector3& getPosition() { return mPos; }
         void setDirection(const Vector3& dir) { mDir = dir; };
         const Vector3& getDirection() { return mDir; }
@@ -63,10 +65,13 @@ namespace Peach3D
         const Color3& getAmbient() { return mAmbient; }
         void setColor(const Color3& color) { mColor = color; };
         const Color3& getColor() { return mColor; }
-        void setAttenuate(const Vector3& atten) { mDir = atten; };
+        void setAttenuate(const Vector3& atten) { mDir = atten; mIsDirty = true; };
         const Vector3& getAttenuate() { return mAttenuate; }
         void setSpotExtend(const Vector2& spotExt) { mSpotExt = spotExt; };
         const Vector2& getSpotExtend() { return mSpotExt; }
+        
+        /** Update max illumine distance. */
+        void prepareForRender();
         
     private:
         std::string mName;       // light name
@@ -78,6 +83,8 @@ namespace Peach3D
         Color3      mColor;      // light color
         Vector3     mAttenuate;  // light const/line/quadratic attenuate, for Dot and Spot
         Vector2     mSpotExt;    // extent spot and cut cos attenuate, for Spot
+        bool        mIsDirty;    // is lighting need update
+        float       mMaxIllumine;// max distance light illumine
         
         Matrix4     mShadowMatrix;  // shadow bias matrix
         TexturePtr  mShadowTexture; // world shadow texture

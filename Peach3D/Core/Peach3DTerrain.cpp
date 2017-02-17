@@ -8,6 +8,8 @@
 
 #include "Peach3DTerrain.h"
 #include "Peach3DIRender.h"
+#include "Peach3DSceneManager.h"
+#include "Peach3DResourceManager.h"
 
 namespace Peach3D
 {
@@ -16,7 +18,12 @@ namespace Peach3D
         mWidthCount = width;
         mHeightCount = height;
         mPerPace = pace;
+        mTerrainLength = Vector3(mWidthCount * mPerPace, 0, mHeightCount * mPerPace);
         memcpy(mHighData, data, sizeof(data));
+        // set light enable default
+        mIsLightingDirty = true;
+        mAcceptShadow = true;
+        mLightEnable = true;
     }
     
     Terrain::~Terrain()
@@ -39,6 +46,9 @@ namespace Peach3D
     
     void Terrain::buildTerrain(const uint* uvdata, const std::vector<TexturePtr>& texl)
     {
+        mBrushs = texl;
+        
+        // create texture
         mTerrainObj = IRender::getSingleton().createObject(("pd_Terrain_"+mName).c_str());
         uint vType = VertexType::Point3|VertexType::Normal|VertexType::UV;
         auto strideSize = IObject::getVertexStrideSize(vType);
@@ -173,6 +183,32 @@ namespace Peach3D
         }
         else {
             return 0.f;
+        }
+    }
+    
+    void Terrain::prepareForRender(float lastFrameTime)
+    {
+        if (mIsLightingDirty) {
+            mRenderLights.clear();
+            mShadowLights.clear();
+            if (mLightEnable) {
+                // save enabled lights name
+                SceneManager::getSingleton().tranverseLights([&](const std::string& name, const LightPtr& l){
+                    if (l->isIlluminePos(mTerrainPos, mIgnoreLights) ||
+                        l->isIlluminePos(mTerrainPos + Vector3(mTerrainLength.x, 0, 0), mIgnoreLights) ||
+                        l->isIlluminePos(mTerrainPos+ Vector3(0, 0, mTerrainLength.z), mIgnoreLights) ||
+                        l->isIlluminePos(mTerrainPos + mTerrainLength, mIgnoreLights)) {
+                        mRenderLights.push_back(l);
+                        // is shadow valid
+                        if (isAcceptShadow() && l->getShadowTexture()) {
+                            mShadowLights.push_back(l);
+                        }
+                    }
+                }, true);
+            }
+            // generate render program
+            mRenderProgram = ResourceManager::getSingleton().getPresetProgram({{PROGRAM_FEATURE_POINT3, 1}, {PROGRAM_FEATURE_UV, 1}, {PROGRAM_FEATURE_LIGHT, mRenderLights.size()}, {PROGRAM_FEATURE_SHADOW, mShadowLights.size()}, {PROGRAM_FEATURE_TERRAIN, mBrushs.size()}});
+            mIsLightingDirty = false;
         }
     }
 }

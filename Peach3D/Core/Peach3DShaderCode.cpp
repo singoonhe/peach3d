@@ -103,6 +103,11 @@ namespace Peach3D
         if ((findIter!=feature.end() && findIter->second > 0)) {
             retString<<"|PC1";
         }
+        // terrain texture count
+        findIter = feature.find(PROGRAM_FEATURE_TERRAIN);
+        if ((findIter!=feature.end() && findIter->second > 0)) {
+            retString<<"|TER"<<findIter->second;
+        }
         return retString.str();
     }
     

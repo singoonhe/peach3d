@@ -136,8 +136,8 @@ namespace Peach3D
         //! delete SceneNode by SceneManager, user can't call destructor function.
         virtual ~SceneNode();
         
-        /* Return is light shine scene node. */
-        bool isLightShineNode(const LightPtr& l);
+        /* Return is light illume scene node. */
+        bool isLightIllumed(const LightPtr& l);
         /* Update child RenderNode state. */
         void updateRenderState();
         /* Update rendering attributes, about world rect/rotate/scale... */
@@ -171,7 +171,7 @@ namespace Peach3D
         
         bool            mLightEnable;   // is lighting enabled, default is true
         bool            mIsLightingDirty;       // is lighting state need update
-        std::vector<LightPtr>   mIgnoreLights;  // need ignore lights
+        std::vector<std::string> mIgnoreLights; // need ignore lights
         
         bool            mPickEnabled;   // is object picking eanbled
         bool            mPickAlways;    // is object always picking eanbled, even not render

@@ -10,6 +10,7 @@
 #define PEACH3D_TERRAIN_H
 
 #include "Peach3DIObject.h"
+#include "Peach3DLight.h"
 
 namespace Peach3D
 {
@@ -30,9 +31,21 @@ namespace Peach3D
         
         void setPosition(const Vector3& pos) { mTerrainPos = pos; }
         const Vector3& getPosition() { return mTerrainPos; }
+        /** Change render program before rendering. */
+        void prepareForRender(float lastFrameTime);
+        
+        /** Set is terrain will show shadow. */
+        void setAcceptShadow(bool enable) { mAcceptShadow = enable; setLightingStateNeedUpdate();}
+        bool isAcceptShadow() { return mAcceptShadow; }
+        /** Auto set terrain lighting enable. */
+        void setLightingEnabled(bool enable) { mLightEnable = enable; setLightingStateNeedUpdate();}
+        bool isLightingEnabled() { return mLightEnable; }
+        /** Lights used will be update before render, called when lights changed. */
+        void setLightingStateNeedUpdate() { mIsLightingDirty = true; }
         
         void setName(const std::string& name) { mName = name; }
         ObjectPtr getObject() { return mTerrainObj; }
+        ProgramPtr getRenderingProgram()const {return mRenderProgram;}
         
     protected:
         Terrain(int width, int height, float pace, const float* data);
@@ -47,8 +60,18 @@ namespace Peach3D
         float*      mHighData;      // saved data for query current height
         
         std::string mName;
+        ProgramPtr  mRenderProgram; // render program
         ObjectPtr   mTerrainObj;
         Vector3     mTerrainPos;    // terrain current position
+        Vector3     mTerrainLength; // terrain x and z length
+        std::vector<TexturePtr> mBrushs;// terrain textures
+        
+        bool        mAcceptShadow;  // is terrain accept shadow
+        bool        mLightEnable;   // is lighting enabled, default is true
+        bool        mIsLightingDirty;   // is lighting state need update
+        std::vector<std::string> mIgnoreLights; // need ignore lights
+        std::vector<LightPtr>   mRenderLights;  // valid lights
+        std::vector<LightPtr>   mShadowLights;  // valid shadow lights, setting by parent
     };
 }
 
