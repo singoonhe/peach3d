@@ -51,11 +51,12 @@ namespace Peach3D
                 }
                 else {
                     // choose 3D node program
-                    if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL3) {
-                        shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
+                    findIter = feature.find(PROGRAM_FEATURE_TERRAIN);
+                    if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2 || (findIter!=feature.end() && findIter->second > 0)) {
+                        shaderPreStr += isVertex ? gVerGL2ShaderCode3D : gFragGL2ShaderCode3D;
                     }
                     else {
-                        shaderPreStr += isVertex ? gVerGL2ShaderCode3D : gFragGL2ShaderCode3D;
+                        shaderPreStr += isVertex ? gVerGL3ShaderCode3D : gFragGL3ShaderCode3D;
                     }
                 }
             }
@@ -90,7 +91,10 @@ namespace Peach3D
                     uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
                 }
                 else {
-                    if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2) {
+                    findIter = feature.find(PROGRAM_FEATURE_TERRAIN);
+                    bool forTerrain = (findIter!=feature.end()) && findIter->second > 0;
+                    // terrain always use GL2 for rendering
+                    if (PD_RENDERLEVEL() == RenderFeatureLevel::eGL2 || forTerrain) {
                         uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
                         uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
                         findIter = feature.find(PROGRAM_FEATURE_LIGHT);

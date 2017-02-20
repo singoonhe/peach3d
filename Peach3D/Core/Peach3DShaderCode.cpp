@@ -140,4 +140,10 @@ namespace Peach3D
         }
         return verType;
     }
+    
+    bool ShaderCode::isContainTypeFeature(const ProgramFeatureMap& features, const std::string& feat)
+    {
+        auto findIter = features.find(feat);
+        return (findIter!=features.end()) && findIter->second > 0;
+    }
 }

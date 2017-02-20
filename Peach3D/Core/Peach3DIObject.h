@@ -110,7 +110,7 @@ namespace Peach3D
         /**
          * @brief Render Terrain, called by SceneManager.
          */
-        virtual void render(Terrain* rtt) = 0;
+        virtual void render(Terrain* terr) = 0;
         
         const std::string& getName() { return mObjectName; }
         const std::string& getUniqueName() { return mUniqueName; }

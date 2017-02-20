@@ -16,6 +16,7 @@
 #include "Peach3DSprite.h"
 #include "Peach3DUtils.h"
 #include "Peach3DOBB.h"
+#include "Peach3DTerrain.h"
 #include "Peach3DLayoutManager.h"
 #include "Peach3DResourceManager.h"
 #include "Peach3DSceneManager.h"
@@ -600,75 +601,15 @@ namespace Peach3D
             valueFunc(uniformLocation);
         }
     }
-
-    void ProgramGL::updateRenderNodeUniforms(RenderNode* node)
+    
+    void ProgramGL::updateLightingUniformsGL2(const std::vector<LightPtr>& lights, const std::vector<LightPtr>& shadows, const Matrix4& normalMat, const Material& objMat)
     {
-        SceneManager* sgr = SceneManager::getSingletonPtr();
-        const Material& objMat = node->getMaterial();
         // lights attribute
         float lData[16 * SceneManager::getSingleton().getLightMax()];
-        // set lighting unfo
-        std::vector<LightPtr> lights, shadows;
-        if (!node->isRenderForShadow()) {
-            lights = node->getRenderLights();
-            shadows = node->getShadowLights();
-        }
         // update object uniforms in list
         for (auto& uniform : mProgramUniformList) {
+            // lights uniforms
             switch (ShaderCode::getUniformNameType(uniform.name)) {
-                case UniformNameType::eProjMatrix:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        const Matrix4& projMatrix = sgr->getProjectionMatrix();
-                        glUniformMatrix4fv(location, 1, false, projMatrix.mat);
-                    });
-                    break;
-                case UniformNameType::eViewMatrix:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
-                        glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
-                    });
-                    break;
-                case UniformNameType::eModelMatrix:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        const Matrix4& modelMat = node->getModelMatrix();
-                        glUniformMatrix4fv(location, 1, false, modelMat.mat);
-                    });
-                    break;
-                case UniformNameType::eDiffuse:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
-                        glUniform4fv(location, 1, color);
-                    });
-                    break;
-                    // material uniforms
-                case UniformNameType::eNormalMatrix:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        Matrix4 modelMat = node->getModelMatrix();
-                        Matrix4 invmat;
-                        modelMat.getInverse(&invmat);
-                        glUniformMatrix4fv(location, 1, false, invmat.getTranspose().mat);
-                    });
-                    break;
-                case UniformNameType::eMatAmbient:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
-                        glUniform3fv(location, 1, color);
-                    });
-                    break;
-                case UniformNameType::eMatSpecular:
-                    // also pass shininess
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
-                        glUniform4fv(location, 1, color);
-                    });
-                    break;
-                case UniformNameType::eMatEmissive:
-                    setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
-                        glUniform3fv(location, 1, color);
-                    });
-                    break;
-                    // lights uniforms
                 case UniformNameType::eLightTypeSpot:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
                         for (auto i=0; i<lights.size(); ++i) {
@@ -753,6 +694,81 @@ namespace Peach3D
                         glUniformMatrix4fv(location, (GLsizei)shadows.size(), false, lData);
                     });
                     break;
+                    // material uniforms
+                case UniformNameType::eNormalMatrix:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        Matrix4 invmat, model = normalMat;
+                        model.getInverse(&invmat);
+                        glUniformMatrix4fv(location, 1, false, invmat.getTranspose().mat);
+                    });
+                    break;
+                case UniformNameType::eMatAmbient:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
+                        glUniform3fv(location, 1, color);
+                    });
+                    break;
+                case UniformNameType::eMatSpecular:
+                    // also pass shininess
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
+                        glUniform4fv(location, 1, color);
+                    });
+                    break;
+                case UniformNameType::eMatEmissive:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
+                        glUniform3fv(location, 1, color);
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    void ProgramGL::updateWorldUniformsGL2(const Matrix4& modelMat, const Color4& diffuse)
+    {
+        SceneManager* sgr = SceneManager::getSingletonPtr();
+        for (auto& uniform : mProgramUniformList) {
+            switch (ShaderCode::getUniformNameType(uniform.name)) {
+                case UniformNameType::eProjMatrix:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        const Matrix4& projMatrix = sgr->getProjectionMatrix();
+                        glUniformMatrix4fv(location, 1, false, projMatrix.mat);
+                    });
+                    break;
+                case UniformNameType::eViewMatrix:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        const Matrix4& viewMatrix = sgr->getActiveCamera()->getViewMatrix();
+                        glUniformMatrix4fv(location, 1, false, viewMatrix.mat);
+                    });
+                    break;
+                case UniformNameType::eModelMatrix:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        glUniformMatrix4fv(location, 1, false, modelMat.mat);
+                    });
+                    break;
+                case UniformNameType::eDiffuse:
+                    setUniformLocationValue(uniform.name, [&](GLint location) {
+                        float color[] = {diffuse.r, diffuse.g, diffuse.b, diffuse.a};
+                        glUniform4fv(location, 1, color);
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    void ProgramGL::updateRenderNodeUniforms(RenderNode* node)
+    {
+        const Material& objMat = node->getMaterial();
+        auto& modelMat = node->getModelMatrix();
+        updateWorldUniformsGL2(modelMat, Color4(objMat.diffuse, objMat.alpha));
+        // update object uniforms in list
+        for (auto& uniform : mProgramUniformList) {
+            switch (ShaderCode::getUniformNameType(uniform.name)) {
                     // bone uniforms
                 case UniformNameType::eBoneMatrix:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
@@ -783,6 +799,13 @@ namespace Peach3D
                 default:
                     break;
             }
+        }
+        // not using lights and shadow when rendering shadow texture
+        std::vector<LightPtr> lights, shadows;
+        if (!node->isRenderForShadow()) {
+            lights = node->getRenderLights();
+            shadows = node->getShadowLights();
+            updateLightingUniformsGL2(lights, shadows, modelMat, objMat);
         }
     }
     
@@ -1143,6 +1166,15 @@ namespace Peach3D
                     break;
             }
         }
+    }
+    
+    void ProgramGL::updateTerrainUniforms(Terrain* ter)
+    {
+        auto modelMat = Matrix4::createTranslation(ter->getPosition());
+        updateWorldUniformsGL2(modelMat, Color4White);
+        // set lighting unfo, terrain will not rendering here
+        std::vector<LightPtr> lights = ter->getRenderLights(), shadows = ter->getShadowLights();
+        updateLightingUniformsGL2(lights, shadows, modelMat, ter->getMaterial());
     }
     
     bool ProgramGL::useAsRenderProgram()

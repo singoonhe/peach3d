@@ -54,7 +54,7 @@ namespace Peach3D
         /**
          * @brief Render Terrain, called by SceneManager.
          */
-        virtual void render(Terrain* rtt);
+        virtual void render(Terrain* terr);
         
     protected:
         /**

@@ -34,6 +34,8 @@ namespace Peach3D
         /** Change render program before rendering. */
         void prepareForRender(float lastFrameTime);
         
+        void setMaterial(const Material& mate) { mMaterial = mate; }
+        const Material& getMaterial() { return mMaterial; }
         /** Set node draw mode, Points/Lines/Trangles. */
         void setDrawMode(DrawMode mode) { mDrawMode = mode; }
         DrawMode getDrawMode() {return mDrawMode;}
@@ -77,6 +79,7 @@ namespace Peach3D
         
         bool        mAcceptShadow;  // is terrain accept shadow
         bool        mLightEnable;   // is lighting enabled, default is true
+        Material    mMaterial;      // terrain material, not contain textures
         bool        mIsLightingDirty;   // is lighting state need update
         std::vector<std::string> mIgnoreLights; // need ignore lights
         std::vector<LightPtr>   mRenderLights;  // valid lights

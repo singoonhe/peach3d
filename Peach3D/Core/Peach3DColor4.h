@@ -20,7 +20,7 @@ namespace Peach3D
         //! Constructor with four float params.
         Color4(float _r, float _g, float _b, float _a = 1.0f) : r(_r), g(_g), b(_b), a(_a) {}
         //! Constructor with Color3 params.
-        Color4(const Color3& c) { r = c.r; g = c.g; b = c.b; a = 1.f; }
+        Color4(const Color3& c, float _a = 1.f) { r = c.r; g = c.g; b = c.b; a = _a; }
 
         //! Operators
         Color4 operator=(const Color4& other) { r = other.r; g = other.g; b = other.b; a = other.a; return *this; }

@@ -46,6 +46,7 @@ namespace Peach3D
     class OBB;
     class Widget;
     class RenderNode;
+    class Terrain;
     class PEACH3D_DLL IProgram
     {
     public:
@@ -90,6 +91,9 @@ namespace Peach3D
         virtual void updateParticle2DUniforms(const Rect& coord) = 0;
         /** Update 3d particle uniforms, include rect/textures... */
         virtual void updateParticle3DUniforms(const Rect& coord) = 0;
+        
+        /** Update terrain uniforms for GL2, terrain only use GL2. */
+        virtual void updateTerrainUniforms(Terrain* ter) {};
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;

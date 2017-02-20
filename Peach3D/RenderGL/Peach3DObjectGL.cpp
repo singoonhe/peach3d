@@ -444,10 +444,10 @@ namespace Peach3D
         } while(0);
     }
     
-    void ObjectGL::render(Terrain* rtt)
+    void ObjectGL::render(Terrain* terr)
     {
         do {
-            ProgramPtr usedProgram = rtt->getProgramForRender();
+            ProgramPtr usedProgram = terr->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
@@ -462,7 +462,7 @@ namespace Peach3D
             ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
             int usedTexCount = 0;
             // active UV texture
-            auto brushes = rtt->getBrushes();
+            auto brushes = terr->getBrushes();
             for (auto i = 0; i < brushes.size(); i++) {
                 auto texGL = static_cast<TextureGL*>(brushes[i].get());
                 if (texGL) {
@@ -470,7 +470,7 @@ namespace Peach3D
                 }
             }
             // active alpha map texture
-            auto mapTes = rtt->getAlphaMaps();
+            auto mapTes = terr->getAlphaMaps();
             for (auto i = 0; i < mapTes.size(); i++) {
                 auto texGL = static_cast<TextureGL*>(mapTes[i].get());
                 if (texGL) {
@@ -478,7 +478,7 @@ namespace Peach3D
                 }
             }
             // active shadow texture if need
-            auto shadows = rtt->getShadowLights();
+            auto shadows = terr->getShadowLights();
             for (auto i = 0; i < shadows.size(); i++) {
                 auto texGL = static_cast<TextureGL*>(shadows[i]->getShadowTexture().get());
                 if (texGL) {
@@ -488,9 +488,9 @@ namespace Peach3D
             
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
             GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
-            GLenum glDrawMode = convertDrawModeToGL(rtt->getDrawMode());
+            GLenum glDrawMode = convertDrawModeToGL(terr->getDrawMode());
             // update current widget uniforms
-//            usedProgram->updateRenderNodeUniforms();
+            usedProgram->updateTerrainUniforms(terr);
             // draw one widget
             glDrawElements(glDrawMode, indexCount, indexType, 0);
             PD_ADD_DRAWCALL(1);

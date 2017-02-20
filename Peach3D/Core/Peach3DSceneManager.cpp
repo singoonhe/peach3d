@@ -304,6 +304,8 @@ namespace Peach3D
     
     void SceneManager::renderOncePass(Render3DPassContent* content)
     {
+        // reupdate global uniforms for GL3, befor rendering may modify camera
+        IRender::getSingleton().prepareForObjectRender();
         // update all scene node
         Render3DPassContent newContent;
         if (!content) {
@@ -316,12 +318,11 @@ namespace Peach3D
                 this->addSceneNodeToCacheList(childNode, 0.f, &newContent, false);
             });
             content = &newContent;
-        }
-        // reupdate global uniforms for GL3, befor rendering may modify camera
-        IRender::getSingleton().prepareForObjectRender();
-        // draw all terrains
-        for (auto trr : mTerrainList) {
-            trr->getObject()->render(trr);
+            // not render terrains when rendering for depth texture,
+            // terrain not bring shadow
+            for (auto trr : mTerrainList) {
+                trr->getObject()->render(trr);
+            }
         }
         // draw all scene node
         RenderNode* lastRenderNode = nullptr;

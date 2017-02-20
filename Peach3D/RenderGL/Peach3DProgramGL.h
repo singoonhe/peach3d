@@ -13,6 +13,7 @@
 #include "Peach3DIProgram.h"
 #include "Peach3DLight.h"
 #include "Peach3DSkeleton.h"
+#include "Peach3DMaterial.h"
 
 namespace Peach3D
 {
@@ -73,6 +74,9 @@ namespace Peach3D
         /** Update 3d particle uniforms, include rect/textures... */
         virtual void updateParticle3DUniforms(const Rect& coord);
         
+        /** Update terrain uniforms for GL2, terrain only use GL2. */
+        virtual void updateTerrainUniforms(Terrain* ter);
+        
     protected:
         /** Compile program, this will be called automatically. */
         void compileProgram();
@@ -97,6 +101,10 @@ namespace Peach3D
         
         //! set uniform value in shader, used for GL2 and GL3
         void setUniformLocationValue(const std::string& name, std::function<void(GLint)> valueFunc);
+        //! world uniforms for GL2
+        void updateWorldUniformsGL2(const Matrix4& modelMat, const Color4& diffuse);
+        //! lights and shadows uniforms for GL2
+        void updateLightingUniformsGL2(const std::vector<LightPtr>& lights, const std::vector<LightPtr>& shadows, const Matrix4& normalMat, const Material& objMat);
         
     protected:
         GLuint  mVSShader;
