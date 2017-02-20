@@ -659,16 +659,13 @@ namespace Peach3D
                 // set object uniform
                 program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(feature));
                 // enable light and generate lights uniforms for GL3
-                auto findIter = feature.find(PROGRAM_FEATURE_LIGHT);
-                auto lightsCount = (findIter!=feature.end()) ? findIter->second : 0;
+                auto lightsCount = ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_LIGHT);
                 program->setLightsCount(lightsCount);
-                if (lightsCount) {
+                if (lightsCount > 0) {
                     // generate shaodw uniforms for GL3 if have lights
-                    findIter = feature.find(PROGRAM_FEATURE_SHADOW);
-                    program->setShadowCount((findIter!=feature.end()) ? findIter->second : 0);
+                    program->setShadowCount(ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_SHADOW));
                 }
-                findIter = feature.find(PROGRAM_FEATURE_BONE);
-                auto bonesCount = (findIter!=feature.end()) ? findIter->second : 0;
+                auto bonesCount = ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_BONE);
                 if (bonesCount > 0) {
                     // generate bone uniforms for GL3
                     program->setBoneCount(bonesCount);

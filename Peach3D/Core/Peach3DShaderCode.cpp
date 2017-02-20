@@ -76,66 +76,58 @@ namespace Peach3D
         retString<<"V"<<(isVertex ? "1" : "0");
         // is point3
         retString<<"|PT";
-        auto findIter = feature.find(PROGRAM_FEATURE_POINT3);
-        retString<<((findIter!=feature.end() && findIter->second > 0) ? "1" : "0");
+        retString<<(ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_POINT3) ? "1" : "0");
         // texture UV
-        findIter = feature.find(PROGRAM_FEATURE_UV);
-        if ((findIter!=feature.end() && findIter->second > 0)) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_UV)) {
             retString<<"|TUV1";
         }
         // light count
-        findIter = feature.find(PROGRAM_FEATURE_LIGHT);
-        if ((findIter!=feature.end() && findIter->second > 0)) {
-            retString<<"|LC"<<findIter->second;
+        auto lightCount = ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_LIGHT);
+        if (lightCount > 0) {
+            retString<<"|LC"<<lightCount;
         }
         // shadow count
-        findIter = feature.find(PROGRAM_FEATURE_SHADOW);
-        if ((findIter!=feature.end() && findIter->second > 0)) {
-            retString<<"|SC"<<findIter->second;
+        auto shadowCount = ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_SHADOW);
+        if (shadowCount > 0) {
+            retString<<"|SC"<<shadowCount;
         }
         // bones count
-        findIter = feature.find(PROGRAM_FEATURE_BONE);
-        if ((findIter!=feature.end() && findIter->second > 0)) {
-            retString<<"|SK"<<findIter->second;
+        auto bonesCount = ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_BONE);
+        if (bonesCount > 0) {
+            retString<<"|SK"<<bonesCount;
         }
         // is particle
-        findIter = feature.find(PROGRAM_FEATURE_PARTICLE);
-        if ((findIter!=feature.end() && findIter->second > 0)) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_PARTICLE)) {
             retString<<"|PC1";
         }
         // terrain texture count
-        findIter = feature.find(PROGRAM_FEATURE_TERRAIN);
-        if ((findIter!=feature.end() && findIter->second > 0)) {
-            retString<<"|TER"<<findIter->second;
+        auto terrCount = ShaderCode::getCountOfTypeFeature(feature, PROGRAM_FEATURE_TERRAIN);
+        if (terrCount > 0) {
+            retString<<"|TER"<<terrCount;
         }
         return retString.str();
     }
     
     uint ShaderCode::getVerTypeOfProgramFeature(const ProgramFeatureMap& feature)
     {
-        auto findIter = feature.find(PROGRAM_FEATURE_POINT3);
         uint verType = 0;
-        if (findIter != feature.end() && findIter->second > 0) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_POINT3)) {
             verType = VertexType::Point3;
         }
         else {
             verType = VertexType::Point2;
         }
-        findIter = feature.find(PROGRAM_FEATURE_UV);
-        if (findIter != feature.end() && findIter->second > 0) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_UV)) {
             verType = verType | VertexType::UV;
         }
-        findIter = feature.find(PROGRAM_FEATURE_LIGHT);
-        if (findIter != feature.end() && findIter->second > 0) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_LIGHT)) {
             verType = verType | VertexType::Normal;
         }
-        findIter = feature.find(PROGRAM_FEATURE_BONE);
-        if (findIter != feature.end() && findIter->second > 0) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_BONE)) {
             verType = verType | VertexType::BWidget;
             verType = verType | VertexType::BIndex;
         }
-        findIter = feature.find(PROGRAM_FEATURE_PARTICLE);
-        if (findIter != feature.end() && findIter->second > 0) {
+        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_PARTICLE)) {
             verType = verType | VertexType::PSprite;
         }
         return verType;
@@ -145,5 +137,11 @@ namespace Peach3D
     {
         auto findIter = features.find(feat);
         return (findIter!=features.end()) && findIter->second > 0;
+    }
+    
+    int ShaderCode::getCountOfTypeFeature(const ProgramFeatureMap& features, const std::string& feat)
+    {
+        auto findIter = features.find(feat);
+        return findIter!=features.end() ? findIter->second : 0;
     }
 }

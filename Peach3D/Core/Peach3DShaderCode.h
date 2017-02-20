@@ -92,8 +92,10 @@ namespace Peach3D
         static uint getUniformFloatBits(UniformDataType type);
         /* Return shader uniform name by type */
         static UniformNameType getUniformNameType(const std::string& name);
-        /* Return shader uniform name by type */
+        /* Return shader uniform name by type. */
         static bool isContainTypeFeature(const ProgramFeatureMap& features, const std::string& feat);
+        /* Return count of feature, such as light/shadow/bones. */
+        static int getCountOfTypeFeature(const ProgramFeatureMap& features, const std::string& feat);
         
     public:
         std::map<std::string, std::string> mShaderMap;
