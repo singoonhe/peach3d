@@ -19,14 +19,12 @@ namespace Peach3D
     public:
         /**
          * @brief Create a pace of terrain
-         * @params count Height count per line.
-         * @params pace Distance between two vertex.
          * @params data Height data buffer.
-         * @params uvdata Vertex UV data buffer.
+         * @params pace Distance between two vertex.
+         * @params map Brushes map texture, each 4 brushes need a map texture.
          * @params texl Texture list of terrain.
          */
         static Terrain* create(int width, int height, const float* data, float pace, const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl);
-        static Terrain* create(const TexturePtr& highTex, float pace, const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl);
         //! query current height info for position
         float getCurrentHeight(const Vector3& pos);
         

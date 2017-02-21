@@ -31,7 +31,7 @@ namespace Peach3D
         width(0),
         height(0)
         {}
-        ~TextureLoaderRes() { if (buffer) { free(buffer); } }
+        ~TextureLoaderRes() { if (buffer) { free(buffer); buffer = nullptr; } }
         TextureDataStatus status;   // texture data status
         TextureFormat format;       // texture format
         uchar* buffer;              // texture data
@@ -147,14 +147,15 @@ namespace Peach3D
         void registerResourceLoaderFunction(const char* name, ResourceLoaderFunction func) { mResourceLoaders[name] = func; }
         /** Unregiste resource loader function. */
         void unregisterResourceLoaderFunction(const char* name) { mResourceLoaders[name] = nullptr; }
-
-    protected:
-        /** Read file data */
-        uchar* readFileData(const char* fullPath, ulong* size);
+        
 #if PEACH3D_CURRENT_RENDER != PEACH3D_RENDER_DX
         /** Parse image data, return decoded or compressed image info. */
         TextureLoaderRes* parseImageData(void* orignData, uint orignSize);
 #endif
+        
+    protected:
+        /** Read file data */
+        uchar* readFileData(const char* fullPath, ulong* size);
         
     private:
         ResourceManager();

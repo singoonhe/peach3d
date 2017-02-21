@@ -46,6 +46,7 @@ namespace Peach3D
         mVertexDataStride = IObject::getVertexStrideSize(mVertexDataType);
         
         // check data size
+        Peach3DAssert(mVertexDataStride >0 && (size % mVertexDataStride) == 0, "VertexType and data size not matched");
         if (mVertexDataStride >0 && (size % mVertexDataStride) > 0) {
             Peach3DLog(LogLevel::eError, "Object %s set vertx failed, type and data size not matched", mObjectName.c_str());
             return false;

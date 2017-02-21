@@ -44,7 +44,8 @@ namespace Peach3D
             auto texlEle = rootEle->FirstChildElement("Brushs");
             auto texEle = texlEle->FirstChildElement();
             while (texEle) {
-                texl.push_back(ResourceManager::getSingleton().addTexture(texEle->GetText()));
+                std::string texName = texEle->GetText();
+                texl.push_back(ResourceManager::getSingleton().addTexture(texName.c_str()));
                 texEle = texEle->NextSiblingElement();
             }
             // used alpha map texture
@@ -52,16 +53,26 @@ namespace Peach3D
             auto alphaEle = rootEle->FirstChildElement("AlphaMaps");
             auto mapTexEle = alphaEle->FirstChildElement();
             while (mapTexEle) {
-                mapTex.push_back(ResourceManager::getSingleton().addTexture(mapTexEle->GetText()));
+                std::string texName = mapTexEle->GetText();
+                mapTex.push_back(ResourceManager::getSingleton().addTexture(texName.c_str()));
                 mapTexEle = mapTexEle->NextSiblingElement();
             }
             // high data
             auto highTexEle = rootEle->FirstChildElement("HighTexture");
             if (highTexEle) {
                 // use high texture
-                auto highTex = ResourceManager::getSingleton().addTexture(highTexEle->GetText());
-                // create terrain
-                loadTer = Terrain::create(highTex, perPace, texl, mapTex);
+                ulong texLength = 0;
+                const char* highName = highTexEle->GetText();
+                uchar *texData = ResourceManager::getSingleton().getFileData(highName, &texLength);
+                if (texLength > 0 && texData) {
+                    TextureLoaderRes* res = ResourceManager::getSingleton().parseImageData(texData, (uint)texLength);
+                    Peach3DInfoLog("Load high image %s success, with:%d height:%d", highName, res->width, res->height);
+                    // create terrain
+                    loadTer = Terrain::create(res->width, res->height, (float*)res->buffer, perPace, texl, mapTex);
+                    delete res;
+                    // release memory data
+                    free(texData);
+                }
             }
             else {
                 // use high data
@@ -83,6 +94,7 @@ namespace Peach3D
             }
             
             if (loadTer) {
+                Peach3DInfoLog("Load terrain file %s success", file);
                 loadTer->setPosition(originPos);
             }
             loadState = loadTer;

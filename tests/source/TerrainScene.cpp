@@ -24,7 +24,7 @@ void TerrainSample::init(Widget* parentWidget)
     mTitle = "work on terrain";
     
     // create terrain
-    auto terr = PttLoader::pttTerrainParse("terrain1.ptt");
+    auto terr = PttLoader::pttTerrainParse("terr_walk.ptt");
     SceneManager::getSingleton().addTerrain(terr);
     
     auto winSize = LayoutManager::getSingleton().getScreenSize();

@@ -9,6 +9,7 @@
 #include "Peach3DTerrain.h"
 #include "Peach3DIRender.h"
 #include "Peach3DSceneManager.h"
+#include "Peach3DLogPrinter.h"
 #include "Peach3DResourceManager.h"
 
 namespace Peach3D
@@ -19,6 +20,7 @@ namespace Peach3D
         mHeightCount = height;
         mPerPace = pace;
         mTerrainLength = Vector3(mWidthCount * mPerPace, 0, mHeightCount * mPerPace);
+        mHighData = (float*)malloc(sizeof(data));
         memcpy(mHighData, data, sizeof(data));
         // set light enable default
         mIsLightingDirty = true;
@@ -45,13 +47,6 @@ namespace Peach3D
         return nullptr;
     }
     
-    Terrain* Terrain::create(const TexturePtr& highTex, float pace, const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl)
-    {
-        auto texWidth = highTex->getWidth(), texHeight = highTex->getHeight();
-//        void* texData = highTex->getDataCache();
-        return nullptr; //Terrain::create(texWidth, texHeight, (float*)texData, pace, map, texl);
-    }
-    
     void Terrain::buildTerrain(const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl)
     {
         mBrushes = texl;
@@ -62,7 +57,8 @@ namespace Peach3D
         uint vType = VertexType::Point3|VertexType::Normal|VertexType::UV;
         auto strideSize = IObject::getVertexStrideSize(vType);
         auto strideFloatSize = strideSize / 4;
-        float* vertexData = (float*)malloc(mWidthCount * mHeightCount * strideSize);
+        auto dataSize = mWidthCount * mHeightCount * strideSize;
+        float* vertexData = (float*)malloc(dataSize);
         for (auto i=0; i<mHeightCount; ++i) {
             for (auto j=0; j<mWidthCount; ++j) {
                 auto curIndex = i * mWidthCount + j;
@@ -81,7 +77,7 @@ namespace Peach3D
             }
         }
         // fill vertex data
-        mTerrainObj->setVertexBuffer(vertexData, sizeof(vertexData), vType);
+        mTerrainObj->setVertexBuffer(vertexData, dataSize, vType);
         free(vertexData);
         
         uint indexCount = (mWidthCount - 1) * (mHeightCount - 1) * 6;

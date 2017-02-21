@@ -40,7 +40,7 @@ namespace Peach3D
     void* jpegImageDataParse(const ResourceLoaderInput& input)
     {
         /* these are standard libjpeg structures for reading(decompression) */
-        struct jpeg_decompress_struct cinfo;
+        jpeg_decompress_struct cinfo;
         /* libjpeg data structure for storing one row, that is, scanline of an image */
         JSAMPROW row_pointer = nullptr;
         
@@ -95,7 +95,7 @@ namespace Peach3D
             JSAMPROW cachePointer[1] = {row_pointer};
             while( cinfo.output_scanline < cinfo.output_height ) {
                 jpeg_read_scanlines( &cinfo, cachePointer, 1 );
-                memcpy(outData + location, &row_pointer[0], cinfo.output_width*cinfo.output_components);
+                memcpy(outData->buffer + location, &row_pointer[0], cinfo.output_width*cinfo.output_components);
                 location -= widthByte;
             }
         } while (0);

@@ -2,15 +2,21 @@
 <Terrain>
     <!-- current piece orign position -->
     <OrignPos>0, 0, 0</OrignPos>
-    <!-- vertex width count and height count -->
-    <HighCount>5, 5</HighCount>
     <!-- distance between two vertex, float -->
-    <PerPace>1</PerPace>
+    <PerPace>0.1</PerPace>
+    <!-- high texture, HighData and HighCount will be ignored -->
+    <HighTexture>terr_heightmap.jpg</HighTexture>
+    <!-- vertex width count and height count -->
+    <!-- <HighCount>5, 5</HighCount> -->
     <!-- all vertex height -->
-    <HighData>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</HighData>
-    <!-- all vertex uv,  unsigned int -->
-    <HighUV>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</HighUV>
+    <!-- <HighData>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</HighData> -->
     <Brushs>
-        <Brush>next_normal.png</Brush>
+        <Brush>terr_dirt.jpg</Brush>
+        <Brush>terr_Grass2.jpg</Brush>
+        <Brush>terr_road.jpg</Brush>
+        <Brush>terr_GreenSkin.jpg</Brush>
     </Brushs>
+    <AlphaMaps>
+        <Map>terr_alphamap.png</Map>
+    </AlphaMaps>
 </Terrain>
