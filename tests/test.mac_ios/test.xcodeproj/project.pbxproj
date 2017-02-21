@@ -51,6 +51,8 @@
 		18BE16E21C4933F5000592A4 /* TouchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16E01C4933F5000592A4 /* TouchScene.cpp */; };
 		18BE16E31C4933F5000592A4 /* TouchScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BE16E01C4933F5000592A4 /* TouchScene.cpp */; };
 		18BF2DBA19B6BBF60006872A /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18F31C1F19B5D8B00089E78E /* OpenGL.framework */; };
+		18C9F7511E5ADDF4003B3C5B /* TerrainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C9F74F1E5ADDF4003B3C5B /* TerrainScene.cpp */; };
+		18C9F7521E5ADDF4003B3C5B /* TerrainScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C9F74F1E5ADDF4003B3C5B /* TerrainScene.cpp */; };
 		18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18F439EA1B72495E00D9B788 /* ActionScene.cpp */; };
 		18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18F439EA1B72495E00D9B788 /* ActionScene.cpp */; };
 		18F9F4D719C5E5640023C83B /* PlatformDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18F9F4D519C5E5640023C83B /* PlatformDelegate.cpp */; };
@@ -153,6 +155,8 @@
 		18AC2E491D5B2AD200D6590B /* writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = writer.h; sourceTree = "<group>"; };
 		18BE16E01C4933F5000592A4 /* TouchScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchScene.cpp; sourceTree = "<group>"; };
 		18BE16E11C4933F5000592A4 /* TouchScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchScene.h; sourceTree = "<group>"; };
+		18C9F74F1E5ADDF4003B3C5B /* TerrainScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainScene.cpp; sourceTree = "<group>"; };
+		18C9F7501E5ADDF4003B3C5B /* TerrainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainScene.h; sourceTree = "<group>"; };
 		18F31C1F19B5D8B00089E78E /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		18F439EA1B72495E00D9B788 /* ActionScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ActionScene.cpp; sourceTree = "<group>"; };
 		18F439EB1B72495E00D9B788 /* ActionScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionScene.h; sourceTree = "<group>"; };
@@ -382,6 +386,8 @@
 				18F9F4D619C5E5640023C83B /* PlatformDelegate.h */,
 				18461DA81CAA68F6001A9829 /* RTTShadowScene.cpp */,
 				18461DA91CAA68F6001A9829 /* RTTShadowScene.h */,
+				18C9F74F1E5ADDF4003B3C5B /* TerrainScene.cpp */,
+				18C9F7501E5ADDF4003B3C5B /* TerrainScene.h */,
 				188637F519D02BED00BD6FE3 /* TestScene.cpp */,
 				188637F619D02BED00BD6FE3 /* TestScene.h */,
 				18BE16E01C4933F5000592A4 /* TouchScene.cpp */,
@@ -520,6 +526,7 @@
 				187D771C1C8ECF9300F5D161 /* LightScene.cpp in Sources */,
 				184107131B6CBCAD005133E2 /* UIScene.cpp in Sources */,
 				184C3BC01C3AB6E20073B598 /* MeshScene.cpp in Sources */,
+				18C9F7511E5ADDF4003B3C5B /* TerrainScene.cpp in Sources */,
 				188637F719D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439EC1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107061B6CAD4B005133E2 /* BaseScene.cpp in Sources */,
@@ -542,6 +549,7 @@
 				187D771D1C8ECF9300F5D161 /* LightScene.cpp in Sources */,
 				184107141B6CBCAD005133E2 /* UIScene.cpp in Sources */,
 				184C3BC11C3AB6E20073B598 /* MeshScene.cpp in Sources */,
+				18C9F7521E5ADDF4003B3C5B /* TerrainScene.cpp in Sources */,
 				188637F819D02BED00BD6FE3 /* TestScene.cpp in Sources */,
 				18F439ED1B72495E00D9B788 /* ActionScene.cpp in Sources */,
 				184107071B6CAD4B005133E2 /* BaseScene.cpp in Sources */,

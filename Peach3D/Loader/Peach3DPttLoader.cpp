@@ -36,30 +36,9 @@ namespace Peach3D
             Vector3 originPos;
             auto posEle = rootEle->FirstChildElement("OrignPos");
             sscanf(posEle->GetText(), "%f,%f,%f", &originPos.x, &originPos.y, &originPos.z);
-            // vertex count per line
-            auto countEle = rootEle->FirstChildElement("OrignPos");
-            int highCount = 0, widthCount = 0;
-            sscanf(countEle->GetText(), "%d,%d", &widthCount, &highCount);
-            int totalCount = widthCount * highCount;
             // distance between two vertex
             auto paceEle = rootEle->FirstChildElement("PerPace");
             float perPace = atof(paceEle->GetText());
-            // height data
-            highData = new float[totalCount];
-            auto dataEle = rootEle->FirstChildElement("HighData");
-            auto splitData = Utils::split(dataEle->GetText(), ',');
-            Peach3DAssert(splitData.size()>=totalCount, "high data size not enough");
-            for (auto i=0; i<totalCount; ++i) {
-                highData[i] = atof(splitData[i].c_str());
-            }
-            // uv data
-            uvData = new uint[totalCount];
-            auto uvEle = rootEle->FirstChildElement("HighUV");
-            auto uvsData = Utils::split(uvEle->GetText(), ',');
-            Peach3DAssert(uvsData.size()>=totalCount, "uv data size not enough");
-            for (auto i=0; i<totalCount; ++i) {
-                uvData[i] = (uint)atoll(uvsData[i].c_str());
-            }
             // used textures
             std::vector<TexturePtr> texl;
             auto texlEle = rootEle->FirstChildElement("Brushs");
@@ -68,9 +47,41 @@ namespace Peach3D
                 texl.push_back(ResourceManager::getSingleton().addTexture(texEle->GetText()));
                 texEle = texEle->NextSiblingElement();
             }
+            // used alpha map texture
+            std::vector<TexturePtr> mapTex;
+            auto alphaEle = rootEle->FirstChildElement("AlphaMaps");
+            auto mapTexEle = alphaEle->FirstChildElement();
+            while (mapTexEle) {
+                mapTex.push_back(ResourceManager::getSingleton().addTexture(mapTexEle->GetText()));
+                mapTexEle = mapTexEle->NextSiblingElement();
+            }
+            // high data
+            auto highTexEle = rootEle->FirstChildElement("HighTexture");
+            if (highTexEle) {
+                // use high texture
+                auto highTex = ResourceManager::getSingleton().addTexture(highTexEle->GetText());
+                // create terrain
+                loadTer = Terrain::create(highTex, perPace, texl, mapTex);
+            }
+            else {
+                // use high data
+                auto countEle = rootEle->FirstChildElement("HighCount");
+                int highCount = 0, widthCount = 0;
+                sscanf(countEle->GetText(), "%d,%d", &widthCount, &highCount);
+                int totalCount = widthCount * highCount;
+                // height data
+                highData = new float[totalCount];
+                auto dataEle = rootEle->FirstChildElement("HighData");
+                auto splitData = Utils::split(dataEle->GetText(), ',');
+                Peach3DAssert(splitData.size()>=totalCount, "high data size not enough");
+                for (auto i=0; i<totalCount; ++i) {
+                    highData[i] = atof(splitData[i].c_str());
+                }
+                // create terrain
+                loadTer = Terrain::create(widthCount, highCount, highData, perPace, texl, mapTex);
+                delete [] highData;
+            }
             
-            // create terrain
-            loadTer = Terrain::create(highCount, highCount, perPace, highData, uvData, texl);
             if (loadTer) {
                 loadTer->setPosition(originPos);
             }

@@ -34,19 +34,28 @@ namespace Peach3D
         }
     }
     
-    Terrain* Terrain::create(int width, int height, float pace, const float* data, const uint* uvdata, const std::vector<TexturePtr>& texl)
+    Terrain* Terrain::create(int width, int height, const float* data, float pace, const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl)
     {
-        if (width > 0 && height > 0 && pace > 0 && data && uvdata) {
+        Peach3DAssert(texl.size() <= (map.size() * 4), "Each 4 brushs need a map texture");
+        if (width > 0 && height > 0 && pace > 0 && data && texl.size() <= (map.size()*4)) {
             Terrain* newT = new Terrain(width, height, pace, data);
-            newT->buildTerrain(uvdata, texl);
+            newT->buildTerrain(map, texl);
             return newT;
         }
         return nullptr;
     }
     
-    void Terrain::buildTerrain(const uint* uvdata, const std::vector<TexturePtr>& texl)
+    Terrain* Terrain::create(const TexturePtr& highTex, float pace, const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl)
+    {
+        auto texWidth = highTex->getWidth(), texHeight = highTex->getHeight();
+//        void* texData = highTex->getDataCache();
+        return nullptr; //Terrain::create(texWidth, texHeight, (float*)texData, pace, map, texl);
+    }
+    
+    void Terrain::buildTerrain(const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl)
     {
         mBrushes = texl;
+        mAlphaMap = map;
         
         // create texture
         mTerrainObj = IRender::getSingleton().createObject(("pd_Terrain_"+mName).c_str());

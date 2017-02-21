@@ -16,6 +16,7 @@
 #include "RTTShadowScene.h"
 #include "DollScene.h"
 #include "ParticleScene.h"
+#include "TerrainScene.h"
 
 struct SceneLinker {
     std::string title;
@@ -31,6 +32,7 @@ std::vector<SceneLinker> gTestSceneList = {{"Device Info", []()->BaseScene* {ret
     {"Rtt Shadow", []()->BaseScene* {return new RTTShadowScene();}},
     {"Particle", []()->BaseScene* {return new ParticleScene();}},
     {"Touch 3D", []()->BaseScene* {return new TouchScene();}},
+    {"Terrain", []()->BaseScene* {return new TerrainScene();}},
 };
 
 bool TestScene::init()

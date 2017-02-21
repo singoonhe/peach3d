@@ -28,6 +28,7 @@ LOCAL_SRC_FILES := main.cpp \
 ../../source/UIScene.cpp \
 ../../source/ActionScene.cpp \
 ../../source/RTTShadowScene.cpp \
+../../source/TerrainScene.cpp \
 ../../source/MeshScene.cpp \
 ../../source/ParticleScene.cpp \
 ../../source/cocos2dx/C3tLoader.cpp

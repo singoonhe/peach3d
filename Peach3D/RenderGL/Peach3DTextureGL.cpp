@@ -18,11 +18,7 @@ namespace Peach3D
     
     void TextureGL::fillGLTextureFormatMap()
     {
-#if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_GL
         mGLTextureFormatMap[TextureFormat::eI8] = TextureGLFormatInfo(GL_ALPHA, GL_UNSIGNED_BYTE);
-#else
-        mGLTextureFormatMap[TextureFormat::eI8] = TextureGLFormatInfo(GL_LUMINANCE, GL_UNSIGNED_BYTE);
-#endif
         mGLTextureFormatMap[TextureFormat::eRGB8] = TextureGLFormatInfo(GL_RGB, GL_UNSIGNED_BYTE);
         mGLTextureFormatMap[TextureFormat::eRGBA8] = TextureGLFormatInfo(GL_RGBA, GL_UNSIGNED_BYTE);
     }
