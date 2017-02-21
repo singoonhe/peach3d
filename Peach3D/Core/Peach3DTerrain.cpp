@@ -78,7 +78,6 @@ namespace Peach3D
         }
         // fill vertex data
         mTerrainObj->setVertexBuffer(vertexData, dataSize, vType);
-        free(vertexData);
         
         uint indexCount = (mWidthCount - 1) * (mHeightCount - 1) * 6;
         IndexType inxType = IndexType::eUShort;
@@ -90,7 +89,7 @@ namespace Peach3D
         void* inxData = malloc(inxDataSize);
         for (auto i=0; i<(mHeightCount-1); ++i) {
             for (auto j=0; j<(mWidthCount-1); ++j) {
-                uint aboveStart = ((i + 1) * mWidthCount + j), curStart = i * mWidthCount + j;
+                uint aboveStart = ((i + 1) * (mWidthCount-1) + j), curStart = i * (mWidthCount-1) + j;
                 uint aboveNext = aboveStart + 1, curNext = curStart + 1;
                 uint inxStart = curStart * 6;
                 // fill two trangles(0,1,3, 3,1,2)
@@ -159,6 +158,7 @@ namespace Peach3D
         }
         // fill index data
         mTerrainObj->setIndexBuffer(inxData, inxDataSize, inxType);
+        free(vertexData);
         free(inxData);
     }
     
