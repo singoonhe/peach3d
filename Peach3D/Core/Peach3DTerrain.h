@@ -64,7 +64,7 @@ namespace Peach3D
     private:
         int         mWidthCount;    // width vertex count
         int         mHeightCount;   // height vertex count
-        float       mPerPace;       // distance between two vertex
+        float       mLandPace;      // distance between two vertex
         float*      mHighData;      // saved data for query current height
         
         std::string mName;

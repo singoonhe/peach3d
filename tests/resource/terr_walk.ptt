@@ -3,9 +3,11 @@
     <!-- current piece orign position -->
     <OrignPos>0, 0, 0</OrignPos>
     <!-- distance between two vertex, float -->
-    <PerPace>0.1</PerPace>
+    <LandPace>0.1</LandPace>
     <!-- high texture, HighData and HighCount will be ignored -->
     <HighTexture>terr_heightmap.jpg</HighTexture>
+    <!-- last high = high ratio * high texture data, only valid when HighTexture-->
+    <HighRatio>0.001</HighRatio>
     <!-- vertex width count and height count -->
     <!-- <HighCount>5, 5</HighCount> -->
     <!-- all vertex height -->

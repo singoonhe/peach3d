@@ -18,8 +18,8 @@ namespace Peach3D
     {
         mWidthCount = width;
         mHeightCount = height;
-        mPerPace = pace;
-        mTerrainLength = Vector3(mWidthCount * mPerPace, 0, mHeightCount * mPerPace);
+        mLandPace = pace;
+        mTerrainLength = Vector3(mWidthCount * mLandPace, 0, mHeightCount * mLandPace);
         mHighData = (float*)malloc(sizeof(data));
         memcpy(mHighData, data, sizeof(data));
         // set light enable default
@@ -64,9 +64,9 @@ namespace Peach3D
                 auto curIndex = i * mWidthCount + j;
                 uint curStart = curIndex * strideFloatSize;
                 // point
-                vertexData[curStart] = mPerPace * i;
+                vertexData[curStart] = mLandPace * j;
                 vertexData[curStart + 1] = mHighData[curIndex];
-                vertexData[curStart + 2] = -mPerPace * j;
+                vertexData[curStart + 2] = -mLandPace * i;
                 // normal
                 vertexData[curStart + 3] = 0.f;
                 vertexData[curStart + 4] = 0.f;
@@ -81,79 +81,73 @@ namespace Peach3D
         
         uint indexCount = (mWidthCount - 1) * (mHeightCount - 1) * 6;
         IndexType inxType = IndexType::eUShort;
-        auto inxDataSize = indexCount * sizeof(ushort);
+        auto inxDataSize = 0;
         if (indexCount > 65535) {
             inxType = IndexType::eUInt;
             inxDataSize = indexCount * sizeof(uint);
         }
+        else {
+            inxDataSize = indexCount * sizeof(ushort);
+        }
+        auto inxIndex = 0;
         void* inxData = malloc(inxDataSize);
         for (auto i=0; i<(mHeightCount-1); ++i) {
             for (auto j=0; j<(mWidthCount-1); ++j) {
-                uint aboveStart = ((i + 1) * (mWidthCount-1) + j), curStart = i * (mWidthCount-1) + j;
+                uint aboveStart = (i + 1) * mWidthCount + j, curStart = i * mWidthCount + j;
                 uint aboveNext = aboveStart + 1, curNext = curStart + 1;
-                uint inxStart = curStart * 6;
                 // fill two trangles(0,1,3, 3,1,2)
                 if (inxType == IndexType::eUShort) {
                     ushort* fillData = (ushort*)inxData;
-                    fillData[inxStart] = curStart;
-                    fillData[inxStart + 1] = aboveStart;
-                    fillData[inxStart + 2] = curNext;
-                    fillData[inxStart + 3] = curNext;
-                    fillData[inxStart + 4] = aboveStart;
-                    fillData[inxStart + 5] = aboveNext;
+                    fillData[inxIndex++] = curStart;
+                    fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = curNext;
+                    fillData[inxIndex++] = curNext;
+                    fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = aboveNext;
                 }
                 else {
                     uint* fillData = (uint*)inxData;
-                    fillData[inxStart] = curStart;
-                    fillData[inxStart + 1] = aboveStart;
-                    fillData[inxStart + 2] = curNext;
-                    fillData[inxStart + 3] = curNext;
-                    fillData[inxStart + 4] = aboveStart;
-                    fillData[inxStart + 5] = aboveNext;
+                    fillData[inxIndex++] = curStart;
+                    fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = curNext;
+                    fillData[inxIndex++] = curNext;
+                    fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = aboveNext;
                 }
             }
         }
         for (auto i=0; i<indexCount; i+=3) {
-            Vector3 v1, v2;
+            uint index0, index1, index2;
             if (inxType == IndexType::eUShort) {
                 ushort* fillData = (ushort*)inxData;
-                auto Index0 = fillData[i] * strideFloatSize;
-                auto Index1 = fillData[i + 1] * strideFloatSize;
-                auto Index2 = fillData[i + 2] * strideFloatSize;
-                Vector3 v0 = Vector3(vertexData[Index0], vertexData[Index0+1], vertexData[Index0+2]);
-                v1 = Vector3(vertexData[Index1], vertexData[Index1+1], vertexData[Index1+2]) - v0;
-                v2 = Vector3(vertexData[Index2], vertexData[Index2+1], vertexData[Index2+2]) - v0;
-                // calc face normal
-                Vector3 cn = v1.cross(v2);
-                cn.normalize();
-                vertexData[Index0] += cn.x; vertexData[Index0+1] += cn.y; vertexData[Index0+2] += cn.z;
-                vertexData[Index1] += cn.x; vertexData[Index1+1] += cn.y; vertexData[Index1+2] += cn.z;
-                vertexData[Index2] += cn.x; vertexData[Index2+1] += cn.y; vertexData[Index2+2] += cn.z;
+                index0 = fillData[i] * strideFloatSize;
+                index1 = fillData[i + 1] * strideFloatSize;
+                index2 = fillData[i + 2] * strideFloatSize;
             }
             else {
                 uint* fillData = (uint*)inxData;
-                auto Index0 = fillData[i] * strideFloatSize;
-                auto Index1 = fillData[i + 1] * strideFloatSize;
-                auto Index2 = fillData[i + 2] * strideFloatSize;
-                Vector3 v0 = Vector3(vertexData[Index0], vertexData[Index0+1], vertexData[Index0+2]);
-                v1 = Vector3(vertexData[Index1], vertexData[Index1+1], vertexData[Index1+2]) - v0;
-                v2 = Vector3(vertexData[Index2], vertexData[Index2+1], vertexData[Index2+2]) - v0;
-                // calc face normal
-                Vector3 cn = v1.cross(v2);
-                cn.normalize();
-                vertexData[Index0] += cn.x; vertexData[Index0+1] += cn.y; vertexData[Index0+2] += cn.z;
-                vertexData[Index1] += cn.x; vertexData[Index1+1] += cn.y; vertexData[Index1+2] += cn.z;
-                vertexData[Index2] += cn.x; vertexData[Index2+1] += cn.y; vertexData[Index2+2] += cn.z;
+                index0 = fillData[i] * strideFloatSize;
+                index1 = fillData[i + 1] * strideFloatSize;
+                index2 = fillData[i + 2] * strideFloatSize;
             }
+            Vector3 v0 = Vector3(vertexData[index0], vertexData[index0+1], vertexData[index0+2]);
+            Vector3 v1 = Vector3(vertexData[index1], vertexData[index1+1], vertexData[index1+2]) - v0;
+            Vector3 v2 = Vector3(vertexData[index2], vertexData[index2+1], vertexData[index2+2]) - v0;
+            // calc face normal
+            Vector3 cn = v2.cross(v1);
+            cn.normalize();
+            vertexData[index0+3] += cn.x; vertexData[index0+4] += cn.y; vertexData[index0+5] += cn.z;
+            vertexData[index1+3] += cn.x; vertexData[index1+4] += cn.y; vertexData[index1+5] += cn.z;
+            vertexData[index2+3] += cn.x; vertexData[index2+4] += cn.y; vertexData[index2+5] += cn.z;
         }
         // normal normalized
         for (auto i=0; i<mHeightCount; ++i) {
             for (auto j=0; j<mWidthCount; ++j) {
                 auto curIndex = i * mWidthCount + j;
                 uint curStart = curIndex * strideFloatSize;
-                Vector3 on(vertexData[curStart], vertexData[curStart+1], vertexData[curStart+2]);
+                Vector3 on(vertexData[curStart+3], vertexData[curStart+4], vertexData[curStart+5]);
                 on.normalize();
-                vertexData[curStart] = on.x; vertexData[curStart+1] = on.y; vertexData[curStart+2] = on.z;
+                vertexData[curStart+3] = on.x; vertexData[curStart+4] = on.y; vertexData[curStart+5] = on.z;
             }
         }
         // fill index data
@@ -164,10 +158,10 @@ namespace Peach3D
     
     float Terrain::getCurrentHeight(const Vector3& pos)
     {
-        Vector3 maxR(mPerPace * (mWidthCount - 1), 0, mPerPace * (mHeightCount - 1));
+        Vector3 maxR(mLandPace * (mWidthCount - 1), 0, mLandPace * (mHeightCount - 1));
         Vector3 offset = pos - mTerrainPos;
         if (offset.x >= 0 && offset.x <= maxR.x && offset.z >= 0 && offset.z <= maxR.z ) {
-            float widthIndex = offset.x / mPerPace, heightIndex = offset.z / mPerPace;
+            float widthIndex = offset.x / mLandPace, heightIndex = offset.z / mLandPace;
             int widthInt = (int)widthIndex, heightInt = (int)heightIndex;
             float widthDec = widthIndex - widthInt, heightDec = heightIndex - heightInt;
             // calc 4 corners high data

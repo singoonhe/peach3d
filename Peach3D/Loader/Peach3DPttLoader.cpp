@@ -37,8 +37,8 @@ namespace Peach3D
             auto posEle = rootEle->FirstChildElement("OrignPos");
             sscanf(posEle->GetText(), "%f,%f,%f", &originPos.x, &originPos.y, &originPos.z);
             // distance between two vertex
-            auto paceEle = rootEle->FirstChildElement("PerPace");
-            float perPace = atof(paceEle->GetText());
+            auto paceEle = rootEle->FirstChildElement("LandPace");
+            float landPace = atof(paceEle->GetText());
             // used textures
             std::vector<TexturePtr> texl;
             auto texlEle = rootEle->FirstChildElement("Brushs");
@@ -60,6 +60,12 @@ namespace Peach3D
             // high data
             auto highTexEle = rootEle->FirstChildElement("HighTexture");
             if (highTexEle) {
+                // read high ratio
+                float highRatio = 1.f;
+                auto ratioEle = rootEle->FirstChildElement("HighRatio");
+                if (ratioEle) {
+                    highRatio = atof(ratioEle->GetText());
+                }
                 // use high texture
                 ulong texLength = 0;
                 const char* highName = highTexEle->GetText();
@@ -67,10 +73,21 @@ namespace Peach3D
                 if (texLength > 0 && texData) {
                     TextureLoaderRes* res = ResourceManager::getSingleton().parseImageData(texData, (uint)texLength);
                     Peach3DInfoLog("Load high image %s success, with:%d height:%d", highName, res->width, res->height);
+                    // convert byte data to float
+                    auto bufferSize = res->width * res->height, widthByte = res->width * 3;
+                    widthByte += 3 - ((widthByte-1) % 4);
+                    float* highBuffer = new float[res->width * res->height];
+                    uchar* texBuffer = (uchar*)res->buffer;
+                    for (auto i=0; i<res->height; ++i) {
+                        for (auto j=0; j<res->width; ++j) {
+                            highBuffer[i*res->width+j] = highRatio * texBuffer[i*widthByte+j*3];
+                        }
+                    }
                     // create terrain
-                    loadTer = Terrain::create(res->width, res->height, (float*)res->buffer, perPace, texl, mapTex);
-                    delete res;
+                    loadTer = Terrain::create(res->width, res->height, highBuffer, landPace, texl, mapTex);
                     // release memory data
+                    delete res;
+                    delete[] highBuffer;
                     free(texData);
                 }
             }
@@ -89,7 +106,7 @@ namespace Peach3D
                     highData[i] = atof(splitData[i].c_str());
                 }
                 // create terrain
-                loadTer = Terrain::create(widthCount, highCount, highData, perPace, texl, mapTex);
+                loadTer = Terrain::create(widthCount, highCount, highData, landPace, texl, mapTex);
                 delete [] highData;
             }
             
