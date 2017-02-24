@@ -92,8 +92,8 @@ namespace Peach3D
         void init();
         /** Render one frame, executing all pass. */
         virtual void render(float lastFrameTime);
-        /** Render once pass. */
-        virtual void renderOncePass(Render3DPassContent* content);
+        /** Render once pass. No need render terrain/particle/sky...for depth texture. */
+        virtual void renderOncePass(bool forDepth, Render3DPassContent* content);
         /** Render once pass for RTT, generate new content if content is nullptr. */
         virtual void renderForRTT(const TexturePtr& rtt, Render3DPassContent* content);
         

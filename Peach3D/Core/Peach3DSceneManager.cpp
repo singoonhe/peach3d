@@ -302,22 +302,11 @@ namespace Peach3D
     }
      */
     
-    void SceneManager::renderOncePass(Render3DPassContent* content)
+    void SceneManager::renderOncePass(bool forDepth, Render3DPassContent* content)
     {
         // reupdate global uniforms for GL3, befor rendering may modify camera
         IRender::getSingleton().prepareForObjectRender();
-        // update all scene node
-        Render3DPassContent newContent;
-        if (!content) {
-            // update all lights
-            for (auto l : mLightList) {
-                l.second->prepareForRender();
-            }
-            // get render content first
-            mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
-                this->addSceneNodeToCacheList(childNode, 0.f, &newContent, false);
-            });
-            content = &newContent;
+        if (!forDepth) {
             // not render terrains when rendering for depth texture,
             // terrain not bring shadow
             for (auto trr : mTerrainList) {
@@ -356,8 +345,19 @@ namespace Peach3D
     {
         // clean frame before render
         rtt->beforeRendering();
-        // render RTT pass, not cache click list
-        renderOncePass(content);
+        // update all scene node if not existed
+        if (!content) {
+            Render3DPassContent newContent;
+            mRootSceneNode->tranverseChildNode([&](size_t, Node* childNode) {
+                this->addSceneNodeToCacheList(childNode, 0.f, &newContent, false);
+            });
+            // render RTT pass, not cache click list
+            renderOncePass(false, &newContent);
+        }
+        else {
+            // render depth texture
+            renderOncePass(true, content);
+        }
         // restore render state
         rtt->afterRendering();
     }
@@ -366,12 +366,17 @@ namespace Peach3D
     {
         // clear picking scene node list once, only add in main pass
         mPickSceneNodeList.clear();
+        // camera action, just update once
         for (auto& camera : mCameraList) {
             camera->prepareForRender(lastFrameTime);
         }
-        // update all lights
+        // update all lights, calc max distance only once
         for (auto l : mLightList) {
             l.second->prepareForRender();
+        }
+        // update all terrains, calc lights and shadows only once
+        for (auto trr : mTerrainList) {
+            trr->prepareForRender(lastFrameTime);
         }
         /* traverse all nodes, activate used RTT.
          root scene node must update, children may need delete. */
@@ -389,9 +394,12 @@ namespace Peach3D
         addWidgetToCacheList(&currentZOrder, mRootWidget, lastFrameTime);
         
         // is node render shadow
-        bool isUpdateDepth = false;
         if (mLightList.size() > 0) {
-            Render3DPassContent depthContent = mainContent;
+            // node only update once no matter how much shadows
+            bool isUpdateDepth = false;
+            // depth not need render OBB and paticle, just copy nodes
+            Render3DPassContent depthContent;
+            depthContent.nodeMap = mainContent.nodeMap;
             for (auto& l : mLightList) {
                 auto shadowTex = l.second->getShadowTexture();
                 if (shadowTex) {
@@ -407,18 +415,16 @@ namespace Peach3D
                                 ++iter;
                             }
                         }
-                        // depth not need render OBB
-                        depthContent.OBBList.clear();
                         isUpdateDepth = true;
                     }
                     renderForRTT(shadowTex, &depthContent);
                 }
             }
-        }
-        // if shadow rendering, mark render color now
-        if (isUpdateDepth) {
-            for (auto& nodeIter : mainContent.nodeMap) {
-                nodeIter.second->setRenderForShadow(false);
+            // if shadow rendering, mark render color now
+            if (isUpdateDepth) {
+                for (auto& nodeIter : mainContent.nodeMap) {
+                    nodeIter.second->setRenderForShadow(false);
+                }
             }
         }
         
@@ -435,7 +441,7 @@ namespace Peach3D
         // clean frame before render
         mainRender->prepareForMainRender();
         // render main pass
-        renderOncePass(&mainContent);
+        renderOncePass(false, &mainContent);
         // present after draw over
         mainRender->finishForMainRender();
         

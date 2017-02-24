@@ -84,7 +84,7 @@ namespace Peach3D
                         }
                     }
                     // create terrain
-                    loadTer = Terrain::create(res->width, res->height, highBuffer, landPace, texl, mapTex);
+                    loadTer = Terrain::create(res->width, res->height, highBuffer, landPace, mapTex, texl);
                     // release memory data
                     delete res;
                     delete[] highBuffer;
@@ -106,7 +106,7 @@ namespace Peach3D
                     highData[i] = atof(splitData[i].c_str());
                 }
                 // create terrain
-                loadTer = Terrain::create(widthCount, highCount, highData, landPace, texl, mapTex);
+                loadTer = Terrain::create(widthCount, highCount, highData, landPace, mapTex, texl);
                 delete [] highData;
             }
             

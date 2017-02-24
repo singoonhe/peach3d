@@ -344,13 +344,15 @@ namespace Peach3D
     varying vec4 f_diffuse;
     \n#ifdef PD_ENABLE_TEXUV\n
         varying vec2 f_uv;
-        uniform sampler2D pd_texture0;
-    \n#elif defined PD_ENABLE_TERRAIN\n
-        varying vec2 f_uv;
-        uniform sampler2D pd_texture[PD_ENABLE_TERRAIN];
-        uniform sampler2D pd_alphaMap0;
-        \n#if PD_ENABLE_TERRAIN > 4\n
-            uniform sampler2D pd_alphaMap1;
+        \n#ifdef PD_ENABLE_TERRAIN\n
+            varying vec2 f_uv;
+            uniform sampler2D pd_texture[PD_ENABLE_TERRAIN];
+            uniform sampler2D pd_alphaMap0;
+            \n#if PD_ENABLE_TERRAIN > 4\n
+                uniform sampler2D pd_alphaMap1;
+            \n#endif
+        \n#else\n
+            uniform sampler2D pd_texture0;
         \n#endif
     \n#endif
     \n#ifdef PD_ENABLE_LIGHT\n
