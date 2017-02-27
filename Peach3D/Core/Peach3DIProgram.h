@@ -92,8 +92,10 @@ namespace Peach3D
         /** Update 3d particle uniforms, include rect/textures... */
         virtual void updateParticle3DUniforms(const Rect& coord) = 0;
         
-        /** Update terrain uniforms for GL2, terrain only use GL2. */
-        virtual void updateTerrainUniforms(Terrain* ter) {};
+        /** Update terrain uniforms for GL2. */
+        virtual void updateTerrainUniformsGL2(Terrain* ter) {};
+        /** Update terrain uniforms for GL3. */
+        virtual void updateTerrainUniformsGL3(Terrain* ter) {};
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;

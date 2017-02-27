@@ -809,6 +809,56 @@ namespace Peach3D
         }
     }
     
+    void ProgramGL::updateWorldUniformsGL3(float *startBuffer, const Matrix4& modelMat, const Material& objMat)
+    {
+        int startOffset = 0;
+        for (auto& uniform : mProgramUniformList) {
+            switch (ShaderCode::getUniformNameType(uniform.name)) {
+                case UniformNameType::eModelMatrix: {
+                    memcpy(startBuffer + startOffset, modelMat.mat, 16 * sizeof(float));
+                    startOffset += 16;
+                }
+                    break;
+                case UniformNameType::eDiffuse: {
+                    float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
+                    memcpy(startBuffer + startOffset, color, 4 * sizeof(float));
+                    startOffset += 4;
+                }
+                    break;
+                    // material uniforms
+                case UniformNameType::eNormalMatrix: {
+                    Matrix4 calcMat = modelMat;
+                    Matrix4 invmat;
+                    calcMat.getInverse(&invmat);
+                    memcpy(startBuffer + startOffset, invmat.getTranspose().mat, 16 * sizeof(float));
+                    startOffset += 16;
+                }
+                    break;
+                case UniformNameType::eMatAmbient: {
+                    float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
+                    memcpy(startBuffer + startOffset, color, 3 * sizeof(float));
+                    startOffset += 3;
+                }
+                    break;
+                case UniformNameType::eMatSpecular: {
+                    // also pass shininess
+                    float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
+                    memcpy(startBuffer + startOffset, color, 4 * sizeof(float));
+                    startOffset += 4;
+                }
+                    break;
+                case UniformNameType::eMatEmissive: {
+                    float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
+                    memcpy(startBuffer + startOffset, color, 3 * sizeof(float));
+                    startOffset += 3;
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
     void ProgramGL::updateInstancedRenderNodeUniforms(const std::vector<RenderNode*>& renderList)
     {
         // map insanced attribute buffer
@@ -817,55 +867,8 @@ namespace Peach3D
         if (data) {
             // set object params to data
             for (auto i = 0; i < renderList.size(); ++i) {
-                int startOffset = 0;
                 int uniformOffset = (mUniformsSize / 4) * i;
-                const Material& objMat = renderList[i]->getMaterial();
-                for (auto& uniform : mProgramUniformList) {
-                    switch (ShaderCode::getUniformNameType(uniform.name)) {
-                        case UniformNameType::eModelMatrix: {
-                            const Matrix4& modelMat = renderList[i]->getModelMatrix();
-                            memcpy(data + uniformOffset + startOffset, modelMat.mat, 16 * sizeof(float));
-                            startOffset += 16;
-                        }
-                            break;
-                        case UniformNameType::eDiffuse: {
-                            float color[] = {objMat.diffuse.r, objMat.diffuse.g, objMat.diffuse.b, objMat.alpha};
-                            memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
-                            startOffset += 4;
-                        }
-                            break;
-                            // material uniforms
-                        case UniformNameType::eNormalMatrix: {
-                            Matrix4 modelMat = renderList[i]->getModelMatrix();
-                            Matrix4 invmat;
-                            modelMat.getInverse(&invmat);
-                            memcpy(data + uniformOffset + startOffset, invmat.getTranspose().mat, 16 * sizeof(float));
-                            startOffset += 16;
-                        }
-                            break;
-                        case UniformNameType::eMatAmbient: {
-                            float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
-                            memcpy(data + uniformOffset + startOffset, color, 3 * sizeof(float));
-                            startOffset += 3;
-                        }
-                            break;
-                        case UniformNameType::eMatSpecular: {
-                            // also pass shininess
-                            float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
-                            memcpy(data + uniformOffset + startOffset, color, 4 * sizeof(float));
-                            startOffset += 4;
-                        }
-                            break;
-                        case UniformNameType::eMatEmissive: {
-                            float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
-                            memcpy(data + uniformOffset + startOffset, color, 3 * sizeof(float));
-                            startOffset += 3;
-                        }
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                updateWorldUniformsGL3(data + uniformOffset, renderList[i]->getModelMatrix(), renderList[i]->getMaterial());
             }
             
             // unmap instanced attribute buffer
@@ -1168,13 +1171,26 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateTerrainUniforms(Terrain* ter)
+    void ProgramGL::updateTerrainUniformsGL2(Terrain* ter)
     {
         auto modelMat = Matrix4::createTranslation(ter->getPosition());
         updateWorldUniformsGL2(modelMat, Color4White);
         // set lighting unfo, terrain will not rendering here
         std::vector<LightPtr> lights = ter->getRenderLights(), shadows = ter->getShadowLights();
         updateLightingUniformsGL2(lights, shadows, modelMat, ter->getMaterial());
+    }
+    
+    void ProgramGL::updateTerrainUniformsGL3(Terrain* ter)
+    {
+        // map insanced attribute buffer
+        float *data = beginMapInstanceUniformBuffer(1);
+        
+        if (data) {
+            auto modelMat = Matrix4::createTranslation(ter->getPosition());
+            updateWorldUniformsGL3(data, modelMat, ter->getMaterial());
+            // unmap instanced attribute buffer
+            endMapInstanceUniformBuffer();
+        }
     }
     
     bool ProgramGL::useAsRenderProgram()

@@ -74,8 +74,10 @@ namespace Peach3D
         /** Update 3d particle uniforms, include rect/textures... */
         virtual void updateParticle3DUniforms(const Rect& coord);
         
-        /** Update terrain uniforms for GL2, terrain only use GL2. */
-        virtual void updateTerrainUniforms(Terrain* ter);
+        /** Update terrain uniforms for GL2. */
+        virtual void updateTerrainUniformsGL2(Terrain* ter);
+        /** Update terrain uniforms for GL3. */
+        virtual void updateTerrainUniformsGL3(Terrain* ter);
         
     protected:
         /** Compile program, this will be called automatically. */
@@ -105,6 +107,8 @@ namespace Peach3D
         void updateWorldUniformsGL2(const Matrix4& modelMat, const Color4& diffuse);
         //! lights and shadows uniforms for GL2
         void updateLightingUniformsGL2(const std::vector<LightPtr>& lights, const std::vector<LightPtr>& shadows, const Matrix4& normalMat, const Material& objMat);
+        //! world uniforms for GL3
+        void updateWorldUniformsGL3(float *startBuffer, const Matrix4& modelMat, const Material& objMat);
         
     protected:
         GLuint  mVSShader;

@@ -449,6 +449,21 @@ namespace Peach3D
         do {
             ProgramPtr usedProgram = terr->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
+            ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
+            if (PD_RENDERLEVEL_GL3()) {
+                // update instanced uniforms
+                usedProgram->updateTerrainUniformsGL3(terr);
+                // set lighting unfo when render color
+                auto lights = terr->getRenderLights();
+                if (lights.size() > 0) {
+                    usedProgramGL->updateObjectLightsUniforms(lights);
+                    // set shadow if need
+                    auto shadows = terr->getShadowLights();
+                    if (shadows.size() > 0) {
+                        usedProgramGL->updateObjectShadowsUniforms(shadows);
+                    }
+                }
+            }
             // bind vertex and index
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
                 generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? usedProgram : nullptr);
@@ -459,7 +474,6 @@ namespace Peach3D
                 bindObjectVertexAttrib();
             }
             
-            ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
             int usedTexCount = 0;
             // active UV texture
             auto brushes = terr->getBrushes();
@@ -489,10 +503,15 @@ namespace Peach3D
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
             GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
             GLenum glDrawMode = convertDrawModeToGL(terr->getDrawMode());
-            // update current widget uniforms
-            usedProgram->updateTerrainUniforms(terr);
-            // draw one widget
-            glDrawElements(glDrawMode, indexCount, indexType, 0);
+            if (PD_RENDERLEVEL_GL3()) {
+                glDrawElementsInstanced(glDrawMode, indexCount, indexType, 0, 1);
+            }
+            else {
+                // update current widget uniforms
+                usedProgram->updateTerrainUniformsGL2(terr);
+                // draw one widget
+                glDrawElements(glDrawMode, indexCount, indexType, 0);
+            }
             PD_ADD_DRAWCALL(1);
             PD_ADD_DRAWTRIAGNLE(indexCount / 3);
             // disable render state

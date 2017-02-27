@@ -83,6 +83,7 @@ namespace Peach3D
         std::vector<std::string> mIgnoreLights; // need ignore lights
         std::vector<LightPtr>   mRenderLights;  // valid lights
         std::vector<LightPtr>   mShadowLights;  // valid shadow lights, setting by parent
+        friend class SceneManager;
     };
 }
 

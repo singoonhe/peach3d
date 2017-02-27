@@ -27,5 +27,9 @@ void TerrainSample::init(Widget* parentWidget)
     auto terr = PttLoader::pttTerrainParse("terr_walk.ptt");
     SceneManager::getSingleton().addTerrain(terr);
     
+    // transform camera pos
+    auto mainCamera = SceneManager::getSingleton().getActiveCamera();
+    mainCamera->setPosition(Vector3(0.f, 2.f, -1.f));
+    
     auto winSize = LayoutManager::getSingleton().getScreenSize();
 }
