@@ -28,8 +28,25 @@ void TerrainSample::init(Widget* parentWidget)
     SceneManager::getSingleton().addTerrain(terr);
     
     // transform camera pos
-    auto mainCamera = SceneManager::getSingleton().getActiveCamera();
-    mainCamera->setPosition(Vector3(0.f, 2.f, -1.f));
+    mActionCamera = SceneManager::getSingleton().getActiveCamera();
+    mActionCamera->unLock();
+    mActionCamera->setPosition(Vector3(0.f, 2.f, -1.f));
     
-    auto winSize = LayoutManager::getSingleton().getScreenSize();
+    // register touch move event
+    static Vector2 lastTouchPos;
+    EventDispatcher::getSingletonPtr()->addClickEventListener(parentWidget, [&](ClickEvent event, const Vector2& pos) {
+        switch (event) {
+            case ClickEvent::eDown:
+                lastTouchPos = pos;
+                break;
+            case ClickEvent::eDrag: {
+                auto diff = pos - lastTouchPos;
+                mActionCamera->rotate(Vector3(0.f, diff.y * 0.01, 0.f));
+                lastTouchPos = pos;
+            }
+                break;
+            default:
+                break;
+        }
+    });
 }

@@ -22,6 +22,8 @@ public:
 class TerrainSample : public BaseSample
 {
     void init(Widget* parentWidget);
+private:
+    Camera*     mActionCamera;
 };
 
 #endif /* PARTICLE_TERRAIN_H */
