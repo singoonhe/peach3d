@@ -20,8 +20,9 @@ namespace Peach3D
         mHeightCount = height;
         mLandPace = pace;
         mTerrainLength = Vector3(mWidthCount * mLandPace, 0, mHeightCount * mLandPace);
-        mHighData = (float*)malloc(sizeof(data));
-        memcpy(mHighData, data, sizeof(data));
+        auto dataSize = width * height * sizeof(float);
+        mHighData = (float*)malloc(dataSize);
+        memcpy(mHighData, data, dataSize);
         // set light enable default
         mIsLightingDirty = true;
         mAcceptShadow = true;
@@ -31,7 +32,7 @@ namespace Peach3D
     Terrain::~Terrain()
     {
         if (mHighData) {
-            delete mHighData;
+            free(mHighData);
             mHighData = nullptr;
         }
     }
@@ -61,6 +62,7 @@ namespace Peach3D
         float* vertexData = (float*)malloc(dataSize);
         for (auto i=0; i<mHeightCount; ++i) {
             for (auto j=0; j<mWidthCount; ++j) {
+                // index : leftbottom(0), rightbottom(1), lefttop(2), righttop(3)
                 auto curIndex = i * mWidthCount + j;
                 uint curStart = curIndex * strideFloatSize;
                 // point
@@ -72,8 +74,8 @@ namespace Peach3D
                 vertexData[curStart + 4] = 0.f;
                 vertexData[curStart + 5] = 0.f;
                 // uv
-                vertexData[curStart + 6] = j * 1.0 / mWidthCount;
-                vertexData[curStart + 7] = i * 1.0 / mHeightCount;
+                vertexData[curStart + 6] = j * 1.0 / (mWidthCount-1);
+                vertexData[curStart + 7] = i * 1.0 / (mHeightCount-1);
             }
         }
         // fill vertex data
@@ -95,23 +97,23 @@ namespace Peach3D
             for (auto j=0; j<(mWidthCount-1); ++j) {
                 uint aboveStart = (i + 1) * mWidthCount + j, curStart = i * mWidthCount + j;
                 uint aboveNext = aboveStart + 1, curNext = curStart + 1;
-                // fill two trangles(0,1,3, 3,1,2)
+                // fill two trangles(0,1,2, 2,1,3)
                 if (inxType == IndexType::eUShort) {
                     ushort* fillData = (ushort*)inxData;
                     fillData[inxIndex++] = curStart;
-                    fillData[inxIndex++] = aboveStart;
-                    fillData[inxIndex++] = curNext;
                     fillData[inxIndex++] = curNext;
                     fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = curNext;
                     fillData[inxIndex++] = aboveNext;
                 }
                 else {
                     uint* fillData = (uint*)inxData;
                     fillData[inxIndex++] = curStart;
-                    fillData[inxIndex++] = aboveStart;
-                    fillData[inxIndex++] = curNext;
                     fillData[inxIndex++] = curNext;
                     fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = aboveStart;
+                    fillData[inxIndex++] = curNext;
                     fillData[inxIndex++] = aboveNext;
                 }
             }

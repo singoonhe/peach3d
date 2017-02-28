@@ -18,8 +18,6 @@ namespace Peach3D
         bool loadState = false;
         uchar *fileData = nullptr;
         Terrain* loadTer = nullptr;
-        float* highData = nullptr;
-        uint* uvData = nullptr;
         do {
             ulong fileLength = 0;
             uchar *fileData = ResourceManager::getSingleton().getFileData(file, &fileLength);
@@ -98,7 +96,7 @@ namespace Peach3D
                 sscanf(countEle->GetText(), "%d,%d", &widthCount, &highCount);
                 int totalCount = widthCount * highCount;
                 // height data
-                highData = new float[totalCount];
+                float* highData = new float[totalCount];
                 auto dataEle = rootEle->FirstChildElement("HighData");
                 auto splitData = Utils::split(dataEle->GetText(), ',');
                 Peach3DAssert(splitData.size()>=totalCount, "high data size not enough");
@@ -120,12 +118,6 @@ namespace Peach3D
         // release memory data
         if (fileData) {
             free(fileData);
-        }
-        if (highData) {
-            delete[] highData;
-        }
-        if (uvData) {
-            delete[] uvData;
         }
         return loadState ? loadTer : nullptr;
     }
