@@ -51,6 +51,7 @@ namespace Peach3D
         
         /** Add Terrain to rendering list. */
         void addTerrain(Terrain* trr) { if(trr && trr->getObject()) mTerrainList.push_back(trr); }
+        void deleteAllTerrains();
         
         void setLightMax(int count) { if (count > 0) mLightMax = count; }
         int getLightMax() { return mLightMax; }

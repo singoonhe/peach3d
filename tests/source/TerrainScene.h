@@ -21,9 +21,12 @@ public:
 
 class TerrainSample : public BaseSample
 {
+public:
+    ~TerrainSample() { mActionCamera->setState(mActionState); }
     void init(Widget* parentWidget);
 private:
     Camera*     mActionCamera;
+    CameraState mActionState;
 };
 
 #endif /* PARTICLE_TERRAIN_H */

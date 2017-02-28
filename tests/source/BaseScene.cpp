@@ -91,6 +91,8 @@ void BaseScene::changeToSample(int index)
             EventDispatcher::getSingleton().deleteClickEventListener(mSampleWidget);
             // delete all SceneNode
             SceneManager::getSingleton().getRootSceneNode()->deleteAllChildren();
+            // delete all terrains
+            SceneManager::getSingleton().deleteAllTerrains();
             delete mCurSample;
             mCurSample = nullptr;
         }

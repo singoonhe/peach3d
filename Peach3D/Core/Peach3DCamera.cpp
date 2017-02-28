@@ -34,18 +34,6 @@ namespace Peach3D
             if (mState.isLocked) {
                 // locked camera
                 mViewMatrix = Matrix4::createLookAt(mState.pos, mState.lockPos, mState.up);
-                
-                // position will change camera rotate(x,y) for locked camera
-                float dis = mState.pos.distance(mState.lockPos);
-                if (dis > FLT_EPSILON && !FLOAT_EQUAL(dis, mState.pos.y)) {
-                    // x in (-90~90)
-                    mState.rotation.x = -asinf(mState.pos.y/dis);
-                    // y in (-180~180)
-                    mState.rotation.y = asinf(mState.pos.x/(sqrtf(dis*dis - mState.pos.y*mState.pos.y)));
-                    if (mState.pos.z < 0) {
-                        mState.rotation.y = PD_PI - mState.rotation.y;
-                    }
-                }
             }
             else {
                 // free camera, z is default to downward(I don't know why?)
@@ -68,6 +56,7 @@ namespace Peach3D
     {
         if (mState.pos != pos) {
             mState.pos = pos;
+            calcLockCameraRotation();
             mIsDataDirty = true;
         }
     }
@@ -95,19 +84,14 @@ namespace Peach3D
             // rotate sequence: Y first , X second , last Z (Z<-X<-Y)
             Matrix4 picthMat = Matrix4::createRotationX(mState.rotation.x);
             Matrix4 yawMat = Matrix4::createRotationY(mState.rotation.y);
-            mState.pos = Vector3(0, 0, mState.pos.distance(mState.lockPos)) * picthMat * yawMat;
+            // use lock pos as original pos
+            Vector3 diffV = mState.pos - mState.lockPos;
+            Vector3 rotateV = diffV * picthMat * yawMat;
+            mState.pos = rotateV + mState.lockPos;
             // roll control up vector
             Matrix4 rollMat = Matrix4::createRotationZ(mState.rotation.z);
             mState.up = Vector3(0, mState.up.distance(Vector3Zero), 0) * rollMat;
         }
-    }
-    
-    Vector3 Camera::getRotation()
-    {
-        if (mState.isLocked) {
-            getViewMatrix();
-        }
-        return mState.rotation;
     }
     
     void Camera::lockToPosition(const Vector3& pos)
@@ -115,6 +99,7 @@ namespace Peach3D
         if (pos != mState.pos) {
             mState.lockPos = pos;
             mState.isLocked = true;
+            calcLockCameraRotation();
             mIsDataDirty = true;
         }
     }
@@ -129,6 +114,23 @@ namespace Peach3D
         else {
             getViewMatrix();
             return mState.forward;
+        }
+    }
+    
+    void Camera::calcLockCameraRotation()
+    {
+        // position will change camera rotate(x,y) for locked camera
+        if (mState.isLocked) {
+            float dis = mState.pos.distance(mState.lockPos);
+            if (dis > FLT_EPSILON && !FLOAT_EQUAL(dis, mState.pos.y)) {
+                // x in (-90~90)
+                mState.rotation.x = -asinf(mState.pos.y/dis);
+                // y in (-180~180)
+                mState.rotation.y = asinf(mState.pos.x/(sqrtf(dis*dis - mState.pos.y*mState.pos.y)));
+                if (mState.pos.z < 0) {
+                    mState.rotation.y = PD_PI - mState.rotation.y;
+                }
+            }
         }
     }
 }

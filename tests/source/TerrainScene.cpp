@@ -29,8 +29,10 @@ void TerrainSample::init(Widget* parentWidget)
     
     // transform camera pos
     mActionCamera = SceneManager::getSingleton().getActiveCamera();
-//    mActionCamera->unLock();
-    mActionCamera->setPosition(Vector3(0.f, 2.f, -1.f));
+    mActionState = mActionCamera->getState();
+    //    mActionCamera->unLock();
+    mActionCamera->lockToPosition(Vector3(120.f, 0.f, -120.f));
+    mActionCamera->setPosition(Vector3(10.f, 10.f, -10.f));
     
     // register touch move event
     static Vector2 lastTouchPos;

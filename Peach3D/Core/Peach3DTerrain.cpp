@@ -14,7 +14,7 @@
 
 namespace Peach3D
 {
-    Terrain::Terrain(int width, int height, float pace, const float* data)
+    Terrain::Terrain(int width, int height, float pace, const float* data) : mDrawMode(DrawMode::eTriangle)
     {
         mWidthCount = width;
         mHeightCount = height;

@@ -32,7 +32,7 @@ namespace Peach3D
         //! set camera rotation, it will effect position when lock to position
         void setRotation(const Vector3& rotation);
         //! get camera rotation
-        Vector3 getRotation();
+        Vector3 getRotation() { return mState.rotation; }
         //! rotate camera
         void rotate(const Vector3& rotate) {setRotation(mState.rotation + rotate);}
         //! rotate camera around x-axis
@@ -63,6 +63,9 @@ namespace Peach3D
         Camera(const Vector3& pos, const Vector3& rotate);
         //! delete camera by SceneManager, user can't call destructor function.
         ~Camera() {}
+        
+        //! calc camera current rotation for lock
+        void calcLockCameraRotation();
 
     protected:
         Matrix4     mViewMatrix;    // camera transform matrix

@@ -88,10 +88,7 @@ namespace Peach3D
     void SceneManager::reset()
     {
         // delete all terrains
-        for (auto terr : mTerrainList) {
-            delete terr;
-        }
-        mTerrainList.clear();
+        deleteAllTerrains();
         // delete all SceneNode
         mRootSceneNode->deleteAllChildren();
         // delete all widget except DebugWidget
@@ -104,6 +101,14 @@ namespace Peach3D
         EventDispatcher::getSingleton().deleteClickEventListener(mRootWidget);
         // delete all lights if exsited
         deleteAllLights();
+    }
+    
+    void SceneManager::deleteAllTerrains()
+    {
+        for (auto terr : mTerrainList) {
+            delete terr;
+        }
+        mTerrainList.clear();
     }
     
     void SceneManager::createDrawStatsNode()
