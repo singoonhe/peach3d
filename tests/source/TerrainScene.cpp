@@ -31,7 +31,8 @@ void TerrainSample::init(Widget* parentWidget)
     mActionCamera = SceneManager::getSingleton().getActiveCamera();
     mActionState = mActionCamera->getState();
     //    mActionCamera->unLock();
-    mActionCamera->lockToPosition(Vector3(120.f, 0.f, -120.f));
+    float halfPace = terr->getLandPace() * 0.5f;
+    mActionCamera->lockToPosition(Vector3(terr->getWidthCount() * halfPace, 0.f, -terr->getHeightCount() * halfPace));
     mActionCamera->setPosition(Vector3(10.f, 10.f, -10.f));
     
     // register touch move event
@@ -43,7 +44,7 @@ void TerrainSample::init(Widget* parentWidget)
                 break;
             case ClickEvent::eDrag: {
                 auto diff = pos - lastTouchPos;
-                mActionCamera->rotate(Vector3(0.f, DEGREE_TO_RADIANS(diff.x), 0.f));
+                mActionCamera->rotate(Vector3(DEGREE_TO_RADIANS(diff.y * 0.05f), -DEGREE_TO_RADIANS(diff.x * 0.5f), 0.f));
                 lastTouchPos = pos;
             }
                 break;

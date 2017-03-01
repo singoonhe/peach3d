@@ -72,7 +72,7 @@ namespace Peach3D
                     TextureLoaderRes* res = ResourceManager::getSingleton().parseImageData(texData, (uint)texLength);
                     Peach3DInfoLog("Load high image %s success, with:%d height:%d", highName, res->width, res->height);
                     // convert byte data to float
-                    auto bufferSize = res->width * res->height, widthByte = res->width * 3;
+                    auto widthByte = res->width * 3;
                     widthByte += 3 - ((widthByte-1) % 4);
                     float* highBuffer = new float[res->width * res->height];
                     uchar* texBuffer = (uchar*)res->buffer;

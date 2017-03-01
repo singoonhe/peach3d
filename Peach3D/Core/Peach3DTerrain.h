@@ -53,6 +53,9 @@ namespace Peach3D
         const std::vector<TexturePtr>& getAlphaMaps() { return mAlphaMap; }
         const std::vector<LightPtr>& getRenderLights() { return mRenderLights; }
         const std::vector<LightPtr>& getShadowLights() { return mShadowLights; }
+        float getLandPace() { return mLandPace; }
+        int getWidthCount() { return mWidthCount; }
+        int getHeightCount() { return mHeightCount; }
         ProgramPtr getProgramForRender()const {return mRenderProgram;}
         
     protected:

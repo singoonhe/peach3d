@@ -63,7 +63,8 @@ namespace Peach3D
     
     void Camera::setRotation(const Vector3& rotation)
     {
-        // make rotation unique
+        Vector3 changeRotate = rotation - mState.rotation;
+        /*// make rotation unique
         while (mState.rotation.y > PD_PI) {
             mState.rotation.y = mState.rotation.y - 2*PD_PI;
         }
@@ -75,21 +76,21 @@ namespace Peach3D
         }
         while (mState.rotation.z < -PD_PI) {
             mState.rotation.z = mState.rotation.z + 2*PD_PI;
-        }
+        }*/
         mState.rotation = rotation;
         mIsDataDirty = true;
         
         // rotate will change camera pos for locked camera
         if (mState.isLocked) {
             // rotate sequence: Y first , X second , last Z (Z<-X<-Y)
-            Matrix4 picthMat = Matrix4::createRotationX(mState.rotation.x);
-            Matrix4 yawMat = Matrix4::createRotationY(mState.rotation.y);
+            Matrix4 picthMat = Matrix4::createRotationX(changeRotate.x);
+            Matrix4 yawMat = Matrix4::createRotationY(changeRotate.y);
             // use lock pos as original pos
             Vector3 diffV = mState.pos - mState.lockPos;
             Vector3 rotateV = diffV * picthMat * yawMat;
             mState.pos = rotateV + mState.lockPos;
             // roll control up vector
-            Matrix4 rollMat = Matrix4::createRotationZ(mState.rotation.z);
+            Matrix4 rollMat = Matrix4::createRotationZ(changeRotate.z);
             mState.up = Vector3(0, mState.up.distance(Vector3Zero), 0) * rollMat;
         }
     }
