@@ -53,6 +53,8 @@ namespace Peach3D
         
         eShadowMatrix,  // shadow matrix
         eBoneMatrix,    // bone matrix
+        
+        eDetailSize,    // terrain texture detail size
     };
     
     // defined object render uniform desc

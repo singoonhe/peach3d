@@ -65,6 +65,8 @@ namespace Peach3D
             
             mUniformsNamesMap["pd_shadowMatrix"] = UniformNameType::eShadowMatrix;
             mUniformsNamesMap["pd_boneMatrix"] = UniformNameType::eBoneMatrix;
+            
+            mUniformsNamesMap["pd_detailSize"] = UniformNameType::eDetailSize;
         }
         return mUniformsNamesMap[name];
     }

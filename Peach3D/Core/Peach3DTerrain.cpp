@@ -50,8 +50,10 @@ namespace Peach3D
     
     void Terrain::buildTerrain(const std::vector<TexturePtr>& map, const std::vector<TexturePtr>& texl)
     {
-        mBrushes = texl;
         mAlphaMap = map;
+        mBrushes = texl;
+        // default set brush detail size to default
+        mBrushDetails.assign(mBrushes.size(), 35.f);
         
         // create texture
         mTerrainObj = IRender::getSingleton().createObject(("pd_Terrain_"+mName).c_str());

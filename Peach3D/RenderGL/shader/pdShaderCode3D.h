@@ -385,6 +385,7 @@ namespace Peach3D
         \n#ifdef PD_ENABLE_TERRAIN\n
             uniform sampler2D pd_texture[PD_ENABLE_TERRAIN];
             uniform sampler2D pd_alphaMap0;
+            uniform float pd_detailSize[PD_ENABLE_TERRAIN];
             \n#if PD_ENABLE_TERRAIN > 4\n
                 uniform sampler2D pd_alphaMap1;
             \n#endif
@@ -416,23 +417,23 @@ namespace Peach3D
         \n#ifdef PD_ENABLE_TEXUV\n
             \n#if defined(PD_ENABLE_TERRAIN)\n
                 vec4 blendFactor =texture2D(pd_alphaMap0, f_uv);
-                vec4 fragColor = texture2D(pd_texture[0], f_uv) * blendFactor.r;
+                vec4 fragColor = texture2D(pd_texture[0], f_uv * pd_detailSize[0]) * blendFactor.r;
                 \n#if (PD_ENABLE_TERRAIN > 1) \n
-                    fragColor = fragColor + texture2D(pd_texture[1], f_uv) * blendFactor.g;
+                    fragColor = fragColor + texture2D(pd_texture[1], f_uv * pd_detailSize[1]) * blendFactor.g;
                     \n#if (PD_ENABLE_TERRAIN > 2) \n
-                        fragColor = fragColor + texture2D(pd_texture[2], f_uv) * blendFactor.b;
+                        fragColor = fragColor + texture2D(pd_texture[2], f_uv * pd_detailSize[2]) * blendFactor.b;
                         \n#if (PD_ENABLE_TERRAIN > 3) \n
-                            fragColor = fragColor + texture2D(pd_texture[3], f_uv) * (1.0 - blendFactor.a);
+                            fragColor = fragColor + texture2D(pd_texture[3], f_uv * pd_detailSize[3]) * (1.0 - blendFactor.a);
                             /* sampling second alpha texture. */
                             \n#if (PD_ENABLE_TERRAIN > 4) \n
                                 vec4 blendFactor1 =texture2D(pd_alphaMap1, f_uv);
-                                fragColor = fragColor + texture2D(pd_texture[4], f_uv) * blendFactor1.r;
+                                fragColor = fragColor + texture2D(pd_texture[4], f_uv * pd_detailSize[4]) * blendFactor1.r;
                                 \n#if (PD_ENABLE_TERRAIN > 5) \n
-                                    fragColor = fragColor + texture2D(pd_texture[5], f_uv) * blendFactor1.g;
+                                    fragColor = fragColor + texture2D(pd_texture[5], f_uv * pd_detailSize[5]) * blendFactor1.g;
                                     \n#if (PD_ENABLE_TERRAIN > 6) \n
-                                        fragColor = fragColor + texture2D(pd_texture[6], f_uv) * blendFactor1.b;
+                                        fragColor = fragColor + texture2D(pd_texture[6], f_uv * pd_detailSize[6]) * blendFactor1.b;
                                         \n#if (PD_ENABLE_TERRAIN > 7) \n
-                                            fragColor = fragColor + texture2D(pd_texture[7], f_uv) * (1.0 - blendFactor1.a);
+                                            fragColor = fragColor + texture2D(pd_texture[7], f_uv * pd_detailSize[7]) * (1.0 - blendFactor1.a);
                                         \n#endif\n
                                     \n#endif\n
                                 \n#endif\n

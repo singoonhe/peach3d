@@ -13,6 +13,7 @@
     <!-- all vertex height -->
     <!-- <HighData>0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0</HighData> -->
     <Brushs>
+        <!-- <Brush detail="35">terr_dirt.jpg</Brush> -->
         <Brush>terr_dirt.jpg</Brush>
         <Brush>terr_Grass2.jpg</Brush>
         <Brush>terr_road.jpg</Brush>

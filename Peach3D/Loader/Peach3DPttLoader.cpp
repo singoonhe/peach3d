@@ -41,9 +41,17 @@ namespace Peach3D
             std::vector<TexturePtr> texl;
             auto texlEle = rootEle->FirstChildElement("Brushs");
             auto texEle = texlEle->FirstChildElement();
+            std::vector<float> detailList;
             while (texEle) {
                 std::string texName = texEle->GetText();
-                texl.push_back(ResourceManager::getSingleton().addTexture(texName.c_str()));
+                // parse texture
+                auto brushTex = ResourceManager::getSingleton().addTexture(texName.c_str());
+                brushTex->setWrap(TextureWrap::eRepeat);
+                texl.push_back(brushTex);
+                // parse texture detail size(texture2D(tex, uv * detail))
+                float detail = 35.f;
+                texEle->QueryFloatAttribute("detail", &detail);
+                detailList.push_back(detail);
                 texEle = texEle->NextSiblingElement();
             }
             // used alpha map texture
@@ -109,6 +117,10 @@ namespace Peach3D
             }
             
             if (loadTer) {
+                // set brush detail size
+                for (auto i=0; i<detailList.size(); ++i) {
+                    loadTer->setBrushDetailSize(i, detailList[i]);
+                }
                 Peach3DInfoLog("Load terrain file %s success", file);
                 loadTer->setPosition(originPos);
             }

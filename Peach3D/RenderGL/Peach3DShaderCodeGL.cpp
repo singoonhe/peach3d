@@ -100,6 +100,9 @@ namespace Peach3D
                         if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_BONE)) {
                             uniforms.push_back(ProgramUniform("pd_boneMatrix", UniformDataType::eVector4));
                         }
+                        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_TERRAIN)) {
+                            uniforms.push_back(ProgramUniform("pd_detailSize", UniformDataType::eFloat));
+                        }
                     }
                     uniforms.push_back(ProgramUniform("pd_modelMatrix", UniformDataType::eMatrix4));
                     uniforms.push_back(ProgramUniform("pd_diffuse", UniformDataType::eVector4));

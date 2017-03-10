@@ -30,6 +30,9 @@ namespace Peach3D
         
         void setPosition(const Vector3& pos) { mTerrainPos = pos; }
         const Vector3& getPosition() { return mTerrainPos; }
+        /** Set index brush detail size, default is 35. */
+        void setBrushDetailSize(int index, float size) { if (index < mBrushDetails.size()) mBrushDetails[index] = size; }
+        const std::vector<float>& getBrushDetails() { return mBrushDetails; }
         /** Change render program before rendering. */
         void prepareForRender(float lastFrameTime);
         
@@ -77,6 +80,7 @@ namespace Peach3D
         Vector3     mTerrainPos;    // terrain current position
         Vector3     mTerrainLength; // terrain x and z length
         std::vector<TexturePtr> mBrushes;   // terrain brush textures
+        std::vector<float> mBrushDetails;   // terrain brush textures detail size
         std::vector<TexturePtr> mAlphaMap;  // terrain alpha map textures
         
         bool        mAcceptShadow;  // is terrain accept shadow

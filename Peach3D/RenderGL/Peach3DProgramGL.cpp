@@ -1178,6 +1178,15 @@ namespace Peach3D
         // set lighting unfo, terrain will not rendering here
         std::vector<LightPtr> lights = ter->getRenderLights(), shadows = ter->getShadowLights();
         updateLightingUniformsGL2(lights, shadows, modelMat, ter->getMaterial());
+        // add texture terrain
+        for (auto& uniform : mProgramUniformList) {
+            if (ShaderCode::getUniformNameType(uniform.name) ==  UniformNameType::eProjMatrix) {
+                auto details = ter->getBrushDetails();
+                setUniformLocationValue(uniform.name, [&](GLint location) {
+                    glUniform1fv(location, details.size(), &details[0]);
+                });
+            }
+        }
     }
     
     void ProgramGL::updateTerrainUniformsGL3(Terrain* ter)
