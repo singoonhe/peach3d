@@ -117,11 +117,12 @@ namespace Peach3D
         /** Add program from file, windows need set isCompiled=true if use vs compiled.
          * @params vertexType Used to bind attribute or create layout for DX.
          * @params uniformList Use program needed uniforms info.
+         * @params drawInstace Is need draw instance.
          * @params isCompiled Is shader had compiled, *.cso file need set true.
         */
-        ProgramPtr addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled = false);
+        ProgramPtr addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool drawInstace = true, bool isCompiled = false);
         /** Create program from memory, params see @addProgram. */
-        ProgramPtr createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool isCompiled=false);
+        ProgramPtr createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize=0, ulong psSize=0, bool drawInstace = true, bool isCompiled=false);
         /** Get preset object program in Peach3D system, program will create if not find. */
         ProgramPtr getPresetProgram(const ProgramFeatureMap& feature);
         void deleteProgram(const ProgramPtr& program);

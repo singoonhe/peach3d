@@ -51,15 +51,17 @@ namespace Peach3D
     {
     public:
         //! Create program by IRender, user can't call constructor function.
-        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mVertexType(0), mLightsCount(0), mShadowCount(0), mBoneCount(0) {}
+        IProgram(uint pId) :mProgramId(pId), mProgramValid(false), mDrawInstance(true), mVertexType(0), mLightsCount(0), mShadowCount(0), mBoneCount(0) {}
         virtual ~IProgram() {}
         
         /** Set vertex shader, program will valid when vs and ps all is set. */
         virtual bool setVertexShader(const char* data, int size, bool isCompiled=false) = 0;
         /** Set pixel shader, program will valid when vs and ps all is set. */
         virtual bool setPixelShader(const char* data, int size, bool isCompiled=false) = 0;
-        /** Set vertex data type, used to bind attr or layout. */
-        virtual void setVertexType(uint type) { mVertexType = type; }
+        /** Set vertex data type, used to bind attr or layout. 
+         * @params drawInstance Is need drawing instance if valid.
+         */
+        virtual void setVertexType(uint type, bool drawInstance=true) { mVertexType = type; mDrawInstance=drawInstance; }
         /** Set user uniforms info, GL3 could get offset, DX need fcount to calc offset. */
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList) {mProgramUniformList = uniformList;}
         /** Set program lights count, auto enable lighting. */
@@ -91,11 +93,8 @@ namespace Peach3D
         virtual void updateParticle2DUniforms(const Rect& coord) = 0;
         /** Update 3d particle uniforms, include rect/textures... */
         virtual void updateParticle3DUniforms(const Rect& coord) = 0;
-        
-        /** Update terrain uniforms for GL2. */
-        virtual void updateTerrainUniformsGL2(Terrain* ter) {};
-        /** Update terrain uniforms for GL3. */
-        virtual void updateTerrainUniformsGL3(Terrain* ter) {};
+        /** Update terrain uniforms. */
+        virtual void updateTerrainUniforms(Terrain* ter) {};
         
         /** Set current object use this program. */
         virtual bool useAsRenderProgram() = 0;
@@ -107,6 +106,7 @@ namespace Peach3D
     protected:
         uint        mProgramId;     // program unique id
         bool        mProgramValid;  // is program valid
+        bool        mDrawInstance;  // is program will used for instance rendering
         uint        mVertexType;    // vertex data type
         int         mLightsCount;   // lights count
         int         mShadowCount;   // lights shadow count

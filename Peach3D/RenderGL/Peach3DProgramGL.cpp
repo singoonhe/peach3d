@@ -46,6 +46,7 @@ namespace Peach3D
     
     bool ProgramGL::setVertexShader(const char* data, int size, bool isCompiled)
     {
+        Peach3DAssert(mVertexType, "Vertex type need valid before setVertexShader");
         // compile shader, replace data if mVSShader exist
         mVSShader = loadShaderFromMemory(GL_VERTEX_SHADER, data, size);
         if (mVSShader && mPSShader && mVertexType) {
@@ -56,6 +57,7 @@ namespace Peach3D
 
     bool ProgramGL::setPixelShader(const char* data, int size, bool isCompiled)
     {
+        Peach3DAssert(mVertexType, "Vertex type need valid before setPixelShader");
         // compile shader
         mPSShader = loadShaderFromMemory(GL_FRAGMENT_SHADER, data, size);
         if (mPSShader && mVSShader && mVertexType) {
@@ -87,16 +89,15 @@ namespace Peach3D
 #endif
         const char* shaderStrings[2];
         GLint shaderStringLengths[2];
-        RenderFeatureLevel featureLevel = IPlatform::getSingletonPtr()->getRenderFeatureLevel();
-        if (featureLevel == RenderFeatureLevel::eGL3) {
+        if (mDrawInstance) {
             shaderStrings[0] = definedShader3;
             shaderStringLengths[0] = (GLint)strlen(definedShader3);
         }
-        else if (featureLevel == RenderFeatureLevel::eGL2 && type == GL_VERTEX_SHADER) {
+        else if (!mDrawInstance && type == GL_VERTEX_SHADER) {
             shaderStrings[0] = definedVS2;
             shaderStringLengths[0] = (GLint)strlen(definedVS2);
         }
-        else if (featureLevel == RenderFeatureLevel::eGL2 && type == GL_FRAGMENT_SHADER) {
+        else if (!mDrawInstance && type == GL_FRAGMENT_SHADER) {
             shaderStrings[0] = definedPS2;
             shaderStringLengths[0] = (GLint)strlen(definedPS2);
         }
@@ -135,12 +136,15 @@ namespace Peach3D
         return shader;
     }
     
-    void ProgramGL::setVertexType(uint type)
+    void ProgramGL::setVertexType(uint type, bool drawInstance)
     {
-        IProgram::setVertexType(type);
-        // if vs and ps is created, compile program
-        if (mVSShader && mPSShader) {
-            compileProgram();
+        IProgram::setVertexType(type, drawInstance);
+        if (mDrawInstance) {
+            mDrawInstance = PD_RENDERLEVEL_GL3();
+            // Point Sprite not used gl3 always
+            if (mVertexType & VertexType::PSprite) {
+                mDrawInstance = false;
+            }
         }
     }
     
@@ -196,7 +200,7 @@ namespace Peach3D
             mProgramValid = true;
             
             // bind gobal uniforms when GL3 support, particle not need
-            if (PD_RENDERLEVEL_GL3() && !(mVertexType & VertexType::PSprite)) {
+            if (mDrawInstance) {
                 bindUniformsBuffer("GlobalUniforms", (mVertexType & VertexType::Point3) ? &mObjectUBOId : &mWidgetUBOId,
                                    (mVertexType & VertexType::Point3) ? &mObjectUBOSize : &mWidgetUBOSize,
                                    (mVertexType & VertexType::Point3) ? &mObjectUBOUniforms : &mWidgetUBOUniforms,
@@ -211,9 +215,9 @@ namespace Peach3D
     
     void ProgramGL::setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList)
     {
+        Peach3DAssert(mVertexType, "Vertex type need valid before setProgramUniformsDesc");
         IProgram::setProgramUniformsDesc(uniformList);
-        
-        if (PD_RENDERLEVEL_GL3() && uniformList.size() > 0) {
+        if (mDrawInstance && uniformList.size() > 0) {
             // save one instanced uniform buffer size
             mUniformsSize = 0;
             for (auto& uniform : uniformList) {
@@ -224,9 +228,10 @@ namespace Peach3D
     
     void ProgramGL::setLightsCount(uint count)
     {
+        Peach3DAssert(mVertexType, "Vertex type need valid before setLightsCount");
         if (count > 0 && (mVertexType & VertexType::Point3)) {
             IProgram::setLightsCount(count);
-            if (PD_RENDERLEVEL_GL3()) {
+            if (mDrawInstance) {
                 // set object lights UBO uniforms
                 mLightsUBOUniforms = ShaderCode::mLightUniforms;
                 // bind lights UBO
@@ -237,9 +242,10 @@ namespace Peach3D
     
     void ProgramGL::setShadowCount(uint count)
     {
+        Peach3DAssert(mVertexType, "Vertex type need valid before setShadowCount");
         if (count > 0 && (mVertexType & VertexType::Point3)) {
             IProgram::setShadowCount(count);
-            if (PD_RENDERLEVEL_GL3()) {
+            if (mDrawInstance) {
                 // set object shadow UBO uniforms
                 mShadowUBOUniforms = {ProgramUniform("pd_shadowMatrix", UniformDataType::eMatrix4)};
                 // bind shadow UBO
@@ -250,9 +256,10 @@ namespace Peach3D
     
     void ProgramGL::setBoneCount(uint count)
     {
+        Peach3DAssert(mVertexType, "Vertex type need valid before setBoneCount");
         if (count > 0 && (mVertexType & VertexType::Point3)) {
             IProgram::setBoneCount(count);
-            if (PD_RENDERLEVEL_GL3()) {
+            if (mDrawInstance) {
                 // set bone lights UBO uniforms
                 mBoneUBOUniforms = {ProgramUniform("pd_boneMatrix", UniformDataType::eVector4)};
                 // bind bone UBO
@@ -503,7 +510,7 @@ namespace Peach3D
     
     void ProgramGL::bindProgramVertexAttrib()
     {
-        if (mAttriBuffer && PD_RENDERLEVEL_GL3()) {
+        if (mAttriBuffer && mDrawInstance) {
             glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
             
             // bind program instace buffer
@@ -534,7 +541,7 @@ namespace Peach3D
     {
         // resize render buffer size
         uint needCount = count - mInstancedCount;
-        if (needCount > 0 && PD_RENDERLEVEL_GL3()) {
+        if (needCount > 0 && mDrawInstance) {
             // save current instanced data count
             uint formulaCount = std::min(mInstancedCount, (uint)INSTANCED_COUNT_INCREASE_STEP);
             mInstancedCount = mInstancedCount + std::max(needCount, formulaCount);
@@ -1171,7 +1178,7 @@ namespace Peach3D
         }
     }
     
-    void ProgramGL::updateTerrainUniformsGL2(Terrain* ter)
+    void ProgramGL::updateTerrainUniforms(Terrain* ter)
     {
         auto modelMat = Matrix4::createTranslation(ter->getPosition());
         updateWorldUniformsGL2(modelMat, Color4White);
@@ -1183,25 +1190,12 @@ namespace Peach3D
             if (ShaderCode::getUniformNameType(uniform.name) ==  UniformNameType::eProjMatrix) {
                 auto details = ter->getBrushDetails();
                 setUniformLocationValue(uniform.name, [&](GLint location) {
-                    glUniform1fv(location, details.size(), &details[0]);
+                    glUniform1fv(location, (GLsizei)details.size(), &details[0]);
                 });
             }
         }
     }
-    
-    void ProgramGL::updateTerrainUniformsGL3(Terrain* ter)
-    {
-        // map insanced attribute buffer
-        float *data = beginMapInstanceUniformBuffer(1);
         
-        if (data) {
-            auto modelMat = Matrix4::createTranslation(ter->getPosition());
-            updateWorldUniformsGL3(data, modelMat, ter->getMaterial());
-            // unmap instanced attribute buffer
-            endMapInstanceUniformBuffer();
-        }
-    }
-    
     bool ProgramGL::useAsRenderProgram()
     {
         if (mProgram && mProgramValid) {
@@ -1209,7 +1203,7 @@ namespace Peach3D
             
             // bind uniform buffer for GL3, particle not need
             //! this is very Important, just like bind array buffer and index buffer
-            if (PD_RENDERLEVEL_GL3() && !(mVertexType & VertexType::PSprite)) {
+            if (mDrawInstance) {
                 glBindBufferBase(GL_UNIFORM_BUFFER, GLOBAL_UBO_BINDING_POINT,
                                  (mVertexType & VertexType::Point3) ? mObjectUBOId: mWidgetUBOId);
                 if (mLightsCount > 0) {

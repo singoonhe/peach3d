@@ -50,7 +50,8 @@ namespace Peach3D
                 }
                 else {
                     // choose 3D node program
-                    if (PD_RENDERLEVEL()==RenderFeatureLevel::eGL2) {
+                    bool isTerrain = ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_TERRAIN);
+                    if (PD_RENDERLEVEL()==RenderFeatureLevel::eGL2 || isTerrain) {
                         shaderPreStr += isVertex ? gVerGL2ShaderCode3D : gFragGL2ShaderCode3D;
                     }
                     else {
@@ -87,7 +88,8 @@ namespace Peach3D
                     uniforms.push_back(ProgramUniform("pd_uvRect", UniformDataType::eVector4));
                 }
                 else {
-                    if (PD_RENDERLEVEL()==RenderFeatureLevel::eGL2) {
+                    bool isTerrain = ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_TERRAIN);
+                    if (PD_RENDERLEVEL()==RenderFeatureLevel::eGL2 || isTerrain) {
                         uniforms.push_back(ProgramUniform("pd_projMatrix", UniformDataType::eMatrix4));
                         uniforms.push_back(ProgramUniform("pd_viewMatrix", UniformDataType::eMatrix4));
                         if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_LIGHT)) {
@@ -100,7 +102,7 @@ namespace Peach3D
                         if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_BONE)) {
                             uniforms.push_back(ProgramUniform("pd_boneMatrix", UniformDataType::eVector4));
                         }
-                        if (ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_TERRAIN)) {
+                        if (isTerrain) {
                             uniforms.push_back(ProgramUniform("pd_detailSize", UniformDataType::eFloat));
                         }
                     }

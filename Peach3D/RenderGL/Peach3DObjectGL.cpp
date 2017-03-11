@@ -75,7 +75,7 @@ namespace Peach3D
             }
             bindObjectVertexAttrib();
             // bind program buffer for GL3, Particle not use draw instance
-            if (program && !(mVertexDataType & VertexType::PSprite) && PD_RENDERLEVEL_GL3()) {
+            if (program) {
                 static_cast<ProgramGL*>(program.get())->bindProgramVertexAttrib();
             }
             mVAOMap[programId] = vaoId;
@@ -368,7 +368,8 @@ namespace Peach3D
             
             // must use VAO on MAC OpenGL core version
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mParticle2DProgram : nullptr);
+                // do not use draw instance
+                generateProgramVertexArray(nullptr);
                 // bind vertex buffer, emitter data need update
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
             }
@@ -411,7 +412,8 @@ namespace Peach3D
             
             // must use VAO on MAC OpenGL core version
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? mParticle3DProgram : nullptr);
+                // do not use draw instance
+                generateProgramVertexArray(nullptr);
                 // bind vertex buffer, emitter data need update
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
             }
@@ -449,24 +451,9 @@ namespace Peach3D
         do {
             ProgramPtr usedProgram = terr->getProgramForRender();
             IF_BREAK(!usedProgram || !usedProgram->useAsRenderProgram(), nullptr);
-            ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
-            if (PD_RENDERLEVEL_GL3()) {
-                // update instanced uniforms
-                usedProgram->updateTerrainUniformsGL3(terr);
-                // set lighting unfo when render color
-                auto lights = terr->getRenderLights();
-                if (lights.size() > 0) {
-                    usedProgramGL->updateObjectLightsUniforms(lights);
-                    // set shadow if need
-                    auto shadows = terr->getShadowLights();
-                    if (shadows.size() > 0) {
-                        usedProgramGL->updateObjectShadowsUniforms(shadows);
-                    }
-                }
-            }
-            // bind vertex and index
+            // bind vertex and index, not use draw instance
             if (PD_GLEXT_VERTEXARRAY_SUPPORT()) {
-                generateProgramVertexArray((PD_RENDERLEVEL_GL3()) ? usedProgram : nullptr);
+                generateProgramVertexArray(nullptr);
             }
             else {
                 glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
@@ -474,6 +461,7 @@ namespace Peach3D
                 bindObjectVertexAttrib();
             }
             
+            ProgramGL* usedProgramGL = (ProgramGL*)usedProgram.get();
             int usedTexCount = 0;
             // active UV texture
             auto brushes = terr->getBrushes();
@@ -503,15 +491,10 @@ namespace Peach3D
             GLenum indexType = (mIndexDataType == IndexType::eUShort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
             GLsizei indexCount = (mIndexDataType == IndexType::eUShort) ? mIndexBufferSize/sizeof(ushort) : mIndexBufferSize/sizeof(uint);
             GLenum glDrawMode = convertDrawModeToGL(terr->getDrawMode());
-            if (PD_RENDERLEVEL_GL3()) {
-                glDrawElementsInstanced(glDrawMode, indexCount, indexType, 0, 1);
-            }
-            else {
-                // update current widget uniforms
-                usedProgram->updateTerrainUniformsGL2(terr);
-                // draw one widget
-                glDrawElements(glDrawMode, indexCount, indexType, 0);
-            }
+            // update current widget uniforms
+            usedProgram->updateTerrainUniforms(terr);
+            // draw one widget
+            glDrawElements(glDrawMode, indexCount, indexType, 0);
             PD_ADD_DRAWCALL(1);
             PD_ADD_DRAWTRIAGNLE(indexCount / 3);
             // disable render state

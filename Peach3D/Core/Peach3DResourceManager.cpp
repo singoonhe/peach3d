@@ -575,7 +575,7 @@ namespace Peach3D
         }
     }
     
-    ProgramPtr ResourceManager::addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool isCompiled)
+    ProgramPtr ResourceManager::addProgram(const char* vsFile, const char* psFile, uint vertexType, const std::vector<ProgramUniform>& uniformList, bool drawInstace, bool isCompiled)
     {
         ProgramPtr newPrograme = nullptr;
         
@@ -587,7 +587,7 @@ namespace Peach3D
             uchar *psData = getFileData(psFile, &psLength);
             if (psLength > 0 && psData) {
                 // return program
-                newPrograme = createProgram((const char*)vsData, (const char*)psData, vertexType, uniformList, vsLength, psLength, isCompiled);
+                newPrograme = createProgram((const char*)vsData, (const char*)psData, vertexType, uniformList, vsLength, psLength, drawInstace, isCompiled);
                 // free pixel file data
                 free(psData);
             }
@@ -598,7 +598,7 @@ namespace Peach3D
         return newPrograme;
     }
     
-    ProgramPtr ResourceManager::createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize, ulong psSize, bool isCompiled)
+    ProgramPtr ResourceManager::createProgram(const char* vs, const char* ps, uint vertexType, const std::vector<ProgramUniform>& uniformList, ulong vsSize, ulong psSize, bool drawInstace, bool isCompiled)
     {
         IRender* render = IRender::getSingletonPtr();
         // generate program unique id
@@ -609,11 +609,11 @@ namespace Peach3D
         
         // create program
         ProgramPtr program = render->createProgram(hashPID);
+        // set vertex type
+        program->setVertexType(vertexType, drawInstace);
         // add shader to program
         program->setVertexShader(vs, (vsSize==0) ? (int)strlen(vs) : (int)vsSize, isCompiled);
         program->setPixelShader(ps, (psSize==0) ? (int)strlen(ps) : (int)psSize, isCompiled);
-        // set vertex type
-        program->setVertexType(vertexType);
         // set object uniform
         program->setProgramUniformsDesc(uniformList);
         
@@ -650,12 +650,12 @@ namespace Peach3D
             else {
                 // create a new preset program
                 ProgramPtr program = IRender::getSingletonPtr()->createProgram(hashPID);
+                // set vertex type, terrain not use drawing instance
+                program->setVertexType(mPresetShader->getVerTypeOfProgramFeature(feature), !ShaderCode::isContainTypeFeature(feature, PROGRAM_FEATURE_TERRAIN));
                 // add shader code to program
                 program->setVertexShader(verData.c_str(), (int)verData.size(), false);
                 program->setPixelShader(fragData.c_str(), (int)fragData.size(), false);
 
-                // set vertex type
-                program->setVertexType(mPresetShader->getVerTypeOfProgramFeature(feature));
                 // set object uniform
                 program->setProgramUniformsDesc(mPresetShader->getProgramUniforms(feature));
                 // enable light and generate lights uniforms for GL3

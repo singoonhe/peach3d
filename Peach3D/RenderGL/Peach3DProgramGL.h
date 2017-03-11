@@ -30,8 +30,10 @@ namespace Peach3D
         virtual bool setVertexShader(const char* data, int size, bool isCompiled=false);
         // set pixel shader, program will valid when vs and ps all is set
         virtual bool setPixelShader(const char* data, int size, bool isCompiled=false);
-        // set vertex data type, used to bind attr
-        virtual void setVertexType(uint type);
+        /** Set vertex data type, used to bind attr or layout.
+         * @params drawInstance Is need drawing instance if valid.
+         */
+        virtual void setVertexType(uint type, bool drawInstance=true);
         //! set user uniforms info, GL3 could get offset, DX need fcount to calc offset
         virtual void setProgramUniformsDesc(const std::vector<ProgramUniform>& uniformList);
         /** Set program lights count, generate light UBO. */
@@ -73,11 +75,8 @@ namespace Peach3D
         virtual void updateParticle2DUniforms(const Rect& coord);
         /** Update 3d particle uniforms, include rect/textures... */
         virtual void updateParticle3DUniforms(const Rect& coord);
-        
-        /** Update terrain uniforms for GL2. */
-        virtual void updateTerrainUniformsGL2(Terrain* ter);
-        /** Update terrain uniforms for GL3. */
-        virtual void updateTerrainUniformsGL3(Terrain* ter);
+        /** Update terrain uniforms. */
+        virtual void updateTerrainUniforms(Terrain* ter);
         
     protected:
         /** Compile program, this will be called automatically. */
