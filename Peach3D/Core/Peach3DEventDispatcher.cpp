@@ -93,8 +93,8 @@ namespace Peach3D
         sortEventNodes();
         // event maybe trigged after engine destroyed
         auto sceneMgr = SceneManager::getSingletonPtr();
-        Widget* rootNode = sceneMgr->getRootWidget();
         if (!sceneMgr) return;
+        Widget* rootNode = sceneMgr->getRootWidget();
         
         std::vector<uint>    rootNodeIds;
         std::vector<Vector2> rootNodePoss;

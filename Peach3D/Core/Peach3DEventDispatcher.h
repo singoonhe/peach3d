@@ -29,7 +29,7 @@ namespace Peach3D
     {
     public:
         EventDispatcher();
-        ~EventDispatcher();
+        virtual ~EventDispatcher();
         
         // add mouse and touch event listener
         void addClickEventListener(Node* target, ClickListenerFunction func);
