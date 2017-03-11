@@ -347,10 +347,10 @@ namespace Peach3D
         \n#ifdef PD_ENABLE_TERRAIN\n
             uniform sampler2D pd_texture[PD_ENABLE_TERRAIN];
             uniform sampler2D pd_alphaMap0;
-            uniform float pd_detailSize[PD_ENABLE_TERRAIN];
             \n#if PD_ENABLE_TERRAIN > 4\n
                 uniform sampler2D pd_alphaMap1;
-            \n#endif
+            \n#endif\n
+            uniform float pd_detailSize[PD_ENABLE_TERRAIN];
         \n#else\n
             uniform sampler2D pd_texture0;
         \n#endif

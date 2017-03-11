@@ -1187,7 +1187,7 @@ namespace Peach3D
         updateLightingUniformsGL2(lights, shadows, modelMat, ter->getMaterial());
         // add texture terrain
         for (auto& uniform : mProgramUniformList) {
-            if (ShaderCode::getUniformNameType(uniform.name) ==  UniformNameType::eProjMatrix) {
+            if (ShaderCode::getUniformNameType(uniform.name) ==  UniformNameType::eDetailSize) {
                 auto details = ter->getBrushDetails();
                 setUniformLocationValue(uniform.name, [&](GLint location) {
                     glUniform1fv(location, (GLsizei)details.size(), &details[0]);

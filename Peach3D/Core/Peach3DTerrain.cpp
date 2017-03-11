@@ -10,6 +10,7 @@
 #include "Peach3DIRender.h"
 #include "Peach3DSceneManager.h"
 #include "Peach3DLogPrinter.h"
+#include "Peach3DUtils.h"
 #include "Peach3DResourceManager.h"
 
 namespace Peach3D
@@ -55,8 +56,11 @@ namespace Peach3D
         // default set brush detail size to default
         mBrushDetails.assign(mBrushes.size(), 35.f);
         
-        // create texture
-        mTerrainObj = IRender::getSingleton().createObject(("pd_Terrain_"+mName).c_str());
+        // generate program unique id
+        static uint terrainAutoCount = 0;
+        auto terrName = Utils::formatString("pd_Terrain%d", terrainAutoCount++);
+        // create terrain object
+        mTerrainObj = IRender::getSingleton().createObject(terrName.c_str());
         uint vType = VertexType::Point3|VertexType::Normal|VertexType::UV;
         auto strideSize = IObject::getVertexStrideSize(vType);
         auto strideFloatSize = strideSize / 4;

@@ -44,7 +44,7 @@ void TerrainSample::init(Widget* parentWidget)
                 break;
             case ClickEvent::eDrag: {
                 auto diff = pos - lastTouchPos;
-                mActionCamera->rotate(Vector3(DEGREE_TO_RADIANS(diff.y * 0.05f), -DEGREE_TO_RADIANS(diff.x * 0.5f), 0.f));
+                mActionCamera->rotate(Vector3(-DEGREE_TO_RADIANS(diff.y * 0.1f), -DEGREE_TO_RADIANS(diff.x * 0.1f), 0.f));
                 lastTouchPos = pos;
             }
                 break;

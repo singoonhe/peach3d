@@ -50,7 +50,6 @@ namespace Peach3D
         /** Lights used will be update before render, called when lights changed. */
         void setLightingStateNeedUpdate() { mIsLightingDirty = true; }
         
-        void setName(const std::string& name) { mName = name; }
         ObjectPtr getObject() { return mTerrainObj; }
         const std::vector<TexturePtr>& getBrushes() { return mBrushes; }
         const std::vector<TexturePtr>& getAlphaMaps() { return mAlphaMap; }
@@ -73,7 +72,6 @@ namespace Peach3D
         float       mLandPace;      // distance between two vertex
         float*      mHighData;      // saved data for query current height
         
-        std::string mName;
         DrawMode    mDrawMode;
         ProgramPtr  mRenderProgram; // render program
         ObjectPtr   mTerrainObj;
