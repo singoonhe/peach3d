@@ -24,10 +24,11 @@ PlatformDelegate      gGameDelegate;
                                                 backing:NSBackingStoreBuffered
                                                   defer:NO];
     [self.window setDelegate:self];
-    
+    // Adaptive retina screen
+    float factor = self.window.backingScaleFactor;
     // init mac platform
     Peach3D::PlatformCreationParams params;
-    params.winSize = Peach3D::Vector2(winSize.width, winSize.height);
+    params.winSize = Peach3D::Vector2(winSize.width * factor, winSize.height * factor);
     //params.MSAA = 1;
     params.logPath = "pdtestlog.txt";
     params.delegate = &gGameDelegate;

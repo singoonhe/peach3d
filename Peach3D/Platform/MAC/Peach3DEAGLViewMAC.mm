@@ -169,8 +169,10 @@ static CVReturn gameDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
     if (type == ClickEvent::eScrollWheel) {
         point = CGPointMake(theEvent.deltaX, theEvent.deltaY);
     }
+    // Adaptive retina screen
+    float factor = self.window.backingScaleFactor;
     std::vector<uint> clickIds = {1};
-    std::vector<Vector2> poss = {Vector2(point.x, point.y)};
+    std::vector<Vector2> poss = {Vector2(point.x, point.y) * factor};
     EventDispatcher::getSingletonPtr()->triggerClickEvent(type, clickIds, poss);
     pthread_mutex_unlock(&mEventMutex);
 }
