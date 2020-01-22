@@ -17,7 +17,6 @@
 
 namespace Peach3D
 {
-    IMPLEMENT_SINGLETON_STATIC(IPlatform);
     // language type names
     std::vector<std::string> IPlatform::LanguageTypeNames = {"Unknow", "English", "Chinese-Hans", "Chinese-Hant", "French", "Russian"};
     

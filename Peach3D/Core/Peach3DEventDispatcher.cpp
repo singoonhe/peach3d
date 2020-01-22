@@ -13,8 +13,6 @@
 
 namespace Peach3D
 {
-    IMPLEMENT_SINGLETON_STATIC(EventDispatcher);
-    
     EventDispatcher::EventDispatcher() : mCurHoldTime(0.0f), mEventHoldTime(2.0f), mHoldScheduler(nullptr),
         mCurClickedTime(0.0f), mEventDClickTime(0.5f), mDClickScheduler(nullptr), mMovedNode(nullptr),
         mFocusNode(nullptr), mDragNode(nullptr), mFocusClickId(0), mKeyboardScene(nullptr)

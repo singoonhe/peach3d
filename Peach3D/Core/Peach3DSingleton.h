@@ -55,14 +55,8 @@ namespace Peach3D
         }
     };
 
-    /** "IMPLEMENT_SINGLETON_STATIC" be called in *.cpp file. */
-#if defined(_WIN32)
-    template <typename T>
-    T* Singleton<T>::mSingleton = nullptr;
-#define IMPLEMENT_SINGLETON_STATIC(T)
-#else
-#define IMPLEMENT_SINGLETON_STATIC(T) template<> T* Singleton<T>::mSingleton = nullptr
-#endif
+/** Not need instance T in *.cpp file no longer. */
+template <typename T> T* Singleton<T>::mSingleton = nullptr;
 }
 
 #endif // PEACH3D_SINGLETON_H

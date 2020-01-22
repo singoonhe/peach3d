@@ -17,9 +17,7 @@
 #endif
 
 namespace Peach3D
-{
-    IMPLEMENT_SINGLETON_STATIC(LogPrinter);
-    
+{    
     LogPrinter::LogPrinter(const std::string& filePath) : mLogFp(nullptr)
     {
         // there can't print log if open file failed,

@@ -17,8 +17,6 @@
 
 namespace Peach3D
 {
-    IMPLEMENT_SINGLETON_STATIC(SceneManager);
-    
     void SceneManager::init()
     {
         IRender* curRender = IRender::getSingletonPtr();

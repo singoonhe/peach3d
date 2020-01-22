@@ -12,9 +12,7 @@
 #include "Peach3DLayoutManager.h"
 
 namespace Peach3D
-{
-    IMPLEMENT_SINGLETON_STATIC(IRender);
-    
+{    
     bool IRender::initRender(const Vector2& size)
     {
         // also set layout window size

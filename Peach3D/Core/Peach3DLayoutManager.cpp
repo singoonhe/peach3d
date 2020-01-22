@@ -17,9 +17,7 @@
 #include "Peach3DSprite.h"
 
 namespace Peach3D
-{
-    IMPLEMENT_SINGLETON_STATIC(LayoutManager);
-    
+{    
     LayoutManager::LayoutManager() : mIsLandscape(false), mLocalizedFunc(nullptr)
     {
         const char* attrStrList[] = {"Widget", "Sprite", "Label", "Button", "Layout", "NormalTexture", "DownTexture", "HighlightTexture",

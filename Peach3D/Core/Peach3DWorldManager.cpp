@@ -10,5 +10,4 @@
 
 namespace Peach3D
 {
-    IMPLEMENT_SINGLETON_STATIC(WorldManager);
 }

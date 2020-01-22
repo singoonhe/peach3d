@@ -45,8 +45,8 @@ namespace Peach3D
     
     uint Mesh::getAnyVertexType()
     {
-        for (auto& iter : mObjectMap) {
-            return iter.second->getVertexType();
+        if (mObjectMap.size() > 0) {
+            return mObjectMap.begin()->second->getVertexType();
         }
         return 0;
     }

@@ -27,7 +27,6 @@
 
 namespace Peach3D
 {
-    IMPLEMENT_SINGLETON_STATIC(ResourceManager);
     // defind static all vertex attr info
     std::vector<VertexAttrInfo> ResourceManager::mVertexAttrList;
     

@@ -10,9 +10,7 @@
 #include "Peach3DSceneManager.h"
 
 namespace Peach3D
-{
-    IMPLEMENT_SINGLETON_STATIC(CursorManager);
-    
+{    
     CursorManager::CursorManager() : mIsCursorEnabled(false), mCursorSprite(nullptr), mCurStatus(0)
     {
         // init texture list
