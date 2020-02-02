@@ -25,6 +25,4 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/libpng \
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/libpng \
                     $(LOCAL_PATH)/libjpeg
 
-LOCAL_STATIC_LIBRARIES := libz
-
 include $(BUILD_STATIC_LIBRARY)

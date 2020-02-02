@@ -72,9 +72,6 @@ static void system_handle_cmd(struct android_app* app, int32_t cmd)
  */
 void android_main(struct android_app* state)
 {
-    // Make sure glue isn't stripped.
-    app_dummy();
-
     // new platform and init
     PlatformAndroid platform;
     PlatformDelegate delegate;

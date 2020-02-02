@@ -1,6 +1,8 @@
 #ifndef __glandroidext2_h_
 #define __glandroidext2_h_
 
+#include <GLES2/gl2.h>
+#include <GLES2/gl2platform.h>
 #include <GLES2/gl2ext.h>
 
 #ifdef __cplusplus

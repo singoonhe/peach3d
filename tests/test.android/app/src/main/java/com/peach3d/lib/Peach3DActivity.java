@@ -28,7 +28,7 @@ public class Peach3DActivity extends android.app.NativeActivity {
 		super.onCreate(savedInstanceState);
         // system load library
         try {
-            ActivityInfo app = getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_ACTIVITIES|PackageManager.GET_META_DATA);
+            ActivityInfo app = getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_SHARED_LIBRARY_FILES|PackageManager.GET_META_DATA);
             Bundle bundle = app.metaData;
             String libName = bundle.getString("android.app.lib_name");
             System.loadLibrary(libName);
