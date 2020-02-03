@@ -22,6 +22,7 @@ using namespace Peach3D;
         // always use OpenGL ES 2.0 under 7.0
         self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         mEnabledVersion = RenderFeatureLevel::eGL2;
+        Peach3DLog(LogLevel::eInfo, "Render feature level GL2 be used");
     }
     else {
         // try to use OpenGl ES 3.0
@@ -30,9 +31,11 @@ using namespace Peach3D;
             // ES 3.0 failed, use ES 2.0
             self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             mEnabledVersion = RenderFeatureLevel::eGL2;
+            Peach3DLog(LogLevel::eInfo, "Render feature level GL2 be used");
         }
         else {
             mEnabledVersion = RenderFeatureLevel::eGL3;
+            Peach3DLog(LogLevel::eInfo, "Render feature level GL3 be used");
         }
     }
     GLKView *view = (GLKView *)self.view;
