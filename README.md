@@ -1,15 +1,16 @@
-A game engine using c++ for multi platform. Using OpenGL for MAC, OpenGL ES for IOS and ANDROID, DX12 for Windows UWP. Engine don't include audio module.
+运行方式：
+ios/mac: 打开tests/test.mac_ios/test.xcodeproj
+android: 终端下执行:cd tests/test.android, ndk-build, gradle build即可生成apk文件
 
-In Android, you need modify "process_input" function in android_native_app_glue.c to avoid system error like "Failed to receive dispatch signal status=-11" or "keyDispatchingTimedOut". It maybe a bug of NDK.
-static void process_input(struct android_app* app, struct android_poll_source* source) {
-    AInputEvent* event = NULL;
-    while (AInputQueue_hasEvents( app->inputQueue ) && AInputQueue_getEvent(app->inputQueue, &event) >= 0) {
-        LOGV("New input event: type=%d\n", AInputEvent_getType(event));
-        if (AInputQueue_preDispatchEvent(app->inputQueue, event)) {
-            continue;
-        }
-        int32_t handled = 0;
-        if (app->onInputEvent != NULL) handled = app->onInputEvent(app, event);
-        AInputQueue_finishEvent(app->inputQueue, event, handled);
-    }
-}
+实现功能: 
+1.基础UI(Widget, Sprite, Button, Label, ProgressBar等)
+2.UI动画，混合UI动画
+3.模型加载(obj,pmt,c3t)和骨骼动画(pst)
+4.骨骼动画支持换装和绑定武器
+5.支持方向光，点光源，按照灯
+6.RTT和阴影
+7.2D粒子(ppt)和3D粒子(未完成)
+8.3D物体点选
+9.地形系统(未完成)
+10.UI布局(plt)
+
