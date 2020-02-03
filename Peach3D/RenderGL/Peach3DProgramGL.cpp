@@ -33,6 +33,13 @@ namespace Peach3D
     #define SHADOW_UBO_BINDING_POINT        2
     // define bones UBO binding point
     #define BONES_UBO_BINDING_POINT         3
+
+    // define gl buffer map flags
+#if (PEACH3D_CURRENT_PLATFORM == PEACH3D_PLATFORM_ANDROID)
+    #define GL_BUFFER_MAP_FLAGS (GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT)
+#else
+    #define GL_BUFFER_MAP_FLAGS (GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT)
+#endif
     
     // defined widget global UBO info
     GLuint ProgramGL::mWidgetUBOId = GL_INVALID_INDEX;
@@ -315,7 +322,7 @@ namespace Peach3D
             glBindBuffer(GL_UNIFORM_BUFFER, mLightsUBOId);
             // map lights buffer and copy memory on GL3
             const size_t varArraySize = sizeof(float) * 4 * lights.size();
-            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mLightsUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mLightsUBOSize, GL_BUFFER_MAP_FLAGS);
             for (auto& uniform : mLightsUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eLightTypeSpot: {
@@ -400,7 +407,7 @@ namespace Peach3D
         if (mShadowUBOId != GL_INVALID_INDEX && mShadowCount > 0) {
             glBindBuffer(GL_UNIFORM_BUFFER, mShadowUBOId);
             // map shadow buffer and copy memory on GL3
-            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mShadowUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mShadowUBOSize, GL_BUFFER_MAP_FLAGS);
             for (auto& uniform : mShadowUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eShadowMatrix: {
@@ -424,7 +431,7 @@ namespace Peach3D
         if (mBoneUBOId != GL_INVALID_INDEX && mBoneUBOSize > 0) {
             glBindBuffer(GL_UNIFORM_BUFFER, mBoneUBOId);
             // map shadow buffer and copy memory on GL3
-            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mBoneUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mBoneUBOSize, GL_BUFFER_MAP_FLAGS);
             for (auto& uniform : mBoneUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eBoneMatrix: {
@@ -462,7 +469,7 @@ namespace Peach3D
         if (mObjectUBOId != GL_INVALID_INDEX) {
             glBindBuffer(GL_UNIFORM_BUFFER, mObjectUBOId);
             // map global buffer and copy memory on GL3
-            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mObjectUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mObjectUBOSize, GL_BUFFER_MAP_FLAGS);
             SceneManager* sgr = SceneManager::getSingletonPtr();
             for (auto& uniform : mObjectUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
@@ -490,7 +497,7 @@ namespace Peach3D
         if (mWidgetUBOId != GL_INVALID_INDEX) {
             glBindBuffer(GL_UNIFORM_BUFFER, mWidgetUBOId);
             // map global buffer and copy memory on GL3
-            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mWidgetUBOSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            float* data = (float*)glMapBufferRange(GL_UNIFORM_BUFFER, 0, mWidgetUBOSize, GL_BUFFER_MAP_FLAGS);
             for (auto& uniform : mWidgetUBOUniforms) {
                 switch (ShaderCode::getUniformNameType(uniform.name)) {
                     case UniformNameType::eViewRect: {
@@ -561,8 +568,7 @@ namespace Peach3D
             // copy attri data to instanced buffer
             glBindBuffer(GL_ARRAY_BUFFER, mAttriBuffer);
             uint copySize = mUniformsSize * count;
-            data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize,
-                                            GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT);
+            data = (float*)glMapBufferRange(GL_ARRAY_BUFFER, 0, copySize, GL_BUFFER_MAP_FLAGS);
         }
         return data;
     }
