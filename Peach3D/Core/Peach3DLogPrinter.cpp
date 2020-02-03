@@ -68,7 +68,7 @@ namespace Peach3D
 #endif
 
         // get unfold log
-        char logInfo[2048], outLog[2048];
+        char logInfo[10240], outLog[10240];
         va_list arg_ptr;
         va_start(arg_ptr, format);
         vsprintf(logInfo, format, arg_ptr);
