@@ -25,9 +25,9 @@ namespace Peach3D
             vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
             vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
             vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
-            vec3 pd_lAmbient[PD_LIGHT_COUNT];   /* Light ambient addition. */
             vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
             vec3 pd_eyeDir;
+            vec3 pd_gAmbient;                   /* Scene global ambient. */
         };
         \n#ifdef PD_SHADOW_COUNT
             /* Define shadow uniforms when light enabled. */
@@ -62,12 +62,12 @@ namespace Peach3D
         in vec4 pd_specular; /* Include material shininess. */
         in vec3 pd_emissive;
         out vec3 f_normal;
+        out vec3 f_gAmbient;
         out vec3 f_matAmbient;
         out vec4 f_matSpecular;
         out vec3 f_matEmissive;
         out vec3 f_lVertexDir[PD_LIGHT_COUNT];
         out vec4 f_lHalfAtten[PD_LIGHT_COUNT];
-        out vec3 f_lAmbient[PD_LIGHT_COUNT];
         out vec3 f_lColor[PD_LIGHT_COUNT];
         \n#ifdef PD_SHADOW_COUNT\n
             out vec4 f_shadowCoord[PD_SHADOW_COUNT];
@@ -118,9 +118,9 @@ namespace Peach3D
             /* Convert normal to world space. */
             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
             f_normal = normalize(tnormal.xyz);
+            f_gAmbient = pd_gAmbient;
             for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-                /* Out light ambient and color. */
-                f_lAmbient[i] = pd_lAmbient[i];
+                /* Out light color. */
                 f_lColor[i] = pd_lColor[i];
                 \n#ifdef PD_SHADOW_COUNT\n
                     f_shadowEnable[i] = pd_lTypeSpot[i].w;
@@ -168,12 +168,12 @@ namespace Peach3D
     \n#endif
     \n#ifdef PD_ENABLE_LIGHT\n
         in vec3 f_normal;
+        in vec3 f_gAmbient;
         in vec3 f_matAmbient;
         in vec4 f_matSpecular;
         in vec3 f_matEmissive;
         in vec3 f_lVertexDir[PD_LIGHT_COUNT];
         in vec4 f_lHalfAtten[PD_LIGHT_COUNT];
-        in vec3 f_lAmbient[PD_LIGHT_COUNT];
         in vec3 f_lColor[PD_LIGHT_COUNT];
         \n#ifdef PD_SHADOW_COUNT\n
             in float f_shadowEnable[PD_LIGHT_COUNT];
@@ -240,10 +240,10 @@ namespace Peach3D
                 \n#endif\n
                 // accumulate diffuse and specular color
                 float verAtten = f_lHalfAtten[i].w;
-                scatteredLight += f_lAmbient[i] * f_matAmbient * verAtten + f_lColor[i] * f_diffuse.rgb * diffuse * verAtten * shadowAtten;
+                scatteredLight += f_lColor[i] * f_diffuse.rgb * diffuse * verAtten * shadowAtten;
                 reflectedLight += f_lColor[i] * f_matSpecular.rgb * specular * verAtten * shadowAtten;
             }
-            vec3 rgb = min(f_matEmissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
+            vec3 rgb = min(f_matEmissive + fragColor.rgb * (scatteredLight + f_gAmbient * f_matAmbient) + reflectedLight, vec3(1.0));
             fragColor = vec4(rgb, fragColor.a);
         \n#else
             \n#ifdef PD_ENABLE_TEXUV\n
@@ -360,12 +360,12 @@ namespace Peach3D
         uniform vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
         uniform vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
         uniform vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
-        uniform vec3 pd_lAmbient[PD_LIGHT_COUNT];   /* Light ambient addition. */
         uniform vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
         uniform vec3 pd_eyeDir;
         uniform vec3 pd_ambient;
         uniform vec4 pd_specular; /* Include material shininess. */
         uniform vec3 pd_emissive;
+        uniform vec3 pd_gAmbient;
         varying vec3 f_normal;
         varying vec3 f_worldVertex;
         \n#ifdef PD_SHADOW_COUNT\n
@@ -460,10 +460,10 @@ namespace Peach3D
                         shadowIndex = shadowIndex + 1;
                     }
                 \n#endif\n
-                scatteredLight += pd_lAmbient[i] * pd_ambient * curAttenuate + pd_lColor[i] * f_diffuse.rgb * diffuse * curAttenuate * shadowAtten;
+                scatteredLight += pd_lColor[i] * f_diffuse.rgb * diffuse * curAttenuate * shadowAtten;
                 reflectedLight += pd_lColor[i] * pd_specular.rgb * specular * curAttenuate * shadowAtten;
             }
-            vec3 rgb = min(pd_emissive + fragColor.rgb * scatteredLight + reflectedLight, vec3(1.0));
+            vec3 rgb = min(pd_emissive + fragColor.rgb * (scatteredLight + pd_gAmbient * pd_ambient) + reflectedLight, vec3(1.0));
             fragColor = vec4(rgb, fragColor.a);
         \n#else
             \n#ifdef PD_ENABLE_TEXUV\n

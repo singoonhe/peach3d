@@ -341,13 +341,16 @@ namespace Peach3D
             // render last objects
             lastRenderNode->getObject()->render(curNodeList);
         }
-        // draw all OBB
-        if (content->OBBList.size() > 0) {
-            mOBBObject->render(content->OBBList);
-        }
-        // draw all particles
-        for (auto& particle : content->particles) {
-            mParticle3DObject->render(particle);
+        // checking render depth texture
+        if (!forDepth) {
+            // draw all OBB
+            if (content->OBBList.size() > 0) {
+                mOBBObject->render(content->OBBList);
+            }
+            // draw all particles
+            for (auto& particle : content->particles) {
+                mParticle3DObject->render(particle);
+            }
         }
     }
     

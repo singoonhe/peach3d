@@ -33,11 +33,11 @@ namespace Peach3D
         ~Light();
         
         /** Direction light only need direction. */
-        void usingAsDirection(const Vector3& dir, const Color3& color = Color3Gray, const Color3& ambient = Color3Gray);
+        void usingAsDirection(const Vector3& dir, const Color3& color = Color3Gray);
         /** Dot light need light position and attenuate(const/line/square). */
-        void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
+        void usingAsDot(const Vector3& pos, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Color3& color = Color3White);
         /** Spot light need light position and direction, add spot angle cos and transverse attenuate(pow) based on the Dot. */
-        void usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Vector2& ext = Vector2(0.5f, 2.f), const Color3& color = Color3White, const Color3& ambient = Color3Gray);
+        void usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate = Vector3(1.f, 0.1f, 0.f), const Vector2& ext = Vector2(0.5f, 2.f), const Color3& color = Color3White);
         
         /** Create shadow RTT with texture size, or disable shadow.
          * @params factor must not samller than 1.f, TextureSize = ScreenSize * factor.
@@ -61,8 +61,6 @@ namespace Peach3D
         const Vector3& getPosition() { return mPos; }
         void setDirection(const Vector3& dir) { mDir = dir; };
         const Vector3& getDirection() { return mDir; }
-        void setAmbient(const Color3& color) { mAmbient = color; };
-        const Color3& getAmbient() { return mAmbient; }
         void setColor(const Color3& color) { mColor = color; };
         const Color3& getColor() { return mColor; }
         void setAttenuate(const Vector3& atten) { mDir = atten; mIsDirty = true; };
@@ -79,7 +77,6 @@ namespace Peach3D
         LightType   mType;       // light type
         Vector3     mPos;        // light position, for Dot and Spot
         Vector3     mDir;        // light direction, for Direction and Spot
-        Color3      mAmbient;    // light ambient
         Color3      mColor;      // light color
         Vector3     mAttenuate;  // light const/line/quadratic attenuate, for Dot and Spot
         Vector2     mSpotExt;    // extent spot and cut cos attenuate, for Spot

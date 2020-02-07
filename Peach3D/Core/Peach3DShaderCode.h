@@ -35,6 +35,7 @@ namespace Peach3D
         eUVRect,        // sprite texture rect
         eTexEffect,     // sprite scale negative and gray effect
         
+        eGlobalAmbient, // global ambient
         eProjMatrix,    // projective matrix
         eViewMatrix,    // view matrix
         eModelMatrix,   // model matrix
@@ -47,7 +48,6 @@ namespace Peach3D
         eLightPos,      // light position
         eLightDir,      // light direction
         eLightAtten,    // light attenute
-        eLightAmbient,  // light ambient
         eLightColor,    // light color
         eEyeDir,        // camera direction
         

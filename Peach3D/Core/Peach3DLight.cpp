@@ -30,19 +30,19 @@ namespace Peach3D
         // SceneManager have update scenenode, so do nothing here
     }
     
-    void Light::usingAsDirection(const Vector3& dir, const Color3& color, const Color3& ambient)
+    void Light::usingAsDirection(const Vector3& dir, const Color3& color)
     {
-        mType = LightType::eDirection; mDir = dir; mColor = color; mAmbient = ambient;
+        mType = LightType::eDirection; mDir = dir; mColor = color;
     }
     
-    void Light::usingAsDot(const Vector3& pos, const Vector3& attenuate, const Color3& color, const Color3& ambient)
+    void Light::usingAsDot(const Vector3& pos, const Vector3& attenuate, const Color3& color)
     {
-        mType = LightType::eDot; mPos = pos; mAttenuate = attenuate; mColor = color; mAmbient = ambient;
+        mType = LightType::eDot; mPos = pos; mAttenuate = attenuate; mColor = color;
     }
     
-    void Light::usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate, const Vector2& ext, const Color3& color, const Color3& ambient)
+    void Light::usingAsSpot(const Vector3& pos, const Vector3& dir, const Vector3& attenuate, const Vector2& ext, const Color3& color)
     {
-        mType = LightType::eSpot; mPos = pos; mDir = dir; mAttenuate = attenuate; mSpotExt = ext; mColor = color; mAmbient = ambient;
+        mType = LightType::eSpot; mPos = pos; mDir = dir; mAttenuate = attenuate; mSpotExt = ext; mColor = color;
     }
     
     void Light::setEnabled(bool enable)

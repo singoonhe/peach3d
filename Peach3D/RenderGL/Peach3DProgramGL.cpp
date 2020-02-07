@@ -366,16 +366,6 @@ namespace Peach3D
                         memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
                     }
                         break;
-                    case UniformNameType::eLightAmbient: {
-                        for (auto i=0; i<lights.size(); ++i) {
-                            auto ambient = lights[i]->getAmbient();
-                            lData[i * 4] = ambient.r;
-                            lData[i * 4 + 1] = ambient.g;
-                            lData[i * 4 + 2] = ambient.b;
-                        }
-                        memcpy(data + uniform.offset/sizeof(float), lData, varArraySize);
-                    }
-                        break;
                     case UniformNameType::eLightColor: {
                         for (auto i=0; i<lights.size(); ++i) {
                             auto color = lights[i]->getColor();
@@ -389,6 +379,12 @@ namespace Peach3D
                     case UniformNameType::eEyeDir: {
                         auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
                         lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
+                        memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3);
+                    }
+                        break;
+                    case UniformNameType::eGlobalAmbient: {
+                        const Color3& ambient = SceneManager::getSingleton().getGlobalAmbient();
+                        lData[0] = ambient.r; lData[1] = ambient.g; lData[2] = ambient.b;
                         memcpy(data + uniform.offset/sizeof(float), lData, sizeof(float) * 3);
                     }
                         break;
@@ -668,15 +664,10 @@ namespace Peach3D
                         glUniform3fv(location, (GLsizei)lights.size(), lData);
                     });
                     break;
-                case UniformNameType::eLightAmbient:
+                case UniformNameType::eGlobalAmbient:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        for (auto i=0; i<lights.size(); ++i) {
-                            auto ambient = lights[i]->getAmbient();
-                            lData[i * 3] = ambient.r;
-                            lData[i * 3 + 1] = ambient.g;
-                            lData[i * 3 + 2] = ambient.b;
-                        }
-                        glUniform3fv(location, (GLsizei)lights.size(), lData);
+                        const Color3& ambient = SceneManager::getSingleton().getGlobalAmbient();
+                        glUniform3f(location, ambient.r, ambient.g, ambient.b);
                     });
                     break;
                 case UniformNameType::eLightColor:
@@ -693,8 +684,7 @@ namespace Peach3D
                 case UniformNameType::eEyeDir:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
                         auto curPos = SceneManager::getSingleton().getActiveCamera()->getForward();
-                        lData[0] = curPos.x; lData[1] = curPos.y; lData[2] = curPos.z;
-                        glUniform3fv(location, 1, lData);
+                        glUniform3f(location, curPos.x, curPos.y, curPos.z);
                     });
                     break;
                     // shadow uniforms
@@ -717,21 +707,18 @@ namespace Peach3D
                     break;
                 case UniformNameType::eMatAmbient:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.ambient.r, objMat.ambient.g, objMat.ambient.b};
-                        glUniform3fv(location, 1, color);
+                        glUniform3f(location, objMat.ambient.r, objMat.ambient.g, objMat.ambient.b);
                     });
                     break;
                 case UniformNameType::eMatSpecular:
                     // also pass shininess
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess};
-                        glUniform4fv(location, 1, color);
+                        glUniform4f(location, objMat.specular.r, objMat.specular.g, objMat.specular.b, objMat.shininess);
                     });
                     break;
                 case UniformNameType::eMatEmissive:
                     setUniformLocationValue(uniform.name, [&](GLint location) {
-                        float color[] = {objMat.emissive.r, objMat.emissive.g, objMat.emissive.b};
-                        glUniform3fv(location, 1, color);
+                        glUniform3f(location, objMat.emissive.r, objMat.emissive.g, objMat.emissive.b);
                     });
                     break;
                 default:

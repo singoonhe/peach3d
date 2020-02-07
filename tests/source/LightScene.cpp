@@ -99,7 +99,7 @@ void DirLightSample::update(float lastFrameTime)
         curItem = (curItem > 0.8f) ? 0.8f : curItem;
         curItem = (curItem < 0.f) ? 0.f : curItem;
     }
-    mDirLight->setAmbient(Color3(curItem));
+    mDirLight->setColor(Color3(curItem));
 }
 
 DirLightSample::~DirLightSample()

@@ -55,6 +55,9 @@ namespace Peach3D
         
         void setLightMax(int count) { if (count > 0) mLightMax = count; }
         int getLightMax() { return mLightMax; }
+        void setGlobalAmbient(const Color3& ambient) { mGlobalAmbient = ambient; }
+        const Color3& getGlobalAmbient() { return mGlobalAmbient; }
+        
         /** Add new light, auto new name if null. */
         LightPtr addNewLight(const char* name = "");
         LightPtr getLight(const char* name);
@@ -86,7 +89,7 @@ namespace Peach3D
 
     protected:
         //! create object by IPlatform, user can't call constructor function.
-        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mWidgetObject(nullptr), mOBBObject(nullptr), mLightMax(10)  {}
+        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mWidgetObject(nullptr), mOBBObject(nullptr), mLightMax(10), mGlobalAmbient(Color3Gray)  {}
         //! delete object by IPlatform, user can't call destructor function.
         virtual ~SceneManager();
         //! init
@@ -115,6 +118,7 @@ namespace Peach3D
         Widget*                 mRootWidget;        // root Widget
         Matrix4                 mProjectionMatrix;  // used projective matrix for object
         int                     mLightMax;          // lighting  max supported count
+        Color3                  mGlobalAmbient;     // global ambient
         
         Scheduler*              mDrawUpdateSchedule;// draw stats update schedule
         Widget*                 mDebugDrawNode;     // draw stats widget

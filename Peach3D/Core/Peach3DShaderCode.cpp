@@ -19,9 +19,9 @@ namespace Peach3D
         ProgramUniform("pd_lPosition", UniformDataType::eVector3),
         ProgramUniform("pd_lDirection", UniformDataType::eVector3),
         ProgramUniform("pd_lAttenuate", UniformDataType::eVector3),
-        ProgramUniform("pd_lAmbient", UniformDataType::eVector3),
         ProgramUniform("pd_lColor", UniformDataType::eVector3),
-        ProgramUniform("pd_eyeDir", UniformDataType::eVector3)};
+        ProgramUniform("pd_eyeDir", UniformDataType::eVector3),
+        ProgramUniform("pd_gAmbient", UniformDataType::eVector3)};
     
     uint ShaderCode::getUniformFloatBits(UniformDataType type)
     {
@@ -47,6 +47,7 @@ namespace Peach3D
             mUniformsNamesMap["pd_uvRect"] = UniformNameType::eUVRect;
             mUniformsNamesMap["pd_texEffect"] = UniformNameType::eTexEffect;
             
+            mUniformsNamesMap["pd_gAmbient"] = UniformNameType::eGlobalAmbient;
             mUniformsNamesMap["pd_projMatrix"] = UniformNameType::eProjMatrix;
             mUniformsNamesMap["pd_viewMatrix"] = UniformNameType::eViewMatrix;
             mUniformsNamesMap["pd_modelMatrix"] = UniformNameType::eModelMatrix;
@@ -59,7 +60,6 @@ namespace Peach3D
             mUniformsNamesMap["pd_lPosition"] = UniformNameType::eLightPos;
             mUniformsNamesMap["pd_lDirection"] = UniformNameType::eLightDir;
             mUniformsNamesMap["pd_lAttenuate"] = UniformNameType::eLightAtten;
-            mUniformsNamesMap["pd_lAmbient"] = UniformNameType::eLightAmbient;
             mUniformsNamesMap["pd_lColor"] = UniformNameType::eLightColor;
             mUniformsNamesMap["pd_eyeDir"] = UniformNameType::eEyeDir;
             
