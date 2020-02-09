@@ -14,75 +14,51 @@
 namespace Peach3D
 {
     /************************************** GL3 shders ***************************************/
-    const char* gVerGL3ShaderCode3D = STRINGIFY(\
-    #ifdef PD_ENABLE_LIGHT
-        \n#define PD_LIGHT_DIRECTION    1.5
-        \n#define PD_LIGHT_DOT          2.5
-        \n#define PD_LIGHT_SPOT         3.5
-        /* Use std140 to make unify same offset for vec3, some verder maybe different. */
-        \nlayout (std140) uniform LightsUniforms {
-            vec4 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate, shadow enabled(1.0) or 0.0. */
-            vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
-            vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
-            vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
-            vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
-            vec3 pd_eyeDir;
-            vec3 pd_gAmbient;                   /* Scene global ambient. */
-        };
-        \n#ifdef PD_SHADOW_COUNT
-            /* Define shadow uniforms when light enabled. */
-            \nuniform ShadowUniforms {
-                mat4 pd_shadowMatrix[PD_SHADOW_COUNT];
-            };
-        \n#endif
-    \n#endif
-    \n#ifdef PD_ENABLE_SKELETON\n
+    const char* gVerGL3ShaderCode3D = R"(
+    #ifdef PD_ENABLE_SKELETON
         uniform BoneUniforms {
             vec4 pd_boneMatrix[PD_ENABLE_SKELETON * 3];
         };
-    \n#endif\n
+        in vec4 pd_bWidget;
+        in vec4 pd_bIndex;
+    #endif
     uniform GlobalUniforms {
         mat4 pd_projMatrix;
         mat4 pd_viewMatrix;
     };
     in vec3 pd_vertex;
-    \n#ifdef PD_ENABLE_TEXUV\n
-        in vec2 pd_uv;
-    \n#endif
-    \n#ifdef PD_ENABLE_SKELETON\n
-        in vec4 pd_bWidget;
-        in vec4 pd_bIndex;
-    \n#endif\n
     in mat4 pd_modelMatrix;
     in vec4 pd_diffuse;
-    \n#ifdef PD_ENABLE_LIGHT\n
+    out vec4 f_diffuse;
+    #ifdef PD_ENABLE_TEXUV
+        in vec2 pd_uv;
+        out vec2 f_uv;
+    #endif
+    #ifdef PD_ENABLE_LIGHT
         in vec3 pd_normal;
         in mat4 pd_normalMatrix;
+        // !vertex attribute must written in vertex shader
         in vec3 pd_ambient;
         in vec4 pd_specular; /* Include material shininess. */
         in vec3 pd_emissive;
+        out vec3 f_ambient;
+        out vec4 f_specular;
+        out vec3 f_emissive;
         out vec3 f_normal;
-        out vec3 f_gAmbient;
-        out vec3 f_matAmbient;
-        out vec4 f_matSpecular;
-        out vec3 f_matEmissive;
-        out vec3 f_lVertexDir[PD_LIGHT_COUNT];
-        out vec4 f_lHalfAtten[PD_LIGHT_COUNT];
-        out vec3 f_lColor[PD_LIGHT_COUNT];
-        \n#ifdef PD_SHADOW_COUNT\n
+        out vec4 f_worldPos;
+        #ifdef PD_SHADOW_COUNT
+            /* Define shadow uniforms when light enabled. */
+            uniform ShadowUniforms {
+                mat4 pd_shadowMatrix[PD_SHADOW_COUNT];
+            };
             out vec4 f_shadowCoord[PD_SHADOW_COUNT];
-            out float f_shadowEnable[PD_LIGHT_COUNT];
-        \n#endif
-    \n#endif\n
-    out vec4 f_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-        out vec2 f_uv;
-    \n#endif\n
+        #endif
+    #endif
 
     void main(void)
     {
         vec4 attribPos = vec4(pd_vertex, 1.0);
-        \n#ifdef PD_ENABLE_SKELETON\n
+        #ifdef PD_ENABLE_SKELETON
             vec4 vMtX = vec4(0.0);
             vec4 vMtY = vec4(0.0);
             vec4 vMtZ = vec4(0.0);
@@ -106,154 +82,157 @@ namespace Peach3D
             resPos.y = dot(attribPos, vMtY);
             resPos.z = dot(attribPos, vMtZ);
             attribPos = resPos;
-        \n#endif\n
+        #endif
         vec4 worldPos = pd_modelMatrix * attribPos;
         mat4 vpMatrix = pd_projMatrix * pd_viewMatrix;
         gl_Position = vpMatrix * worldPos;
+        // !vertex attribute must written in vertex shader
         f_diffuse = pd_diffuse;
-        \n#ifdef PD_ENABLE_TEXUV\n
+        #ifdef PD_ENABLE_TEXUV
             f_uv = pd_uv;
-        \n#endif
-        \n#ifdef PD_ENABLE_LIGHT\n
+        #endif
+        #ifdef PD_ENABLE_LIGHT
+            f_worldPos = worldPos;
             /* Convert normal to world space. */
             vec4 tnormal = pd_normalMatrix * vec4(pd_normal, 1.0);
             f_normal = normalize(tnormal.xyz);
-            f_gAmbient = pd_gAmbient;
-            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-                /* Out light color. */
-                f_lColor[i] = pd_lColor[i];
-                \n#ifdef PD_SHADOW_COUNT\n
-                    f_shadowEnable[i] = pd_lTypeSpot[i].w;
-                \n#endif\n
+            // 
+            f_ambient = pd_ambient;
+            f_specular = pd_specular;
+            f_emissive = pd_emissive;
+            // out world shadow pos
+            #ifdef PD_SHADOW_COUNT
+                for (int i = 0; i < PD_SHADOW_COUNT; ++i) {
+                    f_shadowCoord[i] = pd_shadowMatrix[i] * worldPos;
+                }
+            #endif
+        #endif
+    })";
 
+    const char* gFragGL3ShaderCode3D = R"(
+    #ifdef PD_ENABLE_LIGHT
+        #define PD_LIGHT_DIRECTION    1.5
+        #define PD_LIGHT_DOT          2.5
+        #define PD_LIGHT_SPOT         3.5
+        /* Use std140 to make unify same offset for vec3, some verder maybe different. */
+        layout (std140) uniform LightsUniforms {
+            vec4 pd_lTypeSpot[PD_LIGHT_COUNT];  /* Light type and spot light extend attenuate, shadow enabled(1.0) or 0.0. */
+            vec3 pd_lPosition[PD_LIGHT_COUNT];  /* Dot light or spot light position. */
+            vec3 pd_lDirection[PD_LIGHT_COUNT]; /* Direction light or spot light direction. */
+            vec3 pd_lAttenuate[PD_LIGHT_COUNT]; /* Dot light or spot light base attenuate. */
+            vec3 pd_lColor[PD_LIGHT_COUNT];     /* Light color. */
+            vec3 pd_eyeDir;                     /* Active camera direction. */
+            vec3 pd_gAmbient;                   /* Scene global ambient. */
+        };
+        in vec3 f_ambient;
+        in vec4 f_specular; /* Include material shininess. */
+        in vec3 f_emissive;
+        in vec4 f_worldPos;
+        in vec3 f_normal;
+        #ifdef PD_SHADOW_COUNT
+          in vec4 f_shadowCoord[PD_SHADOW_COUNT];
+          uniform sampler2DShadow pd_shadowTexture[PD_SHADOW_COUNT];
+        #endif
+    #endif
+    in vec4 f_diffuse;
+    #ifdef PD_ENABLE_TEXUV
+        in vec2 f_uv;
+        uniform sampler2D pd_texture0;
+    #endif
+    out vec4 out_FragColor;
+
+    void main(void)
+    {
+        #ifdef PD_ENABLE_TEXUV
+            vec4 fragColor = texture(pd_texture0, f_uv);
+        #else
+            vec4 fragColor = vec4(vec3(1.0), f_diffuse.a);
+        #endif
+        /* Calc lighting effect. */
+        #ifdef PD_ENABLE_LIGHT
+            vec3 scatteredLight = vec3(0.0);
+            vec3 reflectedLight = vec3(0.0);
+            #ifdef PD_SHADOW_COUNT
+                int shadowIndex = 0;
+            #endif
+            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
                 float lType = pd_lTypeSpot[i].x;
+                vec3 vertexDir;
+                vec4 halfAtten;
                 if (lType > PD_LIGHT_DIRECTION) {
-                    f_lVertexDir[i] = pd_lPosition[i] - worldPos.xyz;
-                    float lightDis = length(f_lVertexDir[i]); /* Light to vertex distance. */
-                    f_lVertexDir[i] = f_lVertexDir[i] / lightDis; /* Normalize light direction. */
+                    vertexDir = pd_lPosition[i] - f_worldPos.xyz;
+                    float lightDis = length(vertexDir); /* Light to vertex distance. */
+                    vertexDir = vertexDir / lightDis; /* Normalize light direction. */
 
                     /* Calc attenuate and specular halfVec. */
                     float verAtten = 1.0 / (pd_lAttenuate[i].x + pd_lAttenuate[i].y * lightDis + pd_lAttenuate[i].z * lightDis * lightDis);
                     if (lType > PD_LIGHT_DOT) {
-                        float spotCos = dot(f_lVertexDir[i], -pd_lDirection[i]);
+                        float spotCos = dot(vertexDir, -pd_lDirection[i]);
                         if (spotCos < pd_lTypeSpot[i].y)
                             verAtten = 0.0;
                         else
                             verAtten *= pow(spotCos, pd_lTypeSpot[i].z);
                     }
-                    f_lHalfAtten[i] = vec4(normalize(f_lVertexDir[i] - pd_eyeDir), verAtten);
+                    halfAtten = vec4(normalize(vertexDir - pd_eyeDir), verAtten);
                 }
                 else {
                     /* Direction light just return value. */
-                    f_lVertexDir[i] = -pd_lDirection[i];
-                    f_lHalfAtten[i] = vec4(normalize(f_lVertexDir[i] - pd_eyeDir), 1.0);
+                    vertexDir = -pd_lDirection[i];
+                    halfAtten = vec4(normalize(vertexDir - pd_eyeDir), 1.0);
                 }
-            }\n
-            f_matAmbient = pd_ambient;
-            f_matSpecular = pd_specular;
-            f_matEmissive = pd_emissive;
-            \n#ifdef PD_SHADOW_COUNT\n
-                for (int i = 0; i < PD_SHADOW_COUNT; ++i) {
-                    f_shadowCoord[i] = pd_shadowMatrix[i] * worldPos;
-                }
-            \n#endif
-        \n#endif\n
-    });
 
-    const char* gFragGL3ShaderCode3D = STRINGIFY(\
-    in vec4 f_diffuse;
-    \n#ifdef PD_ENABLE_TEXUV\n
-        in vec2 f_uv;
-        uniform sampler2D pd_texture0;
-    \n#endif
-    \n#ifdef PD_ENABLE_LIGHT\n
-        in vec3 f_normal;
-        in vec3 f_gAmbient;
-        in vec3 f_matAmbient;
-        in vec4 f_matSpecular;
-        in vec3 f_matEmissive;
-        in vec3 f_lVertexDir[PD_LIGHT_COUNT];
-        in vec4 f_lHalfAtten[PD_LIGHT_COUNT];
-        in vec3 f_lColor[PD_LIGHT_COUNT];
-        \n#ifdef PD_SHADOW_COUNT\n
-            in float f_shadowEnable[PD_LIGHT_COUNT];
-            in vec4 f_shadowCoord[PD_SHADOW_COUNT];
-            \n#ifdef GL_ES\n
-                precision highp sampler2DShadow;
-            \n#endif\n
-            uniform sampler2DShadow pd_shadowTexture[PD_SHADOW_COUNT];
-        \n#endif
-    \n#endif\n
-    out vec4 out_FragColor;\n
-
-    void main(void)
-    {
-        \n#ifdef PD_ENABLE_TEXUV\n
-            vec4 fragColor = texture( pd_texture0, f_uv );
-        \n#else\n
-            vec4 fragColor = vec4(vec3(1.0), f_diffuse.a);
-        \n#endif
-        /* Calc lighting effect. */
-        \n#ifdef PD_ENABLE_LIGHT\n
-            vec3 scatteredLight = vec3(0.0);
-            vec3 reflectedLight = vec3(0.0);
-            \n#ifdef PD_SHADOW_COUNT\n
-                int shadowIndex = 0;
-            \n#endif\n
-            for (int i = 0; i < PD_LIGHT_COUNT; ++i) {
-                float diffuse = max(0.0, dot(f_normal, f_lVertexDir[i]));
-                float specular = max(0.0, dot(f_normal, f_lHalfAtten[i].xyz));
-                if (diffuse == 0.0)
+                float diffuse = max(0.0, dot(f_normal, vertexDir));
+                float specular = max(0.0, dot(f_normal, halfAtten.xyz));
+                if (diffuse < 0.0001)
                     specular = 0.0;
                 else
-                    specular = pow(specular, f_matSpecular.a);
+                    specular = pow(specular, f_specular.a);
 
                 float shadowAtten = 1.0;    // shadow attenuation
-                \n#ifdef PD_SHADOW_COUNT\n
-                    if (f_shadowEnable[i] > 0.5) {
+                #ifdef PD_SHADOW_COUNT
+                    if (pd_lTypeSpot[i].w > 0.5) {
                         // Dynamic indexing of sampler types is not allowed on GLES3
-                        if (shadowIndex == 0) {
-                            shadowAtten = textureProj(pd_shadowTexture[0], f_shadowCoord[0]);
+                        switch (shadowIndex) {
+                            case 0:
+                                shadowAtten = textureProj(pd_shadowTexture[0], f_shadowCoord[shadowIndex]);
+                                break;
+                            #if PD_SHADOW_COUNT > 1
+                            case 1:
+                                shadowAtten = textureProj(pd_shadowTexture[1], f_shadowCoord[shadowIndex]);
+                                break;
+                            #if PD_SHADOW_COUNT > 2
+                            case 2:
+                                shadowAtten = textureProj(pd_shadowTexture[2], f_shadowCoord[shadowIndex]);
+                                break;
+                            #if PD_SHADOW_COUNT > 3
+                            case 3:
+                                shadowAtten = textureProj(pd_shadowTexture[3], f_shadowCoord[shadowIndex]);
+                                break;
+                            #endif
+                            #endif
+                            #endif
+                            default:
+                                break;
                         }
-                    \n#if PD_SHADOW_COUNT > 1 \n
-                        else if (shadowIndex == 1) {
-                            shadowAtten = textureProj(pd_shadowTexture[1], f_shadowCoord[1]);
-                        }
-                    \n#endif
-                    \n#if PD_SHADOW_COUNT > 2 \n
-                        else if (shadowIndex == 2) {
-                            shadowAtten = textureProj(pd_shadowTexture[2], f_shadowCoord[2]);
-                        }
-                    \n#endif
-                    \n#if PD_SHADOW_COUNT > 3 \n
-                        else if (shadowIndex == 3) {
-                            shadowAtten = textureProj(pd_shadowTexture[3], f_shadowCoord[3]);
-                        }
-                    \n#endif
-                    \n#if PD_SHADOW_COUNT > 4 \n
-                        else if (shadowIndex == 4) {
-                            shadowAtten = textureProj(pd_shadowTexture[4], f_shadowCoord[4]);
-                        }
-                    \n#endif\n
                         shadowIndex = shadowIndex + 1;
                     }
-                \n#endif\n
+                #endif
                 // accumulate diffuse and specular color
-                float verAtten = f_lHalfAtten[i].w;
-                scatteredLight += f_lColor[i] * f_diffuse.rgb * diffuse * verAtten * shadowAtten;
-                reflectedLight += f_lColor[i] * f_matSpecular.rgb * specular * verAtten * shadowAtten;
+                float verAtten = halfAtten.w;
+                scatteredLight += pd_lColor[i] * f_diffuse.rgb * diffuse * verAtten * shadowAtten;
+                reflectedLight += pd_lColor[i] * f_specular.rgb * specular * verAtten * shadowAtten;
             }
-            vec3 rgb = min(f_matEmissive + fragColor.rgb * (scatteredLight + f_gAmbient * f_matAmbient) + reflectedLight, vec3(1.0));
+            vec3 rgb = min(f_emissive + fragColor.rgb * (scatteredLight + pd_gAmbient * f_ambient) + reflectedLight, vec3(1.0));
             fragColor = vec4(rgb, fragColor.a);
-        \n#else
-            \n#ifdef PD_ENABLE_TEXUV\n
+        #else
+            #ifdef PD_ENABLE_TEXUV
                 fragColor = fragColor * f_diffuse;
-            \n#else\n
+            #else
                 fragColor = f_diffuse;
-            \n#endif
-        \n#endif\n
-        out_FragColor = fragColor;\n
-    });
+            #endif
+        #endif
+        out_FragColor = fragColor;
+    })";
 
     /************************************** GL2 shders ***************************************/
 
