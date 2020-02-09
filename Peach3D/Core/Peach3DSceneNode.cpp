@@ -417,8 +417,10 @@ namespace Peach3D
             bool isNormal = bool(mAttachedMesh->getAnyVertexType() & VertexType::Normal);
             if (mLightEnable && isNormal) {
                 // save enabled lights name
+                int maxLightCount = SceneManager::getSingleton().getLightMax();
                 SceneManager::getSingleton().tranverseLights([&](const std::string& name, const LightPtr& l){
-                    if (l->isIlluminePos(mWorldPosition, mIgnoreLights)) {
+                    // light count can't more than maxLightCount
+                    if (l->isIlluminePos(mWorldPosition, mIgnoreLights) && validLights.size() < maxLightCount) {
                         validLights.push_back(l);
                         // is shadow valid
                         if (isAcceptShadow() && l->getShadowTexture()) {

@@ -109,6 +109,8 @@
 #define PEACH3D_OBJECT_TEXTURE_COUNT_MAX   4
 // max texture count widget supported
 #define PEACH3D_WIDGET_TEXTURE_COUNT_MAX   2
+// max light count supported
+#define PEACH3D_MAX_LIGHT_COUNT 4
 
 ///////////////////////some constant////////////////////////////////
 #ifndef FLT_EPSILON

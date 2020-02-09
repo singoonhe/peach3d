@@ -53,7 +53,7 @@ namespace Peach3D
         void addTerrain(Terrain* trr) { if(trr && trr->getObject()) mTerrainList.push_back(trr); }
         void deleteAllTerrains();
         
-        void setLightMax(int count) { if (count > 0) mLightMax = count; }
+        void setLightMax(int count) { if (count > 0 && count <= PEACH3D_MAX_LIGHT_COUNT) mLightMax = count; }
         int getLightMax() { return mLightMax; }
         void setGlobalAmbient(const Color3& ambient) { mGlobalAmbient = ambient; }
         const Color3& getGlobalAmbient() { return mGlobalAmbient; }
@@ -89,7 +89,7 @@ namespace Peach3D
 
     protected:
         //! create object by IPlatform, user can't call constructor function.
-        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mWidgetObject(nullptr), mOBBObject(nullptr), mLightMax(10), mGlobalAmbient(Color3Gray)  {}
+        SceneManager() : mRootSceneNode(nullptr), mRootWidget(nullptr), mActiveCamera(nullptr), mDebugDrawNode(nullptr), mDrawUpdateSchedule(nullptr), mWidgetObject(nullptr), mOBBObject(nullptr), mLightMax(PEACH3D_MAX_LIGHT_COUNT), mGlobalAmbient(Color3Gray)  {}
         //! delete object by IPlatform, user can't call destructor function.
         virtual ~SceneManager();
         //! init
