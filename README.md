@@ -1,6 +1,6 @@
 运行方式：  
 ios/mac: 打开tests/test.mac_ios/test.xcodeproj  
-android: 终端下执行:cd tests/test.android, ndk-build, gradle build即可生成apk文件  
+android: 终端下执行:cd tests/test.android, ndk-build(可选参数：NDK_DEBUG=1), gradle build即可生成apk文件  
   
 实现功能:   
 1.基础UI(Widget, Sprite, Button, Label, ProgressBar等)  
