@@ -1,10 +1,10 @@
 运行方式：  
 ios/mac: 打开tests/test.mac_ios/test.xcodeproj  
 android: 终端下执行:cd tests/test.android, ndk-build(可选参数：NDK_DEBUG=1), gradle build即可生成apk文件  
-
-Demo下载:
-android:链接: https://pan.baidu.com/s/1c_uOZtbiExuKaEj747u3Bw 提取码: qx7u
-mac:链接: https://pan.baidu.com/s/13q4rRroXN6kkBnNfUsRE1w 提取码: gpeh
+  
+Demo下载:  
+android:链接: https://pan.baidu.com/s/1c_uOZtbiExuKaEj747u3Bw 提取码: qx7u  
+mac:链接: https://pan.baidu.com/s/13q4rRroXN6kkBnNfUsRE1w 提取码: gpeh  
   
 实现功能:   
 1.基础UI(Widget, Sprite, Button, Label, ProgressBar等)  
