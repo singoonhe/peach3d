@@ -82,7 +82,7 @@ namespace Peach3D
         // define GL version MACROS, "GL_ES" has set by OpenGL ES.
 #if PEACH3D_CURRENT_RENDER == PEACH3D_RENDER_GLES
         // Declare for OpenGL ES 3.0
-        const char definedShader3[] = "#version 300 es\n#define PD_LEVEL_GL3\nprecision highp float;\n";
+        const char definedShader3[] = "#version 300 es\n#define PD_LEVEL_GL3\nprecision mediump float;precision mediump sampler2DShadow;\n";
         // Declare for OpenGL ES 2.0, using highp float first.
         const char definedVS2[] = "#version 100\n#define PD_LEVEL_GL2\nprecision highp float;\n";
         const char definedPS2[] = "#version 100\n#define PD_LEVEL_GL2\n"
